@@ -10,36 +10,30 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
 }
 
 DWORD WINAPI Main() {
-    AllocConsole();
-    FILE* fp;
-
-    freopen_s(&fp, "CONOUT$", "w", stdout);
-    freopen_s(&fp, "CONOUT$", "w", stderr);
+    Log::InitializeConsole();
+    Log::Info("Minecraft Base Address: {:x}\n", GetMinecraftBaseAddress());
 
     MH_STATUS status = MH_Initialize();
     if (status != MH_OK) {
-        printf("MH_Initialize: %s\n", MH_StatusToString(status));
-        ShutdownWait(fp);
+        Log::Error("MH_Initialize failed! Reason: {}\n", MH_StatusToString(status));
+        ShutdownWait();
         return 1;
     }
-
-    printf("Minecraft Base Address: %Ix\n", GetMinecraftBaseAddress());
 
     try {
         ModInitializeHooks();
     }
     catch (std::exception const&) {
-        ShutdownWait(fp);
+        ShutdownWait();
         return 1;
     }
 
-    while (1) {
-        Sleep(100);
-        if (GetAsyncKeyState(VK_NUMPAD0))
-            break;
+    while (true) {
+        Sleep(10);
+        if (GetAsyncKeyState(VK_NUMPAD0)) break;
     }
 
-    Shutdown(fp);
+    Shutdown();
     return 0;
 }
 
@@ -47,20 +41,19 @@ DWORD __stdcall EjectThread(LPVOID lpParameter) {
     ExitProcess(0);
 }
 
-void Shutdown(FILE* fp) {
-    fclose(fp);
-    FreeConsole();
+void Shutdown() {
+    Log::DestroyConsole();
     MH_Uninitialize();
     CreateThread(0, 0, EjectThread, 0, 0, 0);
 }
 
-void ShutdownWait(FILE* fp) {
-    printf("Press Numpad0 to close...\n");
+void ShutdownWait() {
+    Log::Info("Press Numpad0 to close...\n");
 
     while (1) {
-        Sleep(50);
+        Sleep(10);
         if (GetAsyncKeyState(VK_NUMPAD0)) break;
     }
 
-    Shutdown(fp);
+    Shutdown();
 }

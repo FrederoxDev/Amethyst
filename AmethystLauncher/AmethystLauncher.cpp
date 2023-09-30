@@ -4,7 +4,7 @@
 
 int main()
 {
-    LPCSTR dllPath = "C:\\Users\\Freddie\\Documents\\C++ Projects\\AmethystAPI\\x64\\Release\\AmethystAPI.dll";
+    LPCSTR dllPath = "C:\\Users\\Freddie\\Documents\\Amethyst\\AmethystAPI\\x64\\Release\\AmethystAPI.dll";
 
 	HWND hwnd = FindWindowExW(FindWindowW(L"ApplicationFrameWindow", L"Minecraft"), NULL, NULL, L"Minecraft");
 	if (hwnd == nullptr) {

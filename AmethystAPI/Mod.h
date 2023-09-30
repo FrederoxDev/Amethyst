@@ -1,6 +1,6 @@
 #pragma once
-#include <iostream>
 #include "MinHook.h"
 #include "Hook.h"
+#include "Log.h"
 
 void ModInitializeHooks();
