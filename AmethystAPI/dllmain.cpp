@@ -11,7 +11,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
 
 DWORD WINAPI Main() {
     Log::InitializeConsole();
-    Log::Info("Minecraft Base Address: {:x}\n", GetMinecraftBaseAddress());
+    Log::Info("Minecraft Base Address: 0x{:x}\n", GetMinecraftBaseAddress());
 
     MH_STATUS status = MH_Initialize();
     if (status != MH_OK) {
