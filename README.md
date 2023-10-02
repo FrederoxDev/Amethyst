@@ -2,7 +2,8 @@
  - [x] Hook Virtual functions
  - [ ] Member variables
  - [ ] Attach a debugger
- - [ ] Sig-scanning
+ - [x] Sig-scanning
+ - [ ] Better sig scanning algorithm
  - [ ] Build into a specific %amethyst% folder
  - [ ] Load mods at runtime / support multiple mods
 
