@@ -1,29 +1,61 @@
 #include "Mod.h"
 
-// Item::Item
-typedef void(__thiscall* T_Item_Item)(void* self, const std::string& identifier, short id); 
-T_Item_Item _Item_Item;
+using _QWORD = unsigned long long;
+struct int128{
+    __int64 low;
+    __int64 high;
+};
 
-static void Item_Item(void* self, const std::string& identifier, short id) {
-    _Item_Item(self, identifier, id);
-}
+// void(__fastcall*** a1)(_QWORD, __int64),
+// __int64 a2,
+// __int64 a3,
+// _QWORD* a4,
+// int a5,
+// __int64 a6,
+// char a7,
+// __int128* a8,
+// __int64 a9,
+// __int64 a10,
+// __int64* a11,
+// _QWORD* a12
 
-// Item::appendFormattedHoverText
-class ItemStackBase;
-class Level;
+struct Vec3 {
+    float x;
+    float y;
+    float z;
+};
 
-typedef void(__thiscall* T_Item_appendFormattedHoverText)(void*, const ItemStackBase&, Level&, std::string&, bool);
-T_Item_appendFormattedHoverText _Item_appendFormattedHoverText;
 
-void Item_appendFormattedHoverText(void* self, const ItemStackBase& isb, Level& lvl, std::string& text, bool b) {
-    _Item_appendFormattedHoverText(self, isb, lvl, text, b);
-    text = "Hello, World!";
+struct S_LocalPlayer {
+    bool padding[1932];
+    Vec3 headPosition;
+};
+
+S_LocalPlayer* localPlayer = nullptr;
+
+// LocalPlayer::LocalPlayer(IClientInstance&, Level&, std::string const&, GameType, NetworkIdentifier const&, SubClientId, mce::UUID, std::string const&,std::string const&,std::unique_ptr<Certificate>,EntityContext &)
+typedef S_LocalPlayer*(__thiscall* T_LocalPlayer)(void*, void*, void*, const std::string&, int, void*, unsigned char, int128, const std::string&, const std::string&, void*, void*);
+T_LocalPlayer _LocalPlayer;
+
+static S_LocalPlayer* LocalPlayer(void* p0, void* p1, void* p2, const std::string& p3, int p4, void* p5, unsigned char p6, int128 p7, const std::string& p8, const std::string& p9, void* p10, void* p11) {
+    S_LocalPlayer* self = _LocalPlayer(p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11);
+    Log::Info("p3: {}\n", p3);
+    Log::Info("p8: {}\n", p8);
+    Log::Info("p9: {}\n", p9);
+    localPlayer = self;
+    return self;
 }
 
 void ModInitializeHooks() {
-    uintptr_t _Item_Item_Addr = SigScan("48 89 5C 24 10 48 89 74 24 18 48 89 7C 24 20 55 41 54 41 55 41 56 41 57 48 8D 6C 24 C9 48 81 EC 00 01 00 00 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 2F 41");
-    CreateHook(_Item_Item_Addr, Item_Item, _Item_Item);
+    CreateHook(SlideAddress(0x0A1D300), LocalPlayer, _LocalPlayer);
+}
 
-    /*uintptr_t _Item_appendFormattedHoverText_Addr = SigScan("40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 D8 48 81 EC 28 01 00 00 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 10 49 8B F1 4C 89 44 24 30");
-    CreateHook(_Item_appendFormattedHoverText_Addr, Item_appendFormattedHoverText, _Item_appendFormattedHoverText);*/
+
+void ModTick() {
+    if (localPlayer != nullptr) {
+        S_LocalPlayer player = *reinterpret_cast<S_LocalPlayer*>(localPlayer);
+        Vec3 position = player.headPosition;
+
+        Log::Info("X: {}, Y: {}, Z: {}\n", position.x, position.y, position.z);
+    }
 }
