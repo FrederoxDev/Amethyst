@@ -2,28 +2,36 @@
 #include <iostream>
 #include <Windows.h>
 
-int main()
-{
-    LPCSTR dllPath = "C:\\Users\\Freddie\\Documents\\Amethyst\\AmethystAPI\\x64\\Release\\AmethystAPI.dll";
-
+HANDLE GetOrCreateMinecraftHandle() {
+	// Look for an existing Minecraft window
 	HWND hwnd = FindWindowExW(FindWindowW(L"ApplicationFrameWindow", L"Minecraft"), NULL, NULL, L"Minecraft");
-	if (hwnd == nullptr) {
-		std::cout << "Could not find Minecraft" << std::endl;
-		std::cin.get();
-		return 1;
+
+	if (hwnd == NULL) {
+		// Create a minecraft process using its URI
+		ShellExecute(0, 0, L"minecraft:", 0, 0, SW_HIDE);
+		hwnd = FindWindowExW(FindWindowW(L"ApplicationFrameWindow", L"Minecraft"), NULL, NULL, L"Minecraft");
 	}
 
 	DWORD procID;
 	GetWindowThreadProcessId(hwnd, &procID);
-	HANDLE handle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, procID);
+	return OpenProcess(PROCESS_ALL_ACCESS, FALSE, procID);
+}
 
-	LPVOID pDllPath = VirtualAllocEx(handle, 0, strlen(dllPath) + 1, MEM_COMMIT, PAGE_READWRITE);
-	WriteProcessMemory(handle, pDllPath, (LPVOID)dllPath, strlen(dllPath) + 1, 0);
-	HANDLE hLoadThread = CreateRemoteThread(handle, 0, 0,
-		(LPTHREAD_START_ROUTINE)GetProcAddress(GetModuleHandleA("Kernel32.dll"), "LoadLibraryA"), pDllPath, 0, 0);
+void InjectDLL(HANDLE& handle, LPCSTR& dllPath) {
+	LPVOID dll = VirtualAllocEx(handle, 0, strlen(dllPath) + 1, MEM_COMMIT, PAGE_READWRITE);
+
+	WriteProcessMemory(handle, dll, (LPVOID)dllPath, strlen(dllPath) + 1, 0);
+	HANDLE hLoadThread = CreateRemoteThread(
+		handle, 0, 0, (LPTHREAD_START_ROUTINE)GetProcAddress(GetModuleHandleA("Kernel32.dll"), "LoadLibraryA"), dll, 0, 0
+	);
 
 	WaitForSingleObject(hLoadThread, INFINITE);
+	VirtualFreeEx(handle, dll, strlen(dllPath) + 1, MEM_RELEASE);
+}
 
-	VirtualFreeEx(handle, pDllPath, strlen(dllPath) + 1, MEM_RELEASE);
-	return 0;
-}   
+int main() {
+	LPCSTR dllPath = "C:\\Users\\Freddie\\Documents\\Amethyst\\AmethystAPI\\x64\\Release\\AmethystAPI.dll";
+
+	HANDLE handle = GetOrCreateMinecraftHandle();
+	InjectDLL(handle, dllPath);
+}
