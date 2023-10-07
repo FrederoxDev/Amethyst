@@ -47,6 +47,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(SolutionDir)include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)lib\$(Configuration)\;$(LibraryPath)</LibraryPath>
+    <OutDir>C:\Users\Freddie\AppData\Roaming\Amethyst\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -85,6 +86,11 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
     </Link>
+    <PostBuildEvent>
+      <Command>xcopy "$(ProjectDir)*.h" "C:\Users\Freddie\AppData\Roaming\Amethyst\include\" /I /Y /exclude:dllmain.h
+del "C:\Users\Freddie\AppData\Roaming\Amethyst\include\dllmain.h"
+xcopy "C:\Users\Freddie\Documents\Amethyst\AmethystAPI\packages\fmt.7.0.1\include" "C:\Users\Freddie\AppData\Roaming\Amethyst\include\" /E /Y</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="dllmain.h" />

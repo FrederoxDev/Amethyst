@@ -9,10 +9,12 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
     return TRUE;
 }
 
+typedef void(*ModInitializeHooks)();
+
 DWORD WINAPI Main() {
     Log::InitializeConsole();
-    Log::Info("Minecraft Base Address: 0x{:x}\n", GetMinecraftBaseAddress());
-    Log::Info("Minecraft Size: 0x{:x}\n", GetMinecraftSize());
+    /*Log::Info("Minecraft Base Address: 0x{:x}\n", GetMinecraftBaseAddress());
+    Log::Info("Minecraft Size: 0x{:x}\n", GetMinecraftSize());*/
 
     MH_STATUS status = MH_Initialize();
     if (status != MH_OK) {
@@ -21,21 +23,43 @@ DWORD WINAPI Main() {
         return 1;
     }
 
-    try {
+    HMODULE hModDLL = LoadLibrary(L"C:\\Users\\Freddie\\Documents\\AmethystMods\\VoiceChat\\x64\\Release\\VoiceChat.dll");
+    if (hModDLL == NULL) {
+        DWORD error = GetLastError();
+
+        if (error == 0x5) {
+            Log::Error("Incorrect permissions on VoiceChat.dll: Error 0x5\n");
+        }
+        else {
+            Log::Error("Failed to load VoiceChat.dll: Error 0x{:x}\n", GetLastError());
+        }
+
+        ShutdownWait();
+        return 1;
+    }
+
+    ModInitializeHooks modInitializeHooks = reinterpret_cast<ModInitializeHooks>(
+        GetProcAddress(hModDLL, "ModInitializeHooks")
+    );
+
+    modInitializeHooks();
+
+    /*try {
         ModInitializeHooks();
     }
     catch (std::exception const&) {
         ShutdownWait();
         return 1;
-    }
+    }*/
 
     // Todo: Hook into world tick or something
     while (true) {
         Sleep(50); // 1/20th second
-        ModTick();
+        //ModTick();
         if (GetAsyncKeyState(VK_NUMPAD0)) break;
     }
 
+    FreeLibrary(hModDLL);
     Shutdown();
     return 0;
 }

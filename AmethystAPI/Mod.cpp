@@ -1,6 +1,5 @@
 #include "Mod.h"
 
-using _QWORD = unsigned long long;
 struct int128{
     __int64 low;
     __int64 high;
@@ -25,7 +24,6 @@ struct Vec3 {
     float z;
 };
 
-
 struct S_LocalPlayer {
     bool padding[1932];
     Vec3 headPosition;
@@ -40,14 +38,15 @@ T_LocalPlayer _LocalPlayer;
 static S_LocalPlayer* LocalPlayer(void* p0, void* p1, void* p2, const std::string& p3, int p4, void* p5, unsigned char p6, int128 p7, const std::string& p8, const std::string& p9, void* p10, void* p11) {
     S_LocalPlayer* self = _LocalPlayer(p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11);
     Log::Info("p3: {}\n", p3);
-    Log::Info("p8: {}\n", p8);
-    Log::Info("p9: {}\n", p9);
     localPlayer = self;
     return self;
 }
 
 void ModInitializeHooks() {
-    CreateHook(SlideAddress(0x0A1D300), LocalPlayer, _LocalPlayer);
+    CreateHook(
+        SigScan("40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 A8 48 81 EC 58 01 00 00 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 40 4C 89 4D"), 
+        LocalPlayer, _LocalPlayer
+    );
 }
 
 
