@@ -30,7 +30,7 @@ void InjectDLL(HANDLE& handle, LPCSTR& dllPath) {
 }
 
 int main() {
-	LPCSTR dllPath = "C:\\Users\\Freddie\\Documents\\Amethyst\\AmethystAPI\\x64\\Release\\AmethystAPI.dll";
+	LPCSTR dllPath = "C:\\Users\\Freddie\\AppData\\Roaming\\Amethyst\\AmethystAPI.dll";
 
 	HANDLE handle = GetOrCreateMinecraftHandle();
 	InjectDLL(handle, dllPath);

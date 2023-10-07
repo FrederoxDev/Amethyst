@@ -5,6 +5,7 @@
 #include "Log.h"
 #include <psapi.h>
 #include <chrono>
+#include <vector>
 
 /*
 Returns the position where Minecraft has been loaded into memory

@@ -13,8 +13,9 @@ typedef void(*ModInitializeHooks)();
 
 DWORD WINAPI Main() {
     Log::InitializeConsole();
-    /*Log::Info("Minecraft Base Address: 0x{:x}\n", GetMinecraftBaseAddress());
-    Log::Info("Minecraft Size: 0x{:x}\n", GetMinecraftSize());*/
+    Log::Info("Hi?\n");
+    Log::Info("Minecraft Base Address: 0x{:x}\n", GetMinecraftBaseAddress());
+    Log::Info("Minecraft Size: 0x{:x}\n", GetMinecraftSize());
 
     MH_STATUS status = MH_Initialize();
     if (status != MH_OK) {
@@ -23,7 +24,7 @@ DWORD WINAPI Main() {
         return 1;
     }
 
-    HMODULE hModDLL = LoadLibrary(L"C:\\Users\\Freddie\\Documents\\AmethystMods\\VoiceChat\\x64\\Release\\VoiceChat.dll");
+    /*HMODULE hModDLL = LoadLibrary(L"C:\\Users\\Freddie\\Documents\\AmethystMods\\VoiceChat\\x64\\Release\\VoiceChat.dll");
     if (hModDLL == NULL) {
         DWORD error = GetLastError();
 
@@ -40,9 +41,9 @@ DWORD WINAPI Main() {
 
     ModInitializeHooks modInitializeHooks = reinterpret_cast<ModInitializeHooks>(
         GetProcAddress(hModDLL, "ModInitializeHooks")
-    );
+        );
 
-    modInitializeHooks();
+    modInitializeHooks();*/
 
     /*try {
         ModInitializeHooks();
@@ -59,7 +60,7 @@ DWORD WINAPI Main() {
         if (GetAsyncKeyState(VK_NUMPAD0)) break;
     }
 
-    FreeLibrary(hModDLL);
+    //FreeLibrary(hModDLL);
     Shutdown();
     return 0;
 }
