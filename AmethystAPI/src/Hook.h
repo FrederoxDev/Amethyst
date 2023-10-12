@@ -32,9 +32,29 @@ void CreateHook(uintptr_t targetAddress, void* detour, T& original) {
     LPVOID address = reinterpret_cast<LPVOID>(targetAddress);
 
     MH_STATUS status = MH_CreateHook(address, detour, reinterpret_cast<LPVOID*>(&original));
+
     if (status != MH_OK) {
-        Log::Error("MH_CreateHook failed! Reason: {}\n", MH_StatusToString(status));
-        throw std::exception();
+        // When loaded for the first time MH will not be initialized
+        if (status == MH_ERROR_NOT_INITIALIZED) {
+            status = MH_Initialize();
+
+            // Log error's if Initialization failed
+            if (status != MH_OK) {
+                Log::Error("MH_Initialize failed! Reason: {}\n", MH_StatusToString(status));
+                throw std::exception();
+            }
+
+            // Try creating the hook again
+            status = MH_CreateHook(address, detour, reinterpret_cast<LPVOID*>(&original));
+            if (status != MH_OK) {
+                Log::Error("MH_CreateHook failed! Reason: {}\n", MH_StatusToString(status));
+                throw std::exception();
+            }
+        }
+        else {
+            Log::Error("MH_CreateHook failed! Reason: {}\n", MH_StatusToString(status));
+            throw std::exception();
+        }
     }
 
     status = MH_EnableHook(address);

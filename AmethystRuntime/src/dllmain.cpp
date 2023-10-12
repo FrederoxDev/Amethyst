@@ -10,6 +10,9 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
     return TRUE;
 }
 
+typedef void(*ModInitializeHooks)();
+typedef void(*ModTick)();
+
 DWORD WINAPI Main() {
     Log::InitializeConsole();
     Log::Info("Minecraft Base Address: 0x{:x}\n", GetMinecraftBaseAddress());
@@ -22,43 +25,53 @@ DWORD WINAPI Main() {
         return 1;
     }
 
-    // HMODULE hModDLL = LoadLibrary("C:\\Users\\Freddie\\Documents\\AmethystMods\\VoiceChat\\x64\\Release\\VoiceChat.dll");
-    // if (hModDLL == NULL) {
-    //     DWORD error = GetLastError();
+    HMODULE hModDLL = LoadLibrary("C:\\Users\\Freddie\\AppData\\Roaming\\Amethyst\\mods\\ProximityVoice\\ProximityVoice.dll");
+    if (hModDLL == NULL) {
+        DWORD error = GetLastError();
 
-    //     if (error == 0x5) {
-    //         Log::Error("Incorrect permissions on VoiceChat.dll: Error 0x5\n");
-    //     }
-    //     else {
-    //         Log::Error("Failed to load VoiceChat.dll: Error 0x{:x}\n", GetLastError());
-    //     }
+        if (error == 0x5) {
+            Log::Error("Incorrect permissions on VoiceChat.dll: Error 0x5\n");
+        }
+        else {
+            Log::Error("Failed to load VoiceChat.dll: Error 0x{:x}\n", GetLastError());
+        }
 
-    //     ShutdownWait();
-    //     return 1;
-    // }
+        ShutdownWait();
+        return 1;
+    }
 
-    // ModInitializeHooks modInitializeHooks = reinterpret_cast<ModInitializeHooks>(
-    //     GetProcAddress(hModDLL, "ModInitializeHooks")
-    // );
+     ModInitializeHooks modInitializeHooks = reinterpret_cast<ModInitializeHooks>(
+         GetProcAddress(hModDLL, "ModInitializeHooks")
+     );
 
-    // modInitializeHooks();
+     ModTick modTick = reinterpret_cast<ModTick>(
+         GetProcAddress(hModDLL, "ModTick")
+     );
 
-    /*try {
-        ModInitializeHooks();
+    try {
+        modInitializeHooks();
     }
     catch (std::exception const&) {
         ShutdownWait();
         return 1;
-    }*/
+    }
 
     // Todo: Hook into world tick or something
     while (true) {
         Sleep(50); // 1/20th second
-        // ModTick();
+
+        try {
+            modTick();
+        }
+        catch (std::exception const&) {
+            ShutdownWait();
+            return 1;
+        }
+
         if (GetAsyncKeyState(VK_NUMPAD0)) break;
     }
 
-    // FreeLibrary(hModDLL);
+    FreeLibrary(hModDLL);
     Shutdown();
     return 0;
 }
