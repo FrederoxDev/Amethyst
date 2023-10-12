@@ -13,7 +13,6 @@ typedef void(*ModInitializeHooks)();
 
 DWORD WINAPI Main() {
     Log::InitializeConsole();
-    Log::Info("Hi?\n");
     Log::Info("Minecraft Base Address: 0x{:x}\n", GetMinecraftBaseAddress());
     Log::Info("Minecraft Size: 0x{:x}\n", GetMinecraftSize());
 
@@ -24,7 +23,7 @@ DWORD WINAPI Main() {
         return 1;
     }
 
-    /*HMODULE hModDLL = LoadLibrary(L"C:\\Users\\Freddie\\Documents\\AmethystMods\\VoiceChat\\x64\\Release\\VoiceChat.dll");
+    HMODULE hModDLL = LoadLibrary("C:\\Users\\Freddie\\Documents\\AmethystMods\\VoiceChat\\x64\\Release\\VoiceChat.dll");
     if (hModDLL == NULL) {
         DWORD error = GetLastError();
 
@@ -41,9 +40,9 @@ DWORD WINAPI Main() {
 
     ModInitializeHooks modInitializeHooks = reinterpret_cast<ModInitializeHooks>(
         GetProcAddress(hModDLL, "ModInitializeHooks")
-        );
+    );
 
-    modInitializeHooks();*/
+    modInitializeHooks();
 
     /*try {
         ModInitializeHooks();
@@ -56,11 +55,11 @@ DWORD WINAPI Main() {
     // Todo: Hook into world tick or something
     while (true) {
         Sleep(50); // 1/20th second
-        //ModTick();
+        // ModTick();
         if (GetAsyncKeyState(VK_NUMPAD0)) break;
     }
 
-    //FreeLibrary(hModDLL);
+    FreeLibrary(hModDLL);
     Shutdown();
     return 0;
 }
