@@ -2,6 +2,7 @@
 #include <fmt/core.h>
 #include <fmt/color.h>
 #include <Windows.h>
+#include <iostream>
 
 namespace Log
 {
@@ -18,4 +19,3 @@ namespace Log
 		fmt::print(fg(fmt::rgb(0xf55762)) | fmt::emphasis::bold, format, args...);
 	}
 };
-

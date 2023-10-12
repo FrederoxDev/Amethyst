@@ -1,8 +1,8 @@
 #include "Hook.h"
 
 uintptr_t GetMinecraftBaseAddress() {
-    return reinterpret_cast<uintptr_t>(GetModuleHandleA("Minecraft.Windows.exe"));
-}   
+	return reinterpret_cast<uintptr_t>(GetModuleHandleA("Minecraft.Windows.exe"));
+}
 
 unsigned long GetMinecraftSize() {
 	HMODULE base = GetModuleHandleA("Minecraft.Windows.exe");

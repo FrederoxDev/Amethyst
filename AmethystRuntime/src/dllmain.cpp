@@ -1,6 +1,6 @@
-// dllmain.cpp : Defines the entry point for the DLL application.
-// #include "dllmain.h"
-#include <Windows.h>
+#include "dllmain.h"
+#include "Log.h"
+#include "Hook.h"
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved) {
     if (ul_reason_for_call == DLL_PROCESS_ATTACH) {
@@ -10,19 +10,17 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
     return TRUE;
 }
 
-typedef void(*ModInitializeHooks)();
-
 DWORD WINAPI Main() {
-    // Log::InitializeConsole();
-    // Log::Info("Minecraft Base Address: 0x{:x}\n", GetMinecraftBaseAddress());
-    // Log::Info("Minecraft Size: 0x{:x}\n", GetMinecraftSize());
+    Log::InitializeConsole();
+    Log::Info("Minecraft Base Address: 0x{:x}\n", GetMinecraftBaseAddress());
+    Log::Info("Minecraft Size: 0x{:x}\n", GetMinecraftSize());
 
-    // MH_STATUS status = MH_Initialize();
-    // if (status != MH_OK) {
-    //     Log::Error("MH_Initialize failed! Reason: {}\n", MH_StatusToString(status));
-    //     ShutdownWait();
-    //     return 1;
-    // }
+    MH_STATUS status = MH_Initialize();
+    if (status != MH_OK) {
+        Log::Error("MH_Initialize failed! Reason: {}\n", MH_StatusToString(status));
+        ShutdownWait();
+        return 1;
+    }
 
     // HMODULE hModDLL = LoadLibrary("C:\\Users\\Freddie\\Documents\\AmethystMods\\VoiceChat\\x64\\Release\\VoiceChat.dll");
     // if (hModDLL == NULL) {
@@ -70,13 +68,13 @@ DWORD __stdcall EjectThread(LPVOID lpParameter) {
 }
 
 void Shutdown() {
-    // Log::DestroyConsole();
-    // MH_Uninitialize();
+    Log::DestroyConsole();
+    MH_Uninitialize();
     CreateThread(0, 0, EjectThread, 0, 0, 0);
 }
 
 void ShutdownWait() {
-    // Log::Info("Press Numpad0 to close...\n");
+    Log::Info("Press Numpad0 to close...\n");
 
     while (1) {
         Sleep(10);
