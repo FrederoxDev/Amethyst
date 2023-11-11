@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
 project(AmethystAPI)
 
+message("$ENV{amethyst}/lib")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELWITHDEBINFO "$ENV{amethyst}/lib")
 
 file(GLOB_RECURSE CPP_SOURCES "src/*.cpp")

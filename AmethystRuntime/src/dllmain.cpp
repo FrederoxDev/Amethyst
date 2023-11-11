@@ -1,6 +1,8 @@
 #include "dllmain.h"
 #include "Log.h"
 #include "Hook.h"
+#include <vector>
+#include <cstdlib>
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved) {
     if (ul_reason_for_call == DLL_PROCESS_ATTACH) {
@@ -12,6 +14,53 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
 
 typedef void(*ModInitializeHooks)();
 typedef void(*ModTick)();
+
+std::vector<HMODULE> g_hmodules;
+std::vector<ModInitializeHooks> g_initialize_hook;
+std::vector<ModTick> g_mod_tick;
+
+int LoadMod(const char* mod_name) {
+    const char* amethyst_folder = std::getenv("amethyst");
+    std::string dll_path = std::string(amethyst_folder) + "/mods/" + mod_name + "/" + mod_name + ".dll";
+
+    HMODULE hModDll = LoadLibrary(dll_path.c_str());
+
+    if (hModDll == NULL) {
+        DWORD error = GetLastError();
+
+        if (error == 0x5) {
+            Log::Error("{}.dll does not have the correct permissions\n", mod_name);
+        }
+        else {
+            Log::Error("Failed to load {}.dll: error code: 0x{:x}", mod_name, error);
+        }
+
+        ShutdownWait();
+        return 1;
+    }
+
+    g_hmodules.push_back(hModDll);
+
+    FARPROC init_addr = GetProcAddress(hModDll, "ModInitializeHooks");
+    if (init_addr != NULL) {
+        g_initialize_hook.push_back(reinterpret_cast<ModInitializeHooks>(init_addr));
+    }
+    else {
+        DWORD error = GetLastError();
+        Log::Info("[{}] ModInitializeHooks was not found! 0x{:x}\n", mod_name, error);
+    }
+
+    FARPROC tick_addr = GetProcAddress(hModDll, "ModTick");
+    if (tick_addr != NULL) {
+        g_mod_tick.push_back(reinterpret_cast<ModTick>(tick_addr));
+    }
+    else {
+        DWORD error = GetLastError();
+        Log::Info("[{}] ModTick was not found!0x{:x}\n", mod_name, error);
+    }
+
+    return 0;
+}
 
 DWORD WINAPI Main() {
     Log::InitializeConsole();
@@ -25,43 +74,27 @@ DWORD WINAPI Main() {
         return 1;
     }
 
-    HMODULE hModDLL = LoadLibrary("C:\\Users\\Freddie\\AppData\\Roaming\\Amethyst\\mods\\ProximityVoice\\ProximityVoice.dll");
-    if (hModDLL == NULL) {
-        DWORD error = GetLastError();
-
-        if (error == 0x5) {
-            Log::Error("Incorrect permissions on VoiceChat.dll: Error 0x5\n");
-        }
-        else {
-            Log::Error("Failed to load VoiceChat.dll: Error 0x{:x}\n", GetLastError());
-        }
-
-        ShutdownWait();
-        return 1;
-    }
-
-     ModInitializeHooks modInitializeHooks = reinterpret_cast<ModInitializeHooks>(
-         GetProcAddress(hModDLL, "ModInitializeHooks")
-     );
-
-     ModTick modTick = reinterpret_cast<ModTick>(
-         GetProcAddress(hModDLL, "ModTick")
-     );
+    LoadMod("Minimap");
 
     try {
-        modInitializeHooks();
+        for each (auto init in g_initialize_hook)
+        {
+            init();
+        }
     }
     catch (std::exception const&) {
         ShutdownWait();
         return 1;
     }
 
-    // Todo: Hook into world tick or something
     while (true) {
-        Sleep(50); // 1/20th second
+        Sleep(50); // Todo: Hook into a minecraft tick function or something
 
         try {
-            modTick();
+            for each (auto tick in g_mod_tick)
+            {
+                tick();
+            }
         }
         catch (std::exception const&) {
             ShutdownWait();
@@ -71,7 +104,6 @@ DWORD WINAPI Main() {
         if (GetAsyncKeyState(VK_NUMPAD0)) break;
     }
 
-    FreeLibrary(hModDLL);
     Shutdown();
     return 0;
 }
@@ -83,6 +115,12 @@ DWORD __stdcall EjectThread(LPVOID lpParameter) {
 void Shutdown() {
     Log::DestroyConsole();
     MH_Uninitialize();
+
+    for each (auto hModDll in g_hmodules)
+    {
+        FreeLibrary(hModDll);
+    }
+
     CreateThread(0, 0, EjectThread, 0, 0, 0);
 }
 

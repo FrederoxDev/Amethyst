@@ -30,8 +30,10 @@ void InjectDLL(HANDLE& handle, LPCSTR& dllPath) {
 }
 
 int main() {
-	LPCSTR dllPath = "C:\\Users\\Freddie\\AppData\\Roaming\\Amethyst\\mods\\AmethystRuntime\\AmethystRuntime.dll";
+	const char* amethyst_folder = std::getenv("amethyst");
+	std::string dll_path = std::string(amethyst_folder) + "/mods/AmethystRuntime/AmethystRuntime.dll";
+	const char* path = dll_path.c_str();
 
 	HANDLE handle = GetOrCreateMinecraftHandle();
-	InjectDLL(handle, dllPath);
+	InjectDLL(handle, path);
 }
