@@ -20,8 +20,8 @@ std::vector<ModInitializeHooks> g_initialize_hook;
 std::vector<ModTick> g_mod_tick;
 
 int LoadMod(const char* mod_name) {
-    const char* amethyst_folder = std::getenv("amethyst");
-    std::string dll_path = std::string(amethyst_folder) + "/mods/" + mod_name + "/" + mod_name + ".dll";
+    const char* amethyst_folder = std::getenv("appdata");
+    std::string dll_path = std::string(amethyst_folder) + "/Amethyst/mods/" + mod_name + "/" + mod_name + ".dll";
 
     HMODULE hModDll = LoadLibrary(dll_path.c_str());
 
