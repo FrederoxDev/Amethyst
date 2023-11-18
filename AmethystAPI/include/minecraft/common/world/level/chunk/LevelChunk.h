@@ -8,5 +8,5 @@ class LevelChunk {
 public:
     // Found in BlockSource::getBlock(const BlockPos&)
     // 0x3909E80
-    const Block& getBlock(const ChunkBlockPos& pos);
+    const Block* getBlock(const ChunkBlockPos& pos);
 };
