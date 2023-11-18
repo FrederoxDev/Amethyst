@@ -6,5 +6,6 @@
 
 class Block {
 public:
-    Color* getMapColor(Color* a2, BlockSource* a3, const BlockPos* a4);
+    /* Returns a ptr to the result parameter */
+    Color* getMapColor(Color* result, BlockSource* a3, const BlockPos* a4) const;
 };
