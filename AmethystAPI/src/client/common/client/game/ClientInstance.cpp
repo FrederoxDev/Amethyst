@@ -1,6 +1,11 @@
 #include "client/common/client/game/ClientInstance.h"
 
 BlockSource* ClientInstance::getRegion() {
-    typedef BlockSource* (__thiscall* _getRegion)(ClientInstance* self);
-	return reinterpret_cast<_getRegion>(this->vftable[26])(this);
+    using function = BlockSource*(__thiscall*)(ClientInstance*);
+    return reinterpret_cast<function>(this->vtable[26])(this);
+}
+
+LocalPlayer* ClientInstance::getLocalPlayer() {
+    using function = LocalPlayer*(__thiscall*)(ClientInstance*);
+    return reinterpret_cast<function>(this->vtable[27])(this);
 }

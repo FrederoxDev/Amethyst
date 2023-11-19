@@ -1,13 +1,13 @@
 #pragma once
 #include <stdint.h>
 #include "minecraft/common/world/level/BlockSource.h"
-#include "Log.h"
-#include "Hook.h"
+#include "client/common/client/player/LocalPlayer.h"
 
 class ClientInstance {
 private:
-    uintptr_t* vftable;
+    uintptr_t** vtable;
 
 public:
     BlockSource* getRegion();
+    LocalPlayer* getLocalPlayer();
 };
