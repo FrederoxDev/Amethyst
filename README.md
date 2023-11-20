@@ -27,3 +27,10 @@ target_link_libraries(${PROJECT_NAME} PRIVATE ${AMETHYST_API})
 target_link_libraries(${PROJECT_NAME} PRIVATE "${AmethystFolder}/lib/fmt.lib")
 target_link_libraries(${PROJECT_NAME} PRIVATE "${AmethystFolder}/lib/libMinHook.x64.lib")
 ```
+
+## Goals of AmethystAPI
+
+ - AmethystAPI does not aim to have completed headers
+ - Add to headers as needed for projects
+ - Sticking to one version (currently 1.20.30.02)
+ - Follow the same folder structure as Minecraft
