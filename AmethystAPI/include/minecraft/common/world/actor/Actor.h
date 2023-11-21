@@ -9,5 +9,5 @@ private:
 
 public:
     Dimension* getDimension();
-    const BlockSource* getDimensionBlockSourceConst();
+    //const BlockSource* getDimensionBlockSourceConst();
 };

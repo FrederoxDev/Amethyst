@@ -14,6 +14,6 @@ Dimension* Actor::getDimension() {
     return func(this);
 }
 
-const BlockSource* Actor::getDimensionBlockSourceConst() {
-    return getDimension()->getBlockSourceFromMainChunkSource();
-}
+//const BlockSource* Actor::getDimensionBlockSourceConst() {
+//    return getDimension()->getBlockSourceFromMainChunkSource();
+//}

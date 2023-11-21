@@ -7,5 +7,5 @@ private:
     uintptr_t** vtable;
 
 public:
-    const BlockSource* getBlockSourceFromMainChunkSource();
+    BlockSource* getBlockSourceFromMainChunkSource();
 };

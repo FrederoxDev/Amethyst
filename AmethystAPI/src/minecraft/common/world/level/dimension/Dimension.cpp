@@ -1,5 +1,6 @@
 #include "minecraft/common/world/level/dimension/Dimension.h"
 
-const BlockSource* Dimension::getBlockSourceFromMainChunkSource() {
-    return reinterpret_cast<const BlockSource*>(this + 204);
+BlockSource* Dimension::getBlockSourceFromMainChunkSource() {
+    auto source = reinterpret_cast<BlockSource*>(this + 204);
+    return source;
 }
