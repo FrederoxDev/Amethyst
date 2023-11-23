@@ -1,4 +1,4 @@
-#include "Log.h"
+#include "amethyst/Log.h"
 
 namespace Log {
 	FILE* fp;

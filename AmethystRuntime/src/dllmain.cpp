@@ -1,11 +1,11 @@
 #include "dllmain.h"
-#include "Log.h"
-#include "Hook.h"
 #include <vector>
 #include <cstdlib>
 #include "client/common/client/game/ClientInstance.h"
 #include "Mod.h"
 #include "AmethystRuntime.h"
+#include "amethyst/Log.h"
+#include "amethyst/HookManager.h"
 
 AmethystRuntime g_amethyst;
 
@@ -33,7 +33,7 @@ DWORD WINAPI Main() {
     }
 
     g_amethyst.Shutdown();
-    Shutdown();
+    ShutdownWait();
     return 0;
 }
 

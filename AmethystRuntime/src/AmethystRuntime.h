@@ -2,6 +2,7 @@
 #include <vector>
 #include "Mod.h"
 #include "client/common/client/game/ClientInstance.h"
+#include "MinHook.h"
 
 typedef void(*ModInitializeHooks)();
 typedef void(*ModTick)();
