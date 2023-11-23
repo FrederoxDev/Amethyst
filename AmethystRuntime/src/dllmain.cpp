@@ -22,18 +22,19 @@ DWORD WINAPI Main() {
     Log::Info("Minecraft Base Address: 0x{:x}\n", GetMinecraftBaseAddress());
     Log::Info("Minecraft Size: 0x{:x}\n", GetMinecraftSize());
 
-    MH_STATUS status = MH_Initialize();
-    if (status != MH_OK) {
-        Log::Error("MH_Initialize failed! Reason: {}\n", MH_StatusToString(status));
+    try {
+        g_amethyst.LoadMods();
+        g_amethyst.RunMods();
+    }
+    catch (std::exception e) {
+        Log::Error("[AmethystRuntime] {}\n", e.what());
         ShutdownWait();
         return 1;
     }
 
-    g_amethyst.LoadMods();
-    g_amethyst.RunMods();
-
-    ShutdownWait();
-    return 1;
+    g_amethyst.Shutdown();
+    Shutdown();
+    return 0;
 }
 
 DWORD __stdcall EjectThread(LPVOID lpParameter) {

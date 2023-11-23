@@ -6,6 +6,7 @@
 typedef void(*ModInitializeHooks)();
 typedef void(*ModTick)();
 typedef void(*ModStartJoinGame)(ClientInstance*);
+typedef void(*ModShutdown)();
 
 class AmethystRuntime {
 private:

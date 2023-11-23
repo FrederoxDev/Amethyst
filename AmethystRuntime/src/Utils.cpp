@@ -6,13 +6,13 @@ std::string GetAmethystFolder() {
     errno_t err = _dupenv_s(&path, &path_length, "AppData");
     
     if (err) {
-        Log::Info("_dupenv_s failed to find %AppData%\n");
-        return 0;
+        Log::Error("_dupenv_s failed to find %AppData%\n");
+        throw std::exception();
     }
 
     if (path == 0) {
-        Log::Info("%AppData% was 0\n");
-        return 0;
+        Log::Error("%AppData% was 0\n");
+        throw std::exception();
     }
 
     std::string app_data(path);

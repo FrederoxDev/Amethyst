@@ -18,7 +18,7 @@ public:
 public:
 	Mod(const char* mod_name);
 	FARPROC GetFunction(const char* func_name);
-	void Shutdown();
+	void Free();
 
 private:
 	fs::path GetTempDll();
