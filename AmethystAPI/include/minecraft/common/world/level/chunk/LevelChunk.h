@@ -1,5 +1,5 @@
 #pragma once
-#include "Hook.h"
+#include "amethyst/Memory.h"
 
 class Block;
 class ChunkBlockPos;

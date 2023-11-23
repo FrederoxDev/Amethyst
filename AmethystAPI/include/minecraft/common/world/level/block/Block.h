@@ -2,7 +2,7 @@
 #include "core/math/Color.h"
 #include "minecraft/common/world/level/BlockSource.h"
 #include "minecraft/common/world/level/BlockPos.h"
-#include "Hook.h"
+#include "amethyst/Memory.h"
 
 class Block {
 public:

@@ -1,7 +1,8 @@
-#include "Hook.h"
+#include "amethyst/Memory.h"
 
 uintptr_t GetMinecraftBaseAddress() {
-	return reinterpret_cast<uintptr_t>(GetModuleHandleA("Minecraft.Windows.exe"));
+	static uintptr_t mc = reinterpret_cast<uintptr_t>(GetModuleHandleA("Minecraft.Windows.exe"));
+	return mc;
 }
 
 unsigned long GetMinecraftSize() {

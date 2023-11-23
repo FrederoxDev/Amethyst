@@ -2,6 +2,6 @@
 #include <Windows.h>
 #include <shlobj.h>
 #include <string>
-#include "Log.h"
+#include "amethyst/Log.h"
 
 std::string GetAmethystFolder();
