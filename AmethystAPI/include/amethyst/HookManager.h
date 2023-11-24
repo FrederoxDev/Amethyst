@@ -6,7 +6,6 @@
 
 class HookManager {
 public:
-    HookManager();
     void CreateHook(uintptr_t targetAddress, void* detour, void** original);
     void Shutdown();
 

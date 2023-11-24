@@ -12,6 +12,8 @@ void AmethystRuntime::LoadMods() {
         throw std::exception("MH_Initialize failed!");
     }
 
+    this->AttachDebugger();
+
     Mod minimap("Minimap");
     m_mods.push_back(minimap);
 
@@ -84,4 +86,12 @@ void AmethystRuntime::Shutdown() {
 
     // Disable MH and remove any created hooks
     MH_Uninitialize();
+}
+
+void AmethystRuntime::AttachDebugger() {
+    char buffer[100];
+    sprintf(buffer, "vsjitdebugger -p %d", GetCurrentProcessId());
+    std::string cmd(buffer);
+
+    system(cmd.c_str());
 }

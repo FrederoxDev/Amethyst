@@ -1,7 +1,5 @@
 #include "amethyst/HookManager.h"
 
-HookManager::HookManager() {}
-
 void HookManager::CreateHook(uintptr_t targetAddress, void* detour, void** original) {
     LPVOID original_addr = reinterpret_cast<LPVOID>(targetAddress);
 

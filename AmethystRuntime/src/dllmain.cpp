@@ -22,7 +22,6 @@ DWORD WINAPI Main() {
     Log::InitializeConsole();
     Log::Info("Minecraft Base Address: 0x{:x}\n", GetMinecraftBaseAddress());
     Log::Info("Minecraft Size: 0x{:x}\n", GetMinecraftSize());
-    AttachDebugger();
 
     try {
         g_runtime.LoadMods();
@@ -60,12 +59,4 @@ void ShutdownWait() {
     }
 
     Shutdown();
-}
-
-void AttachDebugger() {
-    char buffer[100];
-    sprintf(buffer, "vsjitdebugger -p %d", GetCurrentProcessId());
-    std::string cmd(buffer);
-
-    system(cmd.c_str());
 }

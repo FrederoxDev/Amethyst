@@ -18,4 +18,7 @@ public:
 	void LoadMods();
 	void RunMods();
 	void Shutdown();
+
+private:
+	void AttachDebugger();
 };

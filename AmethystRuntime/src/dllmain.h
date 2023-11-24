@@ -6,4 +6,3 @@ DWORD WINAPI Main();
 DWORD __stdcall EjectThread(LPVOID lpParameter);
 void Shutdown();
 void ShutdownWait();
-void AttachDebugger();
