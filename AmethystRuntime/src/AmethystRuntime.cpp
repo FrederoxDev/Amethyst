@@ -24,15 +24,15 @@ void AmethystRuntime::LoadMods() {
             g_mod_initialize.push_back(reinterpret_cast<ModInitializeHooks>(addr));
         }
 
-        /*addr = mod.GetFunction("OnTick");
+        addr = mod.GetFunction("OnTick");
         if (addr != NULL) {
             g_mod_tick.push_back(reinterpret_cast<ModTick>(addr));
-        }*/
+        }
 
-        /*addr = mod.GetFunction("OnStartJoin");
+        addr = mod.GetFunction("OnStartJoin");
         if (addr != NULL) {
             g_mod_start_join.push_back(reinterpret_cast<ModStartJoinGame>(addr));
-        }*/
+        }
 
         addr = mod.GetFunction("Shutdown");
         if (addr != NULL) {

@@ -7,7 +7,8 @@
 #include "amethyst/Log.h"
 #include "amethyst/HookManager.h"
 
-AmethystRuntime g_amethyst;
+AmethystRuntime g_runtime;
+HookManager g_hookManager;
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved) {
     if (ul_reason_for_call == DLL_PROCESS_ATTACH) {
@@ -21,10 +22,11 @@ DWORD WINAPI Main() {
     Log::InitializeConsole();
     Log::Info("Minecraft Base Address: 0x{:x}\n", GetMinecraftBaseAddress());
     Log::Info("Minecraft Size: 0x{:x}\n", GetMinecraftSize());
+    AttachDebugger();
 
     try {
-        g_amethyst.LoadMods();
-        g_amethyst.RunMods();
+        g_runtime.LoadMods();
+        g_runtime.RunMods();
     }
     catch (std::exception e) {
         Log::Error("[AmethystRuntime] {}\n", e.what());
@@ -32,7 +34,7 @@ DWORD WINAPI Main() {
         return 1;
     }
 
-    g_amethyst.Shutdown();
+    g_runtime.Shutdown();
     ShutdownWait();
     return 0;
 }
@@ -42,7 +44,7 @@ DWORD __stdcall EjectThread(LPVOID lpParameter) {
 }
 
 void Shutdown() {
-    g_amethyst.Shutdown();
+    g_runtime.Shutdown();
     Log::DestroyConsole();
     MH_Uninitialize();
 
@@ -58,4 +60,12 @@ void ShutdownWait() {
     }
 
     Shutdown();
+}
+
+void AttachDebugger() {
+    char buffer[100];
+    sprintf(buffer, "vsjitdebugger -p %d", GetCurrentProcessId());
+    std::string cmd(buffer);
+
+    system(cmd.c_str());
 }
