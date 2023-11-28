@@ -94,7 +94,7 @@ uintptr_t multiThreadedSigScan(
 	std::vector<std::thread> threads;
 	std::mutex mutex;
 	uint64_t result = 0;
-	auto sigScan = [&](uint64_t start, uint64_t end) {
+	auto sigScan = [&](uint64_t start, uint64_t end) -> uint64_t{
 		for (uint64_t address = start; address < end; address++) {
 			if (result != 0) return; // another thread found it
 			bool failed = false;
