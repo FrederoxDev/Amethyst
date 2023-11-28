@@ -14,9 +14,6 @@ void AmethystRuntime::LoadMods() {
 
     this->AttachDebugger();
 
-    Mod minimap("Minimap");
-    m_mods.push_back(minimap);
-
     for each (auto mod in m_mods)
     {
         FARPROC addr;
