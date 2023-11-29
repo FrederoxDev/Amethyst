@@ -131,10 +131,10 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AmethystLauncher.cpp" />
-    <ClCompile Include="loader\loader.cpp" />
+    <ClCompile Include="loader\Loader.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="loader\loader.h" />
+    <ClInclude Include="loader\Loader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

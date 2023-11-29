@@ -96,7 +96,7 @@ uintptr_t multiThreadedSigScan(
 	uint64_t result = 0;
 	auto sigScan = [&](uint64_t start, uint64_t end) -> uint64_t{
 		for (uint64_t address = start; address < end; address++) {
-			if (result != 0) return; // another thread found it
+			if (result != 0) return 0; // another thread found it
 			bool failed = false;
 			size_t byteIndex = 0;
 

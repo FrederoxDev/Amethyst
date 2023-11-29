@@ -3,24 +3,19 @@
 #include <Windows.h>
 #define WIN32_LEAN_AND_MEAN
 
-class modLoader
-{
+class ModLoader {
+public:
+	ModLoader();
+	void InjectRuntime();
+
 private:
-	// Get the path to the amethyst folder
 	std::string GetAmethystPath();
 	void getMinecraftWindowHandle();
 	void injectDLL(const std::string& dllPath);
+
 private:
-	// The path to the amethyst folder
-	std::string amethystPath;
-	// The path to the amethyst mods folder
-	std::string modsPath;
-
-	HANDLE _minecraftWindowHandle;
-
-public:
-	modLoader();
-
-	void InjectRuntime();
+	std::string mAmethystPath;
+	std::string mModsPath;
+	HANDLE mMinecraftWindowHandle;
 };
 

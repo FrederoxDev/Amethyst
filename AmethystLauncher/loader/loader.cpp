@@ -1,4 +1,4 @@
-#include "loader.h"
+#include "Loader.h"
 #include <filesystem>
 #include <tlhelp32.h>
 
@@ -28,7 +28,7 @@ DWORD GetProcessIdByName(const wchar_t* processName) {
 
 namespace fs = std::filesystem;
 
-std::string modLoader::GetAmethystPath() 
+std::string ModLoader::GetAmethystPath() 
 {
     std::string baseAmethystPath = "";
 	char* appdata = getenv("appdata");
@@ -36,7 +36,7 @@ std::string modLoader::GetAmethystPath()
         printf("Could not find amethyst path\n");
 		std::abort();
 	}
-	baseAmethystPath = std::string(appdata) + "\\amethyst";
+	baseAmethystPath = std::string(appdata) + "/amethyst";
     if (!fs::exists(baseAmethystPath)) {
         // I would be using getenv but that is throwing an exception for some reason so no
 		printf("Could not find amethyst path\n");
@@ -46,16 +46,16 @@ std::string modLoader::GetAmethystPath()
 	return baseAmethystPath;
 }
 
-modLoader::modLoader() 
+ModLoader::ModLoader() 
 {
 	// We do this so we dont have to call GetAmethystPath() constantly which is slow 
-	amethystPath = GetAmethystPath();
-	modsPath = amethystPath + "\\mods";
+	mAmethystPath = GetAmethystPath();
+	mModsPath = mAmethystPath + "/mods";
     getMinecraftWindowHandle();
 }
 
 // This code was yoinked from my mod loader SBL https://github.com/Duckos-Mods/SBL/blob/master/src/core/loader.cpp xD
-void modLoader::getMinecraftWindowHandle()
+void ModLoader::getMinecraftWindowHandle()
 {
     printf("Getting minecraft window handle\n");
     DWORD procID = GetProcessIdByName(L"Minecraft.Windows.exe");
@@ -70,13 +70,13 @@ void modLoader::getMinecraftWindowHandle()
     }
 
     HANDLE procHandle = OpenProcess(PROCESS_ALL_ACCESS, FALSE, procID);
-    _minecraftWindowHandle = procHandle;
+    mMinecraftWindowHandle = procHandle;
 }
 
-void modLoader::InjectRuntime()
+void ModLoader::InjectRuntime()
 {
 	// Get the path to the amethyst runtime dll
-    std::string runtimePath = modsPath + "/AmethystRuntime/AmethystRuntime.dll"; // get the path to the runtime dll from the mods folder
+    std::string runtimePath = mModsPath + "/AmethystRuntime/AmethystRuntime.dll"; // get the path to the runtime dll from the mods folder
     if (!fs::exists(runtimePath)) {
         printf("Could not find runtime dll at %s\n", runtimePath.c_str());
 		std::abort();
@@ -87,21 +87,21 @@ void modLoader::InjectRuntime()
     injectDLL(runtimePath);
 }	
 
-void modLoader::injectDLL(const std::string& path) 
+void ModLoader::injectDLL(const std::string& path) 
 {
-    LPVOID dll = VirtualAllocEx(_minecraftWindowHandle, NULL, path.length() + 1, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+    LPVOID dll = VirtualAllocEx(mMinecraftWindowHandle, NULL, path.length() + 1, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
     if (dll == NULL)
     {
 		printf("Failed to allocate memory for dll\n");
 		return;
 	}
-    if (!WriteProcessMemory(_minecraftWindowHandle, dll, path.c_str(), path.length() + 1, NULL))
+    if (!WriteProcessMemory(mMinecraftWindowHandle, dll, path.c_str(), path.length() + 1, NULL))
     {
 		printf("Failed to write dll to memory\n");
 		return;
 	}
 
-	HANDLE thread = CreateRemoteThread(_minecraftWindowHandle, NULL, NULL, (LPTHREAD_START_ROUTINE)LoadLibraryA, dll, NULL, NULL);
+	HANDLE thread = CreateRemoteThread(mMinecraftWindowHandle, NULL, NULL, (LPTHREAD_START_ROUTINE)LoadLibraryA, dll, NULL, NULL);
     if (thread == NULL)
     {
 		printf("Failed to create remote thread\n");
@@ -109,5 +109,5 @@ void modLoader::injectDLL(const std::string& path)
 	}
 
 	WaitForSingleObject(thread, INFINITE);
-	VirtualFreeEx(_minecraftWindowHandle, dll, 0, MEM_RELEASE);
+	VirtualFreeEx(mMinecraftWindowHandle, dll, 0, MEM_RELEASE);
 }
