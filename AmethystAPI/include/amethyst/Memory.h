@@ -27,3 +27,11 @@ uintptr_t SlideAddress(uintptr_t offset);
 Finds an address of a function with its signature within the loaded game memory
 */
 uintptr_t SigScan(std::string signature);
+
+/*
+Finds an address of a function with its signature in the loaded game memory, This function uses as many threads as the CPU has cores
+*/
+uintptr_t multiThreadedSigScan(
+	const std::string* sig,
+	const std::vector<bool>& mask
+);
