@@ -5,6 +5,37 @@ std::vector<ModTick> g_mod_tick;
 std::vector<ModStartJoinGame> g_mod_start_join;
 std::vector<ModShutdown> g_mod_shutdown;
 
+void AmethystRuntime::ReadModList() {
+    std::string modlistPath = GetAmethystUWPFolder() + "modlist.txt";
+    Log::Info("[AmethystRuntime] Loading mods from: {}\n", modlistPath);
+
+    if (!fs::exists(modlistPath)) {
+        Log::Error("[AmethystRuntime] Could not find modlist.txt\n\tat '{}'\n", modlistPath);
+        throw std::exception();
+    }
+
+    // Attempt to open modlist.txt
+    std::ifstream modlistFile(modlistPath);
+    if (!modlistFile.is_open()) {
+        Log::Error("[AmethystRuntime] Failed to open modlist.txt\n\tat '{}'", modlistPath);
+        throw std::exception();
+    }
+
+    // Mod::Mod can throw so make sure that the file is closed and re-throw so its managed elsewhere
+    try {
+        std::string line;
+        while (std::getline(modlistFile, line)) {
+            m_mods.push_back(Mod(line));
+        }
+    }
+    catch (std::exception e) {
+        modlistFile.close();
+        throw e;
+    }
+    
+    modlistFile.close();
+}
+
 void AmethystRuntime::LoadMods() {
     MH_STATUS status = MH_Initialize();
     if (status != MH_OK) {
@@ -13,6 +44,7 @@ void AmethystRuntime::LoadMods() {
     }
 
     this->AttachDebugger();
+    this->ReadModList();
 
     for each (auto mod in m_mods)
     {

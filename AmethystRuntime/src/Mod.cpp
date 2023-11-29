@@ -1,6 +1,6 @@
 #include "Mod.h"
 
-Mod::Mod(const char* mod_name) {
+Mod::Mod(std::string mod_name) {
 	this->mod_name = mod_name;
 	fs::path dll_path = GetTempDll();
 

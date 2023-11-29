@@ -4,6 +4,9 @@
 #include "client/common/client/game/ClientInstance.h"
 #include "MinHook.h"
 #include "amethyst/HookManager.h"
+#include "Utils.h"
+#include <fstream>
+#include <sstream>
 
 typedef void(*ModInitializeHooks)();
 typedef void(*ModTick)();
@@ -20,5 +23,6 @@ public:
 	void Shutdown();
 
 private:
+	void ReadModList();
 	void AttachDebugger();
 };

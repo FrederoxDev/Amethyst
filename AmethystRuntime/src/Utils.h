@@ -4,4 +4,5 @@
 #include <string>
 #include "amethyst/Log.h"
 
+std::string GetAmethystUWPFolder();
 std::string GetAmethystFolder();
