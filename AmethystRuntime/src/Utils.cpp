@@ -33,7 +33,7 @@ std::string GetAmethystUWPFolder() {
     }
 
     if (path == 0) {
-        Log::Error("%AppData% was 0\n");
+        Log::Error("%LocalAppData% was 0\n");
         throw std::exception();
     }
 

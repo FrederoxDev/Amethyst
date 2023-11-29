@@ -10,17 +10,17 @@ Mod::Mod(std::string mod_name) {
 		DWORD error = GetLastError();
 
 		if (error == 0x5) {
-			Log::Error("[{}] '{}' does not have the required privileges!\n", mod_name, dll_path.string());
+			Log::Error("[AmethystRuntime] '{}' does not have the required privileges!\n", dll_path.string());
 			throw std::exception();
 		}
 
 		else if (error == 0x7e) {
-			Log::Error("[{}] Failed to find '{}'\n", mod_name, dll_path.string());
+			Log::Error("[AmethystRuntime] Failed to find '{}'\n", dll_path.string());
 			throw std::exception();
 		}
 
 		else {
-			Log::Error("[{}] Failed to load {}.dll, error code: 0x{:x}\n", mod_name, mod_name, error);
+			Log::Error("[AmethystRuntime] Failed to load '{}.dll', error code: 0x{:x}\n", mod_name, error);
 			throw std::exception();
 		}
 	}
@@ -43,7 +43,7 @@ fs::path Mod::GetTempDll() {
 
 	fs::path original_dll = GetAmethystFolder() + "mods/" + mod_name + "/" + mod_name + ".dll";
 	if (!fs::exists(original_dll)) {
-		Log::Error("[{}] Could not find {}.dll\n", mod_name, mod_name);
+		Log::Error("[AmethystRuntime] Could not find '{}.dll'\n", mod_name);
 		throw std::exception();
 	}
 
