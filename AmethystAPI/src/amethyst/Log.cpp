@@ -16,6 +16,7 @@ namespace Log {
 		GetConsoleMode(consoleHandle, &consoleMode);
 		consoleMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
 		SetConsoleMode(consoleHandle, consoleMode);
+		SetConsoleTitle("AmethystAPI");
 	}
 
 	void DestroyConsole() {

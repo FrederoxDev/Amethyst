@@ -48,11 +48,8 @@ uintptr_t SigScan(std::string signature) {
 	std::vector<byte> bytes;
 
 	GenerateSigscanMask(signature, wildcardMask, bytes);
-
-	auto start_time = std::chrono::high_resolution_clock::now();
 	uintptr_t base = GetMinecraftBaseAddress();
 	uintptr_t size = GetMinecraftSize();
-
 
 	// Brute force algorithm
 	for (uintptr_t address = base; address < base + size; address++) {
