@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 #include "Mod.h"
-#include "client/common/client/game/ClientInstance.h"
+#include "minecraft/src-client/common/client/game/ClientInstance.h"
 #include "MinHook.h"
 #include "amethyst/HookManager.h"
 #include "Utils.h"

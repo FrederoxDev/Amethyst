@@ -1,7 +1,7 @@
 #include "dllmain.h"
 #include <vector>
 #include <cstdlib>
-#include "client/common/client/game/ClientInstance.h"
+#include "minecraft/src-client/common/client/game/ClientInstance.h"
 #include "Mod.h"
 #include "AmethystRuntime.h"
 #include "amethyst/Log.h"
