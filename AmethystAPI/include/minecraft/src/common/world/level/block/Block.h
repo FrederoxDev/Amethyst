@@ -1,5 +1,5 @@
 #pragma once
-#include "core/math/Color.h"
+#include "minecraft/src-deps/core/math/Color.h"
 #include "minecraft/src/common/world/level/BlockSource.h"
 #include "minecraft/src/common/world/level/BlockPos.h"
 #include "amethyst/Memory.h"
