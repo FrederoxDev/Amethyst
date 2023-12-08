@@ -8,11 +8,16 @@ Mono-repository for the core AmethystAPI projects.
 
 **AmethystLauncher**: An application which is in charge of starting minecraft and injecting the AmethystRuntime mod
 
-## Creating a mod
+# Creating a mod
 ```cmake
 cmake_minimum_required(VERSION 3.12)
 project(ModName) # Replace with the name of your mod
 
+# Define only RelWithDebInfo as the available build configuration
+set(CMAKE_CONFIGURATION_TYPES "RelWithDebInfo" CACHE STRING "Build configurations" FORCE)
+set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Choose the type of build, options are: Debug Release RelWithDebInfo" FORCE)
+
+# Project Configuration
 set(AmethystFolder "$ENV{appdata}/Amethyst")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO "${AmethystFolder}/mods/${PROJECT_NAME}")
 
@@ -26,10 +31,10 @@ add_library(${PROJECT_NAME} SHARED ${CPP_SOURCES} ${H_FILES})
 target_link_libraries(${PROJECT_NAME} PRIVATE ${AMETHYST_API})
 target_link_libraries(${PROJECT_NAME} PRIVATE "${AmethystFolder}/lib/fmt.lib")
 target_link_libraries(${PROJECT_NAME} PRIVATE "${AmethystFolder}/lib/libMinHook.x64.lib")
+
 ```
 
 ## Goals of AmethystAPI
-
  - AmethystAPI does not aim to have completed headers
  - Add to headers as needed for projects
  - Sticking to one version (currently 1.20.30.02)
