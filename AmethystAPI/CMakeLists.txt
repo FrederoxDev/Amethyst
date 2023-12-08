@@ -1,10 +1,12 @@
 cmake_minimum_required(VERSION 3.12)
 project(AmethystAPI)
 
-set(CMAKE_BUILD_TYPE RelWithDebInfo)
+# Define only RelWithDebInfo as the available build configuration
+set(CMAKE_CONFIGURATION_TYPES "RelWithDebInfo" CACHE STRING "Build configurations" FORCE)
+set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Choose the type of build, options are: Debug Release RelWithDebInfo" FORCE)
 
+# Project Configuration
 set(AmethystFolder "$ENV{appdata}/Amethyst")
-message("${AmethystFolder}/lib")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELWITHDEBINFO "${AmethystFolder}/lib")
 
 file(GLOB_RECURSE CPP_SOURCES "src/*.cpp")
@@ -12,16 +14,25 @@ file(GLOB_RECURSE H_FILES "include/*.h")
 
 add_library(${PROJECT_NAME} STATIC ${CPP_SOURCES} ${H_FILES})
 
+# Organize source files into virtual folders in Visual Studio
+foreach(source IN LISTS CPP_SOURCES H_FILES)
+    get_filename_component(source_path "${source}" DIRECTORY)
+    string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}" "" source_path_relative "${source_path}")
+    string(REPLACE "/" "\\" source_path_relative "${source_path_relative}")
+    source_group("${source_path_relative}" FILES "${source}")
+endforeach()
+
 target_include_directories(${PROJECT_NAME} PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
     $<INSTALL_INTERFACE:include>
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
-    "lib/fmt.lib",
-    "lib/libMinHook.x64.lib"
+    lib/fmt.lib
+    lib/libMinHook.x64.lib
 )
 
+# Auto copy headers to %Appdata%/Amethyst/lib for use
 add_custom_command(
     TARGET ${PROJECT_NAME}
     POST_BUILD
