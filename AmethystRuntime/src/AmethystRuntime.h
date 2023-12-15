@@ -7,9 +7,7 @@
 #include "Utils.h"
 #include <fstream>
 #include <sstream>
-#include "Config.h"
-#include "Json.hpp"
-using json = nlohmann::json;
+#include "amethyst/Config.h"
 
 typedef void(*ModInitializeHooks)();
 typedef void(*ModTick)();
@@ -18,7 +16,6 @@ typedef void(*ModShutdown)();
 
 class AmethystRuntime {
 private:
-	Config m_config;
 	std::vector<Mod> m_mods;
 
 public:
@@ -27,6 +24,6 @@ public:
 	void Shutdown();
 
 private:
-	void ReadConfig();
+	Config ReadConfig();
 	void AttachDebugger();
 };

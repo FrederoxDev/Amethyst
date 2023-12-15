@@ -5,7 +5,7 @@ std::vector<ModTick> g_mod_tick;
 std::vector<ModStartJoinGame> g_mod_start_join;
 std::vector<ModShutdown> g_mod_shutdown;
 
-void AmethystRuntime::ReadConfig() {
+Config AmethystRuntime::ReadConfig() {
     // Ensure it exists
     std::string configPath = GetAmethystUWPFolder() + "config.json";
     Log::Info("[AmethystRuntime] Loading config from: {}\n", configPath);
@@ -21,45 +21,13 @@ void AmethystRuntime::ReadConfig() {
         throw std::exception();
     }
     
-    // Read config.json
-    json data;
-    try {
-        data = json::parse(configFile);
-    }
-    catch (std::exception e) {
-        Log::Error("[AmethystRuntime] Failed to parse config.json\n");
-        configFile.close();
-        throw e;
-    }
-
+    // Read into a std::string
+    std::stringstream buffer;
+    buffer << configFile.rdbuf();
     configFile.close();
+    std::string fileContents = buffer.str();
 
-    // Verify all fields are correct in config.json
-    if (!data["runtime"].is_string()) {
-        throw std::exception("Required field \"runtime\" should be of type \"string\" in config.json");
-    }
-
-    if (!data["mods"].is_array()) {
-        throw std::exception("Required field \"mods\" should be of type \"string[]\" in config.json");
-    }
-
-    if (!data["prompt_debugger"].is_boolean()) {
-        throw std::exception("Required field \"prompt_debugger\" should be of type \"boolean\" in config.json");
-    }
-
-    for (const auto& element : data["mods"]) {
-        if (!element.is_string()) {
-            throw std::exception("Array \"mods\" in config.json should only contain strings");
-        }
-    }
-
-    // Set if debugger should be enabled
-    m_config.promptDebugger = data["prompt_debugger"];
-    
-    // Load each mod from the config.json
-    for (const auto& mod_name : data["mods"]) {
-        m_mods.push_back(Mod(mod_name));
-    }
+    return Config(fileContents);
 }
 
 void AmethystRuntime::LoadMods() {
@@ -71,8 +39,12 @@ void AmethystRuntime::LoadMods() {
     }
 
     // Read config.json file
-    ReadConfig();
-    if (this->m_config.promptDebugger) AttachDebugger();
+    Config config = ReadConfig();
+    for each (auto& modName in config.mods) {
+        this->m_mods.push_back(Mod(modName));
+    }
+
+    if (config.promptDebugger) AttachDebugger();
 
     // Load functions from the mods
     for each (auto mod in m_mods)
