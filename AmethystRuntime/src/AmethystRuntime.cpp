@@ -5,47 +5,76 @@ std::vector<ModTick> g_mod_tick;
 std::vector<ModStartJoinGame> g_mod_start_join;
 std::vector<ModShutdown> g_mod_shutdown;
 
-void AmethystRuntime::ReadModList() {
-    std::string modlistPath = GetAmethystUWPFolder() + "modlist.txt";
-    Log::Info("[AmethystRuntime] Loading mods from: {}\n", modlistPath);
+void AmethystRuntime::ReadConfig() {
+    // Ensure it exists
+    std::string configPath = GetAmethystUWPFolder() + "config.json";
+    Log::Info("[AmethystRuntime] Loading config from: {}\n", configPath);
 
-    if (!fs::exists(modlistPath)) {
-        Log::Error("[AmethystRuntime] Could not find modlist.txt\n\tat '{}'\n", modlistPath);
+    if (!fs::exists(configPath)) {
+        Log::Error("[AmethystRuntime] Could not find config.json\n\tat '{}'\n", configPath);
         throw std::exception();
     }
 
-    // Attempt to open modlist.txt
-    std::ifstream modlistFile(modlistPath);
-    if (!modlistFile.is_open()) {
-        Log::Error("[AmethystRuntime] Failed to open modlist.txt\n\tat '{}'", modlistPath);
+    std::ifstream configFile(configPath);
+    if (!configFile.is_open()) {
+        Log::Error("[AmethystRuntime] Failed to open config.json\n\tat '{}'", configPath);
         throw std::exception();
-    }
-
-    // Mod::Mod can throw so make sure that the file is closed and re-throw so its managed elsewhere
-    try {
-        std::string line;
-        while (std::getline(modlistFile, line)) {
-            m_mods.push_back(Mod(line));
-        }
-    }
-    catch (std::exception e) {
-        modlistFile.close();
-        throw e;
     }
     
-    modlistFile.close();
+    // Read config.json
+    json data;
+    try {
+        data = json::parse(configFile);
+    }
+    catch (std::exception e) {
+        Log::Error("[AmethystRuntime] Failed to parse config.json\n");
+        configFile.close();
+        throw e;
+    }
+
+    configFile.close();
+
+    // Verify all fields are correct in config.json
+    if (!data["runtime"].is_string()) {
+        throw std::exception("Required field \"runtime\" should be of type \"string\" in config.json");
+    }
+
+    if (!data["mods"].is_array()) {
+        throw std::exception("Required field \"mods\" should be of type \"string[]\" in config.json");
+    }
+
+    if (!data["prompt_debugger"].is_boolean()) {
+        throw std::exception("Required field \"prompt_debugger\" should be of type \"boolean\" in config.json");
+    }
+
+    for (const auto& element : data["mods"]) {
+        if (!element.is_string()) {
+            throw std::exception("Array \"mods\" in config.json should only contain strings");
+        }
+    }
+
+    // Set if debugger should be enabled
+    m_config.promptDebugger = data["prompt_debugger"];
+    
+    // Load each mod from the config.json
+    for (const auto& mod_name : data["mods"]) {
+        m_mods.push_back(Mod(mod_name));
+    }
 }
 
 void AmethystRuntime::LoadMods() {
+    // Initialize MinHook
     MH_STATUS status = MH_Initialize();
     if (status != MH_OK) {
         Log::Error("MH_Initialize failed! Reason: {}\n", MH_StatusToString(status));
         throw std::exception("MH_Initialize failed!");
     }
 
-    this->AttachDebugger();
-    this->ReadModList();
+    // Read config.json file
+    ReadConfig();
+    if (this->m_config.promptDebugger) AttachDebugger();
 
+    // Load functions from the mods
     for each (auto mod in m_mods)
     {
         FARPROC addr;

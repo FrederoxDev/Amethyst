@@ -10,7 +10,7 @@ set(AmethystFolder "$ENV{appdata}/Amethyst")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO "${AmethystFolder}/mods/${PROJECT_NAME}")
 
 find_library(AMETHYST_API AmethystAPI PATHS "${AmethystFolder}/lib")
-include_directories(${AmethystFolder}/include)
+include_directories(${AmethystFolder}/include "include/")
 
 file(GLOB_RECURSE CPP_SOURCES "src/*.cpp")
 file(GLOB_RECURSE H_FILES "src/*.h")

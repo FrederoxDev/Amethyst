@@ -27,7 +27,7 @@ DWORD WINAPI Main() {
         g_runtime.RunMods();
     }
     catch (std::exception e) {
-        Log::Error("[AmethystRuntime] {}\n", e.what());
+        Log::Error("[AmethystRuntime] Uncaught Exception: {}\n", e.what());
         ShutdownWait();
         return 1;
     }
