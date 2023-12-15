@@ -18,7 +18,7 @@ public:
 private:
 	std::string GetAmethystPath();
 	void getMinecraftWindowHandle();
-	void injectDLL(const std::string& dllPath);
+	void InjectDLL(const std::string& dllPath);
 
 private:
 	Config mConfig;

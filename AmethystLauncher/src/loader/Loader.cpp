@@ -1,10 +1,10 @@
 #include "Loader.h"
+namespace fs = std::filesystem;
 
 void ReportIssue(LPCWSTR message) {
     MessageBoxW(NULL, message, L"AmethystLauncher", MB_ICONERROR | MB_OK);
 }
 
-// Function to get process handle by name
 DWORD GetProcessIdByName(const wchar_t* processName) {
     DWORD processId = 0;
     HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
@@ -31,7 +31,34 @@ DWORD GetProcessIdByName(const wchar_t* processName) {
     return processId;
 }
 
-namespace fs = std::filesystem;
+std::string GetAmethystUWPFolder() {
+    char* path;
+    size_t path_length;
+    errno_t err = _dupenv_s(&path, &path_length, "LocalAppData");
+
+    if (err) {
+        ReportIssue(L"_dupenv_s failed to find %LocalAppData%");
+        throw std::exception();
+    }
+
+    if (path == 0) {
+        ReportIssue(L"%LocalAppData% was 0");
+        throw std::exception();
+    }
+
+    std::string app_data(path);
+    free(path);
+
+    std::string amethyst_folder = app_data + "/Packages/Microsoft.MinecraftUWP_8wekyb3d8bbwe/AC/Amethyst/";
+    return amethyst_folder;
+}
+
+ModLoader::ModLoader(Config config) : mConfig(config)
+{
+    mAmethystPath = GetAmethystPath();
+    mModsPath = mAmethystPath + "/mods";
+    getMinecraftWindowHandle();
+}
 
 std::string ModLoader::GetAmethystPath() 
 {
@@ -51,14 +78,6 @@ std::string ModLoader::GetAmethystPath()
 	return baseAmethystPath;
 }
 
-ModLoader::ModLoader(Config config) : mConfig(config)
-{
-	mAmethystPath = GetAmethystPath();
-	mModsPath = mAmethystPath + "/mods";
-    getMinecraftWindowHandle();
-}
-
-// This code was yoinked from my mod loader SBL https://github.com/Duckos-Mods/SBL/blob/master/src/core/loader.cpp xD
 void ModLoader::getMinecraftWindowHandle()
 {
     DWORD procID = GetProcessIdByName(L"Minecraft.Windows.exe");
@@ -87,17 +106,17 @@ void ModLoader::InjectRuntime()
     }
     
     std::string runtimePath = fmt::format("{}/{}/{}.dll", mModsPath, mConfig.injectedMod, mod_shortened);
-    Log::Info("{}\n", runtimePath);
+    Log::Info("Runtime: {}\n", runtimePath);
 
     if (!fs::exists(runtimePath)) {
         ReportIssue(L"Failed to find AmethystRuntime.dll");
 		std::abort();
 	}
 
-    injectDLL(runtimePath);
+    InjectDLL(runtimePath);
 }	
 
-void ModLoader::injectDLL(const std::string& path) 
+void ModLoader::InjectDLL(const std::string& path) 
 {
     LPVOID dll = VirtualAllocEx(mMinecraftWindowHandle, NULL, path.length() + 1, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
     if (dll == NULL)
@@ -120,26 +139,4 @@ void ModLoader::injectDLL(const std::string& path)
 
 	WaitForSingleObject(thread, INFINITE);
 	VirtualFreeEx(mMinecraftWindowHandle, dll, 0, MEM_RELEASE);
-}
-
-std::string GetAmethystUWPFolder() {
-    char* path;
-    size_t path_length;
-    errno_t err = _dupenv_s(&path, &path_length, "LocalAppData");
-
-    if (err) {
-        Log::Error("_dupenv_s failed to find %LocalAppData%\n");
-        throw std::exception();
-    }
-
-    if (path == 0) {
-        Log::Error("%LocalAppData% was 0\n");
-        throw std::exception();
-    }
-
-    std::string app_data(path);
-    free(path);
-
-    std::string amethyst_folder = app_data + "/Packages/Microsoft.MinecraftUWP_8wekyb3d8bbwe/AC/Amethyst/";
-    return amethyst_folder;
 }
