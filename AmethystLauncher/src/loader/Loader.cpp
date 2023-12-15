@@ -1,6 +1,6 @@
 #include "Loader.h"
 
-void ModLoader::ReportIssue(LPCWSTR message) {
+void ReportIssue(LPCWSTR message) {
     MessageBoxW(NULL, message, L"AmethystLauncher", MB_ICONERROR | MB_OK);
 }
 
@@ -51,9 +51,8 @@ std::string ModLoader::GetAmethystPath()
 	return baseAmethystPath;
 }
 
-ModLoader::ModLoader() 
+ModLoader::ModLoader(Config config) : mConfig(config)
 {
-	// We do this so we dont have to call GetAmethystPath() constantly which is slow 
 	mAmethystPath = GetAmethystPath();
 	mModsPath = mAmethystPath + "/mods";
     getMinecraftWindowHandle();
@@ -80,7 +79,16 @@ void ModLoader::getMinecraftWindowHandle()
 void ModLoader::InjectRuntime()
 {
 	// Get the path to the amethyst runtime dll
-    std::string runtimePath = mModsPath + "/AmethystRuntime/AmethystRuntime.dll"; // get the path to the runtime dll from the mods folder
+    std::string mod_shortened = mConfig.injectedMod;
+    size_t atPos = mod_shortened.find("@");
+
+    if (atPos != std::string::npos) {
+        mod_shortened = mod_shortened.substr(0, atPos);
+    }
+    
+    std::string runtimePath = fmt::format("{}/{}/{}.dll", mModsPath, mConfig.injectedMod, mod_shortened);
+    Log::Info("{}\n", runtimePath);
+
     if (!fs::exists(runtimePath)) {
         ReportIssue(L"Failed to find AmethystRuntime.dll");
 		std::abort();
@@ -112,4 +120,26 @@ void ModLoader::injectDLL(const std::string& path)
 
 	WaitForSingleObject(thread, INFINITE);
 	VirtualFreeEx(mMinecraftWindowHandle, dll, 0, MEM_RELEASE);
+}
+
+std::string GetAmethystUWPFolder() {
+    char* path;
+    size_t path_length;
+    errno_t err = _dupenv_s(&path, &path_length, "LocalAppData");
+
+    if (err) {
+        Log::Error("_dupenv_s failed to find %LocalAppData%\n");
+        throw std::exception();
+    }
+
+    if (path == 0) {
+        Log::Error("%LocalAppData% was 0\n");
+        throw std::exception();
+    }
+
+    std::string app_data(path);
+    free(path);
+
+    std::string amethyst_folder = app_data + "/Packages/Microsoft.MinecraftUWP_8wekyb3d8bbwe/AC/Amethyst/";
+    return amethyst_folder;
 }

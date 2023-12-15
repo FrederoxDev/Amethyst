@@ -1,5 +1,9 @@
 #include "amethyst/Config.h"
 
+Config::Config() {
+    
+}
+
 Config::Config(std::string& text) {
     // Parse config.json into json
     json data;

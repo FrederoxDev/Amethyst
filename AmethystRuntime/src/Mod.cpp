@@ -37,17 +37,24 @@ void Mod::Free() {
 }
 
 fs::path Mod::GetTempDll() {
+	std::string mod_shortened = mod_name; 
+	size_t atPos = mod_shortened.find("@");
+
+	if (atPos != std::string::npos) {
+		mod_shortened = mod_shortened.substr(0, atPos);
+	}
+
 	// Ensure temp directory exists
 	fs::path temp_dir = GetAmethystFolder() + "temp/" + mod_name + "/";
 	if (!fs::exists(temp_dir)) fs::create_directories(temp_dir);
 
-	fs::path original_dll = GetAmethystFolder() + "mods/" + mod_name + "/" + mod_name + ".dll";
+	fs::path original_dll = GetAmethystFolder() + "mods/" + mod_name + "/" + mod_shortened + ".dll";
 	if (!fs::exists(original_dll)) {
-		Log::Error("[AmethystRuntime] Could not find '{}.dll'\n", mod_name);
+		Log::Error("[AmethystRuntime] Could not find '{}.dll'\n", mod_shortened);
 		throw std::exception();
 	}
 
-	fs::path temp_dll = temp_dir.string() + mod_name + ".dll";
+	fs::path temp_dll = temp_dir.string() + mod_shortened + ".dll";
 
 	try {
 		fs::copy_file(original_dll, temp_dll, fs::copy_options::overwrite_existing);

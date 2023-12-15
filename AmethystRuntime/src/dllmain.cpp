@@ -19,8 +19,10 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
 
 DWORD WINAPI Main() {
     Log::InitializeConsole();
-    Log::Info("Minecraft Base Address: 0x{:x}\n", GetMinecraftBaseAddress());
-    Log::Info("Minecraft Size: 0x{:x}\n", GetMinecraftSize());
+
+    #ifdef MOD_VERSION
+    Log::Info("[AmethystRuntime] AmethystRuntime{}\n", MOD_VERSION);
+    #endif
 
     try {
         g_runtime.LoadMods();

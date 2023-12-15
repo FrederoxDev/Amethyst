@@ -8,7 +8,7 @@ std::vector<ModShutdown> g_mod_shutdown;
 Config AmethystRuntime::ReadConfig() {
     // Ensure it exists
     std::string configPath = GetAmethystUWPFolder() + "config.json";
-    Log::Info("[AmethystRuntime] Loading config from: {}\n", configPath);
+    Log::Info("[AmethystRuntime] Config: {}\n", configPath);
 
     if (!fs::exists(configPath)) {
         Log::Error("[AmethystRuntime] Could not find config.json\n\tat '{}'\n", configPath);
