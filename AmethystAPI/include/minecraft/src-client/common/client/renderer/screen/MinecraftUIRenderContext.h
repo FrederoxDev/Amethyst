@@ -1,9 +1,50 @@
 #pragma once
 #include <stdint.h>
+#include <string>
+#include "minecraft/src-deps/core/math/Color.h"
+#include "minecraft/src-client/common/client/game/ClientInstance.h"
 
-class ClientInstance;
+using IClientInstance = ClientInstance;
 class ScreenContext;
 class UIScene;
+class Font;
+
+#pragma pack(push, 4)
+struct RectangleArea {
+    float _x0;
+    float _x1;
+    float _y0;
+    float _y1;
+};
+#pragma pack(pop)
+
+namespace ui {
+    enum TextAlignment : uint8_t {
+        Left = 0x0,
+        Center = 0x2
+    };
+}
+
+#pragma pack(push, 4)
+struct TextMeasureData {
+    float fontSize;          
+    int linePadding;       
+    bool renderShadow;     
+    bool showColorSymbol;  
+    bool hideHyphen;       
+    char undefined;        
+};
+#pragma pack(pop)
+
+#pragma pack(push, 4)
+struct CaretMeasureData {
+    int position;        
+    bool shouldRender;   
+    char undefined1;   
+    char undefined2;  
+    char undefined3;   
+};
+#pragma pack(pop)
 
 class MinecraftUIRenderContext {
 private:
@@ -11,17 +52,18 @@ private:
 
 public:
     // 48 89 5C 24 ? 48 89 74 24 ? 48 89 4C 24 ? 57 48 83 EC ? 49 8B F9 48 8B DA 48 8B F1 48 8D 05
-    typedef MinecraftUIRenderContext*(__thiscall* _MinecraftUIRenderContext)(MinecraftUIRenderContext*, ClientInstance&, ScreenContext&, const UIScene&);
-    MinecraftUIRenderContext(ClientInstance&, ScreenContext&, const UIScene&);
+    typedef MinecraftUIRenderContext*(__thiscall* _MinecraftUIRenderContext)(MinecraftUIRenderContext*, IClientInstance&, ScreenContext&, const UIScene&);
+    MinecraftUIRenderContext(IClientInstance& client, ScreenContext& screenContext, const UIScene& currentScene);
 
 public:
     // vfuncs:
     // ~MinecraftUIRenderContext();
-    // getLineLength(Font &, std::string const &, float, bool);
-    // getTextAlpha(void);
-    // setTextAlpha(float);
-    // drawDebugText(RectangleArea const &, std::string const &, mce::Color const &, float, ui::TextAlignment, TextMeasureData const &, CaretMeasureData const &);
-    // drawText(Font &, RectangleArea const &, std::string const &, mce::Color const &, float, ui::TextAlignment, TextMeasureData const &, CaretMeasureData const &);
+    uint64_t getLineLength(Font& font, const std::string& text, float fontSize, bool showColorSymbol);
+    float getTextAlpha();
+    void setTextAlpha(float alpha);
+    void drawDebugText(const RectangleArea& rect, const std::string& text, const mce::Color& color, float alpha, ui::TextAlignment alignment, const TextMeasureData& textData, const CaretMeasureData& caretData);
+    void drawText(Font& font, const RectangleArea& rect, const std::string& text, const mce::Color& color, float alpha, ui::TextAlignment alignment, const TextMeasureData& textData, const CaretMeasureData& caretData);
+
     // flushText(float);
     // drawImage(mce::TexturePtr const &, glm::vec<2, float, (glm::qualifier)0> const &, glm::vec<2, float, (glm::qualifier)0> const &, glm::vec<2, float, (glm::qualifier)0> const &, glm::vec<2, float, (glm::qualifier)0> const &);
     // drawNineslice(mce::TexturePtr const &, NinesliceInfo const &);
