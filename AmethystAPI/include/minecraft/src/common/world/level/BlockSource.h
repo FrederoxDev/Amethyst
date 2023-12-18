@@ -14,5 +14,5 @@ private:
     // BlockSource::BlockSource - 0x3146820
 
 public:
-    virtual const Block* getBlock(const BlockPos&);
+    const Block* getBlock(const BlockPos&);
 };

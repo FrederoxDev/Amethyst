@@ -27,41 +27,43 @@ namespace ui {
 
 #pragma pack(push, 4)
 struct TextMeasureData {
-    float fontSize;          
-    int linePadding;       
-    bool renderShadow;     
-    bool showColorSymbol;  
-    bool hideHyphen;       
-    char undefined;        
+    float fontSize;
+    int linePadding;
+    bool renderShadow;
+    bool showColorSymbol;
+    bool hideHyphen;
+    char undefined;
 };
 #pragma pack(pop)
 
 #pragma pack(push, 4)
 struct CaretMeasureData {
-    int position;        
-    bool shouldRender;   
-    char undefined1;   
-    char undefined2;  
-    char undefined3;   
+    int position;
+    bool shouldRender;
+    char undefined1;
+    char undefined2;
+    char undefined3;
 };
 #pragma pack(pop)
 
 class MinecraftUIRenderContext {
 private:
-    uintptr_t **vtable;
+    uintptr_t** vtable;
 
 public:
     // 48 89 5C 24 ? 48 89 74 24 ? 48 89 4C 24 ? 57 48 83 EC ? 49 8B F9 48 8B DA 48 8B F1 48 8D 05
-    typedef MinecraftUIRenderContext*(__thiscall* _MinecraftUIRenderContext)(MinecraftUIRenderContext*, IClientInstance&, ScreenContext&, const UIScene&);
+    typedef MinecraftUIRenderContext* (__thiscall* _MinecraftUIRenderContext)(MinecraftUIRenderContext*, IClientInstance&, ScreenContext&, const UIScene&);
     MinecraftUIRenderContext(IClientInstance& client, ScreenContext& screenContext, const UIScene& currentScene);
 
 public:
     // vfuncs:
     // ~MinecraftUIRenderContext();
-    uint64_t getLineLength(Font& font, const std::string& text, float fontSize, bool showColorSymbol);
+    float getLineLength(Font& font, const std::string& text, float fontSize, bool showColorSymbol);
     float getTextAlpha();
     void setTextAlpha(float alpha);
-    void drawDebugText(const RectangleArea& rect, const std::string& text, const mce::Color& color, float alpha, ui::TextAlignment alignment, const TextMeasureData& textData, const CaretMeasureData& caretData);
+
+    // text and color need to stay valid after call
+    void drawDebugText(const RectangleArea* rect, const std::string* text, const mce::Color* color, float alpha, ui::TextAlignment alignment, const TextMeasureData* textData, const CaretMeasureData* caretData);
     void drawText(Font& font, const RectangleArea& rect, const std::string& text, const mce::Color& color, float alpha, ui::TextAlignment alignment, const TextMeasureData& textData, const CaretMeasureData& caretData);
 
     // flushText(float);
