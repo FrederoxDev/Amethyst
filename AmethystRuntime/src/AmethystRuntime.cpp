@@ -4,6 +4,7 @@ std::vector<ModInitializeHooks> g_mod_initialize;
 std::vector<ModTick> g_mod_tick;
 std::vector<ModStartJoinGame> g_mod_start_join;
 std::vector<ModShutdown> g_mod_shutdown;
+std::vector<ModRender> g_mod_render;
 
 Config AmethystRuntime::ReadConfig() {
     // Ensure it exists
@@ -66,6 +67,11 @@ void AmethystRuntime::LoadMods() {
             g_mod_start_join.push_back(reinterpret_cast<ModStartJoinGame>(addr));
         }
 
+        addr = mod.GetFunction("OnRenderUI");
+        if (addr != NULL) {
+            g_mod_render.push_back(reinterpret_cast<ModRender>(addr));
+        }
+
         addr = mod.GetFunction("Shutdown");
         if (addr != NULL) {
             g_mod_shutdown.push_back(reinterpret_cast<ModShutdown>(addr));
@@ -79,6 +85,10 @@ void AmethystRuntime::LoadMods() {
 }
 
 void AmethystRuntime::RunMods() {
+    // AmethystRuntime's own Hooks
+    InitializeHooks();
+
+    // Allow mods to create hooks
     for each (auto init_func in g_mod_initialize) init_func();
 
     while (true) {
@@ -98,7 +108,24 @@ void AmethystRuntime::RunMods() {
     }
 }
 
+ScreenView::_setupAndRender _ScreenView_setupAndRender;
+
+static void* ScreenView_setupAndRender(ScreenView* self, UIRenderContext* ctx) {
+    for each (auto render_func in g_mod_render) render_func(self, ctx);
+
+    return _ScreenView_setupAndRender(self, ctx);
+}
+
+void AmethystRuntime::InitializeHooks() {
+    g_hookManager.CreateHook(
+        SigScan("48 8B C4 48 89 58 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D A8 ? ? ? ? 48 81 EC ? ? ? ? 0F 29 70 ? 0F 29 78 ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4C 8B FA 48 89 54 24 ? 4C 8B E9 48 89 4C 24"),
+        &ScreenView_setupAndRender, reinterpret_cast<void**>(&_ScreenView_setupAndRender)
+    );
+}
+
 void AmethystRuntime::Shutdown() {
+    g_hookManager.Shutdown();
+
     // Allow each mod to have its shutdown logic
     for each (auto shutdown_func in g_mod_shutdown) shutdown_func();
 
