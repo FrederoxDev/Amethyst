@@ -32,7 +32,6 @@ struct TextMeasureData {
     bool renderShadow;
     bool showColorSymbol;
     bool hideHyphen;
-    char undefined;
 };
 #pragma pack(pop)
 
@@ -40,15 +39,19 @@ struct TextMeasureData {
 struct CaretMeasureData {
     int position;
     bool shouldRender;
-    char undefined1;
-    char undefined2;
-    char undefined3;
 };
 #pragma pack(pop)
 
 class MinecraftUIRenderContext {
 private:
     uintptr_t** vtable;
+public:
+    IClientInstance* mClient;
+    void* mScreenContext; // ScreenContext*
+private:
+    bool padding0[224];
+public:
+    void* mCurrentScene; // const UIScene*, this + 248
 
 public:
     // 48 89 5C 24 ? 48 89 74 24 ? 48 89 4C 24 ? 57 48 83 EC ? 49 8B F9 48 8B DA 48 8B F1 48 8D 05

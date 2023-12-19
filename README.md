@@ -34,6 +34,25 @@ target_link_libraries(${PROJECT_NAME} PRIVATE "${AmethystFolder}/lib/fmt.lib")
 target_link_libraries(${PROJECT_NAME} PRIVATE "${AmethystFolder}/lib/libMinHook.x64.lib")
 ```
 
+## Mod Functions
+A mod can define functions that will be called by AmethystRuntime.
+```cpp
+// Called when a mod is loaded by AmethystAPI, used to create hooks
+extern "C" __declspec(dllexport) void Initialize();
+
+// Called every 50ms, currently not hooked into a real tick function
+extern "C" __declspec(dllexport) void OnTick();
+
+// ClientInstance::onStartJoinGame
+extern "C" __declspec(dllexport) void OnStartJoinGame(ClientInstance* clientInstance);
+
+// Hooked ScreenView::setupAndRender for mods to draw UI
+extern "C" __declspec(dllexport) void OnRenderUI(ScreenView* screenView, UIRenderContext* ctx);
+
+// Used to destroy hooks for hot-reloading
+extern "C" __declspec(dllexport) void Shutdown();
+```
+
 ## Goals of AmethystAPI
  - AmethystAPI does not aim to have completed headers
  - Add to headers as needed for projects
