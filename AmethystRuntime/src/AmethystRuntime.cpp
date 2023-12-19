@@ -140,6 +140,7 @@ void AmethystRuntime::Shutdown() {
     g_mod_tick.clear();
     g_mod_start_join.clear();
     g_mod_shutdown.clear();
+    g_mod_render.clear();
 
     // Disable MH and remove any created hooks
     MH_Uninitialize();
