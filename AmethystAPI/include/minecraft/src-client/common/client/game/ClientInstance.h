@@ -3,6 +3,7 @@
 #include "minecraft/src/common/world/level/BlockSource.h"
 #include "minecraft/src-client/common/client/player/LocalPlayer.h"
 #include "minecraft/src-client/common/client/game/MinecraftGame.h"
+#include "minecraft/src-client/common/client/gui/gui/GuiData.h"
 
 #pragma pack(push, 1)
 class ClientInstance {
@@ -11,6 +12,10 @@ private:
     bool padding0[192];
 public:
     MinecraftGame& minecraftGame;
+private:
+    bool padding1[1168];
+public:
+    GuiData* guiData;
 
 public:
     // 48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 81 EC ? ? ? ? 49 8B F8 0F B6 DA

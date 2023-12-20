@@ -3,9 +3,10 @@
 #include <string>
 #include "minecraft/src-deps/core/math/Color.h"
 #include "minecraft/src-client/common/client/game/ClientInstance.h"
+#include "minecraft/src/common/world/phys/Vec2.h"
+#include "minecraft/src-client/common/client/renderer/screen/ScreenContext.h"
 
 using IClientInstance = ClientInstance;
-class ScreenContext;
 class UIScene;
 class Font;
 
@@ -46,8 +47,8 @@ class MinecraftUIRenderContext {
 private:
     uintptr_t** vtable;
 public:
-    IClientInstance* mClient;
-    void* mScreenContext; // ScreenContext*
+    IClientInstance* mClient; // this + 8
+    ScreenContext* mScreenContext; // this + 16
 private:
     bool padding0[224];
 public:
@@ -64,19 +65,19 @@ public:
     float getLineLength(Font& font, const std::string& text, float fontSize, bool showColorSymbol);
     float getTextAlpha();
     void setTextAlpha(float alpha);
-
-    // text and color need to stay valid after call
     void drawDebugText(const RectangleArea* rect, const std::string* text, const mce::Color* color, float alpha, ui::TextAlignment alignment, const TextMeasureData* textData, const CaretMeasureData* caretData);
     void drawText(Font& font, const RectangleArea& rect, const std::string& text, const mce::Color& color, float alpha, ui::TextAlignment alignment, const TextMeasureData& textData, const CaretMeasureData& caretData);
+    void flushText(float deltaTime);
 
-    // flushText(float);
     // drawImage(mce::TexturePtr const &, glm::vec<2, float, (glm::qualifier)0> const &, glm::vec<2, float, (glm::qualifier)0> const &, glm::vec<2, float, (glm::qualifier)0> const &, glm::vec<2, float, (glm::qualifier)0> const &);
     // drawNineslice(mce::TexturePtr const &, NinesliceInfo const &);
     // flushImages(mce::Color const &, float, HashedString const &);
     // beginSharedMeshBatch(ComponentRenderBatch &);
     // endSharedMeshBatch(ComponentRenderBatch &);
-    // drawRectangle(RectangleArea const &, mce::Color const &, float, int);
-    // fillRectangle(RectangleArea const &, mce::Color const &, float);
+    
+    void drawRectangle(const RectangleArea *rect, const mce::Color *color, float alpha, int thickness);
+    void fillRectangle(const RectangleArea *rect, const mce::Color *color, float alpha);
+    
     // increaseStencilRef(void);
     // decreaseStencilRef(void);
     // resetStencilRef(void);

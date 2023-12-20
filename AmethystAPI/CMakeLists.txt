@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.12)
 project(AmethystAPI)
 
-
 # Define only RelWithDebInfo as the available build configuration
 set(CMAKE_CONFIGURATION_TYPES "RelWithDebInfo" CACHE STRING "Build configurations" FORCE)
 set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Choose the type of build, options are: Debug Release RelWithDebInfo" FORCE)
@@ -34,11 +33,11 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 )
 
 # Auto copy headers to %Appdata%/Amethyst/lib for use
-add_custom_command(
-    TARGET ${PROJECT_NAME}
-    POST_BUILD
+add_custom_target(CopyHeaders
     COMMENT "Copying .h and .lib's to ${AmethystFolder}"
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/include" "${AmethystFolder}/include"
     COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/lib/fmt.lib" "${AmethystFolder}/lib/fmt.lib"
     COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/lib/libMinHook.x64.lib" "${AmethystFolder}/lib/libMinHook.x64.lib"
 )
+
+add_dependencies(${PROJECT_NAME} CopyHeaders)

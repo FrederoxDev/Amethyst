@@ -19,3 +19,21 @@ void MinecraftUIRenderContext::drawDebugText(const RectangleArea* rect, const st
 	using function = void(__thiscall*)(MinecraftUIRenderContext*, const RectangleArea*, const std::string*, const mce::Color*, float, ui::TextAlignment, const TextMeasureData*, const CaretMeasureData*);
 	return reinterpret_cast<function>(this->vtable[4])(this, rect, text, color, alpha, alignment, textData, caretData);
 }
+
+void MinecraftUIRenderContext::flushText(float deltaTime)
+{
+	using function = void(__thiscall*)(MinecraftUIRenderContext*, float);
+	return reinterpret_cast<function>(this->vtable[6])(this, deltaTime);
+}
+
+void MinecraftUIRenderContext::drawRectangle(const RectangleArea* rect, const mce::Color* color, float alpha, int thickness)
+{
+	using function = void(__thiscall*)(MinecraftUIRenderContext*, const RectangleArea*, const mce::Color*, float, int);
+	return reinterpret_cast<function>(this->vtable[13])(this, rect, color, alpha, thickness);
+}
+
+void MinecraftUIRenderContext::fillRectangle(const RectangleArea* rect, const mce::Color* color, float alpha)
+{
+	using function = void(__thiscall*)(MinecraftUIRenderContext*, const RectangleArea*, const mce::Color*, float);
+	return reinterpret_cast<function>(this->vtable[14])(this, rect, color, alpha);
+}
