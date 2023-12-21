@@ -22,6 +22,7 @@ struct RectangleArea {
 namespace ui {
     enum TextAlignment : uint8_t {
         Left = 0x0,
+        Right = 0x1,
         Center = 0x2
     };
 }
@@ -42,6 +43,12 @@ struct CaretMeasureData {
     bool shouldRender;
 };
 #pragma pack(pop)
+
+namespace mce {
+    class TexturePtr;
+};
+
+class ResourceLocation;
 
 class MinecraftUIRenderContext {
 private:
@@ -74,10 +81,10 @@ public:
     // flushImages(mce::Color const &, float, HashedString const &);
     // beginSharedMeshBatch(ComponentRenderBatch &);
     // endSharedMeshBatch(ComponentRenderBatch &);
-    
+
     void drawRectangle(const RectangleArea *rect, const mce::Color *color, float alpha, int thickness);
     void fillRectangle(const RectangleArea *rect, const mce::Color *color, float alpha);
-    
+
     // increaseStencilRef(void);
     // decreaseStencilRef(void);
     // resetStencilRef(void);
@@ -93,7 +100,9 @@ public:
     // renderCustom(gsl::not_null<CustomRenderComponent *>, int, RectangleArea &);
     // cleanup(void);
     // removePersistentMeshes(void);
-    // getTexture(ResourceLocation const &, bool);
+
+    mce::TexturePtr* getTexture(mce::TexturePtr* result, const ResourceLocation* resourceLocation, bool forceReload);
+
     // getZippedTexture(Core::Path const &, ResourceLocation const &, bool);
     // unloadTexture(ResourceLocation const &);
     // getUITextureInfo(ResourceLocation const &, bool);
