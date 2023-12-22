@@ -3,7 +3,6 @@
 ///
 /// @see core (dependence)
 /// @see gtx_quaternion (dependence)
-/// @see gtx_component_wise (dependence)
 ///
 /// @defgroup gtx_norm GLM_GTX_norm
 /// @ingroup gtx
@@ -17,7 +16,6 @@
 // Dependency:
 #include "../geometric.hpp"
 #include "../gtx/quaternion.hpp"
-#include "../gtx/component_wise.hpp"
 
 #if GLM_MESSAGES == GLM_ENABLE && !defined(GLM_EXT_INCLUDED)
 #	ifndef GLM_ENABLE_EXPERIMENTAL
@@ -71,16 +69,6 @@ namespace glm
 	//! From GLM_GTX_norm extension.
 	template<typename T, qualifier Q>
 	GLM_FUNC_DECL T lxNorm(vec<3, T, Q> const& x, unsigned int Depth);
-
-	//! Returns the LMax norm between x and y.
-	//! From GLM_GTX_norm extension.
-	template<typename T, qualifier Q>
-	GLM_FUNC_DECL T lMaxNorm(vec<3, T, Q> const& x, vec<3, T, Q> const& y);
-
-	//! Returns the LMax norm of v.
-	//! From GLM_GTX_norm extension.
-	template<typename T, qualifier Q>
-	GLM_FUNC_DECL T lMaxNorm(vec<3, T, Q> const& x);
 
 	/// @}
 }//namespace glm

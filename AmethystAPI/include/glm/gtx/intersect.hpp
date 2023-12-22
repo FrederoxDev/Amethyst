@@ -66,7 +66,7 @@ namespace glm
 	template<typename genType>
 	GLM_FUNC_DECL bool intersectRaySphere(
 		genType const& rayStarting, genType const& rayNormalizedDirection,
-		genType const& sphereCenter, typename genType::value_type const sphereRadiusSquared,
+		genType const& sphereCenter, typename genType::value_type const sphereRadiusSquered,
 		typename genType::value_type & intersectionDistance);
 
 	//! Compute the intersection of a ray and a sphere.

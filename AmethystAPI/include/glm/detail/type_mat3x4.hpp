@@ -28,12 +28,12 @@ namespace glm
 		typedef length_t length_type;
 		GLM_FUNC_DECL static GLM_CONSTEXPR length_type length() { return 3; }
 
-		GLM_FUNC_DECL col_type & operator[](length_type i) GLM_NOEXCEPT;
-		GLM_FUNC_DECL GLM_CONSTEXPR col_type const& operator[](length_type i) const GLM_NOEXCEPT;
+		GLM_FUNC_DECL col_type & operator[](length_type i);
+		GLM_FUNC_DECL GLM_CONSTEXPR col_type const& operator[](length_type i) const;
 
 		// -- Constructors --
 
-		GLM_DEFAULTED_DEFAULT_CTOR_DECL GLM_CONSTEXPR mat() GLM_DEFAULT_CTOR;
+		GLM_FUNC_DECL GLM_CONSTEXPR mat() GLM_DEFAULT;
 		template<qualifier P>
 		GLM_FUNC_DECL GLM_CONSTEXPR mat(mat<3, 4, T, P> const& m);
 

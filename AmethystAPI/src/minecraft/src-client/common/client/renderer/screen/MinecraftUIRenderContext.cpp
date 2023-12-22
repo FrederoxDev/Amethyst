@@ -32,6 +32,12 @@ void MinecraftUIRenderContext::drawImage(const mce::TexturePtr& texture, const g
 	return reinterpret_cast<function>(this->vtable[7])(this, texture, position, size, uv, uvSize, degree);
 }
 
+void MinecraftUIRenderContext::flushImages(const mce::Color& color, float alpha, const HashedString& materialNameHash)
+{
+	using function = void(__thiscall*)(MinecraftUIRenderContext*, const mce::Color&, float, const HashedString&);
+	return reinterpret_cast<function>(this->vtable[9])(this, color, alpha, materialNameHash);
+}
+
 void MinecraftUIRenderContext::drawRectangle(const RectangleArea* rect, const mce::Color* color, float alpha, int thickness)
 {
 	using function = void(__thiscall*)(MinecraftUIRenderContext*, const RectangleArea*, const mce::Color*, float, int);

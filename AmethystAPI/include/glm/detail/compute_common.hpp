@@ -24,11 +24,11 @@ namespace detail
 		}
 	};
 
-#if (GLM_COMPILER & GLM_COMPILER_CUDA) || (GLM_COMPILER & GLM_COMPILER_HIP)
+#if GLM_COMPILER & GLM_COMPILER_CUDA
 	template<>
 	struct compute_abs<float, true>
 	{
-		GLM_FUNC_QUALIFIER static float call(float x)
+		GLM_FUNC_QUALIFIER GLM_CONSTEXPR static float call(float x)
 		{
 			return fabsf(x);
 		}

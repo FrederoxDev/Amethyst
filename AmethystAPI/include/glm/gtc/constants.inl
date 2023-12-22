@@ -21,12 +21,6 @@ namespace glm
 	}
 
 	template<typename genType>
-	GLM_FUNC_QUALIFIER GLM_CONSTEXPR genType tau()
-	{
-		return two_pi<genType>();
-	}
-
-	template<typename genType>
 	GLM_FUNC_QUALIFIER GLM_CONSTEXPR genType root_pi()
 	{
 		return genType(1.772453850905516027);
@@ -169,5 +163,4 @@ namespace glm
 	{
 		return genType(1.61803398874989484820458683436563811);
 	}
-
 } //namespace glm

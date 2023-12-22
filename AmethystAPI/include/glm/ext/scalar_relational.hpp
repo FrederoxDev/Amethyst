@@ -23,9 +23,6 @@
 
 namespace glm
 {
-	/// @addtogroup ext_scalar_relational
-	/// @{
-
 	/// Returns the component-wise comparison of |x - y| < epsilon.
 	/// True if this expression is satisfied.
 	///

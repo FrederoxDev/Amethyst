@@ -9,7 +9,7 @@
 ///
 /// Include <glm/gtx/associated_min_max.hpp> to use the features of this extension.
 ///
-/// @brief Min and max functions that return associated values not the compared ones.
+/// @brief Min and max functions that return associated values not the compared onces.
 
 #pragma once
 
@@ -31,13 +31,13 @@ namespace glm
 
 	/// Minimum comparison between 2 variables and returns 2 associated variable values
 	/// @see gtx_associated_min_max
-	template<typename T, typename U>
+	template<typename T, typename U, qualifier Q>
 	GLM_FUNC_DECL U associatedMin(T x, U a, T y, U b);
 
 	/// Minimum comparison between 2 variables and returns 2 associated variable values
 	/// @see gtx_associated_min_max
 	template<length_t L, typename T, typename U, qualifier Q>
-	GLM_FUNC_DECL vec<L, U, Q> associatedMin(
+	GLM_FUNC_DECL vec<2, U, Q> associatedMin(
 		vec<L, T, Q> const& x, vec<L, U, Q> const& a,
 		vec<L, T, Q> const& y, vec<L, U, Q> const& b);
 
@@ -115,7 +115,7 @@ namespace glm
 	/// Maximum comparison between 2 variables and returns 2 associated variable values
 	/// @see gtx_associated_min_max
 	template<length_t L, typename T, typename U, qualifier Q>
-	GLM_FUNC_DECL vec<L, U, Q> associatedMax(
+	GLM_FUNC_DECL vec<2, U, Q> associatedMax(
 		vec<L, T, Q> const& x, vec<L, U, Q> const& a,
 		vec<L, T, Q> const& y, vec<L, U, Q> const& b);
 

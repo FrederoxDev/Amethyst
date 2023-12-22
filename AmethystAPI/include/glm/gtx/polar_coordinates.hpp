@@ -28,7 +28,7 @@ namespace glm
 	/// @addtogroup gtx_polar_coordinates
 	/// @{
 
-	/// Convert Euclidean to Polar coordinates, x is the latitude, y the longitude and z the xz distance.
+	/// Convert Euclidean to Polar coordinates, x is the xz distance, y, the latitude and z the longitude.
 	///
 	/// @see gtx_polar_coordinates
 	template<typename T, qualifier Q>

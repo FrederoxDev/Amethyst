@@ -2,9 +2,9 @@ namespace glm
 {
 	// -- Constructors --
 
-#	if GLM_CONFIG_DEFAULTED_DEFAULT_CTOR == GLM_DISABLE
+#	if GLM_CONFIG_DEFAULTED_FUNCTIONS == GLM_DISABLE
 		template<typename T, qualifier Q>
-		GLM_DEFAULTED_DEFAULT_CTOR_QUALIFIER GLM_CONSTEXPR mat<4, 3, T, Q>::mat()
+		GLM_FUNC_QUALIFIER GLM_CONSTEXPR mat<4, 3, T, Q>::mat()
 #			if GLM_CONFIG_CTOR_INIT == GLM_CTOR_INITIALIZER_LIST
 				: value{col_type(1, 0, 0), col_type(0, 1, 0), col_type(0, 0, 1), col_type(0, 0, 0)}
 #			endif
@@ -34,7 +34,7 @@ namespace glm
 	}
 
 	template<typename T, qualifier Q>
-	GLM_FUNC_QUALIFIER GLM_CONSTEXPR mat<4, 3, T, Q>::mat(T s)
+	GLM_FUNC_QUALIFIER GLM_CONSTEXPR mat<4, 3, T, Q>::mat(T const& s)
 #		if GLM_HAS_INITIALIZER_LISTS
 			: value{col_type(s, 0, 0), col_type(0, s, 0), col_type(0, 0, s), col_type(0, 0, 0)}
 #		endif
@@ -255,14 +255,14 @@ namespace glm
 	// -- Accesses --
 
 	template<typename T, qualifier Q>
-	GLM_FUNC_QUALIFIER typename mat<4, 3, T, Q>::col_type & mat<4, 3, T, Q>::operator[](typename mat<4, 3, T, Q>::length_type i) GLM_NOEXCEPT
+	GLM_FUNC_QUALIFIER typename mat<4, 3, T, Q>::col_type & mat<4, 3, T, Q>::operator[](typename mat<4, 3, T, Q>::length_type i)
 	{
 		assert(i < this->length());
 		return this->value[i];
 	}
 
 	template<typename T, qualifier Q>
-	GLM_FUNC_QUALIFIER GLM_CONSTEXPR typename mat<4, 3, T, Q>::col_type const& mat<4, 3, T, Q>::operator[](typename mat<4, 3, T, Q>::length_type i) const GLM_NOEXCEPT
+	GLM_FUNC_QUALIFIER GLM_CONSTEXPR typename mat<4, 3, T, Q>::col_type const& mat<4, 3, T, Q>::operator[](typename mat<4, 3, T, Q>::length_type i) const
 	{
 		assert(i < this->length());
 		return this->value[i];
@@ -406,13 +406,13 @@ namespace glm
 	// -- Binary arithmetic operators --
 
 	template<typename T, qualifier Q>
-	GLM_FUNC_QUALIFIER mat<4, 3, T, Q> operator+(mat<4, 3, T, Q> const& m, T scalar)
+	GLM_FUNC_QUALIFIER mat<4, 3, T, Q> operator+(mat<4, 3, T, Q> const& m, T const& s)
 	{
 		return mat<4, 3, T, Q>(
-			m[0] + scalar,
-			m[1] + scalar,
-			m[2] + scalar,
-			m[3] + scalar);
+			m[0] + s,
+			m[1] + s,
+			m[2] + s,
+			m[3] + s);
 	}
 
 	template<typename T, qualifier Q>
@@ -426,13 +426,13 @@ namespace glm
 	}
 
 	template<typename T, qualifier Q>
-	GLM_FUNC_QUALIFIER mat<4, 3, T, Q> operator-(mat<4, 3, T, Q> const& m, T scalar)
+	GLM_FUNC_QUALIFIER mat<4, 3, T, Q> operator-(mat<4, 3, T, Q> const& m, T const& s)
 	{
 		return mat<4, 3, T, Q>(
-			m[0] - scalar,
-			m[1] - scalar,
-			m[2] - scalar,
-			m[3] - scalar);
+			m[0] - s,
+			m[1] - s,
+			m[2] - s,
+			m[3] - s);
 	}
 
 	template<typename T, qualifier Q>
@@ -446,23 +446,23 @@ namespace glm
 	}
 
 	template<typename T, qualifier Q>
-	GLM_FUNC_QUALIFIER mat<4, 3, T, Q> operator*(mat<4, 3, T, Q> const& m, T scalar)
+	GLM_FUNC_QUALIFIER mat<4, 3, T, Q> operator*(mat<4, 3, T, Q> const& m, T const& s)
 	{
 		return mat<4, 3, T, Q>(
-			m[0] * scalar,
-			m[1] * scalar,
-			m[2] * scalar,
-			m[3] * scalar);
+			m[0] * s,
+			m[1] * s,
+			m[2] * s,
+			m[3] * s);
 	}
 
 	template<typename T, qualifier Q>
-	GLM_FUNC_QUALIFIER mat<4, 3, T, Q> operator*(T scalar, mat<4, 3, T, Q> const& m)
+	GLM_FUNC_QUALIFIER mat<4, 3, T, Q> operator*(T const& s, mat<4, 3, T, Q> const& m)
 	{
 		return mat<4, 3, T, Q>(
-			m[0] * scalar,
-			m[1] * scalar,
-			m[2] * scalar,
-			m[3] * scalar);
+			m[0] * s,
+			m[1] * s,
+			m[2] * s,
+			m[3] * s);
 	}
 
 	template<typename T, qualifier Q>
@@ -563,23 +563,23 @@ namespace glm
 	}
 
 	template<typename T, qualifier Q>
-	GLM_FUNC_QUALIFIER mat<4, 3, T, Q> operator/(mat<4, 3, T, Q> const& m, T scalar)
+	GLM_FUNC_QUALIFIER mat<4, 3, T, Q> operator/(mat<4, 3, T, Q> const& m, T const& s)
 	{
 		return mat<4, 3, T, Q>(
-			m[0] / scalar,
-			m[1] / scalar,
-			m[2] / scalar,
-			m[3] / scalar);
+			m[0] / s,
+			m[1] / s,
+			m[2] / s,
+			m[3] / s);
 	}
 
 	template<typename T, qualifier Q>
-	GLM_FUNC_QUALIFIER mat<4, 3, T, Q> operator/(T scalar, mat<4, 3, T, Q> const& m)
+	GLM_FUNC_QUALIFIER mat<4, 3, T, Q> operator/(T const& s, mat<4, 3, T, Q> const& m)
 	{
 		return mat<4, 3, T, Q>(
-			scalar / m[0],
-			scalar / m[1],
-			scalar / m[2],
-			scalar / m[3]);
+			s / m[0],
+			s / m[1],
+			s / m[2],
+			s / m[3]);
 	}
 
 	// -- Boolean operators --

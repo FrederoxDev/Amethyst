@@ -1,6 +1,3 @@
-option(BUILD_SHARED_LIBS "Build shared library" ON)
-option(BUILD_STATIC_LIBS "Build static library" ON)
-
 file(GLOB ROOT_SOURCE *.cpp)
 file(GLOB ROOT_INLINE *.inl)
 file(GLOB ROOT_HEADER *.hpp)
@@ -45,16 +42,7 @@ source_group("SIMD Files" FILES ${SIMD_SOURCE})
 source_group("SIMD Files" FILES ${SIMD_INLINE})
 source_group("SIMD Files" FILES ${SIMD_HEADER})
 
-add_library(glm INTERFACE)
-
-include(GNUInstallDirs)
-
-target_include_directories(glm INTERFACE
-	$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}>
-	$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-)
-
-install(TARGETS glm EXPORT glm)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/..)
 
 if(BUILD_STATIC_LIBS)
 add_library(glm_static STATIC ${ROOT_TEXT} ${ROOT_MD} ${ROOT_NAT}
@@ -64,8 +52,6 @@ add_library(glm_static STATIC ${ROOT_TEXT} ${ROOT_MD} ${ROOT_NAT}
 	${GTC_SOURCE}     ${GTC_INLINE}     ${GTC_HEADER}
 	${GTX_SOURCE}     ${GTX_INLINE}     ${GTX_HEADER}
 	${SIMD_SOURCE}    ${SIMD_INLINE}    ${SIMD_HEADER})
-	target_link_libraries(glm_static PUBLIC glm)
-	add_library(glm::glm_static ALIAS glm_static)
 endif()
 
 if(BUILD_SHARED_LIBS)
@@ -76,6 +62,5 @@ add_library(glm_shared SHARED ${ROOT_TEXT} ${ROOT_MD} ${ROOT_NAT}
 	${GTC_SOURCE}     ${GTC_INLINE}     ${GTC_HEADER}
 	${GTX_SOURCE}     ${GTX_INLINE}     ${GTX_HEADER}
 	${SIMD_SOURCE}    ${SIMD_INLINE}    ${SIMD_HEADER})
-	target_link_libraries(glm_shared PUBLIC glm)
-	add_library(glm::glm_shared ALIAS glm_shared)
 endif()
+

@@ -22,7 +22,7 @@ namespace detail
 		GLM_FUNC_QUALIFIER static vec<1, uint8, P> call()
 		{
 			return vec<1, uint8, P>(
-				static_cast<uint8>(std::rand() % std::numeric_limits<uint8>::max()));
+				std::rand() % std::numeric_limits<uint8>::max());
 		}
 	};
 
@@ -228,7 +228,7 @@ namespace detail
 			w = x1 * x1 + x2 * x2;
 		} while(w > genType(1));
 
-		return static_cast<genType>(x2 * Deviation * Deviation * sqrt((genType(-2) * log(w)) / w) + Mean);
+		return x2 * Deviation * Deviation * sqrt((genType(-2) * log(w)) / w) + Mean;
 	}
 
 	template<length_t L, typename T, qualifier Q>

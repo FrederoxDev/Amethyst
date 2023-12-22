@@ -6,6 +6,7 @@
 #include "minecraft/src/common/world/phys/Vec2.h"
 #include "minecraft/src-client/common/client/renderer/screen/ScreenContext.h"
 #include "glm/glm.hpp"
+#include "minecraft/src-deps/core/string/StringHash.h"
 
 using IClientInstance = ClientInstance;
 class UIScene;
@@ -70,6 +71,7 @@ public:
 public:
     // vfuncs:
     // ~MinecraftUIRenderContext();
+
     float getLineLength(Font& font, const std::string& text, float fontSize, bool showColorSymbol);
     float getTextAlpha();
     void setTextAlpha(float alpha);
@@ -79,7 +81,9 @@ public:
     void drawImage(const mce::TexturePtr& texture, const glm::tvec2<float>* position, const glm::tvec2<float>* size, glm::tvec2<float>* uv, glm::tvec2<float>* uvSize, int degree);
 
     // drawNineslice(mce::TexturePtr const &, NinesliceInfo const &);
-    // flushImages(mce::Color const &, float, HashedString const &);
+
+    void flushImages(const mce::Color& color, float alpha, const HashedString& materialNameHash);
+
     // beginSharedMeshBatch(ComponentRenderBatch &);
     // endSharedMeshBatch(ComponentRenderBatch &);
 

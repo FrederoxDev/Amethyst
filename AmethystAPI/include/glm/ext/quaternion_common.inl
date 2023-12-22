@@ -11,7 +11,7 @@ namespace glm
 		if(cosTheta > static_cast<T>(1) - epsilon<T>())
 		{
 			// Linear interpolation
-			return qua<T, Q>::wxyz(
+			return qua<T, Q>(
 				mix(x.w, y.w, a),
 				mix(x.x, y.x, a),
 				mix(x.y, y.y, a),
@@ -58,7 +58,7 @@ namespace glm
 		if(cosTheta > static_cast<T>(1) - epsilon<T>())
 		{
 			// Linear interpolation
-			return qua<T, Q>::wxyz(
+			return qua<T, Q>(
 				mix(x.w, z.w, a),
 				mix(x.x, z.x, a),
 				mix(x.y, z.y, a),
@@ -72,47 +72,10 @@ namespace glm
 		}
 	}
 
-    template<typename T, typename S, qualifier Q>
-    GLM_FUNC_QUALIFIER qua<T, Q> slerp(qua<T, Q> const& x, qua<T, Q> const& y, T a, S k)
-    {
-        GLM_STATIC_ASSERT(std::numeric_limits<T>::is_iec559, "'slerp' only accept floating-point inputs");
-        GLM_STATIC_ASSERT(std::numeric_limits<S>::is_integer, "'slerp' only accept integer for spin count");
-
-        qua<T, Q> z = y;
-
-        T cosTheta = dot(x, y);
-
-        // If cosTheta < 0, the interpolation will take the long way around the sphere.
-        // To fix this, one quat must be negated.
-        if (cosTheta < static_cast<T>(0))
-        {
-            z = -y;
-            cosTheta = -cosTheta;
-        }
-
-        // Perform a linear interpolation when cosTheta is close to 1 to avoid side effect of sin(angle) becoming a zero denominator
-        if (cosTheta > static_cast<T>(1) - epsilon<T>())
-        {
-            // Linear interpolation
-            return qua<T, Q>::wxyz(
-                mix(x.w, z.w, a),
-                mix(x.x, z.x, a),
-                mix(x.y, z.y, a),
-                mix(x.z, z.z, a));
-        }
-        else
-        {
-            // Graphics Gems III, page 96
-            T angle = acos(cosTheta);
-            T phi = angle + static_cast<T>(k) * glm::pi<T>();
-            return (sin(angle - a * phi)* x + sin(a * phi) * z) / sin(angle);
-        }
-    }
-
 	template<typename T, qualifier Q>
 	GLM_FUNC_QUALIFIER qua<T, Q> conjugate(qua<T, Q> const& q)
 	{
-		return qua<T, Q>::wxyz(q.w, -q.x, -q.y, -q.z);
+		return qua<T, Q>(q.w, -q.x, -q.y, -q.z);
 	}
 
 	template<typename T, qualifier Q>

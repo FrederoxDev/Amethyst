@@ -26,16 +26,13 @@
 
 namespace glm
 {
-	/// @addtogroup ext_scalar_ulp
-	/// @{
-
 	/// Return the next ULP value(s) after the input value(s).
 	///
 	/// @tparam genType A floating-point scalar type.
 	///
 	/// @see ext_scalar_ulp
 	template<typename genType>
-	GLM_FUNC_DECL genType nextFloat(genType x);
+	GLM_FUNC_DECL genType next_float(genType x);
 
 	/// Return the previous ULP value(s) before the input value(s).
 	///
@@ -43,7 +40,7 @@ namespace glm
 	///
 	/// @see ext_scalar_ulp
 	template<typename genType>
-	GLM_FUNC_DECL genType prevFloat(genType x);
+	GLM_FUNC_DECL genType prev_float(genType x);
 
 	/// Return the value(s) ULP distance after the input value(s).
 	///
@@ -51,7 +48,7 @@ namespace glm
 	///
 	/// @see ext_scalar_ulp
 	template<typename genType>
-	GLM_FUNC_DECL genType nextFloat(genType x, int ULPs);
+	GLM_FUNC_DECL genType next_float(genType x, int ULPs);
 
 	/// Return the value(s) ULP distance before the input value(s).
 	///
@@ -59,17 +56,17 @@ namespace glm
 	///
 	/// @see ext_scalar_ulp
 	template<typename genType>
-	GLM_FUNC_DECL genType prevFloat(genType x, int ULPs);
+	GLM_FUNC_DECL genType prev_float(genType x, int ULPs);
 
 	/// Return the distance in the number of ULP between 2 single-precision floating-point scalars.
 	///
 	/// @see ext_scalar_ulp
-	GLM_FUNC_DECL int floatDistance(float x, float y);
+	GLM_FUNC_DECL int float_distance(float x, float y);
 
 	/// Return the distance in the number of ULP between 2 double-precision floating-point scalars.
 	///
 	/// @see ext_scalar_ulp
-	GLM_FUNC_DECL int64 floatDistance(double x, double y);
+	GLM_FUNC_DECL int64 float_distance(double x, double y);
 
 	/// @}
 }//namespace glm

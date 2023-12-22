@@ -6,9 +6,9 @@
 namespace glm
 {
 	template<typename T, qualifier Q>
-	GLM_FUNC_QUALIFIER GLM_CONSTEXPR qua<T, Q> quat_identity()
+	GLM_FUNC_QUALIFIER qua<T, Q> quat_identity()
 	{
-		return qua<T, Q>::wxyz(static_cast<T>(1), static_cast<T>(0), static_cast<T>(0), static_cast<T>(0));
+		return qua<T, Q>(static_cast<T>(1), static_cast<T>(0), static_cast<T>(0), static_cast<T>(0));
 	}
 
 	template<typename T, qualifier Q>
@@ -70,7 +70,7 @@ namespace glm
 	}
 
 	template<typename T, qualifier Q>
-	GLM_FUNC_QUALIFIER GLM_CONSTEXPR T length2(qua<T, Q> const& q)
+	GLM_FUNC_QUALIFIER T length2(qua<T, Q> const& q)
 	{
 		return q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w;
 	}
@@ -105,7 +105,7 @@ namespace glm
 			k1 = sin((static_cast<T>(0) + a) * fAngle) * fOneOverSin;
 		}
 
-		return qua<T, Q>::wxyz(
+		return qua<T, Q>(
 			k0 * x.w + k1 * y2.w,
 			k0 * x.x + k1 * y2.x,
 			k0 * x.y + k1 * y2.y,
@@ -150,7 +150,7 @@ namespace glm
 		T s = sqrt((T(1) + cosTheta) * static_cast<T>(2));
 		T invs = static_cast<T>(1) / s;
 
-		return qua<T, Q>::wxyz(
+		return qua<T, Q>(
 			s * static_cast<T>(0.5f),
 			rotationAxis.x * invs,
 			rotationAxis.y * invs,

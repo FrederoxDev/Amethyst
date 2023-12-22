@@ -260,8 +260,6 @@ namespace detail
 	template<typename genIUType>
 	GLM_FUNC_QUALIFIER genIUType bitfieldInsert(genIUType const& Base, genIUType const& Insert, int Offset, int Bits)
 	{
-		GLM_STATIC_ASSERT(std::numeric_limits<genIUType>::is_integer, "'bitfieldInsert' only accept integer values");
-
 		return bitfieldInsert(vec<1, genIUType>(Base), vec<1, genIUType>(Insert), Offset, Bits).x;
 	}
 
@@ -270,24 +268,20 @@ namespace detail
 	{
 		GLM_STATIC_ASSERT(std::numeric_limits<T>::is_integer, "'bitfieldInsert' only accept integer values");
 
-		T const Mask = detail::mask(static_cast<T>(Bits)) << Offset;
+		T const Mask = static_cast<T>(detail::mask(Bits) << Offset);
 		return (Base & ~Mask) | ((Insert << static_cast<T>(Offset)) & Mask);
 	}
 
 	// bitfieldReverse
-	template<typename genIUType>
-	GLM_FUNC_QUALIFIER genIUType bitfieldReverse(genIUType x)
+	template<typename genType>
+	GLM_FUNC_QUALIFIER genType bitfieldReverse(genType x)
 	{
-		GLM_STATIC_ASSERT(std::numeric_limits<genIUType>::is_integer, "'bitfieldReverse' only accept integer values");
-
-		return bitfieldReverse(glm::vec<1, genIUType, glm::defaultp>(x)).x;
+		return bitfieldReverse(glm::vec<1, genType, glm::defaultp>(x)).x;
 	}
 
 	template<length_t L, typename T, qualifier Q>
 	GLM_FUNC_QUALIFIER vec<L, T, Q> bitfieldReverse(vec<L, T, Q> const& v)
 	{
-		GLM_STATIC_ASSERT(std::numeric_limits<T>::is_integer, "'bitfieldReverse' only accept integer values");
-
 		vec<L, T, Q> x(v);
 		x = detail::compute_bitfieldReverseStep<L, T, Q, detail::is_aligned<Q>::value, sizeof(T) * 8>=  2>::call(x, static_cast<T>(0x5555555555555555ull), static_cast<T>( 1));
 		x = detail::compute_bitfieldReverseStep<L, T, Q, detail::is_aligned<Q>::value, sizeof(T) * 8>=  4>::call(x, static_cast<T>(0x3333333333333333ull), static_cast<T>( 2));
@@ -299,25 +293,21 @@ namespace detail
 	}
 
 	// bitCount
-	template<typename genIUType>
-	GLM_FUNC_QUALIFIER int bitCount(genIUType x)
+	template<typename genType>
+	GLM_FUNC_QUALIFIER int bitCount(genType x)
 	{
-		GLM_STATIC_ASSERT(std::numeric_limits<genIUType>::is_integer, "'bitCount' only accept integer values");
-
-		return bitCount(glm::vec<1, genIUType, glm::defaultp>(x)).x;
+		return bitCount(glm::vec<1, genType, glm::defaultp>(x)).x;
 	}
 
 	template<length_t L, typename T, qualifier Q>
 	GLM_FUNC_QUALIFIER vec<L, int, Q> bitCount(vec<L, T, Q> const& v)
 	{
-		GLM_STATIC_ASSERT(std::numeric_limits<T>::is_integer, "'bitCount' only accept integer values");
-
 #		if GLM_COMPILER & GLM_COMPILER_VC
 #			pragma warning(push)
 #			pragma warning(disable : 4310) //cast truncates constant value
 #		endif
 
-		vec<L, typename detail::make_unsigned<T>::type, Q> x(v);
+		vec<L, typename detail::make_unsigned<T>::type, Q> x(*reinterpret_cast<vec<L, typename detail::make_unsigned<T>::type, Q> const *>(&v));
 		x = detail::compute_bitfieldBitCountStep<L, typename detail::make_unsigned<T>::type, Q, detail::is_aligned<Q>::value, sizeof(T) * 8>=  2>::call(x, typename detail::make_unsigned<T>::type(0x5555555555555555ull), typename detail::make_unsigned<T>::type( 1));
 		x = detail::compute_bitfieldBitCountStep<L, typename detail::make_unsigned<T>::type, Q, detail::is_aligned<Q>::value, sizeof(T) * 8>=  4>::call(x, typename detail::make_unsigned<T>::type(0x3333333333333333ull), typename detail::make_unsigned<T>::type( 2));
 		x = detail::compute_bitfieldBitCountStep<L, typename detail::make_unsigned<T>::type, Q, detail::is_aligned<Q>::value, sizeof(T) * 8>=  8>::call(x, typename detail::make_unsigned<T>::type(0x0F0F0F0F0F0F0F0Full), typename detail::make_unsigned<T>::type( 4));
@@ -362,7 +352,7 @@ namespace detail
 	{
 		GLM_STATIC_ASSERT(std::numeric_limits<T>::is_integer, "'findMSB' only accept integer values");
 
-		return detail::compute_findMSB_vec<L, T, Q, static_cast<int>(sizeof(T) * 8)>::call(v);
+		return detail::compute_findMSB_vec<L, T, Q, sizeof(T) * 8>::call(v);
 	}
 }//namespace glm
 
