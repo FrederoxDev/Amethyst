@@ -1,44 +1,17 @@
 #pragma once
+#include <string>
+#include "minecraft/src-deps/core/resource/ResourceUtil.h"
 #include "minecraft/src-deps/core/file/Path.h"
+#include "amethyst/Memory.h"
 
 class ResourceLocation {
-public:
-    ResourceFileSystem mFileSystem;
 private:
-    Core::HeapPathBuffer mPath;
-    HashType64 mPathHash;
-    size_t mFullHash;
+    ResourceFileSystem mFileSystem;         // this + 0x0
+    Core::PathBuffer<std::string> mPath;    // this + 0x8
+    uint64_t mPathHash;                     // this + 0x28
+    uint64_t mFullHash;                     // this + 0x30
 
 public:
     ResourceLocation();
-    // 40 53 48 83 EC ? 33 C0 48 8B D9 89 01
-    ResourceLocation(const Core::Path&);
-    ResourceLocation(const Core::Path&, ResourceFileSystem);
-    bool operator<(const ResourceLocation&) const;
-
-    bool operator==(const ResourceLocation& rhs) const {
-        return mPath == rhs.mPath && mFileSystem == rhs.mFileSystem;
-    }
-
-    bool operator!=(const ResourceLocation& rhs) const {
-        return !(*this == rhs);
-    }
-
-    size_t hashCode() const {
-        return mFullHash;
-    }
-
-    std::string getFileSystemName() const {
-        return gsl::to_string(ResourceUtil::stringFromPath(mFileSystem));
-    }
-
-    void serialize(Json::Value&) const;
-    void deserialize(const Json::Value&);
-    Core::HeapPathBuffer getFullPath() const;
-    const Core::HeapPathBuffer& getRelativePath() const;
-    void setRelativePath(const Core::HeapPathBuffer&);
-    HashedString getHashedPath() const;
-
-private:
-    void _computeHashes();
+    ResourceLocation(const Core::Path& path);
 };

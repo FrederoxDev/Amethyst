@@ -26,6 +26,12 @@ void MinecraftUIRenderContext::flushText(float deltaTime)
 	return reinterpret_cast<function>(this->vtable[6])(this, deltaTime);
 }
 
+void MinecraftUIRenderContext::drawImage(const mce::TexturePtr& texture, const glm::tvec2<float>* position, const glm::tvec2<float>* size, glm::tvec2<float>* uv, glm::tvec2<float>* uvSize, int degree)
+{
+	using function = void(__thiscall*)(MinecraftUIRenderContext*, const mce::TexturePtr&, const glm::tvec2<float>*, const glm::tvec2<float>*, glm::tvec2<float>*, glm::tvec2<float>*, int);
+	return reinterpret_cast<function>(this->vtable[7])(this, texture, position, size, uv, uvSize, degree);
+}
+
 void MinecraftUIRenderContext::drawRectangle(const RectangleArea* rect, const mce::Color* color, float alpha, int thickness)
 {
 	using function = void(__thiscall*)(MinecraftUIRenderContext*, const RectangleArea*, const mce::Color*, float, int);
@@ -36,4 +42,10 @@ void MinecraftUIRenderContext::fillRectangle(const RectangleArea* rect, const mc
 {
 	using function = void(__thiscall*)(MinecraftUIRenderContext*, const RectangleArea*, const mce::Color*, float);
 	return reinterpret_cast<function>(this->vtable[14])(this, rect, color, alpha);
+}
+
+mce::TexturePtr* MinecraftUIRenderContext::getTexture(mce::TexturePtr* result, const ResourceLocation* resourceLocation, bool forceReload)
+{
+	using function = mce::TexturePtr* (__thiscall*)(MinecraftUIRenderContext*, mce::TexturePtr*, const ResourceLocation*, bool);
+	return reinterpret_cast<function>(this->vtable[30])(this, result, resourceLocation, forceReload);
 }

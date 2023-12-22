@@ -5,6 +5,7 @@
 #include "minecraft/src-client/common/client/game/ClientInstance.h"
 #include "minecraft/src/common/world/phys/Vec2.h"
 #include "minecraft/src-client/common/client/renderer/screen/ScreenContext.h"
+#include "glm/glm.hpp"
 
 using IClientInstance = ClientInstance;
 class UIScene;
@@ -75,8 +76,8 @@ public:
     void drawDebugText(const RectangleArea* rect, const std::string* text, const mce::Color* color, float alpha, ui::TextAlignment alignment, const TextMeasureData* textData, const CaretMeasureData* caretData);
     void drawText(Font& font, const RectangleArea& rect, const std::string& text, const mce::Color& color, float alpha, ui::TextAlignment alignment, const TextMeasureData& textData, const CaretMeasureData& caretData);
     void flushText(float deltaTime);
+    void drawImage(const mce::TexturePtr& texture, const glm::tvec2<float>* position, const glm::tvec2<float>* size, glm::tvec2<float>* uv, glm::tvec2<float>* uvSize, int degree);
 
-    // drawImage(mce::TexturePtr const &, glm::vec<2, float, (glm::qualifier)0> const &, glm::vec<2, float, (glm::qualifier)0> const &, glm::vec<2, float, (glm::qualifier)0> const &, glm::vec<2, float, (glm::qualifier)0> const &);
     // drawNineslice(mce::TexturePtr const &, NinesliceInfo const &);
     // flushImages(mce::Color const &, float, HashedString const &);
     // beginSharedMeshBatch(ComponentRenderBatch &);
