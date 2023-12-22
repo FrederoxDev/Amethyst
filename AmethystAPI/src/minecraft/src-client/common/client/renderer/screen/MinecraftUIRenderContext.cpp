@@ -53,5 +53,5 @@ void MinecraftUIRenderContext::fillRectangle(const RectangleArea* rect, const mc
 mce::TexturePtr* MinecraftUIRenderContext::getTexture(mce::TexturePtr* result, const ResourceLocation* resourceLocation, bool forceReload)
 {
 	using function = mce::TexturePtr* (__thiscall*)(MinecraftUIRenderContext*, mce::TexturePtr*, const ResourceLocation*, bool);
-	return reinterpret_cast<function>(this->vtable[30])(this, result, resourceLocation, forceReload);
+	return reinterpret_cast<function>(this->vtable[29])(this, result, resourceLocation, forceReload);
 }
