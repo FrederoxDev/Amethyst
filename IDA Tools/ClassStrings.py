@@ -56,3 +56,6 @@ for key in data.keys():
 
 with open(output_file, "w") as file_handle:
     file_handle.write(text_output)
+
+print(f"Found {len(data.keys())} functions in class {class_to_search} with strings")
+print(f"Saved output to {output_file}")
