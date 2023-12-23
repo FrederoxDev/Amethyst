@@ -10,6 +10,7 @@ private:
 
 public:
     Vec3* getPosition();
+    Vec3* getHeadLookVector(float dist);
 
 public:
     Dimension* getDimension();
