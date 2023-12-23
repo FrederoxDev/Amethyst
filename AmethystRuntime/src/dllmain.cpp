@@ -21,7 +21,7 @@ DWORD WINAPI Main() {
     Log::InitializeConsole();
 
     #ifdef MOD_VERSION
-    Log::Info("[AmethystRuntime] AmethystRuntime{}\n", MOD_VERSION);
+    Log::Info("[AmethystRuntime] AmethystRuntime@{}\n", MOD_VERSION);
     #endif
 
     try {
