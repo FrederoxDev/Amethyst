@@ -130,7 +130,7 @@ void AmethystRuntime::InitializeHooks() {
     );
 
     g_hookManager.CreateHook(
-        SigScan("48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 81 EC ? ? ? ? 49 8B F8 0F B6 DA"),
+        SigScan("40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 45 8B F1"),
         &ClientInstance_onStartJoinGame, reinterpret_cast<void**>(&_ClientInstance_onStartJoinGame)
     );
 }
