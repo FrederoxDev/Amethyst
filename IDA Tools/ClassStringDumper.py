@@ -6,10 +6,11 @@ from typing import TypedDict
 import json
 
 # User Input
-# class_to_search = ida_kernwin.ask_str("", 0, "Enter name of class to search for:")
-
-classes_to_search = ["ClientInstance"]
+class_to_search_str: str = ida_kernwin.ask_str("", 0, "Enter name of class(es) to search for (seperate all with ',')")
+classes_to_search = class_to_search_str.replace(" ", "", -1).split(",")
 output_file = ida_kernwin.ask_file(True, "output.json", "JSON (*.json)")
+
+print(f"Finding classes {classes_to_search} and dumping to {output_file}")
 
 # Load all strings
 all_strings = idautils.Strings()

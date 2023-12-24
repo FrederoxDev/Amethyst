@@ -56,7 +56,12 @@ for mangled_name in dumped_data.keys():
             
         print(f"renaming {found_function_name} to {mangled_name} based on \"{function_string['string']}\"\n")
 
-        # Rename the function to the symbol found
+        # Function sometimes just isnt found?
         function = ida_funcs.get_func(xrefs[0].frm)
+        if function == None:
+            print(f"Failed to get {found_function_name} from xref?")
+            break
+
+        # Rename the function to the symbol found
         ida_name.set_name(function.start_ea, mangled_name)
         break
