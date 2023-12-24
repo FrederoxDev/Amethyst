@@ -27,3 +27,5 @@ public:
         return static_cast<T>(mRawId);
     }
 };
+
+static_assert(sizeof(entt::basic_registry<EntityId>) == 0x120);
