@@ -21,7 +21,7 @@ void HookManager::CreateHook(uintptr_t targetAddress, void* detour, void** origi
 }
 
 void HookManager::Shutdown() {
-    for each(auto hook in m_hooks) {
+    for (auto hook : m_hooks) {
         MH_STATUS status;
 
         status = MH_DisableHook(hook);
