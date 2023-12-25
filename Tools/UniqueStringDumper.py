@@ -6,11 +6,9 @@ from typing import TypedDict
 import json
 
 # User Input
-class_to_search_str: str = ida_kernwin.ask_str("", 0, "Enter name of class(es) to search for (seperate all with ',')")
-classes_to_search = class_to_search_str.replace(" ", "", -1).split(",")
 output_file = ida_kernwin.ask_file(True, "output.json", "JSON (*.json)")
 
-print(f"Finding classes {classes_to_search} and dumping to {output_file}")
+print(f"Finding all unique strings and dumping to {output_file}")
 
 # Load all strings
 all_strings = idautils.Strings()
@@ -56,23 +54,19 @@ class StringInfo(TypedDict):
 for string in all_strings:
     xrefs = list(idautils.XrefsTo(string.ea))
 
-    for xref in xrefs:
-        mangled_name: str = idc.get_func_name(xref.frm)
-        func_info = get_class_info(mangled_name)
+    if len(xrefs) != 1:
+        continue
 
-        # If it is unable to demangle the symbol
-        if func_info == None:
-            continue
+    mangled_name: str = idc.get_func_name(xrefs[0].frm)
 
-        if func_info["class_name"] in classes_to_search:
-            # Ensure there is an empty array for the function
-            if mangled_name not in dumped_data:
-                dumped_data[mangled_name] = []
+    # Ensure there is an empty array for the function
+    if mangled_name not in dumped_data:
+        dumped_data[mangled_name] = []
 
-            dumped_data[mangled_name].append({
-                "was_unique": len(xrefs) == 1,
-                "string": str(string)
-            })
+    dumped_data[mangled_name].append({
+        "was_unique": True,
+        "string": str(string)
+    })
 
 with open(output_file, "w") as file_handle:
     file_handle.write(json.dumps(dumped_data))
