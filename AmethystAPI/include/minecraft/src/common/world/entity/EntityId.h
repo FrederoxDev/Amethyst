@@ -1,9 +1,9 @@
 // Yoink! https://github.com/LiteLDev/LeviLamina/blob/24546ef17d8049760bf7573b32ede05cb0958fe9/src/mc/entity/EntityId.h
 #pragma once
+#include "entt/entt.hpp"
 #include <concepts>
 #include <stdint.h>
 #include "minecraft/src/common/world/entity/EntityIdTraits.h"
-#include "entt/entt.hpp"
 
 template <>
 class entt::entt_traits<EntityId> : public entt::basic_entt_traits<EntityIdTraits> {

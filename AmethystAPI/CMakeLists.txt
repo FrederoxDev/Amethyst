@@ -16,6 +16,8 @@ file(GLOB_RECURSE H_FILES "include/*.h")
 
 add_library(${PROJECT_NAME} STATIC ${CPP_SOURCES} ${H_FILES})
 
+target_compile_definitions(${PROJECT_NAME} PUBLIC ENTT_PACKED_PAGE=128)
+
 set_property(
     TARGET ${PROJECT_NAME}
     PROPERTY MSVC_RUNTIME_LIBRARY
