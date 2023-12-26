@@ -2,22 +2,40 @@
 
 #include "loader/Loader.h"
 #include "amethyst/Config.h"
+#include "default_config.h"
 #include <filesystem>
 #include <locale>
 #include <codecvt>
 namespace fs = std::filesystem;
 
 Config LoadConfig() {
-    std::string configPath = GetAmethystUWPFolder() + "config.json";
-    Log::Info("[AmethystRuntime] Loading config from: {}\n", configPath);
+    std::string amethystFolderPath = GetAmethystUWPFolder();
+
+    if(!fs::exists(amethystFolderPath)) {
+        Log::Info("[AmethystLauncher] Creating Amethyst folder at {}\n", amethystFolderPath);
+
+        fs::create_directory(amethystFolderPath);
+    }
+
+    std::string configPath = amethystFolderPath + "config.json";
 
     std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
 
     if (!fs::exists(configPath)) {
-        std::string message = fmt::format("[AmethystLauncher] Could not find config.json at '{}'\n", configPath);
-        ReportIssue(converter.from_bytes(message).c_str());
-        std::abort();
+        std::ofstream configFile(configPath);
+
+        if(!configFile) {
+            std::string message = fmt::format("[AmethystLauncher] Could not create default config.json at '{}'\n", configPath);
+            ReportIssue(converter.from_bytes(message).c_str());
+            std::abort();
+        }
+
+        configFile << default_config;
+
+        configFile.close();
     }
+
+    Log::Info("[AmethystLauncher] Loading config from: {}\n", configPath);
 
     std::ifstream configFile(configPath);
     if (!configFile.is_open()) {
