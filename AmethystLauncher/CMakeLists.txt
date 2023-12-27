@@ -11,7 +11,23 @@ set(AmethystFolder "$ENV{appdata}/Amethyst")
 find_library(AMETHYST_API AmethystAPI PATHS "${AmethystFolder}/lib")
 include_directories(${AmethystFolder}/include "include/")
 
-add_executable(AmethystLauncher src/AmethystLauncher.cpp src/loader/Loader.cpp)
+# add source files
+set(SOURCE_FILES
+        src/AmethystLauncher.cpp
+        src/loader/Loader.cpp
+        src/loader/PermissionChanger.cpp
+        )
+
+# add header files
+set(HEADER_FILES
+        src/loader/Loader.h
+        src/loader/PermissionChanger.h
+        )
+
+add_executable(AmethystLauncher 
+        ${SOURCE_FILES}
+        ${HEADER_FILES}
+        )
 target_link_libraries(${PROJECT_NAME} PRIVATE ${AMETHYST_API})
 target_link_libraries(${PROJECT_NAME} PRIVATE "${AmethystFolder}/lib/fmt.lib")
 target_link_libraries(${PROJECT_NAME} PRIVATE "${AmethystFolder}/lib/libMinHook.x64.lib")
