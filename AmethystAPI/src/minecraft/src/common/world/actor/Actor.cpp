@@ -15,3 +15,11 @@ Dimension* Actor::getDimension() {
     static auto func = reinterpret_cast<function>(SlideAddress(0x2E7C0F0));
     return func(this);
 }
+
+template<typename T>
+const T* Actor::tryGetComponent() {
+    const auto& registry = mEntityContext->getRegistry();
+    return registry.try_get<T>(mEntityContext->mEntity);
+}
+
+template const ActorHeadRotationComponent* Actor::tryGetComponent<ActorHeadRotationComponent>();

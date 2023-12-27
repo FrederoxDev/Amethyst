@@ -1,4 +1,5 @@
 #include "Loader.h"
+#include <codecvt>
 namespace fs = std::filesystem;
 
 void ReportIssue(LPCWSTR message) {
@@ -57,7 +58,6 @@ ModLoader::ModLoader(Config config) : mConfig(config)
 {
     mAmethystPath = GetAmethystPath();
     mModsPath = mAmethystPath + "/mods";
-    getMinecraftWindowHandle();
 }
 
 std::string ModLoader::GetAmethystPath() 
@@ -104,14 +104,24 @@ void ModLoader::InjectRuntime()
     if (atPos != std::string::npos) {
         mod_shortened = mod_shortened.substr(0, atPos);
     }
+
+    if (!fs::exists(mModsPath)) {
+        Log::Info("Creating mods directory: {}\n", mModsPath);
+        fs::create_directories(mModsPath);
+	}
     
     std::string runtimePath = fmt::format("{}/{}/{}.dll", mModsPath, mConfig.injectedMod, mod_shortened);
     Log::Info("Runtime: {}\n", runtimePath);
 
+    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+
     if (!fs::exists(runtimePath)) {
-        ReportIssue(L"Failed to find AmethystRuntime.dll");
+        std::string message = fmt::format("Failed to find AmethystRuntime.dll. Make sure to install the Amethyst Runtime into {}", mModsPath);
+        ReportIssue(converter.from_bytes(message).c_str());
 		std::abort();
 	}
+
+    getMinecraftWindowHandle();
 
     InjectDLL(runtimePath);
 }	
