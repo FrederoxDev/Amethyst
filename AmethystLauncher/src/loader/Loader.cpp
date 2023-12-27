@@ -96,8 +96,7 @@ void ModLoader::InjectRuntime() {
 
     if (mConfig.injectedMod.length() == 0) {
         std::string message = fmt::format(
-            "No injected mod specified. Make sure to update your config.json "
-            "with the latest Amethyst Runtime.");
+            "No injected mod specified. Make sure to update your config.json with the latest Amethyst Runtime.");
         ReportIssue(converter.from_bytes(message).c_str());
         std::abort();
     }
