@@ -60,7 +60,7 @@ ModLoader::ModLoader(Config config) : mConfig(config)
     mModsPath = mAmethystPath + "/mods";
 }
 
-std::string ModLoader::GetAmethystPath() 
+std::string GetAmethystPath() 
 {
     std::string baseAmethystPath = "";
 
