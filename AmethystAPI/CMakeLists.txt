@@ -14,6 +14,8 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELWITHDEBINFO "${AmethystFolder}/lib")
 file(GLOB_RECURSE CPP_SOURCES "src/*.cpp")
 file(GLOB_RECURSE H_FILES "include/*.h")
 
+add_definitions(-DENTT_NO_SIGNALS)
+
 add_library(${PROJECT_NAME} STATIC ${CPP_SOURCES} ${H_FILES})
 
 target_compile_definitions(${PROJECT_NAME} PUBLIC ENTT_PACKED_PAGE=128)
