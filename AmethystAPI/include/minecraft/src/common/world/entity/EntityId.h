@@ -1,4 +1,3 @@
-// Yoink! https://github.com/LiteLDev/LeviLamina/blob/24546ef17d8049760bf7573b32ede05cb0958fe9/src/mc/entity/EntityId.h
 #pragma once
 #include "entt/entt.hpp"
 #include <concepts>

@@ -17,9 +17,14 @@ Dimension* Actor::getDimension() {
 }
 
 template<typename T>
-const T* Actor::tryGetComponent() {
+const T* Actor::tryGetComponent() const {
     const auto& registry = mEntityContext->getRegistry();
-    return registry.try_get<T>(mEntityContext->mEntity);
+    if (registry.valid(mEntityId)) {
+        return registry.try_get<T>(mEntityId);
+    }
+
+    std::cout << "mEntityContext->mEntity is invalid?" << std::endl;
+    return nullptr;
 }
 
-template const ActorHeadRotationComponent* Actor::tryGetComponent<ActorHeadRotationComponent>();
+template const ActorHeadRotationComponent* Actor::tryGetComponent<ActorHeadRotationComponent>() const;

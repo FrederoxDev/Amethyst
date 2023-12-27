@@ -14,6 +14,7 @@ struct EntityIdTraits {
     static constexpr version_type version_mask = 0x3FFF;
 };
 
+// Specialize entt::storage_type by removing sigh_mixin
 template<typename Type>
 struct entt::storage_type<Type, EntityId> {
     using type = basic_storage<Type, EntityId>;

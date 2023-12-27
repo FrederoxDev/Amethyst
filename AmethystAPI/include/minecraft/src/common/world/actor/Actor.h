@@ -12,11 +12,11 @@ private:
     uintptr_t** vtable;
 public:
     EntityContext* mEntityContext; // this + 8
-    const EntityId mEntityId; // this + 16
+    EntityId mEntityId; // this + 16
 
 public:
     template<typename T>
-    const T* tryGetComponent();
+    const T* tryGetComponent() const;
 
 public:
     Vec3* getPosition();
