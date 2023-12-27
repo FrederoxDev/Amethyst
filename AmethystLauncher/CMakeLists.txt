@@ -17,8 +17,6 @@ file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/src/default_config.h
 ${JSON_CONTENT}
 )\";")
 
-add_executable(AmethystLauncher src/AmethystLauncher.cpp src/loader/Loader.cpp)
-
 set(
     MANIFEST_FILE
     "${CMAKE_CURRENT_SOURCE_DIR}/AmethystLauncher.exe.manifest"
