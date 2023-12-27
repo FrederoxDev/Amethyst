@@ -11,8 +11,7 @@ class Actor {
 private:
     uintptr_t** vtable;
 public:
-    EntityContext* mEntityContext; // this + 8
-    EntityId mEntityId; // this + 16
+    EntityContext mEntityContext; // this + 8
 
 public:
     template<typename T>
