@@ -1,4 +1,5 @@
 #include "Loader.h"
+
 #include <codecvt>
 namespace fs = std::filesystem;
 
@@ -54,39 +55,34 @@ std::string GetAmethystUWPFolder() {
     return amethyst_folder;
 }
 
-ModLoader::ModLoader(Config config) : mConfig(config)
-{
+ModLoader::ModLoader(Config config) : mConfig(config) {
     mAmethystPath = GetAmethystPath();
     mModsPath = mAmethystPath + "/mods";
 }
 
-std::string GetAmethystPath() 
-{
+std::string GetAmethystPath() {
     std::string baseAmethystPath = "";
 
-	char* appdata = getenv("appdata");
-	if (appdata == nullptr) {
+    char* appdata = getenv("appdata");
+    if (appdata == nullptr) {
         ReportIssue(L"Failed to get %appdata%");
-		std::abort();
-	}
+        std::abort();
+    }
 
-	baseAmethystPath = std::string(appdata) + "/Amethyst";
+    baseAmethystPath = std::string(appdata) + "/Amethyst";
     if (!fs::exists(baseAmethystPath)) {
         fs::create_directories(baseAmethystPath);
-	}
-	
-	return baseAmethystPath;
+    }
+
+    return baseAmethystPath;
 }
 
-void ModLoader::getMinecraftWindowHandle()
-{
+void ModLoader::getMinecraftWindowHandle() {
     DWORD procID = GetProcessIdByName(L"Minecraft.Windows.exe");
-    if (procID == 0)
-    {
+    if (procID == 0) {
         system("explorer.exe shell:appsFolder\\Microsoft.MinecraftUWP_8wekyb3d8bbwe!App");
 
-        while (procID == 0)
-        {
+        while (procID == 0) {
             procID = GetProcessIdByName(L"Minecraft.Windows.exe");
         }
     }
@@ -95,9 +91,18 @@ void ModLoader::getMinecraftWindowHandle()
     mMinecraftWindowHandle = procHandle;
 }
 
-void ModLoader::InjectRuntime()
-{
-	// Get the path to the amethyst runtime dll
+void ModLoader::InjectRuntime() {
+    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+
+    if (mConfig.injectedMod.length() == 0) {
+        std::string message = fmt::format(
+            "No injected mod specified. Make sure to update your config.json "
+            "with the latest Amethyst Runtime.");
+        ReportIssue(converter.from_bytes(message).c_str());
+        std::abort();
+    }
+
+    // Get the path to the amethyst runtime dll
     std::string mod_shortened = mConfig.injectedMod;
     size_t atPos = mod_shortened.find("@");
 
@@ -108,45 +113,43 @@ void ModLoader::InjectRuntime()
     if (!fs::exists(mModsPath)) {
         Log::Info("Creating mods directory: {}\n", mModsPath);
         fs::create_directories(mModsPath);
-	}
-    
+    }
+
     std::string runtimePath = fmt::format("{}/{}/{}.dll", mModsPath, mConfig.injectedMod, mod_shortened);
     Log::Info("Runtime: {}\n", runtimePath);
-
-    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
 
     if (!fs::exists(runtimePath)) {
         std::string message = fmt::format("Failed to find AmethystRuntime.dll. Make sure to install the Amethyst Runtime into {}", mModsPath);
         ReportIssue(converter.from_bytes(message).c_str());
-		std::abort();
-	}
+        std::abort();
+    }
 
     getMinecraftWindowHandle();
 
     InjectDLL(runtimePath);
-}	
+}
 
-void ModLoader::InjectDLL(const std::string& path) 
-{
-    LPVOID dll = VirtualAllocEx(mMinecraftWindowHandle, NULL, path.length() + 1, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
-    if (dll == NULL)
-    {
+void ModLoader::InjectDLL(const std::string& path) {
+    LPVOID dll = VirtualAllocEx(mMinecraftWindowHandle, NULL, path.length() + 1,
+        MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+    if (dll == NULL) {
         ReportIssue(L"Failed to allocate memory for AmethystRuntime.dll");
-		return;
-	}
-    if (!WriteProcessMemory(mMinecraftWindowHandle, dll, path.c_str(), path.length() + 1, NULL))
-    {
+        return;
+    }
+    if (!WriteProcessMemory(mMinecraftWindowHandle, dll, path.c_str(),
+        path.length() + 1, NULL)) {
         ReportIssue(L"Failed to write AmethystRuntime.dll to memory");
-		return;
-	}
+        return;
+    }
 
-	HANDLE thread = CreateRemoteThread(mMinecraftWindowHandle, NULL, NULL, (LPTHREAD_START_ROUTINE)LoadLibraryA, dll, NULL, NULL);
-    if (thread == NULL)
-    {
+    HANDLE thread = CreateRemoteThread(mMinecraftWindowHandle, NULL, NULL,
+        (LPTHREAD_START_ROUTINE)LoadLibraryA,
+        dll, NULL, NULL);
+    if (thread == NULL) {
         ReportIssue(L"Failed to create remote thread");
-		return;
-	}
+        return;
+    }
 
-	WaitForSingleObject(thread, INFINITE);
-	VirtualFreeEx(mMinecraftWindowHandle, dll, 0, MEM_RELEASE);
+    WaitForSingleObject(thread, INFINITE);
+    VirtualFreeEx(mMinecraftWindowHandle, dll, 0, MEM_RELEASE);
 }
