@@ -1,6 +1,6 @@
 const char* default_config = R"(
 {
-	"injected_mod": "AmethystRuntime@1.0.0",
+	"injected_mod": "",
 	"mods": [],
 	"prompt_debugger": false
 }
