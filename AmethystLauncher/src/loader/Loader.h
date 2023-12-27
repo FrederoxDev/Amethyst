@@ -16,7 +16,6 @@ public:
 	void InjectRuntime();
 
 private:
-	std::string GetAmethystPath();
 	void getMinecraftWindowHandle();
 	void InjectDLL(const std::string& dllPath);
 
@@ -26,5 +25,5 @@ private:
 	std::string mModsPath;
 	HANDLE mMinecraftWindowHandle;
 };
-
+std::string GetAmethystPath();
 std::string GetAmethystUWPFolder();
