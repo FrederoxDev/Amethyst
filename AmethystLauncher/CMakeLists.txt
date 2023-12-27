@@ -11,6 +11,12 @@ set(AmethystFolder "$ENV{appdata}/Amethyst")
 find_library(AMETHYST_API AmethystAPI PATHS "${AmethystFolder}/lib")
 include_directories(${AmethystFolder}/include "include/")
 
+file(READ ${CMAKE_CURRENT_SOURCE_DIR}/src/default_config.json JSON_CONTENT)
+file(WRITE ${CMAKE_CURRENT_SOURCE_DIR}/src/default_config.h 
+"const char* default_config = R\"(
+${JSON_CONTENT}
+)\";")
+
 set(
     MANIFEST_FILE
     "${CMAKE_CURRENT_SOURCE_DIR}/AmethystLauncher.exe.manifest"
