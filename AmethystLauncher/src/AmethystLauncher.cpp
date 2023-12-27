@@ -6,6 +6,7 @@
 #include <filesystem>
 #include <locale>
 #include <codecvt>
+#include "loader/PermissionChanger.h"
 namespace fs = std::filesystem;
 
 Config LoadConfig() {
@@ -53,6 +54,9 @@ Config LoadConfig() {
 }
 
 int main() {
+    if (!AddALLToDirectoryPermissions())
+        ReportIssue(L"Failed to add permissions to the Amethyst folder. Amethyst needs admin to do this");
+
     Config config = LoadConfig();
     ModLoader loader(config);
 

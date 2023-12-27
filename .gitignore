@@ -2,3 +2,5 @@
 */build
 */.vs
 */packages
+.vscode/tasks.json
+.vscode/settings.json
