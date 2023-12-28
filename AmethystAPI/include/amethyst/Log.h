@@ -11,7 +11,7 @@ namespace Log
 
 	template <typename... Args>
 	void Info(const char* format, const Args&... args) {
-		//fmt::print(format, args...);
+		fmt::print(format, args...);
 	}
 
 	template <typename... Args>

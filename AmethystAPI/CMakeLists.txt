@@ -1,11 +1,12 @@
 cmake_minimum_required(VERSION 3.12)
 project(AmethystAPI)
 
+
 set(CMAKE_CXX_STANDARD 20)
 
 # Define only RelWithDebInfo as the available build configuration
 set(CMAKE_CONFIGURATION_TYPES "RelWithDebInfo" CACHE STRING "Build configurations" FORCE)
-set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Choose the type of build, options are: Debug Release RelWithDebInfo" FORCE)
+set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Choose the type of build, options are: RelWithDebInfo" FORCE)
 
 # Project Configuration
 set(AmethystFolder "$ENV{appdata}/Amethyst")
