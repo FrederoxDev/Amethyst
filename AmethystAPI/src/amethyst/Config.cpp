@@ -1,10 +1,11 @@
 #include "amethyst/Config.h"
 
-Config::Config() {
-    
+Config::Config()
+{
 }
 
-Config::Config(std::string& text) {
+Config::Config(std::string& text)
+{
     // Parse config.json into json
     json data;
 
@@ -12,7 +13,7 @@ Config::Config(std::string& text) {
         data = json::parse(text);
     }
     catch (std::exception e) {
-        Log::Error("Failed to parse config.json\n");
+        Log::Error("Failed to parse config.json");
         throw e;
     }
 

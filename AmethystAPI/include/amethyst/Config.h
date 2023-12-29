@@ -1,8 +1,8 @@
 #pragma once
-#include <vector>
-#include <string>
-#include "amethyst/Log.h"
 #include "Json.hpp"
+#include "amethyst/Log.h"
+#include <string>
+#include <vector>
 using json = nlohmann::json;
 
 class Config {

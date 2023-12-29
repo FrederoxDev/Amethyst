@@ -3,3 +3,4 @@
 *\.vs
 */packages
 .vscode/settings.json
+*.env

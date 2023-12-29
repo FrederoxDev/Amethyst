@@ -1,12 +1,12 @@
 #pragma once
+#include "glm/glm.hpp"
+#include "minecraft/src-client/common/client/game/ClientInstance.h"
+#include "minecraft/src-client/common/client/renderer/screen/ScreenContext.h"
+#include "minecraft/src-deps/core/math/Color.h"
+#include "minecraft/src-deps/core/string/StringHash.h"
+#include "minecraft/src/common/world/phys/Vec2.h"
 #include <stdint.h>
 #include <string>
-#include "minecraft/src-deps/core/math/Color.h"
-#include "minecraft/src-client/common/client/game/ClientInstance.h"
-#include "minecraft/src/common/world/phys/Vec2.h"
-#include "minecraft/src-client/common/client/renderer/screen/ScreenContext.h"
-#include "glm/glm.hpp"
-#include "minecraft/src-deps/core/string/StringHash.h"
 
 using IClientInstance = ClientInstance;
 class UIScene;
@@ -22,11 +22,11 @@ struct RectangleArea {
 #pragma pack(pop)
 
 namespace ui {
-    enum TextAlignment : uint8_t {
-        Left = 0x0,
-        Right = 0x1,
-        Center = 0x2
-    };
+enum TextAlignment : uint8_t {
+    Left = 0x0,
+    Right = 0x1,
+    Center = 0x2
+};
 }
 
 #pragma pack(push, 4)
@@ -47,7 +47,7 @@ struct CaretMeasureData {
 #pragma pack(pop)
 
 namespace mce {
-    class TexturePtr;
+class TexturePtr;
 };
 
 class ResourceLocation;
@@ -55,17 +55,19 @@ class ResourceLocation;
 class MinecraftUIRenderContext {
 private:
     uintptr_t** vtable;
+
 public:
-    IClientInstance* mClient; // this + 8
+    IClientInstance* mClient;      // this + 8
     ScreenContext* mScreenContext; // this + 16
 private:
     bool padding0[224];
+
 public:
     void* mCurrentScene; // const UIScene*, this + 248
 
 public:
     // 48 89 5C 24 ? 48 89 74 24 ? 48 89 4C 24 ? 57 48 83 EC ? 49 8B F9 48 8B DA 48 8B F1 48 8D 05
-    typedef MinecraftUIRenderContext* (__thiscall* _MinecraftUIRenderContext)(MinecraftUIRenderContext*, IClientInstance&, ScreenContext&, const UIScene&);
+    typedef MinecraftUIRenderContext*(__thiscall* _MinecraftUIRenderContext)(MinecraftUIRenderContext*, IClientInstance&, ScreenContext&, const UIScene&);
     MinecraftUIRenderContext(IClientInstance& client, ScreenContext& screenContext, const UIScene& currentScene);
 
 public:
@@ -87,8 +89,8 @@ public:
     // beginSharedMeshBatch(ComponentRenderBatch &);
     // endSharedMeshBatch(ComponentRenderBatch &);
 
-    void drawRectangle(const RectangleArea *rect, const mce::Color *color, float alpha, int thickness);
-    void fillRectangle(const RectangleArea *rect, const mce::Color *color, float alpha);
+    void drawRectangle(const RectangleArea* rect, const mce::Color* color, float alpha, int thickness);
+    void fillRectangle(const RectangleArea* rect, const mce::Color* color, float alpha);
 
     // increaseStencilRef(void);
     // decreaseStencilRef(void);

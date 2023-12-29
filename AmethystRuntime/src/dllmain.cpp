@@ -1,35 +1,37 @@
 #include "dllmain.h"
-#include <vector>
-#include <cstdlib>
-#include "minecraft/src-client/common/client/game/ClientInstance.h"
-#include "Mod.h"
 #include "AmethystRuntime.h"
-#include "amethyst/Log.h"
+#include "Mod.h"
 #include "amethyst/HookManager.h"
+#include "amethyst/Log.h"
+#include "minecraft/src-client/common/client/game/ClientInstance.h"
+#include <cstdlib>
+#include <vector>
 
 AmethystRuntime g_runtime;
 HookManager g_hookManager;
 
-BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved) {
+BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved)
+{
     if (ul_reason_for_call == DLL_PROCESS_ATTACH) {
         CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)Main, NULL, 0, NULL);
     }
     return TRUE;
 }
 
-DWORD WINAPI Main() {
+DWORD WINAPI Main()
+{
     Log::InitializeConsole();
 
-    #ifdef MOD_VERSION
-    Log::Info("[AmethystRuntime] AmethystRuntime@{}\n", MOD_VERSION);
-    #endif
+#ifdef MOD_VERSION
+    Log::Info("[AmethystRuntime] AmethystRuntime@{}", MOD_VERSION);
+#endif
 
     try {
         g_runtime.LoadMods();
         g_runtime.RunMods();
     }
     catch (std::exception e) {
-        Log::Error("[AmethystRuntime] Uncaught Exception: {}\n", e.what());
+        Log::Error("[AmethystRuntime] Uncaught Exception: {}", e.what());
         ShutdownWait();
         return 1;
     }
@@ -39,11 +41,13 @@ DWORD WINAPI Main() {
     return 0;
 }
 
-DWORD __stdcall EjectThread(LPVOID lpParameter) {
+DWORD __stdcall EjectThread(LPVOID lpParameter)
+{
     ExitProcess(0);
 }
 
-void Shutdown() {
+void Shutdown()
+{
     g_runtime.Shutdown();
     Log::DestroyConsole();
     MH_Uninitialize();
@@ -51,8 +55,9 @@ void Shutdown() {
     CreateThread(0, 0, EjectThread, 0, 0, 0);
 }
 
-void ShutdownWait() {
-    Log::Info("Press Numpad0 to close...\n");
+void ShutdownWait()
+{
+    Log::Info("Press Numpad0 to close...");
 
     while (1) {
         Sleep(10);
