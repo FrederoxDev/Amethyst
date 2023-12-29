@@ -7,13 +7,13 @@ void HookManager::CreateHook(uintptr_t targetAddress, void* detour, void** origi
 
     status = MH_CreateHook(original_addr, detour, original);
     if (status != MH_OK) {
-        Log::Error("MH_CreateHook failed: Reason: {}\n", MH_StatusToString(status));
+        Log::Error("MH_CreateHook failed: Reason: {}", MH_StatusToString(status));
         throw std::exception();
     }
 
     status = MH_EnableHook(original_addr);
     if (status != MH_OK) {
-        Log::Error("MH_EnableHook failed: Reason: {}\n", MH_StatusToString(status));
+        Log::Error("MH_EnableHook failed: Reason: {}", MH_StatusToString(status));
         throw std::exception();
     }
 
@@ -26,13 +26,13 @@ void HookManager::Shutdown() {
 
         status = MH_DisableHook(hook);
         if (status != MH_OK) {
-            Log::Error("MH_DisableHook failed: Reason: {}\n", MH_StatusToString(status));
+            Log::Error("MH_DisableHook failed: Reason: {}", MH_StatusToString(status));
             throw std::exception();
         }
 
         status = MH_RemoveHook(hook);   
         if (status != MH_OK) {
-            Log::Error("MH_RemoveHook failed: Reason: {}\n", MH_StatusToString(status));
+            Log::Error("MH_RemoveHook failed: Reason: {}", MH_StatusToString(status));
             throw std::exception();
         }     
     }

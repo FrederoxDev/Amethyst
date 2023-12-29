@@ -72,7 +72,7 @@ uintptr_t SigScan(std::string signature) {
 		return address;
 	}
 
-	Log::Error("Sigscan failed! {:s}\n", signature);
+	Log::Error("Sigscan failed! {:s}", signature);
 	throw std::exception();
 }
 

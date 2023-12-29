@@ -9,10 +9,10 @@ std::vector<ModRender> g_mod_render;
 Config AmethystRuntime::ReadConfig() {
     // Ensure it exists
     std::string configPath = GetAmethystUWPFolder() + "config.json";
-    Log::Info("[AmethystRuntime] Config: {}\n", configPath);
+    Log::Info("[AmethystRuntime] Config: {}", configPath);
 
     if (!fs::exists(configPath)) {
-        Log::Error("[AmethystRuntime] Could not find config.json\n\tat '{}'\n", configPath);
+        Log::Error("[AmethystRuntime] Could not find config.json\n\tat '{}'", configPath);
         throw std::exception();
     }
 
@@ -35,7 +35,7 @@ void AmethystRuntime::LoadMods() {
     // Initialize MinHook
     MH_STATUS status = MH_Initialize();
     if (status != MH_OK) {
-        Log::Error("MH_Initialize failed! Reason: {}\n", MH_StatusToString(status));
+        Log::Error("MH_Initialize failed! Reason: {}", MH_StatusToString(status));
         throw std::exception("MH_Initialize failed!");
     }
 
@@ -77,10 +77,10 @@ void AmethystRuntime::LoadMods() {
             g_mod_shutdown.push_back(reinterpret_cast<ModShutdown>(addr));
         }
         else {
-            Log::Warning("[AmethystRuntime] '{}' does not have 'void Shutdown()'. A mod should remove all hooks here for hot-reloading to work.\n", mod.mod_name);
+            Log::Warning("[AmethystRuntime] '{}' does not have 'void Shutdown()'. A mod should remove all hooks here for hot-reloading to work.", mod.mod_name);
         }
 
-        Log::Info("[AmethystRuntime] Loaded '{}'\n", mod.mod_name);
+        Log::Info("[AmethystRuntime] Loaded '{}'", mod.mod_name);
     }
 }
 
@@ -98,7 +98,7 @@ void AmethystRuntime::RunMods() {
         if (GetAsyncKeyState(VK_NUMPAD0)) break;
 
         if (GetAsyncKeyState('R') & 0x8000) {
-            Log::Info("\n[AmethystRuntime] Beginning hot-reload!\n");
+            Log::Info("\n========================= Beginning hot-reload! =========================");
             this->Shutdown();
             this->LoadMods();
 

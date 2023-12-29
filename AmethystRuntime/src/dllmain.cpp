@@ -21,7 +21,7 @@ DWORD WINAPI Main() {
     Log::InitializeConsole();
 
     #ifdef MOD_VERSION
-    Log::Info("[AmethystRuntime] AmethystRuntime@{}\n", MOD_VERSION);
+    Log::Info("[AmethystRuntime] AmethystRuntime@{}", MOD_VERSION);
     #endif
 
     try {
@@ -29,7 +29,7 @@ DWORD WINAPI Main() {
         g_runtime.RunMods();
     }
     catch (std::exception e) {
-        Log::Error("[AmethystRuntime] Uncaught Exception: {}\n", e.what());
+        Log::Error("[AmethystRuntime] Uncaught Exception: {}", e.what());
         ShutdownWait();
         return 1;
     }
@@ -52,7 +52,7 @@ void Shutdown() {
 }
 
 void ShutdownWait() {
-    Log::Info("Press Numpad0 to close...\n");
+    Log::Info("Press Numpad0 to close...");
 
     while (1) {
         Sleep(10);

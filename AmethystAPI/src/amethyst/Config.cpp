@@ -12,7 +12,7 @@ Config::Config(std::string& text) {
         data = json::parse(text);
     }
     catch (std::exception e) {
-        Log::Error("Failed to parse config.json\n");
+        Log::Error("Failed to parse config.json");
         throw e;
     }
 
