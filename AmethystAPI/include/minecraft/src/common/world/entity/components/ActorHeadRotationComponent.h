@@ -2,6 +2,11 @@
 #include "minecraft/src/common/world/phys/Vec2.h"
 
 struct ActorHeadRotationComponent {
-	Vec2 firstVec;
-	Vec2 secondVec;
+    float yaw;
+    float yawLastTick;
+};
+
+struct ActorRotationComponent {
+    Vec2 headRot;
+    Vec2 headRotLastTick;
 };

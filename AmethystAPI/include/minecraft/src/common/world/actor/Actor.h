@@ -12,15 +12,13 @@ private:
     uintptr_t** vtable;
 public:
     EntityContext mEntityContext; // this + 8
+private:
+    bool padding[680];
+
+public:
+    Vec3 mPos; // this + 712
 
 public:
     template<typename T>
     const T* tryGetComponent() const;
-
-public:
-    Vec3* getPosition();
-    Vec3* getHeadLookVector(float dist);
-
-public:
-    Dimension* getDimension();
 };
