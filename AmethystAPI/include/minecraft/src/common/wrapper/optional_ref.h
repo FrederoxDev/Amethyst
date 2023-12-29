@@ -24,33 +24,44 @@ public:
     template <typename U>
     [[nodiscard]] constexpr optional_ref(std::optional<U>& o)
         requires(IsCompatibleV<U>)
-    : mPtr(o ? &*o : nullptr) {}
+        : mPtr(o ? &*o : nullptr)
+    {
+    }
 
     template <typename U>
     [[nodiscard]] constexpr optional_ref(U* p)
         requires(IsCompatibleV<U>)
-    : mPtr(p) {}
+        : mPtr(p)
+    {
+    }
 
     template <typename U>
     [[nodiscard]] constexpr optional_ref(U& r)
         requires(IsCompatibleV<U>)
-    : mPtr(std::addressof(r)) {}
+        : mPtr(std::addressof(r))
+    {
+    }
 
     template <typename U>
     [[nodiscard]] constexpr optional_ref(U const& r)
         requires(IsCompatibleV<U>)
-    : mPtr(std::addressof(r)) {}
+        : mPtr(std::addressof(r))
+    {
+    }
 
     template <typename U>
     [[nodiscard]] constexpr optional_ref(const std::optional<U>& o)
         requires(std::is_const_v<T> && IsCompatibleV<U>)
-    : mPtr(o ? &*o : nullptr) {}
-
+        : mPtr(o ? &*o : nullptr)
+    {
+    }
 
     template <typename U = T>
     [[nodiscard]] constexpr optional_ref(optional_ref<std::remove_const_t<U>> rhs)
         requires(std::is_const_v<U>)
-    : mPtr(rhs.as_ptr()) {}
+        : mPtr(rhs.as_ptr())
+    {
+    }
 
     [[nodiscard]] constexpr optional_ref(optional_ref const&) = default;
 
@@ -62,7 +73,8 @@ public:
 
     [[nodiscard]] constexpr T* as_ptr() const noexcept { return mPtr; }
 
-    [[nodiscard]] constexpr T& get() const {
+    [[nodiscard]] constexpr T& get() const
+    {
         if (!has_value()) {
             throw std::runtime_error{"bad optional_ref access"};
         }
@@ -72,11 +84,12 @@ public:
     [[nodiscard]] constexpr T& value() const { return get(); }
     [[nodiscard]] constexpr T& operator*() const { return get(); }
     [[nodiscard]] constexpr T* operator->() const { return &get(); }
-    [[nodiscard]] constexpr    operator T&() const { return get(); }
-    [[nodiscard]] constexpr    operator T*() const { return &get(); }
+    [[nodiscard]] constexpr operator T&() const { return get(); }
+    [[nodiscard]] constexpr operator T*() const { return &get(); }
 
     template <class U>
-    [[nodiscard]] constexpr T& value_or(U& right) const& {
+    [[nodiscard]] constexpr T& value_or(U& right) const&
+    {
         if (has_value()) {
             return *mPtr;
         }
@@ -84,7 +97,8 @@ public:
     }
 
     template <class U>
-    [[nodiscard]] constexpr T value_or(U&& right) const {
+    [[nodiscard]] constexpr T value_or(U&& right) const
+    {
         if (has_value()) {
             return *mPtr;
         }
@@ -93,14 +107,16 @@ public:
 
     template <typename U = std::decay_t<T>>
         requires(std::is_constructible_v<U, T>)
-    [[nodiscard]] constexpr std::optional<U> copy_as_optional() const {
+    [[nodiscard]] constexpr std::optional<U> copy_as_optional() const
+    {
         return mPtr ? std::optional<U>(*mPtr) : std::nullopt;
     }
 
     template <class... Types>
     constexpr auto operator()(Types&&... args) const
         noexcept(noexcept(std::invoke(*mPtr, static_cast<Types&&>(args)...)))
-            -> decltype(std::invoke(*mPtr, static_cast<Types&&>(args)...)) {
+            -> decltype(std::invoke(*mPtr, static_cast<Types&&>(args)...))
+    {
         return std::invoke(*mPtr, static_cast<Types&&>(args)...);
     }
 };

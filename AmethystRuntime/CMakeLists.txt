@@ -30,3 +30,10 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE MOD_VERSION="${MOD_VERSION}")
 target_link_libraries(${PROJECT_NAME} PRIVATE ${AMETHYST_API})
 target_link_libraries(${PROJECT_NAME} PRIVATE "${AmethystFolder}/lib/fmt.lib")
 target_link_libraries(${PROJECT_NAME} PRIVATE "${AmethystFolder}/lib/libMinHook.x64.lib")
+
+# Code Style
+add_custom_target(ClangFormat
+    COMMAND clang-format
+    -i
+    ${CPP_SOURCES} ${H_FILES}
+)

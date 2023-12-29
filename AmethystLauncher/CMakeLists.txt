@@ -3,7 +3,7 @@ project(AmethystLauncher)
 
 # Define only RelWithDebInfo as the available build configuration
 set(CMAKE_CONFIGURATION_TYPES "RelWithDebInfo" CACHE STRING "Build configurations" FORCE)
-set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Choose the type of build, options are: Debug Release RelWithDebInfo" FORCE)
+set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Choose the type of build, options are: RelWithDebInfo" FORCE)
 
 set(CMAKE_CXX_STANDARD 17)
 
@@ -37,23 +37,11 @@ add_custom_target(
 )
 
 
-# add source files
-set(SOURCE_FILES
-        src/AmethystLauncher.cpp
-        src/loader/Loader.cpp
-        src/loader/PermissionChanger.cpp
-        )
+# Project Files
+file(GLOB_RECURSE CPP_SOURCES "src/*.cpp")
+file(GLOB_RECURSE H_FILES "include/*.h")
+add_executable(AmethystLauncher ${CPP_SOURCES} ${H_FILES})
 
-# add header files
-set(HEADER_FILES
-        src/loader/Loader.h
-        src/loader/PermissionChanger.h
-        )
-
-add_executable(AmethystLauncher 
-        ${SOURCE_FILES}
-        ${HEADER_FILES}
-        )
 target_link_libraries(${PROJECT_NAME} PRIVATE ${AMETHYST_API})
 target_link_libraries(${PROJECT_NAME} PRIVATE "${AmethystFolder}/lib/fmt.lib")
 target_link_libraries(${PROJECT_NAME} PRIVATE "${AmethystFolder}/lib/libMinHook.x64.lib")
@@ -61,3 +49,10 @@ target_link_libraries(${PROJECT_NAME} PRIVATE "${AmethystFolder}/lib/libMinHook.
 
 # Ensure the EmbedManifest target runs after the executable is built
 add_dependencies(AmethystLauncher EmbedManifest)
+
+# Code Style
+add_custom_target(ClangFormat
+    COMMAND clang-format
+    -i
+    ${CPP_SOURCES} ${H_FILES}
+)

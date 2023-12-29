@@ -5,6 +5,7 @@
 class GuiData {
 private:
     char padding0[48];
+
 public:
     Vec2 totalScreenSize;
     Vec2 clientScreenSize;

@@ -1,14 +1,14 @@
 #pragma once
-#include <vector>
-#include <string>
-#include "amethyst/Log.h"
 #include "Json.hpp"
+#include "amethyst/Log.h"
+#include <string>
+#include <vector>
 using json = nlohmann::json;
 
 class Config {
 public:
     std::string injectedMod;
-    std::vector<std::string> mods; 
+    std::vector<std::string> mods;
     bool promptDebugger;
 
 public:
