@@ -60,10 +60,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE "${AmethystFolder}/lib/libMinHook.
 ## Mod Functions
 A mod can define functions that will be called by AmethystRuntime.
 ```cpp
-// Called when a mod is loaded by AmethystAPI, used to create hooks
-extern "C" __declspec(dllexport) void Initialize();
-
-extern "C" __declspec(dllexport) char* GetVersion();
+// Called when a mod is loaded by AmethystAPI, used to create hooks. `gameVersion` is the version defined in config.json.
+extern "C" __declspec(dllexport) void Initialize(const char* gameVersion);
 
 // Called every 50ms, currently not hooked into a real tick function
 extern "C" __declspec(dllexport) void OnTick();

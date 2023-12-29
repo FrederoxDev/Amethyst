@@ -3,13 +3,11 @@
 #include <codecvt>
 namespace fs = std::filesystem;
 
-void ReportIssue(LPCWSTR message)
-{
+void ReportIssue(LPCWSTR message) {
     MessageBoxW(NULL, message, L"AmethystLauncher", MB_ICONERROR | MB_OK);
 }
 
-DWORD GetProcessIdByName(const wchar_t* processName)
-{
+DWORD GetProcessIdByName(const wchar_t* processName) {
     DWORD processId = 0;
     HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
 
@@ -35,8 +33,7 @@ DWORD GetProcessIdByName(const wchar_t* processName)
     return processId;
 }
 
-std::string GetAmethystUWPFolder()
-{
+std::string GetAmethystUWPFolder() {
     char* path;
     size_t path_length;
     errno_t err = _dupenv_s(&path, &path_length, "LocalAppData");
@@ -58,14 +55,12 @@ std::string GetAmethystUWPFolder()
     return amethyst_folder;
 }
 
-ModLoader::ModLoader(Config config) : mConfig(config)
-{
+ModLoader::ModLoader(Config config) : mConfig(config) {
     mAmethystPath = GetAmethystPath();
     mModsPath = GetAmethystUWPFolder() + "mods";
 }
 
-std::string GetAmethystPath()
-{
+std::string GetAmethystPath() {
     std::string baseAmethystPath = "";
 
     char* appdata = getenv("appdata");
@@ -82,8 +77,7 @@ std::string GetAmethystPath()
     return baseAmethystPath;
 }
 
-void ModLoader::getMinecraftWindowHandle()
-{
+void ModLoader::getMinecraftWindowHandle() {
     DWORD procID = GetProcessIdByName(L"Minecraft.Windows.exe");
     if (procID == 0) {
         system("explorer.exe shell:appsFolder\\Microsoft.MinecraftUWP_8wekyb3d8bbwe!App");
@@ -97,8 +91,7 @@ void ModLoader::getMinecraftWindowHandle()
     mMinecraftWindowHandle = procHandle;
 }
 
-void ModLoader::InjectRuntime()
-{
+void ModLoader::InjectRuntime() {
     std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
 
     if (mConfig.injectedMod.length() == 0) {
@@ -116,20 +109,10 @@ void ModLoader::InjectRuntime()
         mod_shortened = mod_shortened.substr(0, atPos);
     }
 
-    std::string oldModPath = mAmethystPath + "/mods";
-    bool oldModDirExists = fs::exists(oldModPath);
-    bool modDirExists = fs::exists(mModsPath);
-
-    if(!modDirExists && oldModDirExists) {
-        Log::Warning("Mods detected at the old directory: {0}\nCopying them to the new location: {1}", oldModPath, mModsPath);
-        
-        fs::copy(oldModPath, mModsPath, fs::copy_options::recursive);
-    } else if (!modDirExists) {
+    if (!fs::exists(mModsPath)) {
         Log::Info("Creating mods directory: {}", mModsPath);
         fs::create_directories(mModsPath);
     }
-
-
 
     std::string runtimePath = fmt::format("{}/{}/{}.dll", mModsPath, mConfig.injectedMod, mod_shortened);
     Log::Info("Runtime: {}", runtimePath);
@@ -145,8 +128,7 @@ void ModLoader::InjectRuntime()
     InjectDLL(runtimePath);
 }
 
-void ModLoader::InjectDLL(const std::string& path)
-{
+void ModLoader::InjectDLL(const std::string& path) {
     LPVOID dll = VirtualAllocEx(mMinecraftWindowHandle, NULL, path.length() + 1,
                                 MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
     if (dll == NULL) {

@@ -8,7 +8,7 @@ using json = nlohmann::json;
 class Config {
 public:
     std::string injectedMod;
-    std::string version;
+    std::string gameVersion;
     std::vector<std::string> mods; 
     bool promptDebugger;
 
