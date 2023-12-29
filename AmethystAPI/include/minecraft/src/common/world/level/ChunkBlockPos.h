@@ -1,6 +1,6 @@
 #pragma once
-#include <stdint.h>
 #include "minecraft/src/common/world/level/BlockPos.h"
+#include <stdint.h>
 
 class ChunkBlockPos {
 public:

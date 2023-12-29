@@ -1,10 +1,11 @@
 #include "Utils.h"
 
-std::string GetAmethystFolder() {
+std::string GetAmethystFolder()
+{
     char* path;
     size_t path_length;
     errno_t err = _dupenv_s(&path, &path_length, "AppData");
-    
+
     if (err) {
         Log::Error("_dupenv_s failed to find %AppData%");
         throw std::exception();
@@ -22,7 +23,8 @@ std::string GetAmethystFolder() {
     return amethyst_folder;
 }
 
-std::string GetAmethystUWPFolder() {
+std::string GetAmethystUWPFolder()
+{
     char* path;
     size_t path_length;
     errno_t err = _dupenv_s(&path, &path_length, "LocalAppData");

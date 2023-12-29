@@ -10,11 +10,13 @@ public:
     entt::basic_registry<EntityId>& mEnttRegistry;
     EntityId mEntity;
 
-    [[nodiscard]] inline entt::basic_registry<EntityId>& getRegistry() {
+    [[nodiscard]] inline entt::basic_registry<EntityId>& getRegistry()
+    {
         return mEnttRegistry;
     }
 
-    [[nodiscard]] inline entt::basic_registry<EntityId> const& getRegistry() const {
+    [[nodiscard]] inline entt::basic_registry<EntityId> const& getRegistry() const
+    {
         return mEnttRegistry;
     }
 };
