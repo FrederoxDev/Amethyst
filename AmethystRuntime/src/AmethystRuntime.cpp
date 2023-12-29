@@ -51,6 +51,16 @@ void AmethystRuntime::LoadMods() {
     for each (auto mod in m_mods) {
         FARPROC addr;
 
+        addr = mod.GetFunction("GetVersion");
+        if (addr != NULL) {
+            std::string modVersion = reinterpret_cast<ModGetVersion>(addr)();
+            if(modVersion != config.version) {
+                Log::Error("[AmethystRuntime] '{0}' ({1}) does not match the current version ({2}).", mod.mod_name, modVersion, config.version);
+            }
+        } else {
+            Log::Warning("[AmethystRuntime] '{}' does not have 'std::string GetVersion()'. A mod should have this function for version checking to work.\n", mod.mod_name);
+        }
+
         addr = mod.GetFunction("Initialize");
         if (addr != NULL) {
             g_mod_initialize.push_back(reinterpret_cast<ModInitializeHooks>(addr));
@@ -69,13 +79,6 @@ void AmethystRuntime::LoadMods() {
         addr = mod.GetFunction("OnRenderUI");
         if (addr != NULL) {
             g_mod_render.push_back(reinterpret_cast<ModRender>(addr));
-        }
-
-        addr = mod.GetFunction("GetVersion");
-        if (addr != NULL) {
-            reinterpret_cast<ModGetVersion>(addr)();
-        } else {
-            Log::Warning("[AmethystRuntime] '{}' does not have 'std::string GetVersion()'. A mod should have this function for version checking to work.\n", mod.mod_name);
         }
 
         addr = mod.GetFunction("Shutdown");
