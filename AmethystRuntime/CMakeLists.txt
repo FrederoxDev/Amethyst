@@ -11,7 +11,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(AmethystFolder "$ENV{appdata}/Amethyst")
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO "${AmethystFolder}/mods/${PROJECT_NAME}@${MOD_VERSION}")
+set(UWPAmethystFolder "$ENV{LOCALAPPDATA}/Packages/Microsoft.MinecraftUWP_8wekyb3d8bbwe/AC/Amethyst")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO "${UWPAmethystFolder}/mods/${PROJECT_NAME}@${MOD_VERSION}")
 
 find_library(AMETHYST_API AmethystAPI PATHS "${AmethystFolder}/lib")
 include_directories(${AmethystFolder}/include "include/")

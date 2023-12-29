@@ -55,10 +55,10 @@ void AmethystRuntime::LoadMods() {
         if (addr != NULL) {
             std::string modVersion = reinterpret_cast<ModGetVersion>(addr)();
             if(modVersion != config.version) {
-                Log::Error("[AmethystRuntime] '{0}' ({1}) does not match the current version ({2}).", mod.mod_name, modVersion, config.version);
+                Log::Error("[AmethystRuntime] '{0}' ({1}) does not match the current version ({2}).", mod.modName, modVersion, config.version);
             }
         } else {
-            Log::Warning("[AmethystRuntime] '{}' does not have 'std::string GetVersion()'. A mod should have this function for version checking to work.\n", mod.mod_name);
+            Log::Warning("[AmethystRuntime] '{}' does not have 'std::string GetVersion()'. A mod should have this function for version checking to work.\n", mod.modName);
         }
 
         addr = mod.GetFunction("Initialize");
@@ -85,10 +85,10 @@ void AmethystRuntime::LoadMods() {
         if (addr != NULL) {
             g_mod_shutdown.push_back(reinterpret_cast<ModShutdown>(addr));
         } else {
-            Log::Warning("[AmethystRuntime] '{}' does not have 'void Shutdown()'. A mod should remove all hooks here for hot-reloading to work.\n", mod.mod_name);
+            Log::Warning("[AmethystRuntime] '{}' does not have 'void Shutdown()'. A mod should remove all hooks here for hot-reloading to work.\n", mod.modName);
         }
 
-        Log::Info("[AmethystRuntime] Loaded '{}'\n", mod.mod_name);
+        Log::Info("[AmethystRuntime] Loaded '{}'\n", mod.modName);
     }
 }
 

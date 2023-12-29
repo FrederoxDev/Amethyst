@@ -57,7 +57,7 @@ std::string GetAmethystUWPFolder() {
 
 ModLoader::ModLoader(Config config) : mConfig(config) {
     mAmethystPath = GetAmethystPath();
-    mModsPath = mAmethystPath + "/mods";
+    mModsPath = GetAmethystUWPFolder() + "mods";
 }
 
 std::string GetAmethystPath() {
@@ -109,10 +109,20 @@ void ModLoader::InjectRuntime() {
         mod_shortened = mod_shortened.substr(0, atPos);
     }
 
-    if (!fs::exists(mModsPath)) {
+    std::string oldModPath = mAmethystPath + "/mods";
+    bool oldModDirExists = fs::exists(oldModPath);
+    bool modDirExists = fs::exists(mModsPath);
+
+    if(!modDirExists && oldModDirExists) {
+        Log::Warning("Mods detected at the old directory: {0}\nCopying them to the new location: {1}", oldModPath, mModsPath);
+        
+        fs::copy(oldModPath, mModsPath, fs::copy_options::recursive);
+    } else if (!modDirExists) {
         Log::Info("Creating mods directory: {}\n", mModsPath);
         fs::create_directories(mModsPath);
     }
+
+
 
     std::string runtimePath = fmt::format("{}/{}/{}.dll", mModsPath, mConfig.injectedMod, mod_shortened);
     Log::Info("Runtime: {}\n", runtimePath);
