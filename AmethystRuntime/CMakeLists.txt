@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.12)
 project(AmethystRuntime)
-set(MOD_VERSION "1.0.1")
+set(MOD_VERSION "1.0.2")
 
 set(CMAKE_CONFIGURATION_TYPES "RelWithDebInfo" CACHE STRING "Build configurations" FORCE)
 set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Choose the type of build, options are: Debug Release RelWithDebInfo" FORCE)

@@ -8,20 +8,17 @@ Mod::Mod(std::string mod_name) {
 	hModule = LoadLibrary(dll_path.string().c_str());
 	if (hModule == NULL) {
 		DWORD error = GetLastError();
-
-		if (error == 0x5) {
-			Log::Error("[AmethystRuntime] '{}' does not have the required privileges!\n", dll_path.string());
-			throw std::exception();
-		}
-
-		else if (error == 0x7e) {
-			Log::Error("[AmethystRuntime] Failed to find '{}'\n", dll_path.string());
-			throw std::exception();
-		}
-
-		else {
-			Log::Error("[AmethystRuntime] Failed to load '{}.dll', error code: 0x{:x}\n", mod_name, error);
-			throw std::exception();
+		
+		switch (error) {
+			case 0x5:
+				Log::Error("[AmethystRuntime] '{}' does not have the required privileges!\n", dll_path.string());
+				throw std::exception();
+			case 0x7e:
+				Log::Error("[AmethystRuntime] Failed to find '{}'\n", dll_path.string());
+				throw std::exception();
+			default:
+				Log::Error("[AmethystRuntime] Failed to load '{}.dll', error code: 0x{:x}\n", mod_name, error);
+				throw std::exception();
 		}
 	}
 

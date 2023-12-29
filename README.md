@@ -56,5 +56,5 @@ extern "C" __declspec(dllexport) void Shutdown();
 ## Goals of AmethystAPI
  - AmethystAPI does not aim to have completed headers
  - Add to headers as needed for projects
- - Sticking to one version (currently 1.20.30.02)
+ - Sticking to one version (currently 1.20.51.1)
  - Follow the same folder structure as Minecraft
