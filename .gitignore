@@ -1,6 +1,6 @@
 */x64
-*/build
-*/.vs
+*\build
+*\.vs
 */packages
+.vscode/settings.json
 *.env
-.vscode

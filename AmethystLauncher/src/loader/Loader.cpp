@@ -57,7 +57,7 @@ std::string GetAmethystUWPFolder() {
 
 ModLoader::ModLoader(Config config) : mConfig(config) {
     mAmethystPath = GetAmethystPath();
-    mModsPath = mAmethystPath + "/mods";
+    mModsPath = GetAmethystUWPFolder() + "mods";
 }
 
 std::string GetAmethystPath() {
@@ -130,20 +130,20 @@ void ModLoader::InjectRuntime() {
 
 void ModLoader::InjectDLL(const std::string& path) {
     LPVOID dll = VirtualAllocEx(mMinecraftWindowHandle, NULL, path.length() + 1,
-        MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+                                MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
     if (dll == NULL) {
         ReportIssue(L"Failed to allocate memory for AmethystRuntime.dll");
         return;
     }
     if (!WriteProcessMemory(mMinecraftWindowHandle, dll, path.c_str(),
-        path.length() + 1, NULL)) {
+                            path.length() + 1, NULL)) {
         ReportIssue(L"Failed to write AmethystRuntime.dll to memory");
         return;
     }
 
     HANDLE thread = CreateRemoteThread(mMinecraftWindowHandle, NULL, NULL,
-        (LPTHREAD_START_ROUTINE)LoadLibraryA,
-        dll, NULL, NULL);
+                                       (LPTHREAD_START_ROUTINE)LoadLibraryA,
+                                       dll, NULL, NULL);
     if (thread == NULL) {
         ReportIssue(L"Failed to create remote thread");
         return;

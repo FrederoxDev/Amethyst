@@ -1,21 +1,22 @@
 #include "PermissionChanger.h"
-#include <Windows.h>
 #include "Loader.h"
+#include <Windows.h>
 #include <aclapi.h>
 
 std::wstring stringToWstring(const std::string& s)
 {
-	std::wstring temp(s.length(), L' ');
-	std::copy(s.begin(), s.end(), temp.begin());
-	return temp;
+    std::wstring temp(s.length(), L' ');
+    std::copy(s.begin(), s.end(), temp.begin());
+    return temp;
 }
 
-#include <windows.h>
-#include <sddl.h>
 #include <iostream>
+#include <sddl.h>
 #include <string>
+#include <windows.h>
 
-bool AddALLToDirectoryPermissions() {
+bool AddALLToDirectoryPermissions()
+{
     // Get the path to the amethyst folder
     auto stringPath = GetAmethystPath();
     std::wstring amethystPath(stringPath.begin(), stringPath.end()); // Assuming GetAmethystUWPFolder() returns a wide string

@@ -1,6 +1,7 @@
 #include "amethyst/HookManager.h"
 
-void HookManager::CreateHook(uintptr_t targetAddress, void* detour, void** original) {
+void HookManager::CreateHook(uintptr_t targetAddress, void* detour, void** original)
+{
     LPVOID original_addr = reinterpret_cast<LPVOID>(targetAddress);
 
     MH_STATUS status;
@@ -20,7 +21,8 @@ void HookManager::CreateHook(uintptr_t targetAddress, void* detour, void** origi
     m_hooks.push_back(original_addr);
 }
 
-void HookManager::Shutdown() {
+void HookManager::Shutdown()
+{
     for (auto hook : m_hooks) {
         MH_STATUS status;
 
@@ -30,11 +32,11 @@ void HookManager::Shutdown() {
             throw std::exception();
         }
 
-        status = MH_RemoveHook(hook);   
+        status = MH_RemoveHook(hook);
         if (status != MH_OK) {
             Log::Error("MH_RemoveHook failed: Reason: {}", MH_StatusToString(status));
             throw std::exception();
-        }     
+        }
     }
 
     m_hooks.clear();

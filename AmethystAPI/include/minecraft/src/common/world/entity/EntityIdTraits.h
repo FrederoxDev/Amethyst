@@ -15,7 +15,7 @@ struct EntityIdTraits {
 };
 
 // Specialize entt::storage_type by removing sigh_mixin
-template<typename Type>
+template <typename Type>
 struct entt::storage_type<Type, EntityId> {
     using type = basic_storage<Type, EntityId>;
 };

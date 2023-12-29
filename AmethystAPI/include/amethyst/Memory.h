@@ -1,12 +1,12 @@
 #pragma once
-#include <stdint.h>
-#include <windows.h>
-#include <psapi.h>
-#include <string>
-#include <cstdint>
-#include <chrono>
-#include <vector>
 #include "amethyst/Log.h"
+#include <chrono>
+#include <cstdint>
+#include <psapi.h>
+#include <stdint.h>
+#include <string>
+#include <vector>
+#include <windows.h>
 
 /*
 Returns the position where Minecraft has been loaded into memory
@@ -32,6 +32,5 @@ uintptr_t SigScan(std::string signature);
 Finds an address of a function with its signature in the loaded game memory, This function uses as many threads as the CPU has cores
 */
 uintptr_t multiThreadedSigScan(
-	const std::string* sig,
-	const std::vector<bool>& mask
-);
+    const std::string* sig,
+    const std::vector<bool>& mask);
