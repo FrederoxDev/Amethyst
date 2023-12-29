@@ -40,6 +40,8 @@ A mod can define functions that will be called by AmethystRuntime.
 // Called when a mod is loaded by AmethystAPI, used to create hooks
 extern "C" __declspec(dllexport) void Initialize();
 
+extern "C" __declspec(dllexport) char* GetVersion();
+
 // Called every 50ms, currently not hooked into a real tick function
 extern "C" __declspec(dllexport) void OnTick();
 

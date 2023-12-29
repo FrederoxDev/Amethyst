@@ -14,7 +14,7 @@ typedef void(*ModInitializeHooks)();
 typedef void(*ModTick)();
 typedef void(*ModStartJoinGame)(ClientInstance* clientInstance);
 typedef void(*ModRender)(ScreenView* screenView, UIRenderContext* ctx);
-typedef std::string(*ModGetVersion)();
+typedef char*(*ModGetVersion)();
 typedef void(*ModShutdown)();
 
 class AmethystRuntime {
