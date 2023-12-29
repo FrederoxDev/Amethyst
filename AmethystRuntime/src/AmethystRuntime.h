@@ -10,7 +10,7 @@
 #include <sstream>
 #include <vector>
 
-typedef void (*ModInitializeHooks)();
+typedef void (*ModInitializeHooks)(const char* gameVersion);
 typedef void (*ModTick)();
 typedef void (*ModStartJoinGame)(ClientInstance* clientInstance);
 typedef void (*ModShutdown)();

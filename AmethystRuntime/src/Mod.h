@@ -13,11 +13,11 @@ private:
     HMODULE hModule;
 
 public:
-    std::string mod_name;
+    std::string modName;
 
 public:
-    Mod(std::string mod_name);
-    FARPROC GetFunction(const char* func_name);
+    Mod(std::string modName);
+    FARPROC GetFunction(const char* funcName);
     void Free();
 
 private:

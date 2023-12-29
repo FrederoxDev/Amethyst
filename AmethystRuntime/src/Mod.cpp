@@ -1,72 +1,65 @@
 #include "Mod.h"
 
-Mod::Mod(std::string mod_name)
-{
-    this->mod_name = mod_name;
-    fs::path dll_path = GetTempDll();
+Mod::Mod(std::string modName) {
+	this->modName = modName;
+	fs::path dllPath = GetTempDll();
 
-    // Loads the mod in a temporary directory so that the original DLL can still be built to
-    hModule = LoadLibrary(dll_path.string().c_str());
-    if (hModule == NULL) {
-        DWORD error = GetLastError();
-
-        if (error == 0x5) {
-            Log::Error("[AmethystRuntime] '{}' does not have the required privileges!", dll_path.string());
-            throw std::exception();
-        }
-
-        else if (error == 0x7e) {
-            Log::Error("[AmethystRuntime] Failed to find '{}'", dll_path.string());
-            throw std::exception();
-        }
-
-        else {
-            Log::Error("[AmethystRuntime] Failed to load '{}.dll', error code: 0x{:x}", mod_name, error);
-            throw std::exception();
+	// Loads the mod in a temporary directory so that the original DLL can still be built to
+	hModule = LoadLibrary(dllPath.string().c_str());
+	if (hModule == NULL) {
+		DWORD error = GetLastError();
+		
+		switch (error) {
+            case 0x5:
+				Log::Error("[AmethystRuntime] '{}' does not have the required privileges!", dllPath.string());
+				throw std::exception();
+			case 0x7e:
+				Log::Error("[AmethystRuntime] Failed to find '{}'", dllPath.string());
+				throw std::exception();
+			default:
+				Log::Error("[AmethystRuntime] Failed to load '{}.dll', error code: 0x{:x}", modName, error);
+				throw std::exception();
         }
     }
 
     return;
 }
 
-FARPROC Mod::GetFunction(const char* func_name)
-{
-    return GetProcAddress(hModule, func_name);
+FARPROC Mod::GetFunction(const char* funcName) {
+	return GetProcAddress(hModule, funcName);
 }
 
-void Mod::Free()
-{
+void Mod::Free() {
     FreeLibrary(hModule);
 }
 
-fs::path Mod::GetTempDll()
-{
-    std::string mod_shortened = mod_name;
-    size_t atPos = mod_shortened.find("@");
+fs::path Mod::GetTempDll() {
+	std::string modShortened = modName; 
+	size_t atPos = modShortened.find("@");
 
-    if (atPos != std::string::npos) {
-        mod_shortened = mod_shortened.substr(0, atPos);
-    }
+	if (atPos != std::string::npos) {
+		  modShortened = modShortened.substr(0, atPos);
+	}
 
-    // Ensure temp directory exists
-    fs::path temp_dir = GetAmethystFolder() + "temp/" + mod_name + "/";
-    if (!fs::exists(temp_dir)) fs::create_directories(temp_dir);
+	// Ensure temp directory exists
+	fs::path tempDir = GetAmethystUWPFolder() + "temp/" + modName + "/";
+	if (!fs::exists(tempDir)) fs::create_directories(tempDir);
 
-    fs::path original_dll = GetAmethystFolder() + "mods/" + mod_name + "/" + mod_shortened + ".dll";
-    if (!fs::exists(original_dll)) {
-        Log::Error("[AmethystRuntime] Could not find '{}.dll'", mod_shortened);
-        throw std::exception();
-    }
+	fs::path originalDll = GetAmethystUWPFolder() + "mods/" + modName + "/" + modShortened + ".dll";
+	if (!fs::exists(originalDll)) {
+		  Log::Error("[AmethystRuntime] Could not find '{}.dll'", modShortened);
+		  throw std::exception();
+	}
 
-    fs::path temp_dll = temp_dir.string() + mod_shortened + ".dll";
+	fs::path tempDll = tempDir.string() + modShortened + ".dll";
 
-    try {
-        fs::copy_file(original_dll, temp_dll, fs::copy_options::overwrite_existing);
-    }
-    catch (const std::filesystem::filesystem_error& e) {
-        Log::Error("[AmethystRuntime] {} (Error code: {})", e.what(), e.code().value());
-        throw std::exception();
-    }
+	try {
+		  fs::copy_file(originalDll, tempDll, fs::copy_options::overwrite_existing);
+	}
+	catch (const std::filesystem::filesystem_error& e) {
+		  Log::Error("[AmethystRuntime] {} (Error code: {})", e.what(), e.code().value());
+		  throw std::exception();
+	}
 
-    return temp_dll;
+	return tempDll;
 }

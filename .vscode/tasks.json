@@ -1,0 +1,26 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "Build API",
+            "command": "cd AmethystAPI ; mkdir build ; cd build ; cmake .. ; msbuild AmethystAPI.sln",
+            "detail": "Build the Amethyst API",
+            "problemMatcher": []
+        },
+        {
+            "type": "shell",
+            "label": "Build and Run Launcher",
+            "command": "cd AmethystLauncher; mkdir build; cd build; cmake ..; msbuild AmethystLauncher.sln; cd RelWithDebInfo; ./AmethystLauncher.exe",
+            "detail": "Build and run the Amethyst Launcher",
+            "problemMatcher": []
+        },
+        {
+            "type": "shell",
+            "label": "Build Runtime",
+            "command": "cd AmethystRuntime; mkdir build; cd build; cmake ..; msbuild AmethystRuntime.sln",
+            "detail": "Build the Amethyst Runtime",
+            "problemMatcher": []
+        }
+    ]
+}
