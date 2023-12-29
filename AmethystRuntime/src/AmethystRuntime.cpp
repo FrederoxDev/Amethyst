@@ -9,10 +9,10 @@ std::vector<ModRender> g_mod_render;
 Config AmethystRuntime::ReadConfig() {
     // Ensure it exists
     std::string configPath = GetAmethystUWPFolder() + "config.json";
-    Log::Info("[AmethystRuntime] Config: {}\n", configPath);
+    Log::Info("[AmethystRuntime] Config: {}", configPath);
 
     if (!fs::exists(configPath)) {
-        Log::Error("[AmethystRuntime] Could not find config.json\n\tat '{}'\n", configPath);
+        Log::Error("[AmethystRuntime] Could not find config.json\n\tat '{}'", configPath);
         throw std::exception();
     }
 
@@ -35,20 +35,20 @@ void AmethystRuntime::LoadMods() {
     // Initialize MinHook
     MH_STATUS status = MH_Initialize();
     if (status != MH_OK) {
-        Log::Error("MH_Initialize failed! Reason: {}\n", MH_StatusToString(status));
+        Log::Error("MH_Initialize failed! Reason: {}", MH_StatusToString(status));
         throw std::exception("MH_Initialize failed!");
     }
 
     // Read config.json file
     Config config = ReadConfig();
-    for each (auto& modName in config.mods) {
+    for (auto& modName : config.mods) {
         this->m_mods.push_back(Mod(modName));
     }
 
     if (config.promptDebugger) AttachDebugger();
 
     // Load functions from the mods
-    for each (auto mod in m_mods)
+    for (auto& mod : m_mods)
     {
         FARPROC addr;
 
@@ -77,10 +77,10 @@ void AmethystRuntime::LoadMods() {
             g_mod_shutdown.push_back(reinterpret_cast<ModShutdown>(addr));
         }
         else {
-            Log::Warning("[AmethystRuntime] '{}' does not have 'void Shutdown()'. A mod should remove all hooks here for hot-reloading to work.\n", mod.mod_name);
+            Log::Warning("[AmethystRuntime] '{}' does not have 'void Shutdown()'. A mod should remove all hooks here for hot-reloading to work.", mod.mod_name);
         }
 
-        Log::Info("[AmethystRuntime] Loaded '{}'\n", mod.mod_name);
+        Log::Info("[AmethystRuntime] Loaded '{}'", mod.mod_name);
     }
 }
 
@@ -89,16 +89,16 @@ void AmethystRuntime::RunMods() {
     InitializeHooks();
 
     // Allow mods to create hooks
-    for each (auto init_func in g_mod_initialize) init_func();
+    for (auto& init_func : g_mod_initialize) init_func();
 
     while (true) {
-        for each (auto tick_func in g_mod_tick) tick_func();
+        for (auto& tick_func : g_mod_tick) tick_func();
 
         Sleep(1000 / 20);
         if (GetAsyncKeyState(VK_NUMPAD0)) break;
 
         if (GetAsyncKeyState('R') & 0x8000) {
-            Log::Info("\n[AmethystRuntime] Beginning hot-reload!\n");
+            Log::Info("\n========================= Beginning hot-reload! =========================");
             this->Shutdown();
             this->LoadMods();
 
@@ -112,14 +112,14 @@ void AmethystRuntime::RunMods() {
 ScreenView::_setupAndRender _ScreenView_setupAndRender;
 
 static void* ScreenView_setupAndRender(ScreenView* self, UIRenderContext* ctx) {
-    for each (auto render_func in g_mod_render) render_func(self, ctx);
+    for (auto& render_func : g_mod_render) render_func(self, ctx);
     return _ScreenView_setupAndRender(self, ctx);
 }
 
 ClientInstance::_onStartJoinGame _ClientInstance_onStartJoinGame;
 
 static int64_t ClientInstance_onStartJoinGame(ClientInstance* self, int64_t a2, int64_t a3, uint64_t a4) {
-    for each (auto start_func in g_mod_start_join) start_func(self);
+    for (auto& start_func : g_mod_start_join) start_func(self);
     return _ClientInstance_onStartJoinGame(self, a2, a3, a4);
 }
 
@@ -139,10 +139,10 @@ void AmethystRuntime::Shutdown() {
     g_hookManager.Shutdown();
 
     // Allow each mod to have its shutdown logic
-    for each (auto shutdown_func in g_mod_shutdown) shutdown_func();
+    for (auto& shutdown_func : g_mod_shutdown) shutdown_func();
 
     // Unload each mod dll from game memory
-    for each (auto mod in m_mods) {
+    for (auto& mod : m_mods) {
         mod.Free();
     }
 
@@ -159,9 +159,6 @@ void AmethystRuntime::Shutdown() {
 }
 
 void AmethystRuntime::AttachDebugger() {
-    char buffer[100];
-    sprintf(buffer, "vsjitdebugger -p %d", GetCurrentProcessId());
-    std::string cmd(buffer);
-
-    system(cmd.c_str());
+    std::string command = fmt::format("vsjitdebugger -p {:d}", GetCurrentProcessId());
+    system(command.c_str());
 }

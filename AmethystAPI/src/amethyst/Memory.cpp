@@ -72,71 +72,74 @@ uintptr_t SigScan(std::string signature) {
 		return address;
 	}
 
-	Log::Error("Sigscan failed! {:s}\n", signature);
+	Log::Error("Sigscan failed! {:s}", signature);
 	throw std::exception();
 }
 
-uintptr_t multiThreadedSigScan(
-	const std::string* sig,
-	const std::vector<bool>& mask
-)
-{
-	uint64_t start = GetMinecraftBaseAddress();
-	uint64_t end = start + GetMinecraftSize();
-
-	unsigned int threadCount = std::thread::hardware_concurrency() - 1;
-	// leave one thread for the main thread
-	uint64_t chunkSize = (end - start) / threadCount;
-
-	std::vector<std::thread> threads;
-	std::mutex mutex;
-	uint64_t result = 0;
-	auto sigScan = [&](uint64_t start, uint64_t end) -> uint64_t{
-		for (uint64_t address = start; address < end; address++) {
-			if (result != 0) return 0; // another thread found it
-			bool failed = false;
-			size_t byteIndex = 0;
-
-			for (size_t offset = 0; offset < mask.size(); offset++) {
-				if (mask[offset]) continue;
-
-				byte expectedByte = sig->at(byteIndex++);
-				byte realByte = *reinterpret_cast<byte*>(address + offset);
-
-				if (expectedByte != realByte) {
-					failed = true;
-					break;
-				}
-			}
-
-			if (failed) continue;
-
-			mutex.lock();
-			Log::Info("Found sigscan match at 0x{:X}\n", address);
-			result = address;
-			mutex.unlock();
-			return address;
-		}
-
-		return (uint64_t)0;
-	};
-
-	for (unsigned int i = 0; i < threadCount; i++) {
-		uint64_t threadStart = start + (i * chunkSize);
-		uint64_t threadEnd = (i == threadCount - 1) ? end : threadStart + chunkSize;
-
-		threads.emplace_back(std::thread(sigScan, threadStart, threadEnd));
-	}
-
-	for (auto& thread : threads) {
-		thread.join();
-	}
-
-	if (result == 0) {
-		Log::Error("Sigscan failed! {:s}\n", *sig);
-		return -1;
-	}
-	else {
-		return result;
-	}
-}
+// For whatever reason this is causing logging to fail building after I updated to c++ 20
+// So commenting out for now, feel free to fix if using, its not used within AmethystAPI 
+// 
+//uintptr_t multiThreadedSigScan(
+//	const std::string* sig,
+//	const std::vector<bool>& mask
+//)
+//{
+//	uint64_t start = GetMinecraftBaseAddress();
+//	uint64_t end = start + GetMinecraftSize();
+//
+//	unsigned int threadCount = std::thread::hardware_concurrency() - 1;
+//	// leave one thread for the main thread
+//	uint64_t chunkSize = (end - start) / threadCount;
+//
+//	std::vector<std::thread> threads;
+//	std::mutex mutex;
+//	uint64_t result = 0;
+//	auto sigScan = [&](uint64_t start, uint64_t end) -> uint64_t{
+//		for (uint64_t address = start; address < end; address++) {
+//			if (result != 0) return 0; // another thread found it
+//			bool failed = false;
+//			size_t byteIndex = 0;
+//
+//			for (size_t offset = 0; offset < mask.size(); offset++) {
+//				if (mask[offset]) continue;
+//
+//				byte expectedByte = sig->at(byteIndex++);
+//				byte realByte = *reinterpret_cast<byte*>(address + offset);
+//
+//				if (expectedByte != realByte) {
+//					failed = true;
+//					break;
+//				}
+//			}
+//
+//			if (failed) continue;
+//
+//			mutex.lock();
+//			Log::Info("Found sigscan match at 0x{:X}\n", address);
+//			result = address;
+//			mutex.unlock();
+//			return address;
+//		}
+//
+//		return (uint64_t)0;
+//	};
+//
+//	for (unsigned int i = 0; i < threadCount; i++) {
+//		uint64_t threadStart = start + (i * chunkSize);
+//		uint64_t threadEnd = (i == threadCount - 1) ? end : threadStart + chunkSize;
+//
+//		threads.emplace_back(std::thread(sigScan, threadStart, threadEnd));
+//	}
+//
+//	for (auto& thread : threads) {
+//		thread.join();
+//	}
+//
+//	if (result == 0) {
+//		Log::Error("Sigscan failed! {:s}\n", *sig);
+//		return -1;
+//	}
+//	else {
+//		return result;
+//	}
+//}

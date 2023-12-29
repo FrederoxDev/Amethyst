@@ -6,12 +6,12 @@ std::string GetAmethystFolder() {
     errno_t err = _dupenv_s(&path, &path_length, "AppData");
     
     if (err) {
-        Log::Error("_dupenv_s failed to find %AppData%\n");
+        Log::Error("_dupenv_s failed to find %AppData%");
         throw std::exception();
     }
 
     if (path == 0) {
-        Log::Error("%AppData% was 0\n");
+        Log::Error("%AppData% was 0");
         throw std::exception();
     }
 
@@ -28,12 +28,12 @@ std::string GetAmethystUWPFolder() {
     errno_t err = _dupenv_s(&path, &path_length, "LocalAppData");
 
     if (err) {
-        Log::Error("_dupenv_s failed to find %LocalAppData%\n");
+        Log::Error("_dupenv_s failed to find %LocalAppData%");
         throw std::exception();
     }
 
     if (path == 0) {
-        Log::Error("%LocalAppData% was 0\n");
+        Log::Error("%LocalAppData% was 0");
         throw std::exception();
     }
 

@@ -2,9 +2,11 @@ cmake_minimum_required(VERSION 3.12)
 project(AmethystAPI)
 
 
+set(CMAKE_CXX_STANDARD 20)
+
 # Define only RelWithDebInfo as the available build configuration
 set(CMAKE_CONFIGURATION_TYPES "RelWithDebInfo" CACHE STRING "Build configurations" FORCE)
-set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Choose the type of build, options are: Debug Release RelWithDebInfo" FORCE)
+set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Choose the type of build, options are: RelWithDebInfo" FORCE)
 
 # Project Configuration
 set(AmethystFolder "$ENV{appdata}/Amethyst")
@@ -14,6 +16,15 @@ file(GLOB_RECURSE CPP_SOURCES "src/*.cpp")
 file(GLOB_RECURSE H_FILES "include/*.h")
 
 add_library(${PROJECT_NAME} STATIC ${CPP_SOURCES} ${H_FILES})
+
+target_compile_definitions(${PROJECT_NAME} PUBLIC ENTT_PACKED_PAGE=128)
+
+set_property(
+    TARGET ${PROJECT_NAME}
+    PROPERTY MSVC_RUNTIME_LIBRARY
+    # use /MD in debug mode (dynamic linking) and /MT in release mode (static linking)
+    $<$<CONFIG:Debug>:MultiThreadedDLL>$<$<CONFIG:Release>:MultiThreaded>
+)
 
 # Organize source files into virtual folders in Visual Studio
 foreach(source IN LISTS CPP_SOURCES H_FILES)

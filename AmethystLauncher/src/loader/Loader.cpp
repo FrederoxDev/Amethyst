@@ -110,12 +110,12 @@ void ModLoader::InjectRuntime() {
     }
 
     if (!fs::exists(mModsPath)) {
-        Log::Info("Creating mods directory: {}\n", mModsPath);
+        Log::Info("Creating mods directory: {}", mModsPath);
         fs::create_directories(mModsPath);
     }
 
     std::string runtimePath = fmt::format("{}/{}/{}.dll", mModsPath, mConfig.injectedMod, mod_shortened);
-    Log::Info("Runtime: {}\n", runtimePath);
+    Log::Info("Runtime: {}", runtimePath);
 
     if (!fs::exists(runtimePath)) {
         std::string message = fmt::format("Failed to find AmethystRuntime.dll. Make sure to install the Amethyst Runtime into {}", mModsPath);

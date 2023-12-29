@@ -10,17 +10,17 @@ Mod::Mod(std::string mod_name) {
 		DWORD error = GetLastError();
 
 		if (error == 0x5) {
-			Log::Error("[AmethystRuntime] '{}' does not have the required privileges!\n", dll_path.string());
+			Log::Error("[AmethystRuntime] '{}' does not have the required privileges!", dll_path.string());
 			throw std::exception();
 		}
 
 		else if (error == 0x7e) {
-			Log::Error("[AmethystRuntime] Failed to find '{}'\n", dll_path.string());
+			Log::Error("[AmethystRuntime] Failed to find '{}'", dll_path.string());
 			throw std::exception();
 		}
 
 		else {
-			Log::Error("[AmethystRuntime] Failed to load '{}.dll', error code: 0x{:x}\n", mod_name, error);
+			Log::Error("[AmethystRuntime] Failed to load '{}.dll', error code: 0x{:x}", mod_name, error);
 			throw std::exception();
 		}
 	}
@@ -50,7 +50,7 @@ fs::path Mod::GetTempDll() {
 
 	fs::path original_dll = GetAmethystFolder() + "mods/" + mod_name + "/" + mod_shortened + ".dll";
 	if (!fs::exists(original_dll)) {
-		Log::Error("[AmethystRuntime] Could not find '{}.dll'\n", mod_shortened);
+		Log::Error("[AmethystRuntime] Could not find '{}.dll'", mod_shortened);
 		throw std::exception();
 	}
 
@@ -60,7 +60,7 @@ fs::path Mod::GetTempDll() {
 		fs::copy_file(original_dll, temp_dll, fs::copy_options::overwrite_existing);
 	}
 	catch (const std::filesystem::filesystem_error& e) {
-		Log::Error("[AmethystRuntime] {} (Error code: {})\n", e.what(), e.code().value());
+		Log::Error("[AmethystRuntime] {} (Error code: {})", e.what(), e.code().value());
 		throw std::exception();
 	}
 
