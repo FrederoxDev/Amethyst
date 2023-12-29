@@ -11,18 +11,22 @@ set(CMAKE_CXX_STANDARD 20)
 set(AmethystFolder "$ENV{appdata}/Amethyst")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO "${AmethystFolder}/mods/${PROJECT_NAME}@${MOD_VERSION}")
 
+# Include Amethyst
 find_library(AMETHYST_API AmethystAPI PATHS "${AmethystFolder}/lib")
 include_directories(${AmethystFolder}/include "include/")
 
+# Project Files
 file(GLOB_RECURSE CPP_SOURCES "src/*.cpp")
 file(GLOB_RECURSE H_FILES "src/*.h")
 add_library(${PROJECT_NAME} SHARED ${CPP_SOURCES} ${H_FILES})
 
+# EnTT Config Options
 target_compile_definitions(${PROJECT_NAME} PUBLIC ENTT_PACKED_PAGE=128)
 
 # Pass MOD_VERSION to the source code
 target_compile_definitions(${PROJECT_NAME} PRIVATE MOD_VERSION="${MOD_VERSION}")
 
+# Link libraries
 target_link_libraries(${PROJECT_NAME} PRIVATE ${AMETHYST_API})
 target_link_libraries(${PROJECT_NAME} PRIVATE "${AmethystFolder}/lib/fmt.lib")
 target_link_libraries(${PROJECT_NAME} PRIVATE "${AmethystFolder}/lib/libMinHook.x64.lib")
