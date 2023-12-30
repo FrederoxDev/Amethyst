@@ -8,7 +8,7 @@ std::vector<ModRender> g_mod_render;
 
 Config AmethystRuntime::ReadConfig() {
     // Ensure it exists
-    std::string configPath = GetAmethystUWPFolder() + "config.json";
+    std::string configPath = GetAmethystFolder() + "config.json";
     Log::Info("[AmethystRuntime] Config: {}", configPath);
 
     if (!fs::exists(configPath)) {
@@ -74,7 +74,8 @@ void AmethystRuntime::LoadMods() {
         addr = mod.GetFunction("Shutdown");
         if (addr != NULL) {
             g_mod_shutdown.push_back(reinterpret_cast<ModShutdown>(addr));
-        } else {
+        }
+        else {
             Log::Warning("[AmethystRuntime] '{}' does not have 'void Shutdown()'. A mod should remove all hooks here for hot-reloading to work.", mod.modName);
         }
 

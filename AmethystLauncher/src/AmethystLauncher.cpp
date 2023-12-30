@@ -11,7 +11,7 @@ namespace fs = std::filesystem;
 
 Config LoadConfig()
 {
-    std::string amethystFolderPath = GetAmethystUWPFolder();
+    std::string amethystFolderPath = GetAmethystPath();
 
     if (!fs::exists(amethystFolderPath)) {
         Log::Info("[AmethystLauncher] Creating Amethyst folder at {}", amethystFolderPath);
@@ -19,7 +19,7 @@ Config LoadConfig()
         fs::create_directory(amethystFolderPath);
     }
 
-    std::string configPath = amethystFolderPath + "config.json";
+    std::string configPath = amethystFolderPath + "/config.json";
 
     std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
 

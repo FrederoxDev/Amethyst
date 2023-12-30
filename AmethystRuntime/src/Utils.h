@@ -4,5 +4,4 @@
 #include <shlobj.h>
 #include <string>
 
-std::string GetAmethystUWPFolder();
 std::string GetAmethystFolder();

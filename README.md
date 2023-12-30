@@ -1,9 +1,11 @@
 # Project Amethyst
 
-Amethyst is a project for making client-side mods for Minecraft Bedrock version `1.20.51.1`. 
+Amethyst is a project for making client-side mods for Minecraft Bedrock version `1.20.51.1`.
 
 # Mod Functions
+
 A mod is able to export functions that will be automatically called by AmethystRuntime.
+
 ```cpp
 // Called when a mod is loaded by AmethystAPI, used to create hooks
 extern "C" __declspec(dllexport) void Initialize();
@@ -22,6 +24,7 @@ extern "C" __declspec(dllexport) void Shutdown();
 ```
 
 # CMakeLists.txt Template
+
 ```cmake
 cmake_minimum_required(VERSION 3.12)
 project(ModName) # Replace with the name of your mod
@@ -34,8 +37,7 @@ set(CMAKE_CXX_STANDARD 20)
 
 # Build into %appdata%/Amethyst
 set(AmethystFolder "$ENV{appdata}/Amethyst")
-set(UWPAmethystFolder "$ENV{LOCALAPPDATA}/Packages/Microsoft.MinecraftUWP_8wekyb3d8bbwe/AC/Amethyst")
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO "${UWPAmethystFolder}/mods/${PROJECT_NAME}@${MOD_VERSION}")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO "${AmethystFolder}/mods/${PROJECT_NAME}@${MOD_VERSION}")
 
 # Include Amethyst
 find_library(AMETHYST_API AmethystAPI PATHS "${AmethystFolder}/lib")
@@ -59,7 +61,9 @@ target_link_libraries(${PROJECT_NAME} PRIVATE "${AmethystFolder}/lib/libMinHook.
 ```
 
 ## Mod Functions
+
 A mod can define functions that will be called by AmethystRuntime.
+
 ```cpp
 // Called when a mod is loaded by AmethystAPI, used to create hooks. `gameVersion` is the version defined in config.json.
 extern "C" __declspec(dllexport) void Initialize(const char* gameVersion);
@@ -78,7 +82,8 @@ extern "C" __declspec(dllexport) void Shutdown();
 ```
 
 ## Goals of AmethystAPI
- - AmethystAPI does not aim to have completed headers
- - Add to headers as needed for projects
- - Sticking to one version (currently 1.20.51.1)
- - Follow the same folder structure as Minecraft
+
+- AmethystAPI does not aim to have completed headers
+- Add to headers as needed for projects
+- Sticking to one version (currently 1.20.51.1)
+- Follow the same folder structure as Minecraft

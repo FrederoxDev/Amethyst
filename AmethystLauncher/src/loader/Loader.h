@@ -26,4 +26,3 @@ private:
 	HANDLE mMinecraftWindowHandle;
 };
 std::string GetAmethystPath();
-std::string GetAmethystUWPFolder();

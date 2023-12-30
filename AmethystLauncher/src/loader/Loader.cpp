@@ -33,31 +33,9 @@ DWORD GetProcessIdByName(const wchar_t* processName) {
     return processId;
 }
 
-std::string GetAmethystUWPFolder() {
-    char* path;
-    size_t path_length;
-    errno_t err = _dupenv_s(&path, &path_length, "LocalAppData");
-
-    if (err) {
-        ReportIssue(L"_dupenv_s failed to find %LocalAppData%");
-        throw std::exception();
-    }
-
-    if (path == 0) {
-        ReportIssue(L"%LocalAppData% was 0");
-        throw std::exception();
-    }
-
-    std::string app_data(path);
-    free(path);
-
-    std::string amethyst_folder = app_data + "/Packages/Microsoft.MinecraftUWP_8wekyb3d8bbwe/AC/Amethyst/";
-    return amethyst_folder;
-}
-
 ModLoader::ModLoader(Config config) : mConfig(config) {
     mAmethystPath = GetAmethystPath();
-    mModsPath = GetAmethystUWPFolder() + "mods";
+    mModsPath = mAmethystPath + "/mods";
 }
 
 std::string GetAmethystPath() {
@@ -130,20 +108,20 @@ void ModLoader::InjectRuntime() {
 
 void ModLoader::InjectDLL(const std::string& path) {
     LPVOID dll = VirtualAllocEx(mMinecraftWindowHandle, NULL, path.length() + 1,
-                                MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+        MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
     if (dll == NULL) {
         ReportIssue(L"Failed to allocate memory for AmethystRuntime.dll");
         return;
     }
     if (!WriteProcessMemory(mMinecraftWindowHandle, dll, path.c_str(),
-                            path.length() + 1, NULL)) {
+        path.length() + 1, NULL)) {
         ReportIssue(L"Failed to write AmethystRuntime.dll to memory");
         return;
     }
 
     HANDLE thread = CreateRemoteThread(mMinecraftWindowHandle, NULL, NULL,
-                                       (LPTHREAD_START_ROUTINE)LoadLibraryA,
-                                       dll, NULL, NULL);
+        (LPTHREAD_START_ROUTINE)LoadLibraryA,
+        dll, NULL, NULL);
     if (thread == NULL) {
         ReportIssue(L"Failed to create remote thread");
         return;
