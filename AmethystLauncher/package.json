@@ -4,7 +4,8 @@
   "description": "A launcher for mods build with AmethystAPI",
   "main": "src/main.js",
   "scripts": {
-    "build-cpp": "rmdir /s /q bin && rmdir /s /q build && node-gyp configure build && electron-rebuild",
+    "clean": "if exist bin rmdir /s /q bin && if exist build rmdir /s /q build",
+    "build-cpp": "npm run clean && node-gyp configure build && electron-rebuild",
     "start": "electron ."
   },
   "keywords": [],

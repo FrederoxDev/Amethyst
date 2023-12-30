@@ -155,7 +155,8 @@ window.addEventListener('DOMContentLoaded', () => {
     updateUI();
 
     document.getElementById("launch-button").addEventListener("click", () => {
-        console.log("Launch!")
+        // amethyst.LaunchGame(loadedConfig["runtime"]);
+        amethyst.LaunchGame("C:/Users/blake/AppData/Roaming/Amethyst/mods/AmethystRuntime@1.0.1/AmethystRuntime.dll")
     })
 
     document.getElementById("open-folder-button").addEventListener("click", () => {

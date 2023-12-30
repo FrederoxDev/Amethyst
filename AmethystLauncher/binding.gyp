@@ -2,7 +2,10 @@
     "targets": [
         {
             "target_name": "amethyst",
-            "sources": ["injector/amethyst.cpp"]
+            "sources": [
+                "injector/Amethyst.cpp",
+                "injector/Loader.cpp"
+            ]
         }
     ]
 }
