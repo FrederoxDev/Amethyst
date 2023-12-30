@@ -1,6 +1,6 @@
 #pragma once
-#include <string.h>
 #include <functional>
+#include <string.h>
 
 enum class FocusImpact : char {
     Neutral
