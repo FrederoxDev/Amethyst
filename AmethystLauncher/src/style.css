@@ -1,0 +1,7 @@
+#loaded-mods div, #unloaded-mods div {
+    display: flex;
+}
+
+#loaded-mods div p, #unloaded-mods div p {
+    margin: 0;
+}

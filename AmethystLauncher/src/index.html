@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <title>AmethystLauncher</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <button id="open-folder-button">Open Mods Folder</button>
+    <button id="launch-button">Launch</button>
+
+    <div>
+      <label for="runtime-mod">Runtime Mod</label>
+      <select name="runtime-mod-select" id="runtime-mod-select"></select>
+    </div>
+
+    <form id="settings">
+      <div>
+        <label for="keep-open-checkbox">Keep launcher open</label>
+        <input type="checkbox" name="keep-open-checkbox" id="keep-open-checkbox">
+      </div>
+      <div>
+        <label for="dev-mode-checkbox">Developer mode</label>
+        <input type="checkbox" name="dev-mode-checkbox" id="dev-mode-checkbox">
+      </div>
+    </form>
+    
+    <h3>Loaded Mods</h3>
+    <div id="loaded-mods"></div>
+
+    <h3>Unloaded Mods</h2>
+    <div id="unloaded-mods"></div>
+  </body>
+</html>

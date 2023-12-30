@@ -1,0 +1,17 @@
+{
+  "name": "amethyst-launcher",
+  "version": "1.0.0",
+  "description": "A launcher for mods build with AmethystAPI",
+  "main": "src/main.js",
+  "scripts": {
+    "build-cpp": "rmdir /s /q bin && rmdir /s /q build && node-gyp configure build && electron-rebuild",
+    "start": "electron ."
+  },
+  "keywords": [],
+  "author": "FrederoxDev",
+  "license": "ISC",
+  "devDependencies": {
+    "@electron/rebuild": "^3.4.1",
+    "electron": "^28.1.0"
+  }
+}
