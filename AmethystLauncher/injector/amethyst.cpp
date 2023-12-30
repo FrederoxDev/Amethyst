@@ -12,8 +12,6 @@ void LaunchGame(const FunctionCallbackInfo<Value>& args) {
     String::Utf8Value dllPath(isolate, args[0]);
     std::string strPath = *dllPath;
 
-    std::cout << strPath << std::endl;
-
     HANDLE handle = getMinecraftWindowHandle();
     InjectDLL(handle, strPath);
 }

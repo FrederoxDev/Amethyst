@@ -1,5 +1,5 @@
 const amethyst = require('../build/Release/amethyst');
-const { shell } = require("electron")
+const { shell, ipcRenderer } = require("electron")
 const path = require('path'); 
 const fs = require("fs")
 const { exec } = require('child_process');
@@ -184,6 +184,10 @@ window.addEventListener('DOMContentLoaded', () => {
         const dllPath = path.resolve(modsFolder, `${versionedName}/${modName}.dll`);
 
         amethyst.LaunchGame(dllPath);
+
+        if (!keepOpen) {
+            ipcRenderer.invoke('quit-app');
+        }
     })
 
     document.getElementById("open-folder-button").addEventListener("click", () => {
