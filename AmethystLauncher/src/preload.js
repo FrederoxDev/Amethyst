@@ -2,6 +2,7 @@ const amethyst = require('../build/Release/amethyst');
 const { shell } = require("electron")
 const path = require('path'); 
 const fs = require("fs")
+const { exec } = require('child_process');
 
 // Find mods folder + create if doesn't exist
 const amethystFolder = path.resolve(process.env.LOCALAPPDATA, "Packages/Microsoft.MinecraftUWP_8wekyb3d8bbwe/Amethyst/");
@@ -149,7 +150,23 @@ function loadModlist() {
     })
 }
 
+function addSecurityGroup() {
+    let command = `icacls "${amethystFolder}" /grant "*S-1-15-2-1:(OI)(CI)F"`;
+
+    exec(command, (error, stdout, stderr) => {
+        if (error) {
+            console.log(`addSecurityGroup Error: ${error.message}`);
+            return;
+        }
+        if (stderr) {
+            console.log(`addSecurityGroup Stderr: ${stderr}`);
+            return;
+        }
+    });
+}
+
 window.addEventListener('DOMContentLoaded', () => {
+    addSecurityGroup();
     loadModlist();
     tryReadConfig();
     updateUI();
