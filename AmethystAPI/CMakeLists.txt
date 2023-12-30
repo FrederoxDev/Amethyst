@@ -46,6 +46,7 @@ add_custom_target(CopyHeaders
     COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/lib/libMinHook.x64.lib" "${AmethystFolder}/lib/libMinHook.x64.lib"
 )
 
+
 # Code Style
 add_custom_target(ClangFormat
     COMMAND clang-format

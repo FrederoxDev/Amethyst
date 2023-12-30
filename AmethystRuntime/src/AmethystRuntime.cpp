@@ -119,12 +119,21 @@ static void* ScreenView_setupAndRender(ScreenView* self, UIRenderContext* ctx) {
     return _ScreenView_setupAndRender(self, ctx);
 }
 
+// OnStartJoinGame
 ClientInstance::_onStartJoinGame _ClientInstance_onStartJoinGame;
 
 static int64_t ClientInstance_onStartJoinGame(ClientInstance* self, int64_t a2, int64_t a3, uint64_t a4) {
     for (auto& start_func : g_mod_start_join)
         start_func(self);
     return _ClientInstance_onStartJoinGame(self, a2, a3, a4);
+}
+
+// Keyboard Input
+MinecraftInputHandler::__registerInputHandlers _MinecraftInputHandler__registerInputHandlers;
+
+static void* MinecraftInputHandler__registerInputHandlers(MinecraftInputHandler* self) {
+    Log::Info("Make Inputs!");
+    return _MinecraftInputHandler__registerInputHandlers(self);
 }
 
 void AmethystRuntime::InitializeHooks() {
@@ -135,6 +144,10 @@ void AmethystRuntime::InitializeHooks() {
     g_hookManager.CreateHook(
         SigScan("40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 45 8B F1"),
         &ClientInstance_onStartJoinGame, reinterpret_cast<void**>(&_ClientInstance_onStartJoinGame));
+
+    g_hookManager.CreateHook(
+        SigScan("48 89 5C 24 ? 55 56 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B F1 48 8D 05"),
+        &MinecraftInputHandler__registerInputHandlers, reinterpret_cast<void**>(&_MinecraftInputHandler__registerInputHandlers));
 }
 
 void AmethystRuntime::Shutdown() {
