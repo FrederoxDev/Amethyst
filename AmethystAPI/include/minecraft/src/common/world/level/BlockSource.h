@@ -1,8 +1,9 @@
 #pragma once
 #include <stdint.h>
 
-class Block;
-class BlockPos;
+#include "minecraft/src/common/world/level/block/Block.h"
+#include "minecraft/src/common/world/level/BlockPos.h"
+
 class ChunkSource;
 
 class BlockSource {

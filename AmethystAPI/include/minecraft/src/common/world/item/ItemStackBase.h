@@ -1,10 +1,12 @@
 #pragma once
 #include "amethyst/Memory.h"
+
+#include "minecraft/src/common/world/item/Item.h"
 #include "minecraft/src/common/SharedPtr.h"
+
 #include <stdint.h>
 #include <string>
 
-class Item;
 class CompoundTag;
 
 class ItemStackBase {

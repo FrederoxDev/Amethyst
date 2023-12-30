@@ -1,9 +1,10 @@
 #pragma once
-#include "amethyst/Memory.h"
 
-class Block;
-class ChunkBlockPos;
-class BlockPos;
+#include "minecraft/src/common/world/level/ChunkBlockPos.h"
+#include "minecraft/src/common/world/level/block/Block.h"
+#include "minecraft/src/common/world/level/BlockPos.h"
+
+#include "amethyst/Memory.h"
 
 class LevelChunk {
 public:

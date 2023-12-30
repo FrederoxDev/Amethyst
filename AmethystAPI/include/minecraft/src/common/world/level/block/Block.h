@@ -1,8 +1,9 @@
 #pragma once
 #include "amethyst/Memory.h"
-#include "minecraft/src-deps/core/math/Color.h"
-#include "minecraft/src/common/world/level/BlockPos.h"
+
 #include "minecraft/src/common/world/level/BlockSource.h"
+#include "minecraft/src/common/world/level/BlockPos.h"
+#include "minecraft/src-deps/core/math/Color.h"
 
 class Block {
 public:

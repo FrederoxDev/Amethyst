@@ -2,7 +2,7 @@
 #include "entt/entt.hpp"
 #include <stdint.h>
 
-class EntityId;
+#include "EntityId.h"
 
 struct EntityIdTraits {
     using value_type = EntityId;
