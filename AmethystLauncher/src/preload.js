@@ -5,7 +5,7 @@ const fs = require("fs")
 const { exec } = require('child_process');
 
 // Find mods folder + create if doesn't exist
-const amethystFolder = path.resolve(process.env.LOCALAPPDATA, "Packages/Microsoft.MinecraftUWP_8wekyb3d8bbwe/Amethyst/");
+const amethystFolder = path.resolve(process.env.LOCALAPPDATA, "Packages/Microsoft.MinecraftUWP_8wekyb3d8bbwe/AC/Amethyst/");
 const modsFolder = path.resolve(amethystFolder, "mods/");
 const configPath = path.resolve(amethystFolder, "launcher_config.json")
 
@@ -156,10 +156,12 @@ function addSecurityGroup() {
     exec(command, (error, stdout, stderr) => {
         if (error) {
             console.log(`addSecurityGroup Error: ${error.message}`);
+            alert(`addSecurityGroup Error: ${error.message}`)
             return;
         }
         if (stderr) {
             console.log(`addSecurityGroup Stderr: ${stderr}`);
+            alert(`addSecurityGroup Stderr: ${stderr}`);
             return;
         }
     });
@@ -172,8 +174,16 @@ window.addEventListener('DOMContentLoaded', () => {
     updateUI();
 
     document.getElementById("launch-button").addEventListener("click", () => {
-        // amethyst.LaunchGame(loadedConfig["runtime"]);
-        amethyst.LaunchGame("C:/Users/blake/AppData/Roaming/Amethyst/mods/AmethystRuntime@1.0.1/AmethystRuntime.dll")
+        if (loadedConfig["runtime"] == "") {
+            alert("No runtime mod!");
+            return;
+        }
+
+        const versionedName = loadedConfig["runtime"];
+        const modName = versionedName.split("@")[0];
+        const dllPath = path.resolve(modsFolder, `${versionedName}/${modName}.dll`);
+
+        amethyst.LaunchGame(dllPath);
     })
 
     document.getElementById("open-folder-button").addEventListener("click", () => {

@@ -6,19 +6,20 @@ std::vector<ModStartJoinGame> g_mod_start_join;
 std::vector<ModShutdown> g_mod_shutdown;
 std::vector<ModRender> g_mod_render;
 
+int count = 0;
+
 Config AmethystRuntime::ReadConfig() {
-    // Ensure it exists
-    std::string configPath = GetAmethystUWPFolder() + "config.json";
-    Log::Info("[AmethystRuntime] Config: {}", configPath);
+    // Ensure it exist
+    std::string configPath = GetAmethystUWPFolder() + "launcher_config.json";
 
     if (!fs::exists(configPath)) {
-        Log::Error("[AmethystRuntime] Could not find config.json\n\tat '{}'", configPath);
+        Log::Error("[AmethystRuntime] Could not find launcher_config.json\n\tat '{}'", configPath);
         throw std::exception();
     }
 
     std::ifstream configFile(configPath);
     if (!configFile.is_open()) {
-        Log::Error("[AmethystRuntime] Failed to open config.json\n\tat '{}'", configPath);
+        Log::Error("[AmethystRuntime] Failed to open launcher_config.json\n\tat '{}'", configPath);
         throw std::exception();
     }
 
