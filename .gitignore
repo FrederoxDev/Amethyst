@@ -4,3 +4,9 @@
 */packages
 .vscode/settings.json
 *.env
+
+AmethystLauncher/bin/
+AmethystLauncher/build/
+AmethystLauncher/node_modules/
+AmethystLauncher/.vscode/
+AmethystLauncher/dist/

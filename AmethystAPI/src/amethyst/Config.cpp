@@ -18,16 +18,16 @@ Config::Config(std::string& text)
     }
 
     // Verify all fields are correct in config.json
-    if (!data["injected_mod"].is_string()) {
-        throw std::exception("Required field \"injected_mod\" should be of type \"string\" in config.json");
+    if (!data["runtime"].is_string()) {
+        throw std::exception("Required field \"runtime\" should be of type \"string\" in config.json");
     }
 
     if (!data["mods"].is_array()) {
         throw std::exception("Required field \"mods\" should be of type \"string[]\" in config.json");
     }
 
-    if (!data["prompt_debugger"].is_boolean()) {
-        throw std::exception("Required field \"prompt_debugger\" should be of type \"boolean\" in config.json");
+    if (!data["developer_mode"].is_boolean()) {
+        throw std::exception("Required field \"developer_mode\" should be of type \"boolean\" in config.json");
     }
 
     for (const auto& element : data["mods"]) {
@@ -37,7 +37,7 @@ Config::Config(std::string& text)
     }
 
     // Set values
-    this->injectedMod = data["injected_mod"];
+    this->injectedMod = data["runtime"];
     this->mods = data["mods"];
-    this->promptDebugger = data["prompt_debugger"];
+    this->promptDebugger = data["developer_mode"];
 }

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <title>AmethystLauncher</title>
+    <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+    <div id="header">
+      <p id="window-title">Amethyst Launcher</p>
+    </div>
+    <div id="header-highlight"></div>
+    <div id="header-shadow"></div>
+    <div id="main-panel-shadow"></div>
+
+    <div class="divided-section">
+      <label for="runtime-mod" class="minecraft-seven">Runtime Mod</label>
+      <select name="runtime-mod-select" id="runtime-mod-select"></select>
+    </div>
+
+    <form id="settings">
+      <div class="divided-section flex">
+        <div>
+          <p class="minecraft-seven">Keep launcher open</p>
+          <p class="minecraft-seven-subtext">Prevents the launcher from closing after launching the game.</p>
+        </div>
+        <label class="toggle-container" for="keep-open-checkbox">
+          <div class="toggle-enabled">
+            <p class="minecraft-seven toggle-text">|</p>
+          </div>
+          <div class="toggle-disabled">
+            <p class="minecraft-seven toggle-text">O</p>
+          </div>
+          <input type="checkbox" name="keep-open-checkbox" id="keep-open-checkbox" class="toggle">
+        </label>
+      </div>
+
+      <div class="divided-section flex">
+        <div>
+          <p class="minecraft-seven">Developer mode</p>
+          <p class="minecraft-seven-subtext">Enables hot-reloading and prompting to attach a debugger.</p>
+        </div>
+        <label class="toggle-container" for="dev-mode-checkbox">
+          <div class="toggle-enabled">
+            <p class="minecraft-seven toggle-text">|</p>
+          </div>
+          <div class="toggle-disabled">
+            <p class="minecraft-seven toggle-text">O</p>
+          </div>
+          <input type="checkbox" name="dev-mode-checkbox" id="dev-mode-checkbox" class="toggle">
+        </label>
+      </div>
+    </form>
+    
+    <div class="divided-section mods-section">
+      <div class="mod-panel">
+        <p class="minecraft-seven">Active Mods</p>
+        <div id="loaded-mods" class="mod-list"></div>
+      </div>
+      <div class="mod-panel">
+        <p class="minecraft-seven">Inactive Mods</p>
+        <div id="unloaded-mods" class="mod-list"></div>
+      </div>
+    </div>
+
+    <div class="buttons divided-section">
+      <div class="minecraft-button" id="launch-button">
+        <div class="button-top">Launch Game</div>
+        <div class="button-shadow"></div>
+      </div>
+      <div class="minecraft-button" id="open-folder-button">
+        <div class="button-top">Open Mods Folder</div>
+        <div class="button-shadow"></div>
+      </div>
+    </div>
+  </body>
+</html>
