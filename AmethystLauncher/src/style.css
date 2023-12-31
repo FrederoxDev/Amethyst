@@ -27,6 +27,9 @@
 
 body {
     background-color: var(--main-panel-color);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 #header {
@@ -65,15 +68,13 @@ p, h1, h2, h3, label {
     font-family: "Minecraft-Ten";
     letter-spacing: .1px;
     font-size: 16px;
+    image-rendering: pixelated;
 }
 
 .buttons {
     display: flex;
     justify-content: center;
-    position: fixed;
-    bottom: 8px;
-    left: 0;
-    width: 100%;
+    height: 52px;
 }
 
 .minecraft-button {
@@ -99,6 +100,7 @@ p, h1, h2, h3, label {
     place-items: center;
     display: flex;
     font-family: "Minecraft-Ten";
+    image-rendering: pixelated;
     color: #FFF;
     letter-spacing: .1px;
     font-size: 16px;
@@ -143,14 +145,6 @@ p, h1, h2, h3, label {
     background-color: #5A5B5C; 
 }
 
-#loaded-mods div, #unloaded-mods div {
-    display: flex;
-}
-
-#loaded-mods div p, #unloaded-mods div p {
-    margin: 0;
-}
-
 #runtime-mod-select {
     display: block;
     width: 100%;
@@ -158,6 +152,7 @@ p, h1, h2, h3, label {
 
 .minecraft-seven {
     font-family: "Minecraft-Seven";
+    image-rendering: pixelated;
     color: white;
     font-size: 14px;
     letter-spacing: .5px;
@@ -165,6 +160,7 @@ p, h1, h2, h3, label {
 
 .minecraft-seven-subtext {
     font-family: "Minecraft-Seven";
+    image-rendering: pixelated;
     color: #BCBEC0;
     font-size: 12px;
     letter-spacing: .5px;
@@ -233,4 +229,66 @@ p, h1, h2, h3, label {
 
 .toggle:checked {
     transform: translate(26px, -4px)
+}
+
+.mods-section {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.mod-panel {
+    width: 45vw;
+    margin-left: 10px;
+    margin-right: 10px;
+    flex: 1;
+    margin-bottom: 16px;
+}
+
+.mod-list {
+    margin-top: 4px;
+    flex: 1;
+    border-style: solid;
+    border-width: 2px;
+    box-sizing: border-box;
+    min-height: 100%;
+    border-color: #1E1E1F;
+    background-color: #313233;
+}
+
+#loaded-mods div, #unloaded-mods div {
+    display: flex;
+    border-bottom: 2px solid #5A5B5C;
+    background-color: #48494A;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+#loaded-mods div:hover, #unloaded-mods div:hover {
+    background-color: #5A5B5C;
+}
+
+#loaded-mods div p, #unloaded-mods div p {
+    padding: 4px;
+    font-family: "Minecraft-Seven";
+    color: white;
+    image-rendering: pixelated;
+    font-size: 13px;
+    letter-spacing: .5px;
+}
+
+#runtime-mod-select {
+    border-radius: 0;
+    border-style: solid;
+    border-width: 2px;
+    box-sizing: border-box;
+    border-color: #1E1E1F;
+    background-color: #313233;
+
+    padding: 4px;
+    font-family: "Minecraft-Seven";
+    color: white;
+    image-rendering: pixelated;
+    font-size: 13px;
+    letter-spacing: .5px;
 }

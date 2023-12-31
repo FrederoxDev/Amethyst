@@ -56,14 +56,11 @@ function updateUI() {
         const form = isLoaded ? loadedModDiv : unloadedModDiv;
 
         const div = document.createElement("div");
-        const button = document.createElement("button");
-        button.innerText = isLoaded ? "-" : "+";
-        button.onclick = isLoaded ? () => unloadCallback(modName) : () => loadCallback(modName);
+        div.onclick = isLoaded ? () => unloadCallback(modName) : () => loadCallback(modName);
 
         const text = document.createElement("p");
         text.innerText = modName;
 
-        div.append(button);
         div.append(text);
         form.append(div);
     })
