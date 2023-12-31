@@ -1,5 +1,9 @@
 #include "minecraft/src/common/world/actor/Actor.h"
 
+Vec3* Actor::getPosition() {
+    return &mStateVectorComponent->pos;
+}
+
 template <typename T>
 const T* Actor::tryGetComponent() const
 {

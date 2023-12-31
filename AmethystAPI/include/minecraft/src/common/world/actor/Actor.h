@@ -20,6 +20,8 @@ public:
     StateVectorComponent* mStateVectorComponent; // this + 712
 
 public:
+    Vec3* getPosition();
+
     template <typename T>
     const T* tryGetComponent() const;
 
