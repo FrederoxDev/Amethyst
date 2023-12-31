@@ -172,7 +172,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById("launch-button").addEventListener("click", () => {
         if (loadedConfig["runtime"] == "") {
-            alert("No runtime mod!");
+            alert("Cannot launch, you must select a runtime mod.");
             return;
         }
 
