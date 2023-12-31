@@ -17,9 +17,12 @@ private:
     bool padding[680];
 
 public:
-    Vec3 mPos; // this + 712
+    StateVectorComponent* mStateVectorComponent; // this + 712
 
 public:
     template <typename T>
     const T* tryGetComponent() const;
+
+    template <typename T>
+    T* tryGetComponent();
 };
