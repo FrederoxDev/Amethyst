@@ -5,6 +5,9 @@
 #include "minecraft/src/common/world/level/BlockSource.h"
 #include <stdint.h>
 
+class Minecraft;
+class ClientInputHandler;
+
 #pragma pack(push, 1)
 class ClientInstance {
 private:
@@ -12,13 +15,20 @@ private:
     bool padding0[192];
 
 public:
-    MinecraftGame& minecraftGame;
+    MinecraftGame& minecraftGame; // this + 200
+    Minecraft* minecraft; // this + 208
 
 private:
-    bool padding1[1168];
+    bool padding1[56];
 
 public:
-    GuiData* guiData;
+    ClientInputHandler* inputHandler; // this + 272
+
+private:
+    bool padding2[1096];
+
+public:
+    GuiData* guiData; // this + 1376
 
 public:
     // 40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 45 8B F1
