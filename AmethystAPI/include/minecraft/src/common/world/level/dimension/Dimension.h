@@ -1,6 +1,7 @@
 #pragma once
-#include "minecraft/src/common/world/level/BlockSource.h"
 #include <stdint.h>
+
+class BlockSource;
 
 class Dimension {
 private:
