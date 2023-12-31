@@ -1,12 +1,14 @@
 #pragma once
 #include <functional>
-#include <string.h>
+#include <string>
+#include "amethyst/Memory.h"
 
 enum class FocusImpact : char {
     Neutral
 };
 
-class IClientInstance;
+class ClientInstance;
+using IClientInstance = ClientInstance;
 
 class InputHandler {
 public:
