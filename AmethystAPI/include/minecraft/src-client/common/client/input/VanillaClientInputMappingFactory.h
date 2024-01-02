@@ -1,5 +1,6 @@
 #pragma once
 #include "minecraft/src-deps/input/InputHandler.h"
+#include "minecraft/src-client/common/client/input/ClientInputMappingFactory.h"
 #include <string>
 
 class KeyboardInputMapping;
@@ -66,7 +67,7 @@ public:
     };
 };
 
-class VanillaClientInputMappingFactory {
+class VanillaClientInputMappingFactory : public ClientInputMappingFactory {
 public:
     // 48 89 5C 24 ? 55 56 57 48 8B EC 48 83 EC ? 49 8B F0 48 8B DA 48 8B F9 E8
     typedef void*(__thiscall* __createBaseNormalGamePlayKeyboardAndMouseMapping)(VanillaClientInputMappingFactory* self, KeyboardInputMapping* normalGamePlayKeyboardMapping, MouseInputMapping* normalGamePlayMouseMapping);

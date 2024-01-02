@@ -3,8 +3,10 @@
 #include <functional>
 #include <string>
 
-enum class FocusImpact : char {
-    Neutral
+enum FocusImpact : char {
+    Neutral = 0x0,
+    ActivateFocus = 0x1,
+    DeactivateFocus = 0x2,
 };
 
 class ClientInstance;
