@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 
-class Keymapping {
+struct Keymapping {
 public:
     std::string mAction;
     std::vector<int> mKeys;
