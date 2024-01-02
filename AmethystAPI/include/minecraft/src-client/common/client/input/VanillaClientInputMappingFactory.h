@@ -1,13 +1,13 @@
 #pragma once
-#include <string>
 #include "minecraft/src-deps/input/InputHandler.h"
+#include <string>
 
 class KeyboardInputMapping;
 class MouseInputMapping;
 
 class Remapping {
 public:
-    // From China 1.16.201 - doubt its the same, but should be pretty close?
+    // From china 1.16.201
     enum ActionEnum : int32_t {
         Attack = 0x0000,
         PickItem = 0x0001,

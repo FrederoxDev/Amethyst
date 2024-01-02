@@ -16,7 +16,7 @@ private:
 
 public:
     MinecraftGame& minecraftGame; // this + 200
-    Minecraft* minecraft; // this + 208
+    Minecraft* minecraft;         // this + 208
 
 private:
     bool padding1[56];

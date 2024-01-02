@@ -1,7 +1,7 @@
 #pragma once
+#include "amethyst/Memory.h"
 #include <functional>
 #include <string>
-#include "amethyst/Memory.h"
 
 enum class FocusImpact : char {
     Neutral

@@ -1,7 +1,7 @@
 #pragma once
+#include "amethyst/Memory.h"
 #include <stdint.h>
 #include <string>
-#include "amethyst/Memory.h"
 
 class CompoundTag;
 class Level;
