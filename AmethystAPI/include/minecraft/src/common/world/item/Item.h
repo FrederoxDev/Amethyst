@@ -1,11 +1,11 @@
 #pragma once
+#include "amethyst/Memory.h"
 #include <stdint.h>
 #include <string>
 
-#include "minecraft/src/common/world/item/ItemStackBase.h"
-#include "minecraft/src/common/world/level/Level.h"
-
 class CompoundTag;
+class Level;
+class ItemStackBase;
 
 #pragma pack(push, 1)
 class Item {

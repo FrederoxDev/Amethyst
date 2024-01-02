@@ -9,7 +9,7 @@ class Config {
 public:
     std::string injectedMod;
     std::string gameVersion;
-    std::vector<std::string> mods; 
+    std::vector<std::string> mods;
     bool promptDebugger;
 
 public:

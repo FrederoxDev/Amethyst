@@ -1,10 +1,9 @@
 #pragma once
 #include "amethyst/Memory.h"
 #include "minecraft/src/common/world/entity/EntityContext.h"
-#include "minecraft/src/common/world/entity/EntityId.h"
 #include "minecraft/src/common/world/entity/components/ActorHeadRotationComponent.h"
-#include "minecraft/src/common/world/level/BlockSource.h"
-#include "minecraft/src/common/world/level/dimension/Dimension.h"
+#include "minecraft/src/common/world/entity/components/ActorRotationComponent.h"
+#include "minecraft/src/common/world/entity/components/StateVectorComponent.h"
 #include "minecraft/src/common/world/phys/Vec3.h"
 
 class Actor {
@@ -17,9 +16,14 @@ private:
     bool padding[680];
 
 public:
-    Vec3 mPos; // this + 712
+    StateVectorComponent* mStateVectorComponent; // this + 712
 
 public:
+    Vec3* getPosition();
+
     template <typename T>
     const T* tryGetComponent() const;
+
+    template <typename T>
+    T* tryGetComponent();
 };

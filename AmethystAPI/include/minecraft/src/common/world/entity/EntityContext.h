@@ -1,6 +1,5 @@
 #pragma once
 #include "minecraft/src/common/world/entity/EntityId.h"
-#include "minecraft/src/common/wrapper/optional_ref.h"
 
 class EntityRegistry;
 
