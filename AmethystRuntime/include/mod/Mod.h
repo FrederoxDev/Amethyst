@@ -1,10 +1,11 @@
 #pragma once
-#include "Utils.h"
 #include <Windows.h>
 #include <filesystem>
 #include <iostream>
 #include <shlobj.h>
 #include <vector>
+#include <amethyst/Utility.h>
+#include <amethyst/Log.h>
 
 namespace fs = std::filesystem;
 
@@ -17,8 +18,8 @@ public:
 
 public:
     Mod(std::string modName);
-    FARPROC GetFunction(const char* funcName);
-    void Free();
+    FARPROC GetFunction(const char* functionName);
+    void Shutdown();
 
 private:
     fs::path GetTempDll();

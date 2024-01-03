@@ -1,26 +1,36 @@
 #include "AmethystRuntime.h"
 
-std::vector<ModInitializeHooks> g_mod_initialize;
-std::vector<ModTick> g_mod_tick;
-std::vector<ModStartJoinGame> g_mod_start_join;
-std::vector<ModShutdown> g_mod_shutdown;
-std::vector<ModRender> g_mod_render;
+AmethystRuntime* AmethystRuntime::instance = nullptr;
 
-int count = 0;
+void AmethystRuntime::Start() {
+    Log::Info("[AmethystRuntime] AmethystRuntime@{}", MOD_VERSION);
+    MH_Initialize();
 
-Config AmethystRuntime::ReadConfig() {
-    // Ensure it exist
-    std::string configPath = GetAmethystUWPFolder() + "launcher_config.json";
+    // Read launcher_config.json and load mod Dlls
+    ReadLauncherConfig();
+    LoadModDlls();
 
-    if (!fs::exists(configPath)) {
-        Log::Error("[AmethystRuntime] Could not find launcher_config.json\n\tat '{}'", configPath);
-        throw std::exception();
+    // Create any hooks that are time dependant and need to be done early
+    CreateEarlyHooks();
+
+    // Prompt a debugger if they are in developer mode
+    if (mLauncherConfig.promptDebugger) PromptDebugger();
+    CreateOwnHooks();
+    RunMods();
+}
+
+void AmethystRuntime::ReadLauncherConfig() 
+{
+    // Ensure it exists
+    std::string launcherConfigPath = GetAmethystFolder() + "launcher_config.json";
+    if (!fs::exists(launcherConfigPath)) {
+        throw std::exception("launcher_config.json could not be found!");
     }
 
-    std::ifstream configFile(configPath);
+    // Try to read it to a std::string
+    std::ifstream configFile(launcherConfigPath);
     if (!configFile.is_open()) {
-        Log::Error("[AmethystRuntime] Failed to open launcher_config.json\n\tat '{}'", configPath);
-        throw std::exception();
+        throw std::exception("Failed to open launcher_config.json");
     }
 
     // Read into a std::string
@@ -29,153 +39,92 @@ Config AmethystRuntime::ReadConfig() {
     configFile.close();
     std::string fileContents = buffer.str();
 
-    return Config(fileContents);
+    mLauncherConfig = Config(fileContents);
 }
 
-void AmethystRuntime::LoadMods() {
-    // Initialize MinHook
-    MH_STATUS status = MH_Initialize();
-    if (status != MH_OK) {
-        Log::Error("MH_Initialize failed! Reason: {}", MH_StatusToString(status));
-        throw std::exception("MH_Initialize failed!");
+void AmethystRuntime::LoadModDlls() 
+{
+    // Load all mods from the launcher_config.json
+    for (auto& modName : mLauncherConfig.mods) {
+        mLoadedMods.emplace_back(modName);
     }
 
-    // Read config.json file
-    Config config = ReadConfig();
-    for (auto& modName : config.mods) {
-        this->m_mods.push_back(Mod(modName));
-    }
-
-    if (config.promptDebugger) AttachDebugger();
-
-    // Load functions from the mods
-    for (auto& mod : m_mods) {
-        FARPROC addr;
-
-        addr = mod.GetFunction("Initialize");
-        if (addr != NULL) {
-            g_mod_initialize.push_back(reinterpret_cast<ModInitializeHooks>(addr));
-        }
-
-        addr = mod.GetFunction("OnTick");
-        if (addr != NULL) {
-            g_mod_tick.push_back(reinterpret_cast<ModTick>(addr));
-        }
-
-        addr = mod.GetFunction("OnStartJoinGame");
-        if (addr != NULL) {
-            g_mod_start_join.push_back(reinterpret_cast<ModStartJoinGame>(addr));
-        }
-
-        addr = mod.GetFunction("OnRenderUI");
-        if (addr != NULL) {
-            g_mod_render.push_back(reinterpret_cast<ModRender>(addr));
-        }
-
-        addr = mod.GetFunction("Shutdown");
-        if (addr != NULL) {
-            g_mod_shutdown.push_back(reinterpret_cast<ModShutdown>(addr));
-        } else {
-            Log::Warning("[AmethystRuntime] '{}' does not have 'void Shutdown()'. A mod should remove all hooks here for hot-reloading to work.", mod.modName);
-        }
-
-        Log::Info("[AmethystRuntime] Loaded '{}'", mod.modName);
+    // Load all mod functions
+    for (auto& mod : mLoadedMods) {
+        _LoadModFunc(&mModInitialize, mod, "Initialize");
+        _LoadModFunc(&mModTick, mod, "OnTick");
+        _LoadModFunc(&mModStartJoinGame, mod, "OnStartJoinGame");
+        _LoadModFunc(&mModRender, mod, "OnRenderUI");
+        _LoadModFunc(&mModShutdown, mod, "Shutdown");
     }
 }
 
-void AmethystRuntime::RunMods() {
-    // AmethystRuntime's own Hooks
-    InitializeHooks();
+template <typename T>
+void AmethystRuntime::_LoadModFunc(std::vector<T>* vector, Mod& mod, const char* functionName) 
+{
+    FARPROC address = mod.GetFunction(functionName);
+    if (address == NULL) return;
+    vector->push_back(reinterpret_cast<T>(address));
+}
 
-    Config config = ReadConfig();
+void AmethystRuntime::CreateEarlyHooks() 
+{
+   
+}
 
-    // Allow mods to create hooks
-    for (auto& init_func : g_mod_initialize)
-        init_func(config.gameVersion.c_str());
+void AmethystRuntime::PromptDebugger() 
+{
+    std::string command = fmt::format("vsjitdebugger -p {:d}", GetCurrentProcessId());
+    system(command.c_str());
+}
+
+void AmethystRuntime::CreateOwnHooks()
+{
+    CreateModFunctionHooks();
+}
+
+void AmethystRuntime::RunMods() 
+{
+    // Invoke mods to initialize and setup hooks, etc..
+    for (auto& modInitialize : mModInitialize) modInitialize("1.20.51.1");
 
     while (true) {
-        for (auto& tick_func : g_mod_tick)
-            tick_func();
-
+        for (auto& modTick : mModTick) modTick();
         Sleep(1000 / 20);
-        if (GetAsyncKeyState(VK_NUMPAD0)) break;
 
+        if (GetAsyncKeyState(VK_NUMPAD0)) break;
         if (GetAsyncKeyState('R') & 0x8000) {
             Log::Info("\n========================= Beginning hot-reload! =========================");
             this->Shutdown();
-            this->LoadMods();
-
             Sleep(100);
-            return this->RunMods();
+            this->Start();
         }
     }
 }
 
-// Hooks
-ScreenView::_setupAndRender _ScreenView_setupAndRender;
+void AmethystRuntime::Shutdown()
+{
+    // Remove any of the runtime mods hooks
+    mHookManager.Shutdown();
 
-static void* ScreenView_setupAndRender(ScreenView* self, UIRenderContext* ctx) {
-    for (auto& render_func : g_mod_render)
-        render_func(self, ctx);
-    return _ScreenView_setupAndRender(self, ctx);
-}
+    // Prompt all mods to shutdown
+    for (auto& modShutdown : mModShutdown) modShutdown();
 
-// OnStartJoinGame
-ClientInstance::_onStartJoinGame _ClientInstance_onStartJoinGame;
-
-static int64_t ClientInstance_onStartJoinGame(ClientInstance* self, int64_t a2, int64_t a3, uint64_t a4) {
-    for (auto& start_func : g_mod_start_join)
-        start_func(self);
-    return _ClientInstance_onStartJoinGame(self, a2, a3, a4);
-}
-
-// Keyboard Input
-MinecraftInputHandler::__registerInputHandlers _MinecraftInputHandler__registerInputHandlers;
-
-static void* MinecraftInputHandler__registerInputHandlers(MinecraftInputHandler* self) {
-    Log::Info("Make Inputs!");
-    return _MinecraftInputHandler__registerInputHandlers(self);
-}
-
-void AmethystRuntime::InitializeHooks() {
-    g_hookManager.CreateHook(
-        SigScan("48 8B C4 48 89 58 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D A8 ? ? ? ? 48 81 EC ? ? ? ? 0F 29 70 ? 0F 29 78 ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4C 8B FA 48 89 54 24 ? 4C 8B E9 48 89 4C 24"),
-        &ScreenView_setupAndRender, reinterpret_cast<void**>(&_ScreenView_setupAndRender));
-
-    g_hookManager.CreateHook(
-        SigScan("40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 45 8B F1"),
-        &ClientInstance_onStartJoinGame, reinterpret_cast<void**>(&_ClientInstance_onStartJoinGame));
-
-    g_hookManager.CreateHook(
-        SigScan("48 89 5C 24 ? 55 56 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B F1 48 8D 05"),
-        &MinecraftInputHandler__registerInputHandlers, reinterpret_cast<void**>(&_MinecraftInputHandler__registerInputHandlers));
-}
-
-void AmethystRuntime::Shutdown() {
-    g_hookManager.Shutdown();
-
-    // Allow each mod to have its shutdown logic
-    for (auto& shutdown_func : g_mod_shutdown)
-        shutdown_func();
-
-    // Unload each mod dll from game memory
-    for (auto& mod : m_mods) {
-        mod.Free();
+    // Unload all mod Dlls
+    for (auto& mod : mLoadedMods) {
+        mod.Shutdown();
     }
 
-    // Remove any existing function addresses to mod funcs
-    m_mods.clear();
-    g_mod_initialize.clear();
-    g_mod_tick.clear();
-    g_mod_start_join.clear();
-    g_mod_shutdown.clear();
-    g_mod_render.clear();
+    // Clear all mod functions
+    mModInitialize.clear();
+    mModTick.clear();
+    mModStartJoinGame.clear();
+    mModShutdown.clear();
+    mModRender.clear();
 
-    // Disable MH and remove any created hooks
     MH_Uninitialize();
 }
 
-void AmethystRuntime::AttachDebugger() {
-    std::string command = fmt::format("vsjitdebugger -p {:d}", GetCurrentProcessId());
-    system(command.c_str());
+HookManager* AmethystRuntime::getHookManager() {
+    return &this->mHookManager;
 }
