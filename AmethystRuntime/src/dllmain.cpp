@@ -1,14 +1,4 @@
 #include "dllmain.h"
-#include "AmethystRuntime.h"
-#include "Mod.h"
-#include "amethyst/HookManager.h"
-#include "amethyst/Log.h"
-#include "minecraft/src-client/common/client/game/ClientInstance.h"
-#include <cstdlib>
-#include <vector>
-
-AmethystRuntime g_runtime;
-HookManager g_hookManager;
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved)
 {
@@ -22,21 +12,18 @@ DWORD WINAPI Main()
 {
     Log::InitializeConsole();
 
-#ifdef MOD_VERSION
-    Log::Info("[AmethystRuntime] AmethystRuntime@{}", MOD_VERSION);
-#endif
+    // Create an instance of AmethystRuntime and invoke it to start
+    AmethystRuntime* runtime = AmethystRuntime::getInstance();
 
     try {
-        g_runtime.LoadMods();
-        g_runtime.RunMods();
+        runtime->Start();
     }
-    catch (std::exception e) {
-        Log::Error("[AmethystRuntime] Uncaught Exception: {}", e.what());
+    catch (std::exception& exception) {
+        Log::Error("[AmethystRuntime] Uncaught Exception: {}", exception.what());
         ShutdownWait();
         return 1;
     }
 
-    g_runtime.Shutdown();
     ShutdownWait();
     return 0;
 }
@@ -48,10 +35,10 @@ DWORD __stdcall EjectThread(LPVOID lpParameter)
 
 void Shutdown()
 {
-    g_runtime.Shutdown();
+    AmethystRuntime* runtime = AmethystRuntime::getInstance();
+    runtime->Shutdown();
+    
     Log::DestroyConsole();
-    MH_Uninitialize();
-
     CreateThread(0, 0, EjectThread, 0, 0, 0);
 }
 

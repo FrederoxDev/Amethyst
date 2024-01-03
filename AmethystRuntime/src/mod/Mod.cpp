@@ -1,4 +1,4 @@
-#include "Mod.h"
+#include "mod/Mod.h"
 
 Mod::Mod(std::string modName)
 {
@@ -26,12 +26,12 @@ Mod::Mod(std::string modName)
     return;
 }
 
-FARPROC Mod::GetFunction(const char* funcName)
+FARPROC Mod::GetFunction(const char* functionName)
 {
-    return GetProcAddress(hModule, funcName);
+    return GetProcAddress(hModule, functionName);
 }
 
-void Mod::Free()
+void Mod::Shutdown()
 {
     FreeLibrary(hModule);
 }
@@ -46,10 +46,10 @@ fs::path Mod::GetTempDll()
     }
 
     // Ensure temp directory exists
-    fs::path tempDir = GetAmethystUWPFolder() + "temp/" + modName + "/";
+    fs::path tempDir = GetAmethystFolder() + "temp/" + modName + "/";
     if (!fs::exists(tempDir)) fs::create_directories(tempDir);
 
-    fs::path originalDll = GetAmethystUWPFolder() + "mods/" + modName + "/" + modShortened + ".dll";
+    fs::path originalDll = GetAmethystFolder() + "mods/" + modName + "/" + modShortened + ".dll";
     if (!fs::exists(originalDll)) {
         Log::Error("[AmethystRuntime] Could not find '{}.dll'", modShortened);
         throw std::exception();
