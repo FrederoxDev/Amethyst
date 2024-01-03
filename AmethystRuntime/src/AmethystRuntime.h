@@ -10,6 +10,7 @@
 #include <fstream>
 #include <sstream>
 #include <vector>
+#include "Input.h"
 
 typedef void (*ModInitializeHooks)(const char* gameVersion);
 typedef void (*ModTick)();

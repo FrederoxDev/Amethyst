@@ -19,7 +19,6 @@ add_library(${PROJECT_NAME} STATIC ${CPP_SOURCES} ${H_FILES})
 # EnTT Compile Options
 target_compile_definitions(${PROJECT_NAME} PUBLIC ENTT_PACKED_PAGE=128)
 
-
 # Organize source files into virtual folders in Visual Studio
 foreach(source IN LISTS CPP_SOURCES H_FILES)
     get_filename_component(source_path "${source}" DIRECTORY)

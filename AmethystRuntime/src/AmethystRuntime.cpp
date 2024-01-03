@@ -46,7 +46,9 @@ void AmethystRuntime::LoadMods() {
         this->m_mods.push_back(Mod(modName));
     }
 
-    if (config.promptDebugger) AttachDebugger();
+    if (config.promptDebugger) {
+        AttachDebugger();
+    }
 
     // Load functions from the mods
     for (auto& mod : m_mods) {
@@ -129,13 +131,6 @@ static int64_t ClientInstance_onStartJoinGame(ClientInstance* self, int64_t a2, 
     return _ClientInstance_onStartJoinGame(self, a2, a3, a4);
 }
 
-// Keyboard Input
-MinecraftInputHandler::__registerInputHandlers _MinecraftInputHandler__registerInputHandlers;
-
-static void* MinecraftInputHandler__registerInputHandlers(MinecraftInputHandler* self) {
-    Log::Info("Make Inputs!");
-    return _MinecraftInputHandler__registerInputHandlers(self);
-}
 
 void AmethystRuntime::InitializeHooks() {
     g_hookManager.CreateHook(
@@ -146,9 +141,7 @@ void AmethystRuntime::InitializeHooks() {
         SigScan("40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 45 8B F1"),
         &ClientInstance_onStartJoinGame, reinterpret_cast<void**>(&_ClientInstance_onStartJoinGame));
 
-    g_hookManager.CreateHook(
-        SigScan("48 89 5C 24 ? 55 56 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B F1 48 8D 05"),
-        &MinecraftInputHandler__registerInputHandlers, reinterpret_cast<void**>(&_MinecraftInputHandler__registerInputHandlers));
+    Amethyst::CreateInputHooks(&g_hookManager);
 }
 
 void AmethystRuntime::Shutdown() {
