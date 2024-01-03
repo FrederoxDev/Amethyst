@@ -11,7 +11,7 @@ void VanillaClientInputMappingFactory::createKeyboardAndMouseBinding(KeyboardInp
     Keymapping mapping = mLayout->getKeymappingByAction(keyName);
 
 	for(int key : mapping.mKeys) {
-		key = mLayout->getAdjustedKey(key);
+		//key = mLayout->getAdjustedKey(key);
 		if (!mapping.isAssigned()) continue;
 
         if (mapping.isAltKey()) {

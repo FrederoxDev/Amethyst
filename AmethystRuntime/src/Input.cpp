@@ -6,10 +6,8 @@ std::string key = "key.test_action";
 RemappingLayout::_assignDefaultMapping _assignDefaultMapping;
 
 static void assignDefaultMapping(RemappingLayout* self, std::vector<Keymapping>&& mapping) {
-    Keymapping keymapping(button, { 0x52 }, true);
+    Keymapping keymapping(key, { 0x52 }, true);
     mapping.emplace_back(keymapping);
-
-    Log::Info("assignDefaultMapping");
 
     _assignDefaultMapping(self, std::move(mapping));
 }
@@ -20,8 +18,6 @@ static void addFullKeyboardGamePlayControls(VanillaClientInputMappingFactory* se
 {
     _addFullKeyboardGamePlayControls(self, keyboard, mouse);
     self->createKeyboardAndMouseBinding(keyboard, mouse, &button, &key);
-
-    Log::Info("addFullKeyboardGamePlayControls");
 }
 
 MinecraftInputHandler::__registerInputHandlers _registerInputHandlers;
@@ -32,8 +28,6 @@ static void registerInputHandlers(MinecraftInputHandler* self) {
     self->mInputHandler->registerButtonDownHandler(button, [](FocusImpact focus, IClientInstance& client) {
             Log::Info("Working input handling!");
     }, false);
-
-    Log::Info("registerInputHandlers");
 }
 
 void Amethyst::CreateInputHooks(HookManager* hookManager) {
