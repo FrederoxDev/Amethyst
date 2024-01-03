@@ -128,6 +128,7 @@ ClientInstance::_onStartJoinGame _ClientInstance_onStartJoinGame;
 static int64_t ClientInstance_onStartJoinGame(ClientInstance* self, int64_t a2, int64_t a3, uint64_t a4) {
     for (auto& start_func : g_mod_start_join)
         start_func(self);
+
     return _ClientInstance_onStartJoinGame(self, a2, a3, a4);
 }
 

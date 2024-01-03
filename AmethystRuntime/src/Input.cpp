@@ -1,9 +1,12 @@
 #include "Input.h"
 
+std::string button = "button.test_action";
+std::string key = "key.test_action";
+
 RemappingLayout::_assignDefaultMapping _assignDefaultMapping;
 
 static void assignDefaultMapping(RemappingLayout* self, std::vector<Keymapping>&& mapping) {
-    Keymapping keymapping("button.test", { 0x72 }, true);
+    Keymapping keymapping(button, { 0x52 }, true);
     mapping.emplace_back(keymapping);
 
     Log::Info("assignDefaultMapping");
@@ -12,9 +15,6 @@ static void assignDefaultMapping(RemappingLayout* self, std::vector<Keymapping>&
 }
 
 VanillaClientInputMappingFactory::__addFullKeyboardGamePlayControls _addFullKeyboardGamePlayControls;
-
-std::string button = "button.test";
-std::string key = "key.test";
 
 static void addFullKeyboardGamePlayControls(VanillaClientInputMappingFactory* self, KeyboardInputMapping* keyboard, MouseInputMapping* mouse)
 {
@@ -29,9 +29,11 @@ MinecraftInputHandler::__registerInputHandlers _registerInputHandlers;
 static void registerInputHandlers(MinecraftInputHandler* self) {
     _registerInputHandlers(self);
 
-    self->mInputHandler->registerButtonDownHandler("button.test", [](FocusImpact focus, IClientInstance& client) {
+    self->mInputHandler->registerButtonDownHandler(button, [](FocusImpact focus, IClientInstance& client) {
             Log::Info("Working input handling!");
     }, false);
+
+    Log::Info("registerInputHandlers");
 }
 
 void Amethyst::CreateInputHooks(HookManager* hookManager) {
