@@ -2,7 +2,8 @@
 
 AmethystRuntime* AmethystRuntime::instance = nullptr;
 
-void AmethystRuntime::Start() {
+void AmethystRuntime::Start()
+{
     Log::Info("[AmethystRuntime] AmethystRuntime@{}", MOD_VERSION);
     MH_Initialize();
 
@@ -19,7 +20,7 @@ void AmethystRuntime::Start() {
     RunMods();
 }
 
-void AmethystRuntime::ReadLauncherConfig() 
+void AmethystRuntime::ReadLauncherConfig()
 {
     // Ensure it exists
     std::string launcherConfigPath = GetAmethystFolder() + "launcher_config.json";
@@ -42,7 +43,7 @@ void AmethystRuntime::ReadLauncherConfig()
     mLauncherConfig = Config(fileContents);
 }
 
-void AmethystRuntime::LoadModDlls() 
+void AmethystRuntime::LoadModDlls()
 {
     // Load all mods from the launcher_config.json
     for (auto& modName : mLauncherConfig.mods) {
@@ -51,6 +52,7 @@ void AmethystRuntime::LoadModDlls()
 
     // Load all mod functions
     for (auto& mod : mLoadedMods) {
+        _LoadModFunc(&mModRegisterInputs, mod, "RegisterInputs");
         _LoadModFunc(&mModInitialize, mod, "Initialize");
         _LoadModFunc(&mModTick, mod, "OnTick");
         _LoadModFunc(&mModStartJoinGame, mod, "OnStartJoinGame");
@@ -60,19 +62,29 @@ void AmethystRuntime::LoadModDlls()
 }
 
 template <typename T>
-void AmethystRuntime::_LoadModFunc(std::vector<T>* vector, Mod& mod, const char* functionName) 
+void AmethystRuntime::_LoadModFunc(std::vector<T>* vector, Mod& mod, const char* functionName)
 {
     FARPROC address = mod.GetFunction(functionName);
     if (address == NULL) return;
     vector->push_back(reinterpret_cast<T>(address));
 }
 
-void AmethystRuntime::CreateEarlyHooks() 
+void AmethystRuntime::CreateEarlyHooks()
 {
-   
+    static bool hasRegisteredBefore = false;
+
+    if (!hasRegisteredBefore) {
+        for (auto& registerInputFunc : mModRegisterInputs) {
+            registerInputFunc(getInputManager());
+        }
+
+        hasRegisteredBefore = true;
+    }
+
+    CreateInputHooks();
 }
 
-void AmethystRuntime::PromptDebugger() 
+void AmethystRuntime::PromptDebugger()
 {
     std::string command = fmt::format("vsjitdebugger -p {:d}", GetCurrentProcessId());
     system(command.c_str());
@@ -83,13 +95,15 @@ void AmethystRuntime::CreateOwnHooks()
     CreateModFunctionHooks();
 }
 
-void AmethystRuntime::RunMods() 
+void AmethystRuntime::RunMods()
 {
     // Invoke mods to initialize and setup hooks, etc..
-    for (auto& modInitialize : mModInitialize) modInitialize("1.20.51.1");
+    for (auto& modInitialize : mModInitialize)
+        modInitialize("1.20.51.1", getInputManager());
 
     while (true) {
-        for (auto& modTick : mModTick) modTick();
+        for (auto& modTick : mModTick)
+            modTick();
         Sleep(1000 / 20);
 
         if (GetAsyncKeyState(VK_NUMPAD0)) break;
@@ -107,8 +121,12 @@ void AmethystRuntime::Shutdown()
     // Remove any of the runtime mods hooks
     mHookManager.Shutdown();
 
+    // Unload any input action callbacks from Mod Dlls
+    mInputManager.Shutdown();
+
     // Prompt all mods to shutdown
-    for (auto& modShutdown : mModShutdown) modShutdown();
+    for (auto& modShutdown : mModShutdown)
+        modShutdown();
 
     // Unload all mod Dlls
     for (auto& mod : mLoadedMods) {
@@ -123,8 +141,4 @@ void AmethystRuntime::Shutdown()
     mModRender.clear();
 
     MH_Uninitialize();
-}
-
-HookManager* AmethystRuntime::getHookManager() {
-    return &this->mHookManager;
 }

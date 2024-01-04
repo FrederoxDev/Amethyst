@@ -37,7 +37,7 @@ void Shutdown()
 {
     AmethystRuntime* runtime = AmethystRuntime::getInstance();
     runtime->Shutdown();
-    
+
     Log::DestroyConsole();
     CreateThread(0, 0, EjectThread, 0, 0, 0);
 }

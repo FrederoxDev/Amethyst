@@ -1,11 +1,11 @@
 #pragma once
 #include <Windows.h>
+#include <amethyst/Log.h>
+#include <amethyst/Utility.h>
 #include <filesystem>
 #include <iostream>
 #include <shlobj.h>
 #include <vector>
-#include <amethyst/Utility.h>
-#include <amethyst/Log.h>
 
 namespace fs = std::filesystem;
 
