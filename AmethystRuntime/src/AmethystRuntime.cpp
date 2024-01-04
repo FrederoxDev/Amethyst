@@ -104,14 +104,15 @@ void AmethystRuntime::RunMods()
     while (true) {
         for (auto& modTick : mModTick)
             modTick();
+
         Sleep(1000 / 20);
 
         if (GetAsyncKeyState(VK_NUMPAD0)) break;
         if (GetAsyncKeyState('R') & 0x8000) {
             Log::Info("\n========================= Beginning hot-reload! =========================");
-            this->Shutdown();
-            Sleep(100);
-            this->Start();
+
+            Shutdown();
+            return Start();
         }
     }
 }
@@ -133,7 +134,10 @@ void AmethystRuntime::Shutdown()
         mod.Shutdown();
     }
 
+    mLoadedMods.clear();
+
     // Clear all mod functions
+    mModRegisterInputs.clear();
     mModInitialize.clear();
     mModTick.clear();
     mModStartJoinGame.clear();
