@@ -1,5 +1,15 @@
 #include "minecraft/src/common/nbt/Tag.h"
 
+Tag::Tag() {
+    vtable = 0x0;
+}
+
+Tag::~Tag()
+{
+    using function = void(__thiscall*)(Tag*);
+    reinterpret_cast<function>(this->vtable[0])(this);
+}
+
 void Tag::deleteChildren() {
     using function = void(__thiscall*)(Tag*);
     return reinterpret_cast<function>(this->vtable[1])(this);

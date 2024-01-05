@@ -28,8 +28,10 @@ private:
     uintptr_t** vtable;
 
 public: 
+    Tag();
+
     /* Tag::vfuncs */
-    // ~Tag();
+    ~Tag();
     void deleteChildren();
     void write(IDataOutput&) const;
     void load(IDataInput&);
