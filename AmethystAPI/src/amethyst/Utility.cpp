@@ -1,6 +1,7 @@
 #include "amethyst/Utility.h"
 
-std::string GetAmethystFolder() {
+std::string GetAmethystFolder()
+{
     static std::string amethystFolder;
 
     if (amethystFolder.empty()) {

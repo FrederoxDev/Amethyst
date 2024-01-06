@@ -1,7 +1,7 @@
 #pragma once
-#include <vector>
-#include <string>
 #include "minecraft/src-deps/input/InputMapping.h"
+#include <string>
+#include <vector>
 
 struct KeyboardKeyBinding {
 public:
@@ -9,7 +9,8 @@ public:
     int32_t keyNum;
     FocusImpact focusImpact;
 
-    KeyboardKeyBinding(const std::string* buttonName, int32_t key, FocusImpact focus) {
+    KeyboardKeyBinding(const std::string* buttonName, int32_t key, FocusImpact focus)
+    {
         this->buttonName = *buttonName;
         this->keyNum = key;
         this->focusImpact = focus;

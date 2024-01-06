@@ -2,6 +2,6 @@
 #include "minecraft/src/common/nbt/Tag.h"
 
 class IntTag : public Tag {
-public: 
+public:
     int32_t data;
 };

@@ -1,7 +1,7 @@
 #pragma once
-#include <string>
 #include <memory>
 #include <stdint.h>
+#include <string>
 
 class IDataOutput;
 class IDataInput;
@@ -27,7 +27,7 @@ public:
 private:
     uintptr_t** vtable;
 
-public: 
+public:
     Tag();
 
     /* Tag::vfuncs */

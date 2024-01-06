@@ -1,12 +1,13 @@
 #pragma once
 #include "minecraft/src/common/nbt/Tag.h"
+#include "minecraft/src/common/nbt/ByteTag.h"
+#include "minecraft/src/common/nbt/ListTag.h"
+#include "minecraft/src/common/nbt/StringTag.h"
 #include <map>
 #include <string_view>
 
 class CompoundTagVariant;
 typedef std::map<std::string, CompoundTagVariant, std::less<>> TagMap;
-
-class ListTag;
 
 class CompoundTag : public Tag {
 public:
@@ -19,7 +20,16 @@ public:
     bool contains(std::string_view name) const;
     bool contains(std::string_view name, Tag::Type type) const;
 
+    const ListTag* getList(std::string_view name) const;
     ListTag* getList(std::string_view name);
+
+    const ByteTag* getByteTag(std::string_view name) const;
+    ByteTag* getByteTag(std::string_view name);
+    uint8_t getByte(std::string_view) const;
+
+    const StringTag* getStringTag(std::string_view name) const;
+    StringTag* getStringTag(std::string_view name);
+    const std::string& getString(std::string_view name) const;
 
 private:
     template <typename T>

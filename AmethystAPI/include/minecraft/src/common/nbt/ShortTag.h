@@ -2,6 +2,6 @@
 #include "minecraft/src/common/nbt/Tag.h"
 
 class ShortTag : public Tag {
-public: 
+public:
     int16_t data;
 };

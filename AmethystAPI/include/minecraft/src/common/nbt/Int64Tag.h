@@ -3,6 +3,6 @@
 #include <stdint.h>
 
 class Int64Tag : public Tag {
-public: 
+public:
     int64_t data;
 };
