@@ -28,9 +28,8 @@ Finds an address of a function with its signature within the loaded game memory
 */
 uintptr_t SigScan(std::string signature);
 
-/*
-Finds an address of a function with its signature in the loaded game memory, This function uses as many threads as the CPU has cores
+/**
+ * Finds the offset of a pointer in a struct/class
+ * returns SIZE_MAX if it fails
 */
-uintptr_t multiThreadedSigScan(
-    const std::string* sig,
-    const std::vector<bool>& mask);
+size_t FindOffsetOfPointer(void* _base, void* _pointer, size_t maxSearchSize);

@@ -7,6 +7,7 @@
 
 class Minecraft;
 class ClientInputHandler;
+class ItemRenderer;
 
 #pragma pack(push, 1)
 class ClientInstance {
@@ -25,9 +26,10 @@ public:
     ClientInputHandler* inputHandler; // this + 272
 
 private:
-    bool padding2[1096];
+    bool padding2[1088];
 
 public:
+    ItemRenderer* itemRenderer; // this + 1368
     GuiData* guiData; // this + 1376
 
 public:
