@@ -2,6 +2,10 @@
 
 Amethyst is a open-source project for making client-side mods for Minecraft Bedrock version `1.20.51.1`. Amethyst provides headers based on the vanilla game, as well as some general purpose APIs for using Minecrafts input system.
 
+![](https://cdn.discordapp.com/attachments/1184979358067204167/1190995332411174992/image.png)
+
+Amethyst also has its own Mod launcher, as well as the ability to play with multiple mods at once.
+
 # Mod Functions
 A mod is able to export functions that will be automatically called by AmethystRuntime.
 ```cpp
