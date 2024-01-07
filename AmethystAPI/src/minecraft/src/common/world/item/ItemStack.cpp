@@ -14,3 +14,9 @@ void ItemStack::reinit(std::string_view name, int count, int auxValue) {
     using function = void(__thiscall*)(ItemStack*, std::string_view, int, int);
     reinterpret_cast<function>(this->vtable[1])(this, name, count, auxValue);
 }
+
+void ItemStack::reinit(const Item* item, int count, int auxValue)
+{
+    using function = void(__thiscall*)(ItemStack*, const Item*, int, int);
+    reinterpret_cast<function>(this->vtable[3])(this, item, count, auxValue);
+}
