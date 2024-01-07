@@ -54,10 +54,11 @@ void AmethystRuntime::LoadModDlls()
     for (auto& mod : mLoadedMods) {
         _LoadModFunc(&mModRegisterInputs, mod, "RegisterInputs");
         _LoadModFunc(&mModInitialize, mod, "Initialize");
-        _LoadModFunc(&mModTick, mod, "OnTick");
         _LoadModFunc(&mModStartJoinGame, mod, "OnStartJoinGame");
         _LoadModFunc(&mModRender, mod, "OnRenderUI");
         _LoadModFunc(&mModShutdown, mod, "Shutdown");
+        _LoadModFunc(&mModTickBefore, mod, "OnTickBefore");
+        _LoadModFunc(&mModTickAfter, mod, "OnTickAfter");
     }
 }
 
@@ -102,9 +103,6 @@ void AmethystRuntime::RunMods()
         modInitialize("1.20.51.1", getInputManager());
 
     while (true) {
-        for (auto& modTick : mModTick)
-            modTick();
-
         Sleep(1000 / 20);
 
         if (GetAsyncKeyState(VK_NUMPAD0)) break;
@@ -139,10 +137,11 @@ void AmethystRuntime::Shutdown()
     // Clear all mod functions
     mModRegisterInputs.clear();
     mModInitialize.clear();
-    mModTick.clear();
     mModStartJoinGame.clear();
     mModShutdown.clear();
     mModRender.clear();
+    mModTickBefore.clear();
+    mModTickAfter.clear();
 
     MH_Uninitialize();
 }

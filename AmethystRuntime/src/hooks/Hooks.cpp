@@ -22,8 +22,21 @@ static int64_t ClientInstance_onStartJoinGame(ClientInstance* self, int64_t a2, 
     return _ClientInstance_onStartJoinGame(self, a2, a3, a4);
 }
 
-void CreateModFunctionHooks()
-{
+Minecraft::_update _Minecraft_update;
+static bool Minecraft_update(Minecraft* self) {
+    static AmethystRuntime* runtime = AmethystRuntime::getInstance();
+    for (auto& tickFunc : runtime->mModTickBefore)
+        if(tickFunc()) return true;
+
+    bool value = _Minecraft_update(self);
+
+    for (auto& tickFunc : runtime->mModTickAfter)
+        tickFunc();
+
+    return value;
+}
+
+void CreateModFunctionHooks() {
     HookManager* hookManager = AmethystRuntime::getHookManager();
 
     hookManager->CreateHook(
@@ -33,4 +46,8 @@ void CreateModFunctionHooks()
     hookManager->CreateHook(
         SigScan("40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 45 8B F1"),
         &ClientInstance_onStartJoinGame, reinterpret_cast<void**>(&_ClientInstance_onStartJoinGame));
+
+    hookManager->CreateHook(
+        SigScan("48 8B C4 48 89 58 ? 48 89 70 ? 48 89 78 ? 55 41 54 41 55 41 56 41 57 48 8D A8 ? ? ? ? 48 81 EC ? ? ? ? 0F 29 70 ? 0F 29 78 ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4C 8B E9 48"),
+        &Minecraft_update, reinterpret_cast<void**>(&_Minecraft_update));
 }
