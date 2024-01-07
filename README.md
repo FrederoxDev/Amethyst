@@ -1,63 +1,24 @@
 # Project Amethyst
 
-Amethyst is a open-source project for making client-side mods for Minecraft Bedrock version `1.20.51.1`. Amethyst provides headers based on the vanilla game, as well as some general purpose APIs for using Minecrafts input system.
+Project Amethyst is an open source-project for building client-side mods for Minecraft Bedrock `1.20.51.1`, client-side mods are able to stretch past the limitations of addons and have full control over the game such as using Minecraft's input system, creating your own user interfaces, changing vanilla functionality, and more. Please consider starring ⭐ the repository, doing this takes a significant of work.
 
-![](https://cdn.discordapp.com/attachments/1184979358067204167/1190995332411174992/image.png)
+![image](https://github.com/FrederoxDev/Amethyst/assets/69014593/68882aec-0d4c-4c1a-9a6c-2777fc91a859)
 
-Amethyst also has its own Mod launcher, as well as the ability to play with multiple mods at once.
+We have a community discord server here: [discord.gg/Cxrj9UXnDB](https://discord.gg/Cxrj9UXnDB)
 
-# Mod Functions
-A mod is able to export functions that will be automatically called by AmethystRuntime.
-```cpp
-// Called when a mod is loaded by AmethystAPI, used to create hooks
-extern "C" __declspec(dllexport) void Initialize();
+## Mods built with Amethyst
 
-// Called every 50ms, currently not hooked into a real tick function
-extern "C" __declspec(dllexport) void OnTick();
+### - [ItemInformation](https://github.com/FrederoxDev/Item-Information)
 
-// ClientInstance::onStartJoinGame
-extern "C" __declspec(dllexport) void OnStartJoinGame(ClientInstance* clientInstance);
+| ![image](https://github.com/FrederoxDev/Amethyst/assets/69014593/4d834633-cd07-4fd9-addf-b07349b9130b) | ![image](https://github.com/FrederoxDev/Amethyst/assets/69014593/0d8cb358-faf0-48f7-b8ab-aeb420a68939) |
+|--------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------|
 
-// Hooked ScreenView::setupAndRender for mods to draw UI
-extern "C" __declspec(dllexport) void OnRenderUI(ScreenView* screenView, UIRenderContext* ctx);
+ItemInformation is a mod by FrederoxDev, which adds extra information to item hovers, (if applicable) item durability, and namespace:identifier information about the item.
 
-// Used to destroy hooks for hot-reloading
-extern "C" __declspec(dllexport) void Shutdown();
-```
+### - [VidereLonge](https://github.com/ATXLtheAxolotl/VidereLonge)
 
-# CMakeLists.txt Template
-```cmake
-cmake_minimum_required(VERSION 3.12)
-project(ModName) # Replace with the name of your mod
-set(MOD_VERSION "1.0.0") # Replace with the version of your mod
+| Before Zoom                                                                                            | After Zoom                                                                                             |
+|--------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------|
+| ![image](https://github.com/FrederoxDev/Amethyst/assets/69014593/c08ba235-3ac0-427a-b66b-3e5c69a56996) | ![image](https://github.com/FrederoxDev/Amethyst/assets/69014593/43c797db-4a67-470a-afae-5719bfbca1ce) |
 
-# C++ Build Settings
-set(CMAKE_CONFIGURATION_TYPES "RelWithDebInfo" CACHE STRING "Build configurations" FORCE)
-set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Choose the type of build, options are: Debug Release RelWithDebInfo" FORCE)
-set(CMAKE_CXX_STANDARD 20)
-
-# Build into %appdata%/Amethyst
-set(AmethystFolder "$ENV{appdata}/Amethyst")
-set(UWPAmethystFolder "$ENV{LOCALAPPDATA}/Packages/Microsoft.MinecraftUWP_8wekyb3d8bbwe/AC/Amethyst")
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO "${UWPAmethystFolder}/mods/${PROJECT_NAME}@${MOD_VERSION}")
-
-# Include Amethyst
-find_library(AMETHYST_API AmethystAPI PATHS "${AmethystFolder}/lib")
-include_directories(${AmethystFolder}/include "include/")
-
-# Project Files
-file(GLOB_RECURSE CPP_SOURCES "src/*.cpp")
-file(GLOB_RECURSE H_FILES "src/*.h")
-add_library(${PROJECT_NAME} SHARED ${CPP_SOURCES} ${H_FILES})
-
-# EnTT Config Options
-target_compile_definitions(${PROJECT_NAME} PUBLIC ENTT_PACKED_PAGE=128)
-
-# Pass MOD_VERSION to the source code
-target_compile_definitions(${PROJECT_NAME} PRIVATE MOD_VERSION="${MOD_VERSION}")
-
-# Link libraries
-target_link_libraries(${PROJECT_NAME} PRIVATE ${AMETHYST_API})
-target_link_libraries(${PROJECT_NAME} PRIVATE "${AmethystFolder}/lib/fmt.lib")
-target_link_libraries(${PROJECT_NAME} PRIVATE "${AmethystFolder}/lib/libMinHook.x64.lib")
-```
+VidereLonge is a mod by ATXL, which allows you to be able to zoom in, and shows off being able to use minecrafts input system in a mod
