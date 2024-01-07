@@ -85,6 +85,12 @@ uint8_t CompoundTag::getByte(std::string_view name) const
     return 0;
 }
 
+void CompoundTag::putByte(std::string name, unsigned char value)
+{
+    ByteTag stringTag(value);
+    mTags[name].emplace<ByteTag>(stringTag);
+}
+
 const StringTag* CompoundTag::getStringTag(std::string_view name) const
 {
     return get<StringTag>(name);
@@ -95,13 +101,18 @@ StringTag* CompoundTag::getStringTag(std::string_view name)
     return get<StringTag>(name);
 }
 
-const std::string& CompoundTag::getString(std::string_view name) const
+const std::string* CompoundTag::getString(std::string_view name) const
 {
     auto tag = getStringTag(name);
     if (tag) {
-        return tag->data;
+        return &tag->data;
     }
     else {
-        return "";
+        return nullptr;
     }
+}
+
+void CompoundTag::putString(std::string name, std::string value) {
+    StringTag stringTag(value);
+    mTags[name].emplace<StringTag>(stringTag);
 }

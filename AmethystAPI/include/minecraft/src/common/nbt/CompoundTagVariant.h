@@ -1,4 +1,5 @@
 #pragma once
+#include "minecraft/src/common/nbt/StringTag.h"
 #include "minecraft/src/common/nbt/ByteArrayTag.h"
 #include "minecraft/src/common/nbt/ByteTag.h"
 #include "minecraft/src/common/nbt/CompoundTag.h"
@@ -10,7 +11,6 @@
 #include "minecraft/src/common/nbt/IntTag.h"
 #include "minecraft/src/common/nbt/ListTag.h"
 #include "minecraft/src/common/nbt/ShortTag.h"
-#include "minecraft/src/common/nbt/StringTag.h"
 #include <variant>
 
 class CompoundTagVariant {
@@ -57,5 +57,11 @@ public:
         else {
             return nullptr;
         }
+    }
+
+    template <typename T, typename... Args>
+    void emplace(Args&&... args)
+    {
+        mTagStorage.emplace<T>(std::forward<Args>(args)...);
     }
 };

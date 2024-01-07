@@ -26,10 +26,12 @@ public:
     const ByteTag* getByteTag(std::string_view name) const;
     ByteTag* getByteTag(std::string_view name);
     uint8_t getByte(std::string_view) const;
+    void putByte(std::string name, unsigned char value);
 
     const StringTag* getStringTag(std::string_view name) const;
     StringTag* getStringTag(std::string_view name);
-    const std::string& getString(std::string_view name) const;
+    const std::string* getString(std::string_view name) const;
+    void putString(std::string name, std::string value);
 
 private:
     template <typename T>

@@ -24,7 +24,7 @@ public:
         IntArray = 0x000b,
     };
 
-private:
+public:
     uintptr_t** vtable;
 
 public:
