@@ -57,8 +57,8 @@ void AmethystRuntime::LoadModDlls()
         _LoadModFunc(&mModStartJoinGame, mod, "OnStartJoinGame");
         _LoadModFunc(&mModRender, mod, "OnRenderUI");
         _LoadModFunc(&mModShutdown, mod, "Shutdown");
-        _LoadModFunc(&mModTickBefore, mod, "TickBefore");
-        _LoadModFunc(&mModTickAfter, mod, "TickAfter");
+        _LoadModFunc(&mModTickBefore, mod, "BeforeTick");
+        _LoadModFunc(&mModTickAfter, mod, "AfterTick");
     }
 }
 
