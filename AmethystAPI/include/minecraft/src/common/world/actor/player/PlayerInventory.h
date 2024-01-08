@@ -1,5 +1,7 @@
 #pragma once
-#include "minecraft/src/common/world/Container.h"
+#include "minecraft/src/common/world/item/ItemStack.h"
+#include "minecraft/src/common/world/actor/player/Inventory.h"
+#include <memory.h>
 
 // This is probably wrong in some way or outdated, from china
 enum ContainerID : unsigned char {
@@ -21,9 +23,11 @@ public:
         int32_t mSlot;
     };
 
-    bool padding0[16];
-    int mSelected; // this + 16
-    Container* container; // this + 24
-    bool padding1[152];
-    ContainerID mSelectedContainerId; // this + 184
+public:
+    uintptr_t** vtable0; // PlayerInventory::`vftable'{for `ContainerSizeChangeListener'}
+    uintptr_t** vtable1; // PlayerInventory::`vftable'{for `ContainerContentChangeListener'}
+    int32_t mSelected;
+    ItemStack mInfiniteItem;
+    ContainerID mSelectedContainerId;
+    std::unique_ptr<Inventory> mInventory;
 };

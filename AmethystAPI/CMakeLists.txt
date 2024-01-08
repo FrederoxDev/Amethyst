@@ -33,7 +33,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC
     $<INSTALL_INTERFACE:include>
 )
 
-
 target_link_libraries(${PROJECT_NAME} PRIVATE
     lib/fmt.lib
     lib/libMinHook.x64.lib
