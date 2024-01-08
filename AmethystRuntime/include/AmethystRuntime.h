@@ -75,8 +75,9 @@ public:
     // Mod Functions
     std::vector<ModRegisterInputs> mModRegisterInputs;
     std::vector<ModInitialize> mModInitialize;
-    std::vector<ModTick> mModTick;
     std::vector<ModStartJoinGame> mModStartJoinGame;
     std::vector<ModShutdown> mModShutdown;
     std::vector<ModRender> mModRender;
+    std::vector<ModTickBefore> mModTickBefore;
+    std::vector<ModTickAfter> mModTickAfter;
 };
