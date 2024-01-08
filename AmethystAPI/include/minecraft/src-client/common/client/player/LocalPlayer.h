@@ -1,6 +1,6 @@
 #pragma once
-#include "minecraft/src/common/world/actor/Actor.h"
+#include "minecraft/src/common/world/actor/player/Player.h"
 #include <stdint.h>
 
-class LocalPlayer : public Actor {
+class LocalPlayer : public Player {
 };
