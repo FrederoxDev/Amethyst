@@ -17,6 +17,7 @@ private:
 
 public:
     StateVectorComponent* mStateVectorComponent; // this + 712
+    bool padding1[504];
 
 public:
     Vec3* getPosition();
@@ -27,3 +28,5 @@ public:
     template <typename T>
     T* tryGetComponent();
 };
+
+static_assert(sizeof(Actor) == 1224);

@@ -3,6 +3,9 @@
 
 class Player : public Mob {
 public:
-    bool padding[1304];
-    PlayerInventory playerInventory; // this + 2024
+    bool __padding0[2160];
+    PlayerInventory* playerInventory; // this + 3808
+    bool __padding1[3768];
 };
+
+static_assert(sizeof(Player) == 7584);

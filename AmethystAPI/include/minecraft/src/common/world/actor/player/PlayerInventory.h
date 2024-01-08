@@ -2,7 +2,7 @@
 #include "minecraft/src/common/world/Container.h"
 
 // This is probably wrong in some way or outdated, from china
-enum ContainerID : char {
+enum ContainerID : unsigned char {
     CONTAINER_ID_NONE = 0xff,
     CONTAINER_ID_INVENTORY = 0x0000,
     CONTAINER_ID_FIRST = 0x0001,
@@ -14,6 +14,7 @@ enum ContainerID : char {
 };
 
 class PlayerInventory {
+public:
     class SlotData {
     public:
         ContainerID mContainerId;
