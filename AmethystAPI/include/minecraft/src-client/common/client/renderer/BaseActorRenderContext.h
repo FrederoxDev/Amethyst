@@ -8,9 +8,13 @@ using IClientInstance = ClientInstance;
 class MinecraftGame;
 using IMinecraftGame = MinecraftGame;
 
+class ItemRenderer;
+
 class BaseActorRenderContext {
-private:
-    bool padding[0x298];
+public:
+    bool padding[0x58];
+    ItemRenderer* itemRenderer;
+    bool padding1[0x238];
 
 public:
     BaseActorRenderContext(ScreenContext* screenContext, IClientInstance* clientInstance, IMinecraftGame* minecraftGame);

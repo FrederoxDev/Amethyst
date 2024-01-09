@@ -4,7 +4,7 @@ AmethystRuntime* AmethystRuntime::instance = nullptr;
 
 void AmethystRuntime::Start()
 {
-    Log::Info("[AmethystRuntime] AmethystRuntime@{}", MOD_VERSION);
+    Log::Info("[AmethystRuntime] Using 'AmethystRuntime@{}'", MOD_VERSION);
     MH_Initialize();
 
     // Read launcher_config.json and load mod Dlls
@@ -52,6 +52,8 @@ void AmethystRuntime::LoadModDlls()
 
     // Load all mod functions
     for (auto& mod : mLoadedMods) {
+        Log::Info("[AmethystRuntime] Loading '{}'", mod.modName);
+
         _LoadModFunc(&mModRegisterInputs, mod, "RegisterInputs");
         _LoadModFunc(&mModInitialize, mod, "Initialize");
         _LoadModFunc(&mModStartJoinGame, mod, "OnStartJoinGame");
@@ -87,6 +89,7 @@ void AmethystRuntime::CreateEarlyHooks()
 
 void AmethystRuntime::PromptDebugger()
 {
+    Log::Info("[AmethystRuntime] Minecraft's Base: 0x{:x}", GetMinecraftBaseAddress());
     std::string command = fmt::format("vsjitdebugger -p {:d}", GetCurrentProcessId());
     system(command.c_str());
 }
@@ -102,6 +105,7 @@ void AmethystRuntime::RunMods()
     for (auto& modInitialize : mModInitialize)
         modInitialize("1.20.51.1", getInputManager());
 
+    // Listen for hot-reload and keep Amethyst running until the end
     while (true) {
         Sleep(1000 / 20);
 
