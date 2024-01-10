@@ -8,9 +8,32 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
     return TRUE;
 }
 
+LONG WINAPI ExceptionHandler(EXCEPTION_POINTERS* ExceptionInfo)
+{
+    if (ExceptionInfo == nullptr) {
+        std::cerr << "ExceptionInfo is nullptr" << std::endl;
+        return ExceptionContinueSearch;
+    }
+
+    HMODULE hModule = GetModuleHandle(nullptr);
+
+    TCHAR szModuleName[MAX_PATH];
+    GetModuleFileName(hModule, szModuleName, MAX_PATH);
+
+    EXCEPTION_RECORD* exceptionRecord = ExceptionInfo->ExceptionRecord;
+    uint64_t exceptionAddr = (uint64_t)exceptionRecord->ExceptionAddress - GetMinecraftBaseAddress();
+    uint64_t exceptionCode = (uint64_t)exceptionRecord->ExceptionCode;
+
+    Log::Error("[AmethystRuntime] Exception thrown at 0x{:x} in {}. Exception code: 0x{:x}", exceptionAddr, szModuleName, exceptionCode);
+
+    ShutdownWait();
+    return ExceptionContinueSearch;
+}
+
 DWORD WINAPI Main()
 {
     Log::InitializeConsole();
+    SetUnhandledExceptionFilter(ExceptionHandler);
 
     // Create an instance of AmethystRuntime and invoke it to start
     AmethystRuntime* runtime = AmethystRuntime::getInstance();
