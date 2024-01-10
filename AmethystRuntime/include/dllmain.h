@@ -8,3 +8,5 @@ DWORD WINAPI Main();
 DWORD __stdcall EjectThread(LPVOID lpParameter);
 void Shutdown();
 void ShutdownWait();
+
+LONG WINAPI ExceptionHandler(EXCEPTION_POINTERS* ExceptionInfo);
