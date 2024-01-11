@@ -39,4 +39,14 @@ foreach(HEADER ${HEADERS})
 
 endforeach()
 
+# Copy Amethyst's dependencies to AmethystFolder/include
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${AmethystFolder}/include/)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/lib/ DESTINATION ${AmethystFolder}/lib/)
+
+# Create source groups to reflect the directory structure in Visual Studio
+foreach(_source IN ITEMS ${SOURCES} ${HEADERS})
+    get_filename_component(_source_path "${_source}" PATH)
+    file(RELATIVE_PATH _source_path_rel "${CMAKE_CURRENT_SOURCE_DIR}/src" "${_source_path}")
+    string(REPLACE "/" "\\" _group_path "${_source_path_rel}")
+    source_group("${_group_path}" FILES "${_source}")
+endforeach()
