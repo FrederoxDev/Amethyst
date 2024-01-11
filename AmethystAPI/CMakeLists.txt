@@ -1,56 +1,52 @@
 cmake_minimum_required(VERSION 3.12)
 project(AmethystAPI)
 
-# C++ Build Options
-set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_CONFIGURATION_TYPES "RelWithDebInfo" CACHE STRING "Build configurations" FORCE)
-set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Choose the type of build, options are: RelWithDebInfo" FORCE)
-cmake_policy(SET CMP0069 NEW)
-
-# Project Configuration
+# Amethyst folder location
 set(AmethystFolder "$ENV{localappdata}/Packages/Microsoft.MinecraftUWP_8wekyb3d8bbwe/AC/Amethyst/")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELWITHDEBINFO "${AmethystFolder}/lib")
 
-# Project Files
-file(GLOB_RECURSE CPP_SOURCES "src/*.cpp")
-file(GLOB_RECURSE H_FILES "include/*.h")
-add_library(${PROJECT_NAME} STATIC ${CPP_SOURCES} ${H_FILES})
+# C++ Compile Options
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CONFIGURATION_TYPES "RelWithDebInfo" CACHE STRING "Build configurations" FORCE)
+set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Choose the type of build, options are: RelWithDebInfo" FORCE)
 
-# EnTT Compile Options
+file(GLOB_RECURSE SOURCES "src/*.cpp")
+file(GLOB_RECURSE HEADERS "src/*.h")
+
+# Create AmethystAPI as a .lib
+add_library(${PROJECT_NAME} STATIC ${SOURCES} ${HEADERS})
+
+# Amethyst Dependencies
+target_include_directories(${PROJECT_NAME} PUBLIC 
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
+
+target_link_libraries(${PROJECT_NAME} PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/lib/fmt.lib
+    ${CMAKE_CURRENT_SOURCE_DIR}/lib/libMinHook.x6.lib
+)
+
+# EnTT Compile options
 target_compile_definitions(${PROJECT_NAME} PUBLIC ENTT_PACKED_PAGE=128)
 
-# Organize source files into virtual folders in Visual Studio
-foreach(source IN LISTS CPP_SOURCES H_FILES)
-    get_filename_component(source_path "${source}" DIRECTORY)
-    string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}" "" source_path_relative "${source_path}")
-    string(REPLACE "/" "\\" source_path_relative "${source_path_relative}")
-    source_group("${source_path_relative}" FILES "${source}")
+# Copy Amethyst's Headers to AmethystFolder/include
+foreach(HEADER ${HEADERS})
+    file(RELATIVE_PATH HEADER_RELATIVE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/src ${HEADER})
+    get_filename_component(HEADER_NAME ${HEADER} NAME)
+    set(DESTINATION_PATH ${AmethystFolder}/include/${HEADER_RELATIVE_PATH})
+    configure_file(${HEADER} ${DESTINATION_PATH} COPYONLY)
+
 endforeach()
 
-# Include files
-target_include_directories(${PROJECT_NAME} PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:include>
-)
+# Copy Amethyst's dependencies to AmethystFolder/include
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${AmethystFolder}/include/)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/lib/ DESTINATION ${AmethystFolder}/lib/)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE
-    lib/fmt.lib
-    lib/libMinHook.x64.lib
-)
-
-# Auto copy headers to %Appdata%/Amethyst/lib for use
-add_custom_target(CopyHeaders
-    COMMENT "Copying .h and .lib's to ${AmethystFolder}"
-    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/include" "${AmethystFolder}/include"
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/lib/fmt.lib" "${AmethystFolder}/lib/fmt.lib"
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_CURRENT_SOURCE_DIR}/lib/libMinHook.x64.lib" "${AmethystFolder}/lib/libMinHook.x64.lib"
-)
-
-# Code Style
-add_custom_target(ClangFormat
-    COMMAND clang-format
-    -i
-    ${CPP_SOURCES} ${H_FILES}
-)
-
-add_dependencies(${PROJECT_NAME} CopyHeaders)
+# Create source groups to reflect the directory structure in Visual Studio
+foreach(_source IN ITEMS ${SOURCES} ${HEADERS})
+    get_filename_component(_source_path "${_source}" PATH)
+    file(RELATIVE_PATH _source_path_rel "${CMAKE_CURRENT_SOURCE_DIR}/src" "${_source_path}")
+    string(REPLACE "/" "\\" _group_path "${_source_path_rel}")
+    source_group("${_group_path}" FILES "${_source}")
+endforeach()
