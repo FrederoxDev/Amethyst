@@ -38,16 +38,17 @@ static bool Minecraft_update(Minecraft* self) {
 
 void CreateModFunctionHooks() {
     HookManager* hookManager = AmethystRuntime::getHookManager();
-
-    hookManager->CreateHook(
+    AmethystRuntime* runtime = AmethystRuntime::getInstance();
+    
+    if (runtime->mModRender.size() > 0) hookManager->CreateHook(
         SigScan("48 8B C4 48 89 58 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D A8 ? ? ? ? 48 81 EC ? ? ? ? 0F 29 70 ? 0F 29 78 ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4C 8B FA 48 89 54 24 ? 4C 8B E9 48 89 4C 24"),
         &ScreenView_setupAndRender, reinterpret_cast<void**>(&_ScreenView_setupAndRender));
-
-    hookManager->CreateHook(
+    
+    if (runtime->mModStartJoinGame.size() > 0) hookManager->CreateHook(
         SigScan("40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 45 8B F1"),
         &ClientInstance_onStartJoinGame, reinterpret_cast<void**>(&_ClientInstance_onStartJoinGame));
 
-    hookManager->CreateHook(
+    if (runtime->mModTickAfter.size() > 0 || runtime->mModTickBefore.size() > 0) hookManager->CreateHook(
         SigScan("48 8B C4 48 89 58 ? 48 89 70 ? 48 89 78 ? 55 41 54 41 55 41 56 41 57 48 8D A8 ? ? ? ? 48 81 EC ? ? ? ? 0F 29 70 ? 0F 29 78 ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4C 8B E9 48"),
         &Minecraft_update, reinterpret_cast<void**>(&_Minecraft_update));
 }
