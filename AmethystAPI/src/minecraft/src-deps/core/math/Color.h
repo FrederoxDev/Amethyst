@@ -23,5 +23,7 @@ public:
         this->b = 0.0f;
         this->a = 0.0f;
     }
+
+    static const Color WHITE;
 };
 }; // namespace mce

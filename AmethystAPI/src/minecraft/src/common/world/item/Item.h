@@ -9,17 +9,18 @@ class ItemStackBase;
 
 #pragma pack(push, 1)
 class Item {
-private:
-    uintptr_t** vtable;
-    bool padding0[154];
-
 public:
+    uintptr_t** vtable;
+    bool padding0[104];
+    void* qword70; // this + 112
+    bool padding1[24];
+    void* qword90; // this + 144
+    bool padding2[10];
     int16_t mId;        // this + 162
     int16_t mMaxDamage; // this + 164
-private:
-    bool padding1[82];
-
-public:
+    bool padding3[2];
+    std::string* mItemName; // this + 168
+    bool padding4[72];
     std::string mNamespace; // this + 248
 
 public:
