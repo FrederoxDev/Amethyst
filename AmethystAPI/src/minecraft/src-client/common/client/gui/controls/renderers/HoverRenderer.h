@@ -5,7 +5,7 @@
 class MinecraftUIRenderContext;
 class ClientInstance;
 using IClientInstance = ClientInstance;
-class RectangleArea;
+struct RectangleArea;
 
 class HoverRenderer {
 public:

@@ -7,6 +7,7 @@
 #include "minecraft/src/common/world/phys/Vec2.h"
 #include <stdint.h>
 #include <string>
+#include "minecraft/src-client/common/client/renderer/NinesliceInfo.h"
 
 using IClientInstance = ClientInstance;
 class UIScene;
@@ -81,9 +82,7 @@ public:
     void drawText(Font& font, const RectangleArea& rect, const std::string& text, const mce::Color& color, float alpha, ui::TextAlignment alignment, const TextMeasureData& textData, const CaretMeasureData& caretData);
     void flushText(float deltaTime);
     void drawImage(const mce::TexturePtr& texture, const glm::tvec2<float>* position, const glm::tvec2<float>* size, glm::tvec2<float>* uv, glm::tvec2<float>* uvSize, int degree);
-
-    // drawNineslice(mce::TexturePtr const &, NinesliceInfo const &);
-
+    void drawNineslice(const mce::TexturePtr* texture, const NinesliceInfo* nineslice);
     void flushImages(const mce::Color& color, float alpha, const HashedString& materialNameHash);
 
     // beginSharedMeshBatch(ComponentRenderBatch &);
