@@ -1,5 +1,11 @@
 #include "hooks/Hooks.h"
 
+#include "AmethystRuntime.h"
+
+#include <minecraft/client/game/ClientInstance.h>
+#include <minecraft/client/gui/ScreenView.h>
+#include <minecraft/common/Minecraft.h>
+
 ScreenView::_setupAndRender _ScreenView_setupAndRender;
 static void* ScreenView_setupAndRender(ScreenView* self, UIRenderContext* ctx)
 {

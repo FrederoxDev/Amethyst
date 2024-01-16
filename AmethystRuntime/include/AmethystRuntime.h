@@ -1,13 +1,15 @@
 #pragma once
-#include "MinHook.h"
+
 #include "hooks/Hooks.h"
 #include "hooks/InputHooks.h"
 #include "input/RuntimeInput.h"
 #include "mod/Mod.h"
 #include "mod/ModFunctions.h"
+
 #include <amethyst/Config.h>
 #include <amethyst/HookManager.h>
 #include <amethyst/Log.h>
+
 #include <filesystem>
 #include <fstream>
 #include <iostream>

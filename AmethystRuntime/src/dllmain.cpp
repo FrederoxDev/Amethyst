@@ -1,4 +1,11 @@
-#include "dllmain.h"
+#include "AmethystRuntime.h"
+#include "amethyst/Log.h"
+
+#define NOMINMAX
+#include "windows.h"
+
+DWORD WINAPI Main();
+void ShutdownWait();
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved)
 {

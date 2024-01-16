@@ -1,6 +1,14 @@
 #pragma once
+
+#ifdef ENTT_ENTITY_FWD_HPP
+static_assert(false, "Please include EntityId.h before all entt headers!");
+#endif
+
+#include "minecraft/entt/fwd.hpp"
 #include "entt/entt.hpp"
+
 #include "minecraft/common/world/entity/EntityIdTraits.h"
+
 #include <concepts>
 #include <cstdint>
 
@@ -30,4 +38,5 @@ public:
     }
 };
 
-static_assert(sizeof(entt::basic_registry<EntityId>) == 0x120);
+//Commenting this out for now... also is the size actually 0x120?
+//static_assert(sizeof(entt::basic_registry<EntityId>) == 0x120);

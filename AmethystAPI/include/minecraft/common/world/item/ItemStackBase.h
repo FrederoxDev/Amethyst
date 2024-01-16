@@ -13,7 +13,7 @@ public:
     WeakPtr<Item> mItem;    // this + 8
     CompoundTag* mUserData; // this + 16
     bool padding0[10];
-    byte count; // this + 34;
+    uint8_t count; // this + 34;
     bool padding1[120];
 
 public:

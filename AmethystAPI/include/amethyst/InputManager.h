@@ -2,7 +2,8 @@
 #include <string>
 #include <vector>
 #include <functional>
-#include "minecraft/src-deps/input/InputHandler.h"
+
+#include "minecraft/client/input/InputHandler.h"
 
 class InputManager {
 public:

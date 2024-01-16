@@ -1,7 +1,7 @@
 #pragma once
 #include <amethyst/InputManager.h>
-#include <minecraft/src-client/common/client/game/ClientInstance.h>
-#include <minecraft/src-client/common/client/gui/ScreenView.h>
+#include <minecraft/client/game/ClientInstance.h>
+#include <minecraft/client/gui/ScreenView.h>
 
 typedef void (*ModRegisterInputs)(InputManager* inputManager);
 typedef void (*ModInitialize)(const char* gameVersion, InputManager* inputManager);

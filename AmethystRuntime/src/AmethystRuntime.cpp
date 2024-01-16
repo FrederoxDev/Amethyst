@@ -67,7 +67,7 @@ void AmethystRuntime::LoadModDlls()
 template <typename T>
 void AmethystRuntime::_LoadModFunc(std::vector<T>* vector, Mod& mod, const char* functionName)
 {
-    FARPROC address = mod.GetFunction(functionName);
+    intptr_t address = mod.GetFunction(functionName);
     if (address == NULL) return;
     vector->push_back(reinterpret_cast<T>(address));
 }

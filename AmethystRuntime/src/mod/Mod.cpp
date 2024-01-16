@@ -1,12 +1,15 @@
 #include "mod/Mod.h"
 
+#define NOMINMAX
+#include "Windows.h"
+
 Mod::Mod(std::string modName)
 {
     this->modName = modName;
     fs::path dllPath = GetTempDll();
 
     // Loads the mod in a temporary directory so that the original DLL can still be built to
-    hModule = LoadLibrary(dllPath.string().c_str());
+    hModule = reinterpret_cast<uint64_t>(LoadLibrary(dllPath.string().c_str()));
     if (hModule == NULL) {
         DWORD error = GetLastError();
 
@@ -22,21 +25,19 @@ Mod::Mod(std::string modName)
             throw std::exception();
         }
     }
-
-    return;
 }
 
-FARPROC Mod::GetFunction(const char* functionName)
+intptr_t Mod::GetFunction(const char* functionName) const
 {
-    return GetProcAddress(hModule, functionName);
+    return reinterpret_cast<intptr_t>(GetProcAddress(reinterpret_cast<HMODULE>(hModule), functionName));
 }
 
-void Mod::Shutdown()
+void Mod::Shutdown() const
 {
-    FreeLibrary(hModule);
+    FreeLibrary(reinterpret_cast<HMODULE>(hModule));
 }
 
-fs::path Mod::GetTempDll()
+fs::path Mod::GetTempDll() const
 {
     std::string modShortened = modName;
     size_t atPos = modShortened.find("@");

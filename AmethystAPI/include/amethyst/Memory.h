@@ -1,12 +1,10 @@
 #pragma once
 #include "amethyst/Log.h"
+
 #include <chrono>
 #include <cstdint>
-#include <psapi.h>
-#include <stdint.h>
 #include <string>
 #include <vector>
-#include <windows.h>
 
 /*
 Returns the position where Minecraft has been loaded into memory

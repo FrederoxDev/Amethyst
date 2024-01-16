@@ -1,4 +1,9 @@
 #include "amethyst/Memory.h"
+
+#define NOMINMAX
+#include <Windows.h>
+#include <psapi.h>
+
 #include <mutex>
 #include <thread>
 

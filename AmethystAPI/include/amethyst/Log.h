@@ -1,5 +1,5 @@
 #pragma once
-#include <Windows.h>
+
 #include <fmt/color.h>
 #include <fmt/core.h>
 #include <iostream>

@@ -1,26 +1,27 @@
 #pragma once
-#include <Windows.h>
+
 #include <amethyst/Log.h>
 #include <amethyst/Utility.h>
+
+#include <cstdint>
 #include <filesystem>
 #include <iostream>
-#include <shlobj.h>
 #include <vector>
 
 namespace fs = std::filesystem;
 
 class Mod {
 private:
-    HMODULE hModule;
+    uint64_t hModule;
 
 public:
     std::string modName;
 
 public:
     Mod(std::string modName);
-    FARPROC GetFunction(const char* functionName);
-    void Shutdown();
+    intptr_t GetFunction(const char* functionName) const;
+    void Shutdown() const;
 
 private:
-    fs::path GetTempDll();
+    fs::path GetTempDll() const;
 };

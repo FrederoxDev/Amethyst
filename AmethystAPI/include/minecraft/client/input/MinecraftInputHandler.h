@@ -1,7 +1,9 @@
 #pragma once
-#include <stdint.h>
+
+#include "minecraft/client/input/InputHandler.h"
+
+#include <cstdint>
 #include <memory>
-#include "minecraft/src-deps/input/InputHandler.h"
 
 class MinecraftInputHandler {
 public:

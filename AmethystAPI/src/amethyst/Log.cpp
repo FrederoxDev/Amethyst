@@ -1,5 +1,8 @@
 #include "amethyst/Log.h"
 
+#define NOMINMAX
+#include "Windows.h"
+
 namespace Log {
 FILE* fp;
 

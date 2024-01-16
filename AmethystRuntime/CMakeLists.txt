@@ -11,16 +11,16 @@ set(CMAKE_CXX_STANDARD 20)
 set(AmethystFolder "$ENV{localappdata}/Packages/Microsoft.MinecraftUWP_8wekyb3d8bbwe/AC/Amethyst/")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO "${AmethystFolder}/mods/${PROJECT_NAME}@${MOD_VERSION}")
 
-# Include Amethyst
-find_library(AMETHYST_API AmethystAPI PATHS "${AmethystFolder}/lib")
-include_directories(${AmethystFolder}/include "include/")
-
 # Project Files
 file(GLOB_RECURSE CPP_SOURCES "src/*.cpp")
 file(GLOB_RECURSE H_FILES "include/*.h" )
 add_library(${PROJECT_NAME} SHARED ${CPP_SOURCES} ${H_FILES})
 
+# Include the AmethystRuntime headers
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_LIST_DIR}/include)
+
 # EnTT Config Options
+target_compile_definitions(${PROJECT_NAME} PUBLIC ENTT_SPARSE_PAGE=2048)
 target_compile_definitions(${PROJECT_NAME} PUBLIC ENTT_PACKED_PAGE=128)
 
 # Organize source files into virtual folders in Visual Studio
@@ -35,9 +35,7 @@ endforeach()
 target_compile_definitions(${PROJECT_NAME} PRIVATE MOD_VERSION="${MOD_VERSION}")
 
 # Link libraries
-target_link_libraries(${PROJECT_NAME} PRIVATE ${AMETHYST_API})
-target_link_libraries(${PROJECT_NAME} PRIVATE "${AmethystFolder}/lib/fmt.lib")
-target_link_libraries(${PROJECT_NAME} PRIVATE "${AmethystFolder}/lib/libMinHook.x64.lib")
+target_link_libraries(${PROJECT_NAME} PRIVATE AmethystAPI)
 
 # Code Style
 add_custom_target(ClangFormat
