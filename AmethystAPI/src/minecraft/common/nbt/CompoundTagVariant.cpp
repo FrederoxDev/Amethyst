@@ -1,1 +1,0 @@
-#include "minecraft/common/nbt/CompoundTagVariant.h"

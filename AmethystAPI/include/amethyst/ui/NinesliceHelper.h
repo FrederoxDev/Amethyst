@@ -1,8 +1,8 @@
 #pragma once
 #include "glm/glm.hpp"
-#include "minecraft/client/renderer/ImageInfo.h"
-#include "minecraft/client/renderer/screen/MinecraftUIRenderContext.h"
-#include "minecraft/common/world/phys/Vec2.h"
+#include "common/client/renderer/ImageInfo.h"
+#include "common/client/renderer/screen/MinecraftUIRenderContext.h"
+#include "common/world/phys/Vec2.h"
 
 namespace Amethyst {
     struct TextureUV {
