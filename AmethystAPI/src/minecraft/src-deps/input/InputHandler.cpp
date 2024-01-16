@@ -1,4 +1,4 @@
-#include "minecraft/src-deps/input/InputHandler.h"
+#include "minecraft/client/input/InputHandler.h"
 
 void InputHandler::registerButtonDownHandler(std::string a1, std::function<void(FocusImpact, IClientInstance&)> a2, bool a3)
 {

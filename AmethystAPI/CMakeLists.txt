@@ -19,7 +19,6 @@ add_library(${PROJECT_NAME} STATIC ${SOURCES} ${HEADERS})
 # Amethyst Dependencies
 target_include_directories(${PROJECT_NAME} PUBLIC 
     ${CMAKE_CURRENT_SOURCE_DIR}/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
 

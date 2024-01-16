@@ -1,4 +1,4 @@
-#include "minecraft/src/common/world/level/block/Block.h"
+#include "minecraft/common/world/level/block/Block.h"
 
 mce::Color* Block::getMapColor(mce::Color* a2, BlockSource* a3, const BlockPos* a4) const
 {

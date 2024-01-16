@@ -1,4 +1,4 @@
-#include "minecraft/src/common/world/item/registry/ItemRegistryManager.h"
+#include "minecraft/common/world/item/registry/ItemRegistryManager.h"
 
 ItemRegistryRef ItemRegistryManager::getItemRegistry() {
     using function = ItemRegistryRef(*)();

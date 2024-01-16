@@ -1,4 +1,4 @@
-#include "minecraft/src/common/nbt/Tag.h"
+#include "minecraft/common/nbt/Tag.h"
 
 Tag::Tag()
 {

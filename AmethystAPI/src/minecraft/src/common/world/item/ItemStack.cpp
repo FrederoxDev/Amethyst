@@ -1,4 +1,4 @@
-#include "minecraft/src/common/world/item/ItemStack.h"
+#include "minecraft/common/world/item/ItemStack.h"
 
 ItemStack::ItemStack() {
 	using function = void(__thiscall*)(ItemStack*);

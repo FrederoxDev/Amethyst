@@ -1,4 +1,4 @@
-#include "minecraft/src-deps/core/string/StringHash.h"
+#include "minecraft/common/core/string/StringHash.h"
 
 bool HashedString::operator==(const HashedString& rhs) const
 {

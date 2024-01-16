@@ -1,4 +1,4 @@
-#include "minecraft/src/common/world/item/Item.h"
+#include "minecraft/common/world/item/Item.h"
 
 short Item::getDamageValue(CompoundTag* mUserData) const
 {

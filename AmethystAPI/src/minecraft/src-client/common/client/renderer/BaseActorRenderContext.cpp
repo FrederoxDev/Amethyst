@@ -1,4 +1,4 @@
-#include "minecraft/src-client/common/client/renderer/BaseActorRenderContext.h"
+#include "minecraft/client/renderer/BaseActorRenderContext.h"
 
 BaseActorRenderContext::BaseActorRenderContext(ScreenContext* screenContext, IClientInstance* clientInstance, IMinecraftGame* minecraftGame) {
     using function = void(__thiscall*)(BaseActorRenderContext*, ScreenContext*, IClientInstance*, IMinecraftGame*);

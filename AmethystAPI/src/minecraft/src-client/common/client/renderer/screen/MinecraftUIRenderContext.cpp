@@ -1,4 +1,4 @@
-#include "minecraft/src-client/common/client/renderer/screen/MinecraftUIRenderContext.h"
+#include "minecraft/client/renderer/screen/MinecraftUIRenderContext.h"
 
 float MinecraftUIRenderContext::getLineLength(Font& font, const std::string& text, float fontSize, bool showColorSymbol)
 {

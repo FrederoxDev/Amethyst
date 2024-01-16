@@ -1,5 +1,7 @@
-#include "minecraft/src/common/nbt/CompoundTag.h"
-#include "minecraft/src/common/nbt/CompoundTagVariant.h"
+#include "minecraft/common/nbt/Tag.h"
+#include "minecraft/common/nbt/ByteTag.h"
+#include "minecraft/common/nbt/CompoundTag.h"
+#include "minecraft/common/nbt/CompoundTagVariant.h"
 
 const Tag* CompoundTag::get(std::string_view name) const
 {

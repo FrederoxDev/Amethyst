@@ -6,9 +6,12 @@
 */packages
 .vscode/settings.json
 *.env
+.idea/
 
 AmethystLauncher/bin/
 AmethystLauncher/build/
 AmethystLauncher/node_modules/
 AmethystLauncher/.vscode/
 AmethystLauncher/dist/
+
+cmake-build-debug/

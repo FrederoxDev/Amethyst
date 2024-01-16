@@ -1,4 +1,4 @@
-#include "minecraft/src/common/world/level/ChunkBlockPos.h"
+#include "minecraft/common/world/level/ChunkBlockPos.h"
 
 ChunkBlockPos::ChunkBlockPos(const BlockPos& pos)
 {

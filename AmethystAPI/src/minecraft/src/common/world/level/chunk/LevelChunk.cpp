@@ -1,4 +1,4 @@
-#include "minecraft/src/common/world/level/chunk/LevelChunk.h"
+#include "minecraft/common/world/level/chunk/LevelChunk.h"
 
 const Block* LevelChunk::getBlock(const ChunkBlockPos& pos)
 {

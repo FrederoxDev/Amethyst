@@ -1,4 +1,4 @@
-#include "minecraft/src/common/world/level/BlockSource.h"
+#include "minecraft/common/world/level/BlockSource.h"
 
 const Block* BlockSource::getBlock(const BlockPos& pos)
 {

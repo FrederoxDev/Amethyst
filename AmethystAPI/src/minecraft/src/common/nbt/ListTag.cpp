@@ -1,4 +1,4 @@
-#include "minecraft/src/common/nbt/ListTag.h"
+#include "minecraft/common/nbt/ListTag.h"
 
 int ListTag::size() const {
     return (int)mList.size();

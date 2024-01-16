@@ -1,4 +1,7 @@
-#include "minecraft/src-deps/core/resource/ResourceHelper.h"
+#include <utility>
+
+#include "minecraft/common/core/resource/ResourceHelper.h"
+#include "minecraft/common/core/resource/ResourceUtil.h"
 
 ResourceLocation::ResourceLocation()
 {
@@ -7,5 +10,5 @@ ResourceLocation::ResourceLocation()
     func(this);
 }
 
-ResourceLocation::ResourceLocation(const std::string& path)
-    : mFileSystem(ResourceFileSystem::UserPackage), mPath(path) {}
+ResourceLocation::ResourceLocation(std::string path)
+    : mFileSystem(ResourceFileSystem::UserPackage), mPath(std::move(path)) {}
