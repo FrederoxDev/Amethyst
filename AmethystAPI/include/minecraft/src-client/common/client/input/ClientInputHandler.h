@@ -1,5 +1,5 @@
 #pragma once
-#include "minecraft/client/input/InputHandler.h"
+#include "common/client/input/InputHandler.h"
 
 class ClientInstance;
 using IClientInstance = ClientInstance;

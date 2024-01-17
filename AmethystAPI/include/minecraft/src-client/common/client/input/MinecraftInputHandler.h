@@ -1,6 +1,6 @@
 #pragma once
 
-#include "minecraft/client/input/InputHandler.h"
+#include "common/client/input/InputHandler.h"
 
 #include <cstdint>
 #include <memory>

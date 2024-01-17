@@ -2,9 +2,9 @@
 
 #include "AmethystRuntime.h"
 
-#include <minecraft/client/game/ClientInstance.h>
-#include <minecraft/client/gui/ScreenView.h>
-#include <minecraft/common/Minecraft.h>
+#include <common/client/game/ClientInstance.h>
+#include <common/client/gui/screens/ScreenView.h>
+#include <common/world/Minecraft.h>
 
 ScreenView::_setupAndRender _ScreenView_setupAndRender;
 static void* ScreenView_setupAndRender(ScreenView* self, UIRenderContext* ctx)

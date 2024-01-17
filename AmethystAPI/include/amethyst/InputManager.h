@@ -1,9 +1,10 @@
 #pragma once
+
 #include <string>
 #include <vector>
 #include <functional>
 
-#include "minecraft/client/input/InputHandler.h"
+#include "common/client/input/InputHandler.h"
 
 class InputManager {
 public:

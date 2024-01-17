@@ -2,11 +2,11 @@
 
 #include "AmethystRuntime.h"
 
-#include <minecraft/client/game/ClientInstance.h>
-#include <minecraft/client/input/ClientInputHandler.h>
-#include <minecraft/client/input/MinecraftInputHandler.h>
-#include <minecraft/client/input/RemappingLayout.h>
-#include <minecraft/client/input/VanillaClientInputMappingFactory.h>
+#include <common/client/game/ClientInstance.h>
+#include <common/client/input/ClientInputHandler.h>
+#include <common/client/input/MinecraftInputHandler.h>
+#include <common/client/input/RemappingLayout.h>
+#include <common/client/input/VanillaClientInputMappingFactory.h>
 
 RemappingLayout::_assignDefaultMapping _assignDefaultMapping;
 VanillaClientInputMappingFactory::__addFullKeyboardGamePlayControls _addFullKeyboardGamePlayControls;
