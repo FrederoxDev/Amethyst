@@ -9,7 +9,8 @@
 #include <windows.h>
 
 template <typename Ret, typename Type>
-Ret& direct_access(Type* type, size_t offset) {
+typename std::conditional<std::is_const<Type>::value, std::add_const<Ret>, std::remove_const<Ret>>::type&
+direct_access(Type* type, size_t offset) {
     union {
         size_t raw;
         Type* source;
@@ -25,12 +26,12 @@ Ret& direct_access(Type* type, size_t offset) {
 
 #define FAKE_FIELD(type, name)       \
 	AS_FIELD(type, name, get##name); \
-	type get##name()
+	type& get##name()
 
 #define BUILD_ACCESS(ptr, type, name, offset)                           \
 	AS_FIELD(type, name, get##name);                                    \
-	type get##name() const { return direct_access<type>(ptr, offset); } \
-	void set##name(type v) const { direct_access<type>(ptr, offset) = v; }
+	type& get##name() const { return direct_access<type>(ptr, offset); } \
+	void set##name(type v) const { direct_access<type>(ptr, offset) = std::move(v); }
 
 /*
 Returns the position where Minecraft has been loaded into memory
