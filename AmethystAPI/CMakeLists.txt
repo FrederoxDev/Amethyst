@@ -17,12 +17,14 @@ file(GLOB_RECURSE ASM "src/*.asm")
 # Create AmethystAPI as a .lib
 add_library(${PROJECT_NAME} STATIC ${SOURCES} ${ASM} ${HEADERS})
 
+# Use proper runtime library
+set_property(TARGET ${PROJECT_NAME} PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
+
 # Amethyst Dependencies
 target_include_directories(${PROJECT_NAME} PUBLIC 
     ${CMAKE_CURRENT_SOURCE_DIR}/include
     ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
-
 
 target_link_libraries(${PROJECT_NAME} PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/lib/fmt.lib

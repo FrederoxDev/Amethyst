@@ -50,6 +50,8 @@ namespace Puv {
     }; 
 };
 
+// vtable for Item 0x1453C9B70
+
 #pragma pack(push, 1)
 class Item {
 public:
@@ -64,11 +66,11 @@ public:
     std::string* mItemName; // this + 168
     bool padding4[72];
     std::string mNamespace; // this + 248
+    bool padding5[320];
 
-    // Begin Virtuals
-private:
-    virtual void unknown0(); // ~Item();
+//virtuals:
 public:
+    virtual ~Item();
     virtual bool initServer(Json::Value&, SemVersion const&, bool, Experiments const&);
     virtual void tearDown();
     virtual Item& setDescriptionId(std::string const&);
@@ -190,8 +192,12 @@ private:
     virtual InteractionResult _useOn(ItemStack&, Actor&, BlockPos, unsigned char, Vec3 const&) const;
 
 public:
+    short getDamageValue(CompoundTag* mUserData) const;
+
 //hooks:
     // 40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 49 8B F1 4C 89 44 24 ? 4C 8B F2 48 8B D9
     typedef void(__thiscall* _appendFormattedHovertext)(Item*, const ItemStackBase&, Level&, std::string&, uint8_t);
 };
 #pragma pack(pop)
+
+static_assert(sizeof(Item) == 600);

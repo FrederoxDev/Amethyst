@@ -7,12 +7,13 @@ void InitItemVtable()
     Item_vtable = reinterpret_cast<void*>(SlideAddress(0xBADADD5)); // Todo find this
 }
 
-//short Item::getDamageValue(CompoundTag* mUserData) const
-//{
-//    using function = short(__thiscall*)(const Item*, CompoundTag*);
-//    static auto func = reinterpret_cast<function>(SigScan("48 89 5C 24 ? 57 48 83 EC ? 48 8B DA 48 85 D2"));
-//    return func(this, mUserData);
-//}
+short Item::getDamageValue(CompoundTag* mUserData) const
+{
+    using function = short(__thiscall*)(const Item*, CompoundTag*);
+    static auto func = reinterpret_cast<function>(SigScan("48 89 5C 24 ? 57 48 83 EC ? 48 8B DA 48 85 D2"));
+    return func(this, mUserData);
+}
+
 //
 //uint64_t Item::getMaxDamage() const
 //{
