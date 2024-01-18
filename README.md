@@ -8,12 +8,12 @@ We have a community discord server here: [discord.gg/Cxrj9UXnDB](https://discord
 
 ## Mods built with Amethyst
 
-### - [ItemInformation](https://github.com/FrederoxDev/Item-Information)
+### - [Better Inventory](https://github.com/FrederoxDev/Better-Inventory)
 
-| ![image](https://github.com/FrederoxDev/Amethyst/assets/69014593/4d834633-cd07-4fd9-addf-b07349b9130b) | ![image](https://github.com/FrederoxDev/Amethyst/assets/69014593/0d8cb358-faf0-48f7-b8ab-aeb420a68939) |
-|--------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------|
+| ![image](https://github.com/FrederoxDev/Better-Inventory/assets/69014593/a6f26fd7-f934-4a9a-95ba-5f03eb950509) | ![image](https://github.com/FrederoxDev/Better-Inventory/assets/69014593/97290890-1a12-4c61-a9ac-407bf78289d6) |
+|----------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------|
 
-ItemInformation is a mod by FrederoxDev, which adds extra information to item hovers, (if applicable) item durability, and namespace:identifier information about the item.
+Better Inventory is an inventory improvement mod for Minecraft Bedrock edition, version `1.20.51.1`. The mod is built by FrederoxDev, and it adds in a shulker box preview, as well as the ability to see extra information about other items, like its identifier, namespace, durability and aux id.
 
 ### - [VidereLonge](https://github.com/ATXLtheAxolotl/VidereLonge)
 
