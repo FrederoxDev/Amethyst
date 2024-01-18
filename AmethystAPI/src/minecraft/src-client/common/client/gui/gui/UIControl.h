@@ -1,6 +1,8 @@
 #pragma once
+#include <string>
 
 class UIControl {
 public:
-  BUILD_ACCESS(this, std::string, layerName, 0x18);
+  bool padding[24];
+  std::string layerName; // this + 24
 };

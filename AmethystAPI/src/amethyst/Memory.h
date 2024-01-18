@@ -8,31 +8,6 @@
 #include <vector>
 #include <windows.h>
 
-template <typename Ret, typename Type>
-typename std::conditional<std::is_const<Type>::value, std::add_const<Ret>, std::remove_const<Ret>>::type&
-direct_access(Type* type, size_t offset) {
-    union {
-        size_t raw;
-        Type* source;
-        Ret* target;
-    } u;
-    u.source = type;
-    u.raw += offset;
-    return *u.target;
-}
-
-#define AS_FIELD(type, name, fn) __declspec(property(get = fn, put = set##name)) type name
-#define DEF_FIELD_RW(type, name) __declspec(property(get = get##name, put = set##name)) type name
-
-#define FAKE_FIELD(type, name)       \
-	AS_FIELD(type, name, get##name); \
-	type& get##name()
-
-#define BUILD_ACCESS(ptr, type, name, offset)                           \
-	AS_FIELD(type, name, get##name);                                    \
-	type& get##name() const { return direct_access<type>(ptr, offset); } \
-	void set##name(type v) const { direct_access<type>(ptr, offset) = std::move(v); }
-
 /*
 Returns the position where Minecraft has been loaded into memory
 */
@@ -58,3 +33,28 @@ uintptr_t SigScan(std::string signature);
  * returns SIZE_MAX if it fails
 */
 size_t FindOffsetOfPointer(void* _base, void* _pointer, size_t maxSearchSize);
+
+template <typename Ret, typename Type>
+typename std::conditional<std::is_const<Type>::value, std::add_const<Ret>, std::remove_const<Ret>>::type&
+DirectAccess(Type* type, size_t offset) {
+    union {
+        size_t raw;
+        Type* source;
+        Ret* target;
+    } u;
+    u.source = type;
+    u.raw += offset;
+    return *u.target;
+}
+
+#define AS_FIELD(type, name, fn) __declspec(property(get = fn, put = set##name)) type name
+#define DEF_FIELD_RW(type, name) __declspec(property(get = get##name, put = set##name)) type name
+
+#define FAKE_FIELD(type, name)       \
+	AS_FIELD(type, name, get##name); \
+	type& get##name()
+
+#define BUILD_ACCESS(ptr, type, name, offset)                           \
+	AS_FIELD(type, name, get##name);                                    \
+	type& get##name() const { return DirectAccess<type>(ptr, offset); } \
+	void set##name(type v) const { DirectAccess<type>(ptr, offset) = std::move(v); }

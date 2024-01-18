@@ -1,7 +1,8 @@
 #pragma once
-#include "UIControl.h"
+#include "minecraft/src-client/common/client/gui/gui/UIControl.h"
 
 class VisualTree {
 public:
-    BUILD_ACCESS(this, class UIControl*, root, 0x8);
+    bool padding[8];
+    UIControl* mRootControlName; // this + 8
 };
