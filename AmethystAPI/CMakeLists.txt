@@ -12,9 +12,10 @@ set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Choose the type of build, op
 
 file(GLOB_RECURSE SOURCES "src/*.cpp")
 file(GLOB_RECURSE HEADERS "src/*.h")
+file(GLOB_RECURSE ASM "src/*.asm")
 
 # Create AmethystAPI as a .lib
-add_library(${PROJECT_NAME} STATIC ${SOURCES} ${HEADERS})
+add_library(${PROJECT_NAME} STATIC ${SOURCES} ${ASM} ${HEADERS})
 
 # Amethyst Dependencies
 target_include_directories(${PROJECT_NAME} PUBLIC 
@@ -31,6 +32,9 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
 # EnTT Compile options
 target_compile_definitions(${PROJECT_NAME} PUBLIC ENTT_PACKED_PAGE=128)
 
+# Set the ASM sources for the library
+set_property(TARGET ${PROJECT_NAME} PROPERTY ASM_SOURCES ${ASM})
+
 # Copy Amethyst's Headers to AmethystFolder/include
 foreach(HEADER ${HEADERS})
     file(RELATIVE_PATH HEADER_RELATIVE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/src ${HEADER})
@@ -44,8 +48,9 @@ endforeach()
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${AmethystFolder}/include/)
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/lib/ DESTINATION ${AmethystFolder}/lib/)
 
+
 # Create source groups to reflect the directory structure in Visual Studio
-foreach(_source IN ITEMS ${SOURCES} ${HEADERS})
+foreach(_source IN ITEMS ${SOURCES} ${HEADERS} ${ASM})
     get_filename_component(_source_path "${_source}" PATH)
     file(RELATIVE_PATH _source_path_rel "${CMAKE_CURRENT_SOURCE_DIR}/src" "${_source_path}")
     string(REPLACE "/" "\\" _group_path "${_source_path_rel}")
