@@ -162,6 +162,7 @@ void AmethystRuntime::UnPauseGameThread()
 {
     typedef NTSTATUS(NTAPI * NtResumeThreadPtr)(HANDLE ThreadHandle, PULONG PreviousSuspendCount);
     static NtResumeThreadPtr NtResumeThread = (NtResumeThreadPtr)GetProcAddress(GetModuleHandle("ntdll.dll"), "NtResumeThread");
+    NtResumeThread(mMcThreadHandle, NULL);
 }
 
 void AmethystRuntime::PauseGameThread()
