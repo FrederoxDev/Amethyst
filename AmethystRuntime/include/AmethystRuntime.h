@@ -8,6 +8,8 @@
 #include <amethyst/Config.h>
 #include <amethyst/HookManager.h>
 #include <amethyst/Log.h>
+#include <amethyst/events/Event.h>
+#include <amethyst/events/EventManager.h>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -51,6 +53,11 @@ public:
         return &AmethystRuntime::getInstance()->mInputManager;
     }
 
+    static Amethyst::EventManager* getEventManager() 
+    {
+        return &AmethystRuntime::getInstance()->mEventManager;
+    }
+
     void Start();
     void Shutdown();
 
@@ -69,15 +76,12 @@ private:
     Config mLauncherConfig;
     HookManager mHookManager;
     RuntimeInputManager mInputManager;
+    Amethyst::EventManager mEventManager;
     std::vector<Mod> mLoadedMods;
 
 public:
     // Mod Functions
     std::vector<ModRegisterInputs> mModRegisterInputs;
     std::vector<ModInitialize> mModInitialize;
-    std::vector<ModStartJoinGame> mModStartJoinGame;
     std::vector<ModShutdown> mModShutdown;
-    std::vector<ModRender> mModRender;
-    std::vector<ModTickBefore> mModTickBefore;
-    std::vector<ModTickAfter> mModTickAfter;
 };
