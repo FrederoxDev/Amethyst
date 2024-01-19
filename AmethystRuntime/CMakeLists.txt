@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.12)
 project(AmethystRuntime)
-set(MOD_VERSION "1.1.0")
+set(MOD_VERSION "1.2.0")
 
 # C++ Build Settings
 set(CMAKE_CONFIGURATION_TYPES "RelWithDebInfo" CACHE STRING "Build configurations" FORCE)

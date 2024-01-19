@@ -56,11 +56,7 @@ void AmethystRuntime::LoadModDlls()
 
         _LoadModFunc(&mModRegisterInputs, mod, "RegisterInputs");
         _LoadModFunc(&mModInitialize, mod, "Initialize");
-        _LoadModFunc(&mModStartJoinGame, mod, "OnStartJoinGame");
-        _LoadModFunc(&mModRender, mod, "OnRenderUI");
         _LoadModFunc(&mModShutdown, mod, "Shutdown");
-        _LoadModFunc(&mModTickBefore, mod, "BeforeTick");
-        _LoadModFunc(&mModTickAfter, mod, "AfterTick");
     }
 }
 
@@ -103,7 +99,9 @@ void AmethystRuntime::RunMods()
 {
     // Invoke mods to initialize and setup hooks, etc..
     for (auto& modInitialize : mModInitialize)
-        modInitialize("1.20.51.1", getInputManager());
+        modInitialize(getEventManager(), getInputManager());
+
+    UnPauseGameThread();
 
     // Listen for hot-reload and keep Amethyst running until the end
     while (true) {
@@ -141,11 +139,29 @@ void AmethystRuntime::Shutdown()
     // Clear all mod functions
     mModRegisterInputs.clear();
     mModInitialize.clear();
-    mModStartJoinGame.clear();
     mModShutdown.clear();
-    mModRender.clear();
-    mModTickBefore.clear();
-    mModTickAfter.clear();
+
+    mEventManager.Shutdown();
 
     MH_Uninitialize();
+}
+
+void AmethystRuntime::SetMcThreadInfoAndThreadId(DWORD dMcThreadID, HANDLE hMcThreadHandle)
+{
+    mMcThreadId = dMcThreadID;
+	mMcThreadHandle = hMcThreadHandle;
+}
+
+void AmethystRuntime::UnPauseGameThread()
+{
+    typedef NTSTATUS(NTAPI * NtResumeThreadPtr)(HANDLE ThreadHandle, PULONG PreviousSuspendCount);
+    static NtResumeThreadPtr NtResumeThread = (NtResumeThreadPtr)GetProcAddress(GetModuleHandle("ntdll.dll"), "NtResumeThread");
+    NtResumeThread(mMcThreadHandle, NULL);
+}
+
+void AmethystRuntime::PauseGameThread()
+{
+    typedef NTSTATUS(NTAPI * NtSuspendThreadPtr)(HANDLE ThreadHandle, PULONG PreviousSuspendCount);
+    static NtSuspendThreadPtr NtSuspendThread = (NtSuspendThreadPtr)GetProcAddress(GetModuleHandle("ntdll.dll"), "NtSuspendThread");
+    NtSuspendThread(mMcThreadHandle, NULL);
 }

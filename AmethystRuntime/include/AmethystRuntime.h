@@ -8,6 +8,8 @@
 #include <amethyst/Config.h>
 #include <amethyst/HookManager.h>
 #include <amethyst/Log.h>
+#include <amethyst/events/Event.h>
+#include <amethyst/events/EventManager.h>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -51,8 +53,14 @@ public:
         return &AmethystRuntime::getInstance()->mInputManager;
     }
 
+    static Amethyst::EventManager* getEventManager() 
+    {
+        return &AmethystRuntime::getInstance()->mEventManager;
+    }
+
     void Start();
     void Shutdown();
+    void SetMcThreadInfoAndThreadId(DWORD dMcThreadID, HANDLE hMcThreadHandle);
 
 private:
     void ReadLauncherConfig();
@@ -61,6 +69,8 @@ private:
     void PromptDebugger();
     void CreateOwnHooks();
     void RunMods();
+    void UnPauseGameThread();
+    void PauseGameThread();
 
     template <typename T>
     void _LoadModFunc(std::vector<T>* vector, Mod& mod, const char* functionName);
@@ -69,15 +79,15 @@ private:
     Config mLauncherConfig;
     HookManager mHookManager;
     RuntimeInputManager mInputManager;
+    Amethyst::EventManager mEventManager;
     std::vector<Mod> mLoadedMods;
+
+    HANDLE mMcThreadHandle;
+    DWORD mMcThreadId;
 
 public:
     // Mod Functions
     std::vector<ModRegisterInputs> mModRegisterInputs;
     std::vector<ModInitialize> mModInitialize;
-    std::vector<ModStartJoinGame> mModStartJoinGame;
     std::vector<ModShutdown> mModShutdown;
-    std::vector<ModRender> mModRender;
-    std::vector<ModTickBefore> mModTickBefore;
-    std::vector<ModTickAfter> mModTickAfter;
 };
