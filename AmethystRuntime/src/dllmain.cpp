@@ -91,6 +91,7 @@ void __cdecl Init(DWORD dMcThreadID, HANDLE hMcThreadHandle)
     auto mainCallLambda = [](LPVOID lpParameter) -> DWORD {
         // Cast the parameter back to ThreadData
         auto pData = static_cast<ThreadData*>(lpParameter);
+        Log::Info("[AmethystRuntime] dwThreadID: {}\n[AmethystRuntime] hThreadHandle: {}", pData->dwThreadId, pData->hThreadHandle);
         DWORD result = Main(pData->dwThreadId, pData->hThreadHandle);
         // Return the result
         delete pData;
