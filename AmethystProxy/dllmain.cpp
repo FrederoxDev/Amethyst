@@ -42,7 +42,7 @@ static Config loadConfig(const std::wstring& path)
     }
 }
 
-static void SuspendMinecraftThread()
+void SuspendMinecraftThread()
 {
 	NtSuspendThread(hMcThreadHandle, NULL);
 }
@@ -82,6 +82,8 @@ static void InjectIntoMinecraft(std::wstring& path)
 static void Proxy()
 {
     Log::InitializeConsole();
+    Log::Info("[AmethystProxy] Injected into Minecraft");
+    Log::Info("[AmethystProxy] McThreadID: {}\n[AmethystProxy] McThreadHandle: {}", dMcThreadID, hMcThreadHandle);
     Log::Info("[AmethystProxy] Using 'AmethystProxy@{}'", PROXY_VERSION);
 
     HMODULE ntdllHandle = GetModuleHandle(L"ntdll.dll");
@@ -129,6 +131,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
         // Create a seperate thread to do the proxying after caching the currentThreadID
         dMcThreadID = GetCurrentThreadId();
         hMcThreadHandle = OpenThread(THREAD_ALL_ACCESS, FALSE, dMcThreadID);
+
         // Create a thread to do the proxying
         CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)Proxy, NULL, NULL, NULL);
     }
