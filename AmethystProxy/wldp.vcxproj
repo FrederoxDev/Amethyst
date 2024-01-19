@@ -163,6 +163,7 @@
     <None Include="wldp.def" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="dllmain.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
