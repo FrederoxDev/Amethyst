@@ -1,41 +1,42 @@
 import Title from './components/Title';
 import DividedSection from './components/DividedSection';
 import MainPanel from './components/MainPanel'
-import MinecraftButton from './components/MinecraftButton';
-import ToggleSection from './components/ToggleSection';
 import Dropdown from './components/Dropdown';
-import ButtonSection from './components/ButtonSection';
+import { useState } from 'react';
 
 export default function App() {
+  const [ runtimeMod, setRuntimeMod ] = useState("None");
+  const [ allRuntimeMods, setAllRuntimeMods ] = useState(["None", "AmethystRuntime@1.1.0"]);
+
+  const [ gameVersion, setGameVersion ] = useState("1.20.51.1");
+  const [ allSupportedVersions, setAllSupportedVersions ] = useState(["1.20.51.1"]);
+
   return (
     <div className='select-none'>
       <Title />
       <MainPanel>
+        <p>{runtimeMod}</p>
+        <p>{gameVersion}</p>
 
         <DividedSection>
+          {/* Runtime Mod Selector */}
           <Dropdown 
             id="runtime-mod" 
-            options={["None", "AmethystRuntime@1.1.0"]}
+            options={allRuntimeMods}
             labelText='Runtime Mod'
+            value={runtimeMod}
+            setValue={setRuntimeMod}
           />
+
+          {/* Version Selector */}
+          <Dropdown 
+            id="game-version" 
+            options={allSupportedVersions}
+            labelText='Game Version'
+            value={gameVersion}
+            setValue={setGameVersion}
+          />  
         </DividedSection>
-
-        <ToggleSection 
-          text='Keep Launcher Open'
-          subtext='Prevents the launcher from closing after launching the game.'
-          isCheckedByDefault={false}
-        />
-
-        <ToggleSection 
-            text='Developer Mode'
-            subtext='Enables hot-reloading and prompting to attach a debugger.'
-            isCheckedByDefault={true}
-        />
-
-        <DividedSection>
-          <ButtonSection />
-        </DividedSection>
-        
       </MainPanel>
     </div>
   )
