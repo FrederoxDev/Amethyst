@@ -1,41 +1,46 @@
 {
-  "name": "amethyst-launcher",
-  "version": "2.0.0",
-  "description": "A launcher for mods build with AmethystAPI",
-  "main": "src/main.js",
+  "name": "react-launcher",
+  "version": "0.1.0",
+  "private": true,
+  "main": "public/main.js",
+  "dependencies": {
+    "@testing-library/jest-dom": "^5.17.0",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^16.18.70",
+    "@types/react": "^18.2.47",
+    "@types/react-dom": "^18.2.18",
+    "electron": "^28.1.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1",
+    "typescript": "^4.9.5",
+    "web-vitals": "^2.1.4"
+  },
   "scripts": {
-    "clean": "if exist bin rmdir /s /q bin && if exist build rmdir /s /q build",
-    "build-cpp": "npm run clean && node-gyp configure build && electron-rebuild",
-    "start": "electron .",
-    "build-installer": "electron-builder --win --x64"
+    "start-react": "react-scripts start",
+    "start-electron": "electron ."
   },
-  "keywords": [],
-  "author": "FrederoxDev",
-  "license": "ISC",
-  "devDependencies": {
-    "@electron/rebuild": "^3.4.1",
-    "electron": "^28.1.0",
-    "electron-builder": "^24.9.1",
-    "electron-packager": "^17.1.2"
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
   },
-  "build": {
-    "productName": "Amethyst Launcher",
-    "appId": "com.frederoxdev.amethystlauncher",
-    "win": {
-      "icon": "assets/amethyst_shard.ico"
-    },
-    "directories": {
-      "output": "dist",
-      "buildResources": "build"
-    },
-    "files": [
-      "src/**",
-      "assets/fonts/**",
-      "build/Release/amethyst.node"
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
     ],
-    "nsis": {
-      "oneClick": false,
-      "allowToChangeInstallationDirectory": true
-    }
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.1"
   }
 }

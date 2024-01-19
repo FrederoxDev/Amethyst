@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: 'Minecraft-Ten';
+    src: url('../public/fonts/Minecraft-Ten.otf') format('opentype');
+}
+
+@font-face {
+    font-family: 'Minecraft-Seven';
+    src: url('../public/fonts/Minecraft-Seven.otf') format('opentype');
+}
+
+.minecraft-seven {
+    font-family: "Minecraft-Seven";
+    image-rendering: pixelated;
+    letter-spacing: .5px;
+}
+
+.minecraft-ten {
+    font-family: "Minecraft-Ten";
+    image-rendering: pixelated;
+    letter-spacing: .1px;
+}
+
+.toggle-transform {
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
