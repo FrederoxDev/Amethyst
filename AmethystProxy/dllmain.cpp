@@ -110,7 +110,6 @@ void proxy()
     std::cout << "Suspending Minecraft thread\n";
     suspendMinecraftThread();
     std::cout << "Minecraft thread suspended\n";
-
     std::cout << "Locating Amethyst DLL\n";
     std::wstring path = constructAmethystDLLPath();
     std::wcout << "Amethyst DLL Path: " << path << "\n";
