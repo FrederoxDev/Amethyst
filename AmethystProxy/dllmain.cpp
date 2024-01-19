@@ -1,26 +1,25 @@
 #pragma once
 
-#pragma comment(linker,"/export:WldpAddDeveloperCertificateForDynamicCodeTrust=C:\\Windows\\System32\\wldp.WldpAddDeveloperCertificateForDynamicCodeTrust,@5")
-#pragma comment(linker,"/export:WldpCheckDeviceEncryptionNotStarted=C:\\Windows\\System32\\wldp.WldpCheckDeviceEncryptionNotStarted,@6")
-#pragma comment(linker,"/export:WldpCheckRetailConfiguration=C:\\Windows\\System32\\wldp.WldpCheckRetailConfiguration,@7")
-#pragma comment(linker,"/export:WldpCheckSecurityWatermarkState=C:\\Windows\\System32\\wldp.WldpCheckSecurityWatermarkState,@8")
-#pragma comment(linker,"/export:WldpCheckWcosDeviceEncryptionSecure=C:\\Windows\\System32\\wldp.WldpCheckWcosDeviceEncryptionSecure,@9")
-#pragma comment(linker,"/export:WldpDisableDeveloperMode=C:\\Windows\\System32\\wldp.WldpDisableDeveloperMode,@10")
-#pragma comment(linker,"/export:WldpEnableDeveloperMode=C:\\Windows\\System32\\wldp.WldpEnableDeveloperMode,@11")
-#pragma comment(linker,"/export:WldpGetLockdownPolicy=C:\\Windows\\System32\\wldp.WldpGetLockdownPolicy,@12")
-#pragma comment(linker,"/export:WldpIsAllowedEntryPoint=C:\\Windows\\System32\\wldp.WldpIsAllowedEntryPoint,@13")
-#pragma comment(linker,"/export:WldpIsAppApprovedByPolicy=C:\\Windows\\System32\\wldp.WldpIsAppApprovedByPolicy,@1")
-#pragma comment(linker,"/export:WldpIsClassInApprovedList=C:\\Windows\\System32\\wldp.WldpIsClassInApprovedList,@14")
-#pragma comment(linker,"/export:WldpIsDebugAllowed=C:\\Windows\\System32\\wldp.WldpIsDebugAllowed,@15")
-#pragma comment(linker,"/export:WldpIsDynamicCodePolicyEnabled=C:\\Windows\\System32\\wldp.WldpIsDynamicCodePolicyEnabled,@16")
-#pragma comment(linker,"/export:WldpQueryDynamicCodeTrust=C:\\Windows\\System32\\wldp.WldpQueryDynamicCodeTrust,@17")
-#pragma comment(linker,"/export:WldpQuerySecurityPolicy=C:\\Windows\\System32\\wldp.WldpQuerySecurityPolicy,@18")
-#pragma comment(linker,"/export:WldpQueryWindowsLockdownMode=C:\\Windows\\System32\\wldp.WldpQueryWindowsLockdownMode,@2")
-#pragma comment(linker,"/export:WldpQueryWindowsLockdownRestriction=C:\\Windows\\System32\\wldp.WldpQueryWindowsLockdownRestriction,@3")
-#pragma comment(linker,"/export:WldpResetSecurityWatermarkState=C:\\Windows\\System32\\wldp.WldpResetSecurityWatermarkState,@19")
-#pragma comment(linker,"/export:WldpSetDynamicCodeTrust=C:\\Windows\\System32\\wldp.WldpSetDynamicCodeTrust,@20")
-#pragma comment(linker,"/export:WldpSetDynamicCodeTrust2=C:\\Windows\\System32\\wldp.WldpSetDynamicCodeTrust2,@21")
-#pragma comment(linker,"/export:WldpSetWindowsLockdownRestriction=C:\\Windows\\System32\\wldp.WldpSetWindowsLockdownRestriction,@4")
+
+#pragma comment(linker, "/export:ApplyCompatResolutionQuirking=c:\\windows\\system32\\dxgi.ApplyCompatResolutionQuirking,@1")
+#pragma comment(linker, "/export:CompatString=c:\\windows\\system32\\dxgi.CompatString,@2")
+#pragma comment(linker, "/export:CompatValue=c:\\windows\\system32\\dxgi.CompatValue,@3")
+#pragma comment(linker, "/export:CreateDXGIFactory=c:\\windows\\system32\\dxgi.CreateDXGIFactory,@10")
+#pragma comment(linker, "/export:CreateDXGIFactory1=c:\\windows\\system32\\dxgi.CreateDXGIFactory1,@11")
+#pragma comment(linker, "/export:CreateDXGIFactory2=c:\\windows\\system32\\dxgi.CreateDXGIFactory2,@12")
+#pragma comment(linker, "/export:DXGID3D10CreateDevice=c:\\windows\\system32\\dxgi.DXGID3D10CreateDevice,@13")
+#pragma comment(linker, "/export:DXGID3D10CreateLayeredDevice=c:\\windows\\system32\\dxgi.DXGID3D10CreateLayeredDevice,@14")
+#pragma comment(linker, "/export:DXGID3D10GetLayeredDeviceSize=c:\\windows\\system32\\dxgi.DXGID3D10GetLayeredDeviceSize,@15")
+#pragma comment(linker, "/export:DXGID3D10RegisterLayers=c:\\windows\\system32\\dxgi.DXGID3D10RegisterLayers,@16")
+#pragma comment(linker, "/export:DXGIDeclareAdapterRemovalSupport=c:\\windows\\system32\\dxgi.DXGIDeclareAdapterRemovalSupport,@17")
+#pragma comment(linker, "/export:DXGIDumpJournal=c:\\windows\\system32\\dxgi.DXGIDumpJournal,@4")
+#pragma comment(linker, "/export:DXGIGetDebugInterface1=c:\\windows\\system32\\dxgi.DXGIGetDebugInterface1,@18")
+#pragma comment(linker, "/export:DXGIReportAdapterConfiguration=c:\\windows\\system32\\dxgi.DXGIReportAdapterConfiguration,@19")
+#pragma comment(linker, "/export:PIXBeginCapture=c:\\windows\\system32\\dxgi.PIXBeginCapture,@5")
+#pragma comment(linker, "/export:PIXEndCapture=c:\\windows\\system32\\dxgi.PIXEndCapture,@6")
+#pragma comment(linker, "/export:PIXGetCaptureState=c:\\windows\\system32\\dxgi.PIXGetCaptureState,@7")
+#pragma comment(linker, "/export:SetAppCompatStringPointer=c:\\windows\\system32\\dxgi.SetAppCompatStringPointer,@8")
+#pragma comment(linker, "/export:UpdateHMDEmulationStatus=c:\\windows\\system32\\dxgi.UpdateHMDEmulationStatus,@9")
 
 #include "windows.h"
 #include "ios"
@@ -41,7 +40,7 @@ typedef void(__cdecl* AmethystInitPtr)(DWORD dMcThreadID, HANDLE hMcThreadHandle
     
 
 // Remove this line if you aren't proxying any functions.
-HMODULE hProxied = LoadLibrary(L"C:\\Windows\\System32\\wldp.dll");
+HMODULE hProxied = LoadLibrary(L"C:\\Windows\\System32\\dxgi.dll");
 HMODULE hAmethyst = NULL;
 
 HMODULE hClientModule = NULL;
