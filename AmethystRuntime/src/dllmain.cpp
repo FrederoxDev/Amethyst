@@ -84,19 +84,20 @@ void __cdecl Init(DWORD dMcThreadID, HANDLE hMcThreadHandle)
         HANDLE hThreadHandle;
     };
     // Create an instance of the ThreadData struct
-    auto pData = std::make_unique<ThreadData>();
+    ThreadData* pData = new ThreadData;
     pData->dwThreadId = dMcThreadID;
     pData->hThreadHandle = hMcThreadHandle;
     // Create a lambda function with the correct signature
     auto mainCallLambda = [](LPVOID lpParameter) -> DWORD {
         // Cast the parameter back to ThreadData
         auto pData = static_cast<ThreadData*>(lpParameter);
-        // Call the Main function with the stored data
         DWORD result = Main(pData->dwThreadId, pData->hThreadHandle);
         // Return the result
+        delete pData;
         return result;
     };
 
+
     // Create the thread and pass the lambda function and the ThreadData struct
-    CreateThread(nullptr, 0, mainCallLambda, pData.get(), 0, nullptr);
+    CreateThread(nullptr, 0, mainCallLambda, pData, 0, nullptr);
 }

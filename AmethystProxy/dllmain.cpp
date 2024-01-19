@@ -120,6 +120,7 @@ void proxy()
     std::cout << "Locating AmethystInit\n";
     AmethystInit = (AmethystInitPtr)GetProcAddress(GetModuleHandle(L"AmethystRuntime.dll"), "Init");
     std::cout << "AmethystInit located at " << AmethystInit << "\n";
+    std::cout << "Thread Handle: " << hMcThreadHandle << "Thread ID: " << dMcThreadID << "\n";
     std::cout << "Handing control to the Amethyst Runtime\n";
     AmethystInit(dMcThreadID, hMcThreadHandle);
 
