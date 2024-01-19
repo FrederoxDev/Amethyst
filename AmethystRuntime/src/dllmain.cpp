@@ -99,6 +99,4 @@ void __cdecl Init(DWORD dMcThreadID, HANDLE hMcThreadHandle)
 
     // Create the thread and pass the lambda function and the ThreadData struct
     CreateThread(nullptr, 0, mainCallLambda, pData.get(), 0, nullptr);
-
-
 }

@@ -63,6 +63,7 @@ private:
     void CreateOwnHooks();
     void RunMods();
     void UnPauseGameThread();
+    void PauseGameThread();
 
     template <typename T>
     void _LoadModFunc(std::vector<T>* vector, Mod& mod, const char* functionName);

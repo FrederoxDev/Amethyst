@@ -161,6 +161,12 @@ void AmethystRuntime::SetMcThreadInfoAndThreadId(DWORD dMcThreadID, HANDLE hMcTh
 void AmethystRuntime::UnPauseGameThread()
 {
     typedef NTSTATUS(NTAPI * NtResumeThreadPtr)(HANDLE ThreadHandle, PULONG PreviousSuspendCount);
-    NtResumeThreadPtr NtResumeThread = (NtResumeThreadPtr)GetProcAddress(GetModuleHandle("ntdll.dll"), "NtResumeThread");
-    Log::Info("Resuming thread: {}", NtResumeThread(mMcThreadHandle, NULL));
+    static NtResumeThreadPtr NtResumeThread = (NtResumeThreadPtr)GetProcAddress(GetModuleHandle("ntdll.dll"), "NtResumeThread");
+}
+
+void AmethystRuntime::PauseGameThread()
+{
+    typedef NTSTATUS(NTAPI * NtSuspendThreadPtr)(HANDLE ThreadHandle, PULONG PreviousSuspendCount);
+    static NtSuspendThreadPtr NtSuspendThread = (NtSuspendThreadPtr)GetProcAddress(GetModuleHandle("ntdll.dll"), "NtSuspendThread");
+    NtSuspendThread(mMcThreadHandle, NULL);
 }
