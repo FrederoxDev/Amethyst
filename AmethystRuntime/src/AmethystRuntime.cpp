@@ -105,6 +105,8 @@ void AmethystRuntime::RunMods()
     for (auto& modInitialize : mModInitialize)
         modInitialize("1.20.51.1", getInputManager());
 
+    UnPauseGameThread();
+
     // Listen for hot-reload and keep Amethyst running until the end
     while (true) {
         Sleep(1000 / 20);
@@ -148,4 +150,17 @@ void AmethystRuntime::Shutdown()
     mModTickAfter.clear();
 
     MH_Uninitialize();
+}
+
+void AmethystRuntime::SetMcThreadInfoAndThreadId(DWORD dMcThreadID, HANDLE hMcThreadHandle)
+{
+    mMcThreadId = dMcThreadID;
+	mMcThreadHandle = hMcThreadHandle;
+}
+
+void AmethystRuntime::UnPauseGameThread()
+{
+    typedef NTSTATUS(NTAPI * NtResumeThreadPtr)(HANDLE ThreadHandle, PULONG PreviousSuspendCount);
+    NtResumeThreadPtr NtResumeThread = (NtResumeThreadPtr)GetProcAddress(GetModuleHandle("ntdll.dll"), "NtResumeThread");
+    Log::Info("Resuming thread: {}", NtResumeThread(mMcThreadHandle, NULL));
 }

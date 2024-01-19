@@ -53,6 +53,7 @@ public:
 
     void Start();
     void Shutdown();
+    void SetMcThreadInfoAndThreadId(DWORD dMcThreadID, HANDLE hMcThreadHandle);
 
 private:
     void ReadLauncherConfig();
@@ -61,6 +62,7 @@ private:
     void PromptDebugger();
     void CreateOwnHooks();
     void RunMods();
+    void UnPauseGameThread();
 
     template <typename T>
     void _LoadModFunc(std::vector<T>* vector, Mod& mod, const char* functionName);
@@ -70,6 +72,9 @@ private:
     HookManager mHookManager;
     RuntimeInputManager mInputManager;
     std::vector<Mod> mLoadedMods;
+
+    HANDLE mMcThreadHandle;
+    DWORD mMcThreadId;
 
 public:
     // Mod Functions
