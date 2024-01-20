@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.12)
 project(AmethystAPI)
 
+include(FetchContent)
+
 # Amethyst folder location
 set(AmethystFolder "$ENV{localappdata}/Packages/Microsoft.MinecraftUWP_8wekyb3d8bbwe/AC/Amethyst/")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELWITHDEBINFO "${AmethystFolder}/lib")
@@ -16,9 +18,6 @@ file(GLOB_RECURSE ASM "src/*.asm")
 
 # Create AmethystAPI as a .lib
 add_library(${PROJECT_NAME} STATIC ${SOURCES} ${ASM} ${HEADERS})
-
-# Use proper runtime library
-set_property(TARGET ${PROJECT_NAME} PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
 
 # Amethyst Dependencies
 target_include_directories(${PROJECT_NAME} PUBLIC 
@@ -36,6 +35,21 @@ target_compile_definitions(${PROJECT_NAME} PUBLIC ENTT_PACKED_PAGE=128)
 
 # Set the ASM sources for the library
 set_property(TARGET ${PROJECT_NAME} PROPERTY ASM_SOURCES ${ASM})
+
+# Include libhat for SigScan
+FetchContent_Declare(
+    libhat
+    GIT_REPOSITORY  https://github.com/BasedInc/libhat.git
+    GIT_TAG         9ef05d6961ce37a4c801f11159de895aa21878a9
+)
+FetchContent_MakeAvailable(libhat)
+target_link_libraries(${PROJECT_NAME} PRIVATE libhat)
+
+# Use proper runtime library
+set_property(
+    TARGET ${PROJECT_NAME} libhat
+    PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreadedDLL"
+)
 
 # Copy Amethyst's Headers to AmethystFolder/include
 foreach(HEADER ${HEADERS})
