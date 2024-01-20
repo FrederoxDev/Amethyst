@@ -5,15 +5,12 @@ import Dropdown from './components/Dropdown';
 import { useState } from 'react';
 import { SemVersion } from './types/SemVersion';
 import { MinecraftVersion, VersionType } from './types/MinecraftVersion';
-import { downloadVersion, extractVersion, getCurrentlyInstalledPackageID, isRegisteredVersionOurs, isVersionDownloaded, registerVersion, unregisterExisting } from './VersionManager';
+import { cacheMinecraftData, downloadVersion, extractVersion, getCurrentlyInstalledPackageID, isRegisteredVersionOurs, isVersionDownloaded, registerVersion, restoreMinecraftData, unregisterExisting } from './VersionManager';
 const child = window.require('child_process') as typeof import('child_process')
 
 export default function App() {
   const [ runtimeMod, setRuntimeMod ] = useState("None");
   const [ allRuntimeMods, setAllRuntimeMods ] = useState(["None", "AmethystRuntime@1.1.0"]);
-
-  const [ gameVersion, setGameVersion ] = useState("1.20.51.1");
-  const [ allSupportedVersions, setAllSupportedVersions ] = useState(["1.20.51.1"]);
 
   const [ status, setStatus ] = useState("")
   const [ actionLock, setActionLock ] = useState(false)
@@ -32,7 +29,8 @@ export default function App() {
 
     // Only register the game if needed
     if (!isRegisteredVersionOurs(minecraftVersion)) {
-      // Todo: Copy com.mojang to a temp directory if it exists so its contents is not lost
+      setStatus("Copying existing minecraft data")
+      cacheMinecraftData();
 
       setStatus("Unregistering existing version");
       await unregisterExisting();
@@ -40,7 +38,8 @@ export default function App() {
       setStatus("Registering downloaded version");
       await registerVersion(minecraftVersion)
 
-      // Todo: Restore com.mojang folder
+      setStatus("Restoring existing minecraft data")
+      restoreMinecraftData();
     } 
   
     setStatus("")

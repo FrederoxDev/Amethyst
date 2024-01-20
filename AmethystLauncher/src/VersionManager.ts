@@ -24,6 +24,10 @@ export async function downloadVersion(
     setStatus: React.Dispatch<React.SetStateAction<string>>
 ) {
     const downloadFolder = getAmethystFolder() + "/versions";
+    if (!fs.existsSync(downloadFolder)) {
+        fs.mkdirSync(downloadFolder, { recursive: true })
+    }
+    
     const fileName = `Minecraft-${version.version.toString()}.appx`
 
     await download(version.uuid, "1", `${downloadFolder}/${fileName}`, (transferred, totalSize) => {
@@ -116,4 +120,36 @@ export function isVersionDownloaded(version: MinecraftVersion) {
     const fileName = `Minecraft-${version.version.toString()}`
     const folder = `${downloadFolder}\\${fileName}\\`
     return fs.existsSync(folder)
+}
+
+export function cacheMinecraftData() {
+    //@ts-ignore
+    const minecraftDataFolder = window.env["LocalAppData"] + "\\Packages\\Microsoft.MinecraftUWP_8wekyb3d8bbwe";
+    const tempDataFolder = getAmethystFolder() + "\\DataRestorePoint\\";
+
+    // There is no data so do nothing
+    if (!fs.existsSync(minecraftDataFolder)) return;
+    
+    // Remove any existing stuff so if installing multiple times, they wont merge
+    if (fs.existsSync(tempDataFolder)) {
+        fs.rmdirSync(tempDataFolder, { recursive: true });
+    }
+
+    // Store contents of minecraft data in a temp folder
+    fs.cpSync(minecraftDataFolder, tempDataFolder, {recursive: true})
+}
+
+export function restoreMinecraftData() {
+    //@ts-ignore
+    const minecraftDataFolder = window.env["LocalAppData"] + "\\Packages\\Microsoft.MinecraftUWP_8wekyb3d8bbwe";
+    const tempDataFolder = getAmethystFolder() + "\\DataRestorePoint\\";
+
+    // Check there was actually something to restore from
+    if (!fs.existsSync(tempDataFolder)) return;
+
+    if (fs.existsSync(minecraftDataFolder)) {
+        fs.rmdirSync(minecraftDataFolder, { recursive: true });
+    }
+
+    fs.cpSync(tempDataFolder, minecraftDataFolder, {recursive: true})
 }
