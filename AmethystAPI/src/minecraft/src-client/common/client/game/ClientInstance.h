@@ -13,20 +13,20 @@ class ItemRenderer;
 class ClientInstance {
 private:
     uintptr_t** vtable;
-    bool padding0[192];
+    std::byte padding0[192];
 
 public:
     MinecraftGame* minecraftGame; // this + 200
     Minecraft* minecraft;         // this + 208
 
 private:
-    bool padding1[56];
+    std::byte padding1[56];
 
 public:
     ClientInputHandler* inputHandler; // this + 272
 
 private:
-    bool padding2[1088];
+    std::byte padding2[1088];
 
 public:
     ItemRenderer* itemRenderer; // this + 1368

@@ -13,11 +13,11 @@ private:
 public:
     EntityContext mEntityContext; // this + 8
 private:
-    bool padding[680];
+    std::byte padding[680];
 
 public:
     StateVectorComponent* mStateVectorComponent; // this + 712
-    bool padding1[504];
+    std::byte padding1[504];
 
 public:
     Vec3* getPosition();

@@ -6,7 +6,7 @@
 
 class ItemRegistry {
 public:
-    char padding0[0x28]; 
+    std::byte padding0[0x28];
     std::unordered_map<int32_t, WeakPtr<Item>> mIdToItemMap; // this + 40
     std::unordered_map<HashedString, WeakPtr<Item>> mHashed;
 };

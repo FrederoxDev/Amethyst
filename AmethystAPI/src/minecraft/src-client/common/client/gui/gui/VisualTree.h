@@ -3,6 +3,6 @@
 
 class VisualTree {
 public:
-    bool padding[8];
+    std::byte padding[8];
     UIControl* mRootControlName; // this + 8
 };
