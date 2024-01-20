@@ -5,8 +5,8 @@ import Dropdown from './components/Dropdown';
 import { useState } from 'react';
 import { SemVersion } from './types/SemVersion';
 import { MinecraftVersion, VersionType } from './types/MinecraftVersion';
-import { downloadVersion } from './downloader/VersionManager';
-import CancellationToken from './downloader/CancellationToken';
+import { downloadVersion, extractVersion, getCurrentlyInstalledPackageID, registerVersion, unregisterExisting } from './VersionManager';
+
 
 export default function App() {
   const [ runtimeMod, setRuntimeMod ] = useState("None");
@@ -15,28 +15,59 @@ export default function App() {
   const [ gameVersion, setGameVersion ] = useState("1.20.51.1");
   const [ allSupportedVersions, setAllSupportedVersions ] = useState(["1.20.51.1"]);
 
-  const [ isDownloading, setIsDownloading ] = useState(false)
-  const [ currentTransferred, setCurrentTransferred ] = useState(0)
-  const [ totalSize, setTotalSize ] = useState(0)
+  const [ status, setStatus ] = useState("")
+  const [ actionLock, setActionLock ] = useState(false)
  
   const semVersion = new SemVersion(1, 20, 51, 1)
   const minecraftVersion = new MinecraftVersion(semVersion, "58c5f0cd-09d7-4e99-a6b6-c3829fd62ac9", VersionType.Release)
 
-  const onClickButton = async () => {
-    let cancellationToken = new CancellationToken();
-    await downloadVersion(minecraftVersion, cancellationToken, setCurrentTransferred, setTotalSize, setIsDownloading)
+  const downloadButton = async () => {
+    await downloadVersion(minecraftVersion, setStatus, setActionLock);
   }
 
-  const toMB = (bytes: number) => {
-    let mb = bytes / (1024 * 1024)
-    return `${mb.toFixed(1)}MB`
+  const extractButton = async () => {
+    await extractVersion(minecraftVersion, setStatus, setActionLock);
+  }
+
+  const registerButton = async () => {
+    unregisterExisting();
+    registerVersion(minecraftVersion)
+  }
+
+  const installGame = async () => {
+    await downloadVersion(minecraftVersion, setStatus, setActionLock);
+    await extractVersion(minecraftVersion, setStatus, setActionLock);
+    unregisterExisting();
+    registerVersion(minecraftVersion)
   }
 
   return (
     <div>
-      <p>Is Downloading: {isDownloading ? "true" : "false"}</p>
-      <p>{toMB(currentTransferred)} / {toMB(totalSize)}</p>
-      <button onClick={onClickButton} disabled={isDownloading}>Download 1.20.51.1 Appx</button>
+      <p>Is Locked {actionLock ? "true" : "false"}</p>
+      <p>{status ?? " "}</p>
+      <hr />
+      <button onClick={installGame} disabled={actionLock} 
+        className={`${actionLock ? 'cursor-wait' : 'cursor-pointer'}`}>
+          Install Minecraft
+      </button>
+
+      <hr />
+      <h1>Individual Actions</h1>
+
+      <button onClick={downloadButton} disabled={actionLock} 
+        className={`${actionLock ? 'cursor-wait' : 'cursor-pointer'}`}>
+          Download 1.20.51.1 Appx
+      </button>
+      <hr />
+      <button onClick={extractButton} disabled={actionLock} 
+        className={`${actionLock ? 'cursor-wait' : 'cursor-pointer'}`}>
+          Extract
+      </button>
+      <hr />
+      <button onClick={registerButton} disabled={actionLock} 
+        className={`${actionLock ? 'cursor-wait' : 'cursor-pointer'}`}>
+          Register
+      </button>
     </div>
   )
 

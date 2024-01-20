@@ -1,4 +1,3 @@
-import CancellationToken from "./CancellationToken";
 import { Downloader } from "./Downloader";
 import { ActionComplete, DownloadProgress } from "./Progress";
 
@@ -266,7 +265,6 @@ export async function download(
   updateIdentity: string,
   revisionNumber: string,
   destination: string,
-  cancellationToken: CancellationToken,
   onProgress: DownloadProgress = () => {},
   onComplete: ActionComplete = () => {},
 ) {
@@ -278,16 +276,10 @@ export async function download(
     onComplete(false);
     throw new Error("BadUpdateIdentity!");
   }
-  if (cancellationToken.isCancellationRequested()) {
-    onComplete(false);
-    console.log("Version download cancelled");
-  }
-
   console.log("Resolved download link:", link);
   await Downloader.downloadFile(
     link,
     destination,
-    cancellationToken,
     onProgress,
     onComplete,
   );

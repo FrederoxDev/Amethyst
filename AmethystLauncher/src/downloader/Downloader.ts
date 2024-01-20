@@ -1,11 +1,10 @@
-import CancellationToken from "./CancellationToken";
 import { ActionComplete, DownloadProgress } from "./Progress";
 import { WriteStream } from "fs";
 const fs = window.require('fs') as typeof import('fs');
 
 
 export class Downloader {
-  static async downloadFile(from: string, to: string, cancellationToken: CancellationToken, onProgress: DownloadProgress = () => {}, onComplete: ActionComplete = () => {}) {
+  static async downloadFile(from: string, to: string, onProgress: DownloadProgress = () => {}, onComplete: ActionComplete = () => {}) {
     const response = await fetch(from);
     if (!response.ok) {
       throw new Error('Download error.');
@@ -20,7 +19,7 @@ export class Downloader {
       try {
         while (true) {
           const { done, value } = await stream.read();
-          if (done || cancellationToken.isCancellationRequested())
+          if (done)
             break;
           downloadProgress += value.length;
           onProgress(downloadProgress, maxLength);
@@ -30,10 +29,6 @@ export class Downloader {
         }
       }
       finally {
-        if (cancellationToken.isCancellationRequested()) {
-          console.log('downloadFile cancelled.');
-          fs.unlinkSync(to);
-        }
         stream.releaseLock();
         onComplete(true);
       }
