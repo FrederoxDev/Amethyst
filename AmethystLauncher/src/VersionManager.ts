@@ -21,17 +21,19 @@ async function sleep(ms: number) {
 
 export async function downloadVersion(
     version: MinecraftVersion, 
-    setStatus: React.Dispatch<React.SetStateAction<string>>
+    setStatus: React.Dispatch<React.SetStateAction<string>>,
+    setLoadingPercent: React.Dispatch<React.SetStateAction<number>>
 ) {
     const downloadFolder = getAmethystFolder() + "/versions";
     if (!fs.existsSync(downloadFolder)) {
         fs.mkdirSync(downloadFolder, { recursive: true })
     }
-    
+
     const fileName = `Minecraft-${version.version.toString()}.appx`
 
     await download(version.uuid, "1", `${downloadFolder}/${fileName}`, (transferred, totalSize) => {
         setStatus(`Downloading: ${toMB(transferred)} / ${toMB(totalSize)}`)
+        setLoadingPercent(transferred / totalSize)
     }, 
     (success) => {
         setStatus("");
@@ -42,7 +44,8 @@ export async function downloadVersion(
 
 export async function extractVersion(
     version: MinecraftVersion, 
-    setStatus: React.Dispatch<React.SetStateAction<string>>
+    setStatus: React.Dispatch<React.SetStateAction<string>>,
+    setLoadingPercent: React.Dispatch<React.SetStateAction<number>>
 ) {
     const downloadFolder = getAmethystFolder() + "/versions";
     const fileName = `Minecraft-${version.version.toString()}`
@@ -50,6 +53,7 @@ export async function extractVersion(
 
     await Extractor.extractFile(`${downloadFolder}/${fileName}.appx`, `${downloadFolder}/${fileName}/`, exludes, 
     (fileIndex, totalFiles, fileName) => {
+        setLoadingPercent(fileIndex / totalFiles);
         setStatus(`Unzipping: ${fileName}`)
     }, 
     (success) => {
@@ -80,12 +84,12 @@ export async function unregisterExisting() {
 
     const unregisterCmd = `powershell -ExecutionPolicy Bypass -Command "& { Remove-AppxPackage -Package "${packageId}" }"`;
     child.spawn(unregisterCmd, { shell: true })
-    await sleep(5000);
+    await sleep(3000);
 }
 
 export async function registerVersion(version: MinecraftVersion) {
     const currentPackageId = getCurrentlyInstalledPackageID();
-    if (currentPackageId != undefined) {
+    if (currentPackageId !== undefined) {
         throw new Error("There is still a version installed!");
     }
 
@@ -94,7 +98,7 @@ export async function registerVersion(version: MinecraftVersion) {
 
     const registerCmd = `powershell -ExecutionPolicy Bypass -Command "& { Add-AppxPackage -Path "${downloadFolder}/${fileName}/AppxManifest.xml" -Register }"`;
     child.spawn(registerCmd, { shell: true })
-    await sleep(5000);
+    await sleep(3000);
 }
 
 export function isRegisteredVersionOurs(version: MinecraftVersion) {

@@ -1,4 +1,4 @@
-import * as JSZip from 'jszip';
+import JSZip from 'jszip';
 import { ActionComplete, ExtractProgress } from '../downloader/Progress';
 const fs = window.require('fs') as typeof import('fs');
 const path = window.require('path') as typeof import('path');
