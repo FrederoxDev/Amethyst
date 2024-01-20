@@ -3,6 +3,8 @@ import DividedSection from './components/DividedSection';
 import MainPanel from './components/MainPanel'
 import Dropdown from './components/Dropdown';
 import { useState } from 'react';
+import { SemVersion } from './types/SemVersion';
+import { MinecraftVersion, VersionType } from './types/MinecraftVersion';
 
 export default function App() {
   const [ runtimeMod, setRuntimeMod ] = useState("None");
@@ -10,6 +12,9 @@ export default function App() {
 
   const [ gameVersion, setGameVersion ] = useState("1.20.51.1");
   const [ allSupportedVersions, setAllSupportedVersions ] = useState(["1.20.51.1"]);
+
+  const semVersion = new SemVersion(1, 20, 51, 1)
+  const minecraftVersion = new MinecraftVersion(semVersion, "58c5f0cd-09d7-4e99-a6b6-c3829fd62ac9", VersionType.Release)
 
   return (
     <div className='select-none'>
