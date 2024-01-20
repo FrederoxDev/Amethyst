@@ -61,7 +61,7 @@ public:
     IClientInstance* mClient;      // this + 8
     ScreenContext* mScreenContext; // this + 16
 private:
-    bool padding0[224];
+    std::byte padding0[224];
 
 public:
     void* mCurrentScene; // const UIScene*, this + 248

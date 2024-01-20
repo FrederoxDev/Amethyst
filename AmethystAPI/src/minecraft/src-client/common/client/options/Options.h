@@ -6,7 +6,7 @@ class KeyboardRemappingLayout;
 
 class Options {
 public:
-    bool padding0[5984];
+    std::byte padding0[5984];
     // Found in Options::_readKeyboardMapping in call to RemappingLayout::setMapping
     std::vector<std::shared_ptr<KeyboardRemappingLayout>> mKeyboardRemappings;
 };

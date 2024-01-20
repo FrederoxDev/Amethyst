@@ -12,9 +12,9 @@ public:
     uintptr_t** vtable;
     WeakPtr<Item> mItem;    // this + 8
     CompoundTag* mUserData; // this + 16
-    bool padding0[10];
+    std::byte padding0[10];
     byte count; // this + 34;
-    bool padding1[120];
+    std::byte padding1[120];
 
 public:
     ItemStackBase() {};

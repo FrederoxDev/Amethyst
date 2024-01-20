@@ -13,7 +13,7 @@ public:
 
 // Todo fill out this class if we want to support controller
 class GamePadRemappingLayout {
-    bool padding[0x58];
+    std::byte padding[0x58];
 };
 
 static_assert(sizeof(GamePadRemappingLayout) == 0x58);

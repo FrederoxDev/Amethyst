@@ -55,18 +55,18 @@ namespace Puv {
 #pragma pack(push, 1)
 class Item {
 public:
-    bool padding0[104];
+    std::byte padding0[104];
     void* qword70; // this + 112
-    bool padding1[24];
+    std::byte padding1[24];
     void* qword90; // this + 144
-    bool padding2[10];
+    std::byte padding2[10];
     int16_t mId;        // this + 162
     int16_t mMaxDamage; // this + 164
-    bool padding3[2];
+    std::byte padding3[2];
     std::string* mItemName; // this + 168
-    bool padding4[72];
+    std::byte padding4[72];
     std::string mNamespace; // this + 248
-    bool padding5[320];
+    std::byte padding5[320];
 
 //virtuals:
 public:

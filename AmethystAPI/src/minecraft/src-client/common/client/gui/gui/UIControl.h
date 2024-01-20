@@ -3,6 +3,6 @@
 
 class UIControl {
 public:
-  bool padding[24];
+  std::byte padding[24];
   std::string layerName; // this + 24
 };
