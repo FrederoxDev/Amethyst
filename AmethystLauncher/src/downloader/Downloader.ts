@@ -1,8 +1,8 @@
-const fs = window.require('fs') as typeof import('fs');
-import { WriteStream } from "fs";
-
 import CancellationToken from "./CancellationToken";
 import { ActionComplete, DownloadProgress } from "./Progress";
+import { WriteStream } from "fs";
+const fs = window.require('fs') as typeof import('fs');
+
 
 export class Downloader {
   static async downloadFile(from: string, to: string, cancellationToken: CancellationToken, onProgress: DownloadProgress = () => {}, onComplete: ActionComplete = () => {}) {
