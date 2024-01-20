@@ -26,7 +26,7 @@ uintptr_t SlideAddress(uintptr_t offset);
 /*
 Finds an address of a function with its signature within the loaded game memory
 */
-uintptr_t SigScan(std::string signature);
+uintptr_t SigScan(std::string_view signature);
 
 /**
  * Finds the offset of a pointer in a struct/class
