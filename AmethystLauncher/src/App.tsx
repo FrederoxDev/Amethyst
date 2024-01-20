@@ -5,8 +5,8 @@ import Dropdown from './components/Dropdown';
 import { useState } from 'react';
 import { SemVersion } from './types/SemVersion';
 import { MinecraftVersion, VersionType } from './types/MinecraftVersion';
-import { downloadVersion, extractVersion, getCurrentlyInstalledPackageID, registerVersion, unregisterExisting } from './VersionManager';
-
+import { downloadVersion, extractVersion, getCurrentlyInstalledPackageID, isRegisteredVersionOurs, isVersionDownloaded, registerVersion, unregisterExisting } from './VersionManager';
+const child = window.require('child_process') as typeof import('child_process')
 
 export default function App() {
   const [ runtimeMod, setRuntimeMod ] = useState("None");
@@ -21,52 +21,45 @@ export default function App() {
   const semVersion = new SemVersion(1, 20, 51, 1)
   const minecraftVersion = new MinecraftVersion(semVersion, "58c5f0cd-09d7-4e99-a6b6-c3829fd62ac9", VersionType.Release)
 
-  const downloadButton = async () => {
-    await downloadVersion(minecraftVersion, setStatus, setActionLock);
-  }
-
-  const extractButton = async () => {
-    await extractVersion(minecraftVersion, setStatus, setActionLock);
-  }
-
-  const registerButton = async () => {
-    unregisterExisting();
-    registerVersion(minecraftVersion)
-  }
-
   const installGame = async () => {
-    await downloadVersion(minecraftVersion, setStatus, setActionLock);
-    await extractVersion(minecraftVersion, setStatus, setActionLock);
-    unregisterExisting();
-    registerVersion(minecraftVersion)
+    setActionLock(true);
+
+    // Only install the game once
+    if (!isVersionDownloaded(minecraftVersion)) {
+      await downloadVersion(minecraftVersion, setStatus);
+      await extractVersion(minecraftVersion, setStatus);
+    }
+
+    // Only register the game if needed
+    if (!isRegisteredVersionOurs(minecraftVersion)) {
+      // Todo: Copy com.mojang to a temp directory if it exists so its contents is not lost
+
+      setStatus("Unregistering existing version");
+      await unregisterExisting();
+
+      setStatus("Registering downloaded version");
+      await registerVersion(minecraftVersion)
+
+      // Todo: Restore com.mojang folder
+    } 
+  
+    setStatus("")
+    setActionLock(false);
+
+    const startGameCmd = `start minecraft:`;
+    child.spawn(startGameCmd, { shell: true })
   }
 
   return (
     <div>
+      <p>Is Registered Version the one selected? {isRegisteredVersionOurs(minecraftVersion) ? "true" : "false"}</p>
+      <p>Is version downloaded? {isVersionDownloaded(minecraftVersion) ? "true" : "false"}</p>
       <p>Is Locked {actionLock ? "true" : "false"}</p>
       <p>{status ?? " "}</p>
       <hr />
       <button onClick={installGame} disabled={actionLock} 
         className={`${actionLock ? 'cursor-wait' : 'cursor-pointer'}`}>
-          Install Minecraft
-      </button>
-
-      <hr />
-      <h1>Individual Actions</h1>
-
-      <button onClick={downloadButton} disabled={actionLock} 
-        className={`${actionLock ? 'cursor-wait' : 'cursor-pointer'}`}>
-          Download 1.20.51.1 Appx
-      </button>
-      <hr />
-      <button onClick={extractButton} disabled={actionLock} 
-        className={`${actionLock ? 'cursor-wait' : 'cursor-pointer'}`}>
-          Extract
-      </button>
-      <hr />
-      <button onClick={registerButton} disabled={actionLock} 
-        className={`${actionLock ? 'cursor-wait' : 'cursor-pointer'}`}>
-          Register
+          Launch Game
       </button>
     </div>
   )
