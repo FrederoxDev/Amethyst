@@ -64,7 +64,6 @@ endforeach()
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${AmethystFolder}/include/)
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/lib/ DESTINATION ${AmethystFolder}/lib/)
 
-
 # Create source groups to reflect the directory structure in Visual Studio
 foreach(_source IN ITEMS ${SOURCES} ${HEADERS} ${ASM})
     get_filename_component(_source_path "${_source}" PATH)

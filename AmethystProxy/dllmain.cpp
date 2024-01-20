@@ -25,7 +25,8 @@ static Config loadConfig(const std::wstring& path)
     // Read the config file and make sure that if exists
     std::ifstream configStream(path);
     if (!configStream.good()) {
-        std::wcout << "[AmethystProxy] Failed to read '" << path << "'" << std::endl;
+        std::wcout << "[AmethystProxy] Failed to open '" << path << "'" << std::endl;
+        std::wcout << L"Error" << std::strerror(errno) << std::endl;
         ShutdownWait();
     }
 
@@ -82,9 +83,8 @@ static void InjectIntoMinecraft(std::wstring& path)
 static void Proxy()
 {
     Log::InitializeConsole();
-    Log::Info("[AmethystProxy] Injected into Minecraft");
-    Log::Info("[AmethystProxy] McThreadID: {}\n[AmethystProxy] McThreadHandle: {}", dMcThreadID, hMcThreadHandle);
     Log::Info("[AmethystProxy] Using 'AmethystProxy@{}'", PROXY_VERSION);
+    Log::Info("[AmethystProxy] McThreadID: {}, McThreadHandle: {}", dMcThreadID, hMcThreadHandle);
 
     HMODULE ntdllHandle = GetModuleHandle(L"ntdll.dll");
     if (ntdllHandle == 0) {

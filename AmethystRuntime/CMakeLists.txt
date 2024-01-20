@@ -13,7 +13,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO "${AmethystFolder}/mods/${PROJ
 
 # Include Amethyst
 find_library(AMETHYST_API AmethystAPI PATHS "${AmethystFolder}/lib")
-include_directories(${AmethystFolder}/include "include/")
+include_directories(${AmethystFolder}/include "src/")
 
 # Project Files
 file(GLOB_RECURSE CPP_SOURCES "src/*.cpp")

@@ -3,10 +3,16 @@ import { download } from "./downloader/MinecraftVersionDownloader";
 import { Extractor } from "./installer/Extractor";
 const regedit = window.require('regedit-rs') as typeof import('regedit-rs');
 const child = window.require('child_process') as typeof import('child_process')
+// const { remote } = require('electron');
 
 const toMB = (bytes: number) => {
     let mb = bytes / (1024 * 1024)
     return `${mb.toFixed(1)}MB`
+}
+
+function getAmethystFolder() {
+    //@ts-ignore
+    return window.env["Amethyst"]
 }
 
 export async function downloadVersion(
@@ -14,7 +20,7 @@ export async function downloadVersion(
     setStatus: React.Dispatch<React.SetStateAction<string>>,
     setLock: React.Dispatch<React.SetStateAction<boolean>>
 ) {
-    const downloadFolder = "C:/Users/blake/Desktop"
+    const downloadFolder = getAmethystFolder() + "/versions";
     const fileName = `Minecraft-${version.version.toString()}.appx`
 
     setLock(true);
@@ -35,7 +41,7 @@ export async function extractVersion(
     setStatus: React.Dispatch<React.SetStateAction<string>>,
     setLock: React.Dispatch<React.SetStateAction<boolean>>
 ) {
-    const downloadFolder = "C:/Users/blake/Desktop"
+    const downloadFolder = getAmethystFolder() + "/versions";
     const fileName = `Minecraft-${version.version.toString()}`
     const exludes = ["AppxMetadata/CodeIntegrity.cat", "AppxMetadata", "AppxBlockMap.xml", "AppxSignature.p7x", "[Content_Types].xml"];
 
@@ -82,7 +88,7 @@ export function registerVersion(version: MinecraftVersion) {
         throw new Error("There is still a version installed!");
     }
 
-    const downloadFolder = "C:/Users/blake/Desktop"
+    const downloadFolder = getAmethystFolder() + "/versions";
     const fileName = `Minecraft-${version.version.toString()}`
 
     const registerCmd = `powershell -ExecutionPolicy Bypass -Command "& { Add-AppxPackage -Path "${downloadFolder}/${fileName}/AppxManifest.xml" -Register }"`;

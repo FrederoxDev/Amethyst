@@ -24,6 +24,7 @@ void AmethystRuntime::ReadLauncherConfig()
 {
     // Ensure it exists
     std::string launcherConfigPath = GetAmethystFolder() + "launcher_config.json";
+
     if (!fs::exists(launcherConfigPath)) {
         throw std::exception("launcher_config.json could not be found!");
     }
