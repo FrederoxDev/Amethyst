@@ -6,7 +6,7 @@
 class MinecraftInputHandler {
 public:
     uintptr_t** vtable;
-    bool padding[24];
+    std::byte padding[24];
     std::unique_ptr<InputHandler> mInputHandler;
 
 //hooks:

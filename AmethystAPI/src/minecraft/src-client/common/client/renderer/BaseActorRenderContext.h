@@ -12,9 +12,9 @@ class ItemRenderer;
 
 class BaseActorRenderContext {
 public:
-    bool padding[0x58];
+    std::byte padding[0x58];
     ItemRenderer* itemRenderer;
-    bool padding1[0x238];
+    std::byte padding1[0x238];
 
 public:
     BaseActorRenderContext(ScreenContext* screenContext, IClientInstance* clientInstance, IMinecraftGame* minecraftGame);
