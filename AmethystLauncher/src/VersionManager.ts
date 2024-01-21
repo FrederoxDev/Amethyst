@@ -4,15 +4,21 @@ import { Extractor } from "./installer/Extractor";
 const regedit = window.require('regedit-rs') as typeof import('regedit-rs');
 const child = window.require('child_process') as typeof import('child_process')
 const fs = window.require('fs') as typeof import('fs');
+const path = window.require("path") as typeof import('path')
 
 const toMB = (bytes: number) => {
     let mb = bytes / (1024 * 1024)
     return `${mb.toFixed(1)}MB`
 }
 
-function getAmethystFolder() {
+export function getAmethystFolder() {
     //@ts-ignore
     return window.env["AppData"] + "\\Amethyst"
+}
+
+export function getMinecraftFolder() {
+    //@ts-ignore
+    return window.env["LocalAppData"] + "\\Packages\\Microsoft.MinecraftUWP_8wekyb3d8bbwe"
 }
 
 async function sleep(ms: number) {

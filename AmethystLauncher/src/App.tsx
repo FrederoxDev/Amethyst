@@ -33,10 +33,10 @@ export default function App() {
     setActionLock(true);
 
     // Only install the game once
-    // if (!isVersionDownloaded(minecraftVersion)) {
-      // await downloadVersion(minecraftVersion, setStatus, setLoadingPercent);
+    if (!isVersionDownloaded(minecraftVersion)) {
+      await downloadVersion(minecraftVersion, setStatus, setLoadingPercent);
       await extractVersion(minecraftVersion, setStatus, setLoadingPercent);
-    // }
+    }
 
     // Only register the game if needed
     if (!isRegisteredVersionOurs(minecraftVersion)) {
@@ -90,7 +90,7 @@ export default function App() {
           subtext='Enables hot-reloading and prompting to attach a debugger.'
         />
 
-        <ModSection />
+        <ModSection actionLock={actionLock} />
 
         <ButtonSection launchGame={installGame} actionLock={actionLock} loadingPercent={loadingPercent} status={status} />
       </MainPanel>
