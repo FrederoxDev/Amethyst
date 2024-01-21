@@ -57,6 +57,7 @@ export default function App() {
     setLoadingPercent(0);
     setActionLock(false);
 
+
     const startGameCmd = `start minecraft:`;
     child.spawn(startGameCmd, { shell: true })
   }

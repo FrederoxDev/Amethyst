@@ -2,7 +2,8 @@ const { contextBridge } = require("electron")
 const path = require("path")
 
 const native = {
-    path: path
+    path: path,
+    __dirname: __dirname
 }
 
 if (process.contextIsolated) {

@@ -63,9 +63,20 @@ export async function extractVersion(
         setStatus(`Unzipping: ${fileName}`)
     }, 
     (success) => {
+        if (!success) {
+            alert("There was an issue extracting the game!");
+            return;
+        }
+
         console.log("Finished extracting!")
         setStatus("")
     });
+
+    //@ts-ignore
+    const proxyDllPath = window.native.path.join(window.native.__dirname, "proxy", "dxgi.dll");
+    const targetDllPath = `${downloadFolder}/${fileName}/dxgi.dll`;
+
+    fs.copyFileSync(proxyDllPath, targetDllPath);
 }
 
 export function getCurrentlyInstalledPackageID() {
@@ -90,7 +101,7 @@ export async function unregisterExisting() {
 
     const unregisterCmd = `powershell -ExecutionPolicy Bypass -Command "& { Remove-AppxPackage -Package "${packageId}" }"`;
     child.spawn(unregisterCmd, { shell: true })
-    await sleep(3000);
+    await sleep(6000);
 }
 
 export async function registerVersion(version: MinecraftVersion) {
@@ -104,7 +115,7 @@ export async function registerVersion(version: MinecraftVersion) {
 
     const registerCmd = `powershell -ExecutionPolicy Bypass -Command "& { Add-AppxPackage -Path "${downloadFolder}/${fileName}/AppxManifest.xml" -Register }"`;
     child.spawn(registerCmd, { shell: true })
-    await sleep(3000);
+    await sleep(6000);
 }
 
 export function isRegisteredVersionOurs(version: MinecraftVersion) {
