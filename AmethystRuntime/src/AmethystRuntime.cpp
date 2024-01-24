@@ -17,7 +17,6 @@ void AmethystRuntime::Start()
 
     // Create any hooks that are time dependant and need to be done early
     CreateEarlyHooks();
-
     CreateOwnHooks();
     RunMods();
 }
