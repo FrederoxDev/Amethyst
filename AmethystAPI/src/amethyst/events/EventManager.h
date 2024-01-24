@@ -15,11 +15,22 @@ public:
     Event<> beforeTick;
     Event<> afterTick;
 
+    /*
+    Clear any events that have been registered
+    */
     void Shutdown() {
         onStartJoinGame.Shutdown();
         onRenderUI.Shutdown();
         beforeTick.Shutdown();
         afterTick.Shutdown();
+    }
+
+    /*
+    To Do: Rename this
+    */
+    template <typename Func>
+    void RegisterFunction(Func function) {
+        Log::Info("{}", typeid(function).name);
     }
 };
 } // namespace Amethyst

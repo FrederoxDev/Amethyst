@@ -5,6 +5,10 @@ AmethystRuntime* AmethystRuntime::instance = nullptr;
 void AmethystRuntime::Start()
 {
     Log::Info("[AmethystRuntime] Using 'AmethystRuntime@{}'", MOD_VERSION);
+
+    // Prompt a debugger if they are in developer mode
+    if (mLauncherConfig.promptDebugger) PromptDebugger();
+
     MH_Initialize();
 
     // Read launcher_config.json and load mod Dlls
@@ -14,8 +18,6 @@ void AmethystRuntime::Start()
     // Create any hooks that are time dependant and need to be done early
     CreateEarlyHooks();
 
-    // Prompt a debugger if they are in developer mode
-    if (mLauncherConfig.promptDebugger) PromptDebugger();
     CreateOwnHooks();
     RunMods();
 }

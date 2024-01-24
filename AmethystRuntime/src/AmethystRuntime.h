@@ -14,6 +14,7 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include <minecraft/src/common/world/item/Item.h>
 
 namespace fs = std::filesystem;
 
