@@ -8,7 +8,7 @@
 class HookManager {
 public:
     template <typename Func>
-    void CreateHookAbsolute(Func function, void* detour, void** original)
+    void CreateHook(Func function, void* detour, void** original)
     {
         size_t hash = typeid(function).hash_code();
 
@@ -22,7 +22,7 @@ public:
         CreateHookAbsolute(original_addr, detour, original);
     }
 
-    void CreateHook(uintptr_t targetAddress, void* detour, void** original);
+    void CreateHookAbsolute(uintptr_t targetAddress, void* detour, void** original);
 
     template <typename Func>
     void RegisterFunction(Func function, std::string_view signature)

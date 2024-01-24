@@ -25,7 +25,7 @@ void HookManager::Shutdown()
 /*
     Creates a hook with an absolute address
 */
-void HookManager::CreateHook(uintptr_t targetAddress, void* detour, void** original)
+void HookManager::CreateHookAbsolute(uintptr_t targetAddress, void* detour, void** original)
 {
     LPVOID original_addr = reinterpret_cast<LPVOID>(targetAddress);
     MH_STATUS status;
