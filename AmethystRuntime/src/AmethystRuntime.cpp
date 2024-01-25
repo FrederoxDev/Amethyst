@@ -70,21 +70,6 @@ void AmethystRuntime::_LoadModFunc(std::vector<T>* vector, Mod& mod, const char*
     vector->push_back(reinterpret_cast<T>(address));
 }
 
-void AmethystRuntime::CreateEarlyHooks()
-{
-    /*static bool hasRegisteredBefore = false;
-
-    if (!hasRegisteredBefore) {
-        for (auto& registerInputFunc : mModRegisterInputs) {
-            registerInputFunc(getInputManager());
-        }
-
-        hasRegisteredBefore = true;
-    }
-
-    CreateInputHooks();*/
-}
-
 void AmethystRuntime::PromptDebugger()
 {
     Log::Info("[AmethystRuntime] Minecraft's Base: 0x{:x}", GetMinecraftBaseAddress());
@@ -94,14 +79,25 @@ void AmethystRuntime::PromptDebugger()
 
 void AmethystRuntime::CreateOwnHooks()
 {
-    //CreateModFunctionHooks();
+    static bool hasRegisteredInputsBefore = false;
+
+    if (!hasRegisteredInputsBefore) {
+        for (auto& registerInputFunc : mModRegisterInputs) {
+            registerInputFunc(getInputManager());
+        }
+
+        hasRegisteredInputsBefore = true;
+    }
+
+    CreateInputHooks();
+    CreateModFunctionHooks();
 }
 
 void AmethystRuntime::RunMods()
 {
     // Invoke mods to initialize and setup hooks, etc..
     for (auto& modInitialize : mModInitialize)
-        modInitialize(getEventManager(), getInputManager());
+        modInitialize(getHookManager(), getEventManager(), getInputManager());
 
     ResumeGameThread();
 
@@ -121,6 +117,8 @@ void AmethystRuntime::RunMods()
 
 void AmethystRuntime::Shutdown()
 {
+    mEventManager.Shutdown();
+
     // Remove any of the runtime mods hooks
     mHookManager.Shutdown();
 
@@ -142,8 +140,6 @@ void AmethystRuntime::Shutdown()
     mModRegisterInputs.clear();
     mModInitialize.clear();
     mModShutdown.clear();
-
-    mEventManager.Shutdown();
 
     MH_Uninitialize();
 }

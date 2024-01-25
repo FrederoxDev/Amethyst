@@ -44,7 +44,6 @@ DWORD WINAPI Main()
     catch (std::exception& exception) {
         Log::Error("[AmethystRuntime] Uncaught Exception: {}", exception.what());
         throw exception;
-        ShutdownWait();
     }
 
     ShutdownWait();
@@ -77,7 +76,6 @@ void ShutdownWait()
     Shutdown();
 }
 
-// Very ugly function, but it works
 void __cdecl Init(DWORD dMcThreadID, HANDLE hMcThreadHandle)
 {
     // Define a struct to hold the data
@@ -105,7 +103,6 @@ void __cdecl Init(DWORD dMcThreadID, HANDLE hMcThreadHandle)
         delete pData;
         return result;
     };
-
 
     // Create the thread and pass the lambda function and the ThreadData struct
     CreateThread(nullptr, 0, mainCallLambda, pData, 0, nullptr);

@@ -18,10 +18,14 @@ public:
             throw std::exception();
         }
 
-        LPVOID original_addr = reinterpret_cast<LPVOID>(mFuncHashToOriginalAddress[hash]);
+        uintptr_t original_addr = mFuncHashToOriginalAddress[hash];
         CreateHookAbsolute(original_addr, detour, original);
     }
 
+    /**
+     * Directly hooks a function with an absolute address
+     * CAUTION: This will not work if two mods want to hook the same function. For more compatibility, use HookManager::CreateHook
+     */
     void CreateHookAbsolute(uintptr_t targetAddress, void* detour, void** original);
 
     template <typename Func>

@@ -1,5 +1,8 @@
 #include "amethyst/HookManager.h"
 
+/*
+Disables any hooks and un-caches any stored addresses
+*/
 void HookManager::Shutdown()
 {
     for (auto hook : m_hooks) {
@@ -22,9 +25,6 @@ void HookManager::Shutdown()
     mFuncHashToOriginalAddress.clear();
 }
 
-/*
-    Creates a hook with an absolute address
-*/
 void HookManager::CreateHookAbsolute(uintptr_t targetAddress, void* detour, void** original)
 {
     LPVOID original_addr = reinterpret_cast<LPVOID>(targetAddress);

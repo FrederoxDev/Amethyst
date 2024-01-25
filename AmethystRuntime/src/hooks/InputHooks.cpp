@@ -59,15 +59,15 @@ void CreateInputHooks()
 {
     HookManager* hookManager = AmethystRuntime::getHookManager();
 
-    hookManager->CreateHook(
+    hookManager->CreateHookAbsolute(
         SigScan("48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8B EC 48 83 EC ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 4C 8B C2"),
         &assignDefaultMapping, reinterpret_cast<void**>(&_assignDefaultMapping));
 
-    hookManager->CreateHook(
+    hookManager->CreateHookAbsolute(
         SigScan("40 55 53 56 57 41 56 48 8B EC 48 83 EC ? 45 0F B6 F1"),
         &addFullKeyboardGamePlayControls, reinterpret_cast<void**>(&_addFullKeyboardGamePlayControls));
 
-    hookManager->CreateHook(
+    hookManager->CreateHookAbsolute(
         SigScan("48 89 5C 24 ? 55 56 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B F1 48 8D 05"),
         &registerInputHandlers, reinterpret_cast<void**>(&_registerInputHandlers));
 }

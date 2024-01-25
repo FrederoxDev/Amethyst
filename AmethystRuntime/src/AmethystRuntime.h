@@ -65,7 +65,6 @@ public:
 private:
     void ReadLauncherConfig();
     void LoadModDlls();
-    void CreateEarlyHooks();
     void PromptDebugger();
     void CreateOwnHooks();
     void RunMods();
