@@ -61,7 +61,6 @@ public:
 
     void Start();
     void Shutdown();
-    void SetMcThreadInfoAndThreadId(DWORD dMcThreadID, HANDLE hMcThreadHandle);
 
 private:
     void ReadLauncherConfig();
@@ -70,7 +69,7 @@ private:
     void PromptDebugger();
     void CreateOwnHooks();
     void RunMods();
-    void UnPauseGameThread();
+    void ResumeGameThread();
     void PauseGameThread();
 
     template <typename T>
@@ -82,9 +81,6 @@ private:
     RuntimeInputManager mInputManager;
     Amethyst::EventManager mEventManager;
     std::vector<Mod> mLoadedMods;
-
-    HANDLE mMcThreadHandle;
-    DWORD mMcThreadId;
 
 public:
     // Mod Functions

@@ -1,8 +1,11 @@
 #include "dllmain.h"
 
+HANDLE gMcThreadHandle;
+DWORD gMcThreadId;
+
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved)
 {
-    return TRUE; // Just a return true because we invoke with our own custom function
+    return TRUE;
 }
 
 LONG WINAPI ExceptionHandler(EXCEPTION_POINTERS* ExceptionInfo)
@@ -27,22 +30,21 @@ LONG WINAPI ExceptionHandler(EXCEPTION_POINTERS* ExceptionInfo)
     return ExceptionContinueSearch;
 }
 
-DWORD WINAPI Main(DWORD dMcThreadID, HANDLE hMcThreadHandle)
+DWORD WINAPI Main()
 {
     Log::InitializeConsole();
     SetUnhandledExceptionFilter(ExceptionHandler);
 
     // Create an instance of AmethystRuntime and invoke it to start
     AmethystRuntime* runtime = AmethystRuntime::getInstance();
-    runtime->SetMcThreadInfoAndThreadId(dMcThreadID, hMcThreadHandle);
 
     try {
         runtime->Start();
     }
     catch (std::exception& exception) {
         Log::Error("[AmethystRuntime] Uncaught Exception: {}", exception.what());
+        throw exception;
         ShutdownWait();
-        return 1;
     }
 
     ShutdownWait();
@@ -83,16 +85,22 @@ void __cdecl Init(DWORD dMcThreadID, HANDLE hMcThreadHandle)
         DWORD dwThreadId;
         HANDLE hThreadHandle;
     };
+
     // Create an instance of the ThreadData struct
     ThreadData* pData = new ThreadData;
     pData->dwThreadId = dMcThreadID;
     pData->hThreadHandle = hMcThreadHandle;
-    // Create a lambda function with the correct signature
+
     auto mainCallLambda = [](LPVOID lpParameter) -> DWORD {
         // Cast the parameter back to ThreadData
         auto pData = static_cast<ThreadData*>(lpParameter);
         Log::Info("[AmethystRuntime] McThreadID: {}, McThreadHandle: {}", pData->dwThreadId, pData->hThreadHandle);
-        DWORD result = Main(pData->dwThreadId, pData->hThreadHandle);
+        
+        gMcThreadHandle = pData->hThreadHandle;
+        gMcThreadId = pData->dwThreadId;
+
+        DWORD result = Main();
+
         // Return the result
         delete pData;
         return result;

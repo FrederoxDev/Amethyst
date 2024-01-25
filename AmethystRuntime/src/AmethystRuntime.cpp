@@ -1,6 +1,8 @@
 #include "AmethystRuntime.h"
 
 AmethystRuntime* AmethystRuntime::instance = nullptr;
+extern HANDLE gMcThreadHandle;
+extern DWORD gMcThreadId;
 
 void AmethystRuntime::Start()
 {
@@ -9,14 +11,12 @@ void AmethystRuntime::Start()
     // Prompt a debugger if they are in developer mode
     if (mLauncherConfig.promptDebugger) PromptDebugger();
 
+    // Setup MH, read the config file and load in any mods
     MH_Initialize();
-
-    // Read launcher_config.json and load mod Dlls
     ReadLauncherConfig();
     LoadModDlls();
 
-    // Create any hooks that are time dependant and need to be done early
-    CreateEarlyHooks();
+    // Create our hooks then run the mods
     CreateOwnHooks();
     RunMods();
 }
@@ -72,7 +72,7 @@ void AmethystRuntime::_LoadModFunc(std::vector<T>* vector, Mod& mod, const char*
 
 void AmethystRuntime::CreateEarlyHooks()
 {
-    static bool hasRegisteredBefore = false;
+    /*static bool hasRegisteredBefore = false;
 
     if (!hasRegisteredBefore) {
         for (auto& registerInputFunc : mModRegisterInputs) {
@@ -82,7 +82,7 @@ void AmethystRuntime::CreateEarlyHooks()
         hasRegisteredBefore = true;
     }
 
-    CreateInputHooks();
+    CreateInputHooks();*/
 }
 
 void AmethystRuntime::PromptDebugger()
@@ -94,7 +94,7 @@ void AmethystRuntime::PromptDebugger()
 
 void AmethystRuntime::CreateOwnHooks()
 {
-    CreateModFunctionHooks();
+    //CreateModFunctionHooks();
 }
 
 void AmethystRuntime::RunMods()
@@ -103,7 +103,7 @@ void AmethystRuntime::RunMods()
     for (auto& modInitialize : mModInitialize)
         modInitialize(getEventManager(), getInputManager());
 
-    UnPauseGameThread();
+    ResumeGameThread();
 
     // Listen for hot-reload and keep Amethyst running until the end
     while (true) {
@@ -148,22 +148,16 @@ void AmethystRuntime::Shutdown()
     MH_Uninitialize();
 }
 
-void AmethystRuntime::SetMcThreadInfoAndThreadId(DWORD dMcThreadID, HANDLE hMcThreadHandle)
-{
-    mMcThreadId = dMcThreadID;
-	mMcThreadHandle = hMcThreadHandle;
-}
-
-void AmethystRuntime::UnPauseGameThread()
+void AmethystRuntime::ResumeGameThread()
 {
     typedef NTSTATUS(NTAPI * NtResumeThreadPtr)(HANDLE ThreadHandle, PULONG PreviousSuspendCount);
     static NtResumeThreadPtr NtResumeThread = (NtResumeThreadPtr)GetProcAddress(GetModuleHandle("ntdll.dll"), "NtResumeThread");
-    NtResumeThread(mMcThreadHandle, NULL);
+    NtResumeThread(gMcThreadHandle, NULL);
 }
 
 void AmethystRuntime::PauseGameThread()
 {
     typedef NTSTATUS(NTAPI * NtSuspendThreadPtr)(HANDLE ThreadHandle, PULONG PreviousSuspendCount);
     static NtSuspendThreadPtr NtSuspendThread = (NtSuspendThreadPtr)GetProcAddress(GetModuleHandle("ntdll.dll"), "NtSuspendThread");
-    NtSuspendThread(mMcThreadHandle, NULL);
+    NtSuspendThread(gMcThreadHandle, NULL);
 }
