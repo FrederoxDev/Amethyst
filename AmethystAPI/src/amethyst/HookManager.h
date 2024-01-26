@@ -7,8 +7,8 @@
 
 class HookManager {
 public:
-     template <typename Func>
-     void CreateHook(Func function, SafetyHookInline& trampoline, void* hook)
+     template <typename OriginalFn>
+     void CreateHook(OriginalFn function, SafetyHookInline& trampoline, void* hook)
      {
          size_t hash = typeid(function).hash_code();
 
