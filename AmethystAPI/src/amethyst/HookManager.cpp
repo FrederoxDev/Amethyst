@@ -5,7 +5,8 @@ Disables any hooks and un-caches any stored addresses
 */
 void HookManager::Shutdown()
 {
-    for (auto* hook : mHooks) {
+    for (auto it = mHooks.rbegin(); it != mHooks.rend(); ++it) {
+        auto* hook = *it;
         *hook = {};
     }
 

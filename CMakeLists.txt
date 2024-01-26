@@ -5,7 +5,7 @@ cmake_minimum_required(VERSION 3.27.0)
 project(AmethystMono)
 
 # Set C++ Standard
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 
 # Add the AmethystAPI subfolder as a subdirectory
 add_subdirectory(AmethystAPI)
