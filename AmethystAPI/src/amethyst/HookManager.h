@@ -1,5 +1,5 @@
 #pragma once
-#include "MinHook.h"
+#include <amethyst-deps/safetyhook.hpp>
 #include "amethyst/Log.h"
 #include "amethyst/Memory.h"
 #include <unordered_map>
@@ -7,26 +7,29 @@
 
 class HookManager {
 public:
-    template <typename Func>
-    void CreateHook(Func function, void* detour, void** original)
-    {
-        size_t hash = typeid(function).hash_code();
+     template <typename Func>
+     void CreateHook(Func function, SafetyHookInline& trampoline, void* hook)
+     {
+         size_t hash = typeid(function).hash_code();
 
-        if (mFuncHashToOriginalAddress.find(hash) == mFuncHashToOriginalAddress.end()) 
-        {
-            Log::Error("[AmethystAPI] '{}' has not registered!", typeid(function).name());
-            throw std::exception();
-        }
+         if (mFuncHashToOriginalAddress.find(hash) == mFuncHashToOriginalAddress.end())
+         {
+             Log::Error("[AmethystAPI] '{}' has not registered!", typeid(function).name());
+             throw std::exception();
+         }
 
-        uintptr_t original_addr = mFuncHashToOriginalAddress[hash];
-        CreateHookAbsolute(original_addr, detour, original);
-    }
-
+         uintptr_t original_addr = mFuncHashToOriginalAddress[hash];
+         CreateHookAbsolute(trampoline, original_addr, hook);
+     }
+    
     /**
      * Directly hooks a function with an absolute address
      * CAUTION: This will not work if two mods want to hook the same function. For more compatibility, use HookManager::CreateHook
      */
-    void CreateHookAbsolute(uintptr_t targetAddress, void* detour, void** original);
+    void CreateHookAbsolute(SafetyHookInline& safetyHookTrampoline, uintptr_t originalAddress, void* hook) {
+        safetyHookTrampoline = safetyhook::create_inline((void*)originalAddress, hook);
+        mHooks.push_back(&safetyHookTrampoline);
+    }
 
     template <typename Func>
     void RegisterFunction(Func function, std::string_view signature)
@@ -57,6 +60,6 @@ public:
     void Shutdown();
 
 private:
-    std::vector<LPVOID> m_hooks;
+    std::vector<SafetyHookInline*> mHooks;
     std::unordered_map<size_t, uintptr_t> mFuncHashToOriginalAddress;
 };

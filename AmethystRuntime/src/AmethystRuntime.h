@@ -1,5 +1,4 @@
 #pragma once
-#include "MinHook.h"
 #include "hooks/Hooks.h"
 #include "hooks/InputHooks.h"
 #include "input/RuntimeInput.h"

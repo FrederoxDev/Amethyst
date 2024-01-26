@@ -5,7 +5,7 @@ set(MOD_VERSION "1.2.0")
 # C++ Build Settings
 set(CMAKE_CONFIGURATION_TYPES "RelWithDebInfo" CACHE STRING "Build configurations" FORCE)
 set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Choose the type of build, options are: Debug Release RelWithDebInfo" FORCE)
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 
 # Build into %appdata%/Amethyst
 set(AmethystFolder "$ENV{localappdata}/Packages/Microsoft.MinecraftUWP_8wekyb3d8bbwe/AC/Amethyst/")
@@ -37,7 +37,6 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE MOD_VERSION="${MOD_VERSION}")
 # Link libraries
 target_link_libraries(${PROJECT_NAME} PRIVATE ${AMETHYST_API})
 target_link_libraries(${PROJECT_NAME} PRIVATE "${AmethystFolder}/lib/fmt.lib")
-target_link_libraries(${PROJECT_NAME} PRIVATE "${AmethystFolder}/lib/libMinHook.x64.lib")
 target_link_libraries(${PROJECT_NAME} PRIVATE "${AmethystFolder}/lib/libhat.lib")
 
 # Code Style

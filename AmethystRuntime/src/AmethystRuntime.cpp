@@ -11,8 +11,7 @@ void AmethystRuntime::Start()
     // Prompt a debugger if they are in developer mode
     if (mLauncherConfig.promptDebugger) PromptDebugger();
 
-    // Setup MH, read the config file and load in any mods
-    MH_Initialize();
+    // read the config file and load in any mods
     ReadLauncherConfig();
     LoadModDlls();
 
@@ -140,8 +139,6 @@ void AmethystRuntime::Shutdown()
     mModRegisterInputs.clear();
     mModInitialize.clear();
     mModShutdown.clear();
-
-    MH_Uninitialize();
 }
 
 void AmethystRuntime::ResumeGameThread()
