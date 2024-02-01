@@ -2,11 +2,13 @@
 
 section .text
 
-extern "C" {
-    extern void* Item_vtable;
-}
+extern Item_vtable
 
-; Failed to match ~Item(); in windows BDS
+global ??1Item@@UEAA@XZ
+??1Item@@UEAA@XZ:
+	mov rax, [rel Item_vtable]
+	jmp [rax + 0]
+
 
 global ?initServer@Item@@UEAA_NAEAVValue@Json@@AEBVSemVersion@@_NAEBVExperiments@@@Z
 ?initServer@Item@@UEAA_NAEAVValue@Json@@AEBVSemVersion@@_NAEBVExperiments@@@Z:
@@ -83,6 +85,7 @@ global ?isDye@Item@@UEBA_NXZ
 	mov rax, [rel Item_vtable]
 	jmp [rax + 120]
 
+?getItemColor@Item@@UEBA?AVItemColor@@XZ
 global ?getItemColor@Item@@UEBA?AW4ItemColor@@XZ
 ?getItemColor@Item@@UEBA?AW4ItemColor@@XZ:
 	mov rax, [rel Item_vtable]
@@ -528,8 +531,8 @@ global ?getInteractText@Item@@UEBA?AV?$basic_string@DU?$char_traits@D@std@@V?$al
 	mov rax, [rel Item_vtable]
 	jmp [rax + 832]
 
-global ?getAnimationFrameFor@Item@@UEBAHPEAVMob@@_NPEBVItemStack@@_N@Z
-?getAnimationFrameFor@Item@@UEBAHPEAVMob@@_NPEBVItemStack@@_N@Z:
+global ?getAnimationFrameFor@Item@@UEBAHPEAVMob@@_NPEBVItemStack@@1@Z
+?getAnimationFrameFor@Item@@UEBAHPEAVMob@@_NPEBVItemStack@@1@Z:
 	mov rax, [rel Item_vtable]
 	jmp [rax + 840]
 
@@ -592,4 +595,5 @@ global ?_useOn@Item@@EEBA?AVInteractionResult@@AEAVItemStack@@AEAVActor@@VBlockP
 ?_useOn@Item@@EEBA?AVInteractionResult@@AEAVItemStack@@AEAVActor@@VBlockPos@@EAEBVVec3@@@Z:
 	mov rax, [rel Item_vtable]
 	jmp [rax + 936]
+
 

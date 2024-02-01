@@ -1,12 +1,5 @@
 #include "minecraft/src/common/world/item/Item.h"
 
-void* Item_vtable;
-
-void InitItemVtable()
-{
-    Item_vtable = reinterpret_cast<void*>(SlideAddress(0x1453C9B70)); // 1.20.51.1
-}
-
 #pragma warning(push)
 #pragma warning(disable : 26495)
 Item::Item(const std::string& stringId, short numericalId)
@@ -16,13 +9,6 @@ Item::Item(const std::string& stringId, short numericalId)
     func(this, stringId, numericalId);
 }
 #pragma warning(pop)
-
-Item::~Item()
-{
-    /*using function = void(__thiscall*)(Item*);
-    Log::Info("0x{:x}", *reinterpret_cast<uintptr_t**>(this)[0] - GetMinecraftBaseAddress());
-    reinterpret_cast<function>(reinterpret_cast<uintptr_t**>(this)[0])(this);*/
-}
 
 short Item::getDamageValue(CompoundTag* mUserData) const
 {

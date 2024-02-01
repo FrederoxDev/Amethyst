@@ -6,6 +6,7 @@
 #include "minecraft/src-deps/core/headerIncludes/gsl_includes.h"
 #include "minecraft/src-deps/core/string/StringHash.h"
 #include "minecraft/src/common/SharedPtr.h"
+#include <cstddef>
 
 class CompoundTag;
 class Level;
@@ -19,37 +20,37 @@ class ItemStackBase;
 class RenderParams;
 class SemVersion;
 class ItemComponent;
-class ItemColor {};
+enum ItemColor {};
 class IFoodItemComponent;
 class BaseGameVersion;
-class BlockShape {};
+enum BlockShape {};
 class CompoundTag;
 class Block;
 class Level;
 class ItemDescriptor;
-class ActorDefinitionIdentifier {};
+struct ActorDefinitionIdentifier {};
 class BlockSource;
 class Player;
 class ItemInstance;
 class Actor;
 class Container;
 class Vec3;
-class ItemUseMethod {};
+enum ItemUseMethod {};
 class Mob;
 class BlockPos;
 class ReadOnlyBinaryStream;
 class IDataInput;
-class InHandUpdateType {};
-class ActorLocation;
+enum InHandUpdateType {};
+enum ActorLocation {};
 class InteractionResult {};
 class IDataOutput;
-class Brightness;
-class ResolvedItemIconInfo {};
+struct Brightness;
+struct ResolvedItemIconInfo {};
 class BlockLegacy;
 
 namespace Puv {
     namespace Legacy {
-        class LevelSoundEvent {};
+        enum LevelSoundEvent {};
     }; 
 };
 
@@ -149,7 +150,7 @@ public:
 //virtuals:
 public:
     virtual ~Item();
-    /*virtual bool initServer(Json::Value&, SemVersion const&, bool, Experiments const&);
+    virtual bool initServer(Json::Value&, SemVersion const&, bool, Experiments const&);
     virtual void tearDown();
     virtual Item& setDescriptionId(std::string const&);
     virtual std::string const& getDescriptionId() const;
@@ -267,7 +268,7 @@ private:
     virtual bool _checkUseOnPermissions(Actor&, ItemStackBase&, unsigned char const&, BlockPos const&) const;
     virtual bool _calculatePlacePos(ItemStackBase&, Actor&, unsigned char&, BlockPos&) const;
     virtual bool _shouldAutoCalculatePlacePos() const;
-    virtual InteractionResult _useOn(ItemStack&, Actor&, BlockPos, unsigned char, Vec3 const&) const;*/
+    virtual InteractionResult _useOn(ItemStack&, Actor&, BlockPos, unsigned char, Vec3 const&) const;
 
 public:
     Item(const std::string&, short);

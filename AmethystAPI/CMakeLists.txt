@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
-project(AmethystAPI)
+project(AmethystAPI CXX ASM_NASM)
 include(FetchContent)
 
 # Amethyst folder location
@@ -11,11 +11,8 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CONFIGURATION_TYPES "RelWithDebInfo" CACHE STRING "Build configurations" FORCE)
 set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Choose the type of build, options are: RelWithDebInfo" FORCE)
 
-file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.c")
+file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.c" "src/*.asm")
 file(GLOB_RECURSE HEADERS "src/*.h" "src/*.hpp")
-
-set_property(SOURCE src/minecraft/src/common/world/item/Item.asm APPEND PROPERTY COMPILE_OPTIONS "-x" "assembler-with-cpp")
-
 
 # Create AmethystAPI as a .lib
 add_library(${PROJECT_NAME} STATIC 

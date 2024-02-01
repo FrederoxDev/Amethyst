@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 #include <windows.h>
+#include <string_view>
 
 /*
 Returns the position where Minecraft has been loaded into memory
