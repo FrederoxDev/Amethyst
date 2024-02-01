@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.12)
 project(AmethystAPI)
-
 include(FetchContent)
 
 # Amethyst folder location
@@ -14,10 +13,17 @@ set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Choose the type of build, op
 
 file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.c")
 file(GLOB_RECURSE HEADERS "src/*.h" "src/*.hpp")
-file(GLOB_RECURSE ASM "src/*.asm")
+
+set_property(SOURCE src/minecraft/src/common/world/item/Item.asm APPEND PROPERTY COMPILE_OPTIONS "-x" "assembler-with-cpp")
+
 
 # Create AmethystAPI as a .lib
-add_library(${PROJECT_NAME} STATIC ${SOURCES} ${ASM} ${HEADERS})
+add_library(${PROJECT_NAME} STATIC 
+    ${SOURCES}
+    ${HEADERS}
+    src/minecraft/src/common/world/item/Item.asm
+)
+
 
 # Amethyst Dependencies
 target_include_directories(${PROJECT_NAME} PUBLIC 
@@ -29,12 +35,8 @@ target_link_libraries(${PROJECT_NAME} PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/lib/fmt.lib
 )
 
-
 # EnTT Compile options
 target_compile_definitions(${PROJECT_NAME} PUBLIC ENTT_PACKED_PAGE=128)
-
-# Set the ASM sources for the library
-set_property(TARGET ${PROJECT_NAME} PROPERTY ASM_SOURCES ${ASM})
 
 # Include libhat for SigScan
 FetchContent_Declare(
@@ -65,7 +67,7 @@ file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${AmethystFolder}/inc
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/lib/ DESTINATION ${AmethystFolder}/lib/)
 
 # Create source groups to reflect the directory structure in Visual Studio
-foreach(_source IN ITEMS ${SOURCES} ${HEADERS} ${ASM})
+foreach(_source IN ITEMS ${SOURCES} ${HEADERS})
     get_filename_component(_source_path "${_source}" PATH)
     file(RELATIVE_PATH _source_path_rel "${CMAKE_CURRENT_SOURCE_DIR}/src" "${_source_path}")
     string(REPLACE "/" "\\" _group_path "${_source_path_rel}")

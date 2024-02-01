@@ -13,6 +13,8 @@ void AmethystRuntime::Start()
 
     // read the config file and load in any mods
     ReadLauncherConfig();
+    if (mLauncherConfig.injectedMod == "Vanilla") return Shutdown();
+
     LoadModDlls();
 
     // Create our hooks then run the mods

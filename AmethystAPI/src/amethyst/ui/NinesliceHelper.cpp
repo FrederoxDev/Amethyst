@@ -23,7 +23,7 @@ Amethyst::NinesliceHelper::NinesliceHelper(int textureWidth, int textureHeight, 
     mSlices[8] = Slice(textureWidth - ninesliceWidth, textureHeight - ninesliceHeight, ninesliceWidth, ninesliceHeight); // Bottom Right
 }
 
-Amethyst::TextureUV Amethyst::NinesliceHelper::Slice(int x, int y, int xSize, int ySize)
+Amethyst::TextureUV Amethyst::NinesliceHelper::Slice(int x, int y, int xSize, int ySize) const
 {
     glm::tvec2<float> uvPos((float)x / mTextureWidth, (float)y / mTextureHeight);
     glm::tvec2<float> uvSize((float)xSize / mTextureWidth, (float)ySize / mTextureHeight);
@@ -39,14 +39,14 @@ ImageInfo Amethyst::NinesliceHelper::Scale(TextureUV* slice, float x, float y, f
 
 void Amethyst::NinesliceHelper::Draw(RectangleArea& rect, const mce::TexturePtr* texture, MinecraftUIRenderContext* ctx)
 {
-    int xOff = rect._x0;
-    int yOff = rect._y0;
+    float xOff = rect._x0;
+    float yOff = rect._y0;
 
-    int width = rect._x1 - rect._x0;
-    int height = rect._y1 - rect._y0;
+    float width = rect._x1 - rect._x0;
+    float height = rect._y1 - rect._y0;
 
-    int middleWidth = width - 2 * mNinesliceWidth;
-    int middleHeight = height - 2 * mNinesliceHeight;
+    float middleWidth = width - 2 * mNinesliceWidth;
+    float middleHeight = height - 2 * mNinesliceHeight;
 
     ImageInfo topLeft = Scale(&mSlices[0], xOff, yOff, mNinesliceWidth, mNinesliceHeight);
     ImageInfo top = Scale(&mSlices[1], xOff + mNinesliceWidth, yOff, middleWidth, mNinesliceHeight);
@@ -55,7 +55,7 @@ void Amethyst::NinesliceHelper::Draw(RectangleArea& rect, const mce::TexturePtr*
     ImageInfo middle = Scale(&mSlices[4], xOff + mNinesliceWidth, yOff + mNinesliceHeight, middleWidth, middleHeight);
     ImageInfo right = Scale(&mSlices[5], xOff + width - mNinesliceWidth, yOff + mNinesliceHeight, mNinesliceWidth, middleHeight);
     ImageInfo bottomLeft = Scale(&mSlices[6], xOff, yOff + height - mNinesliceHeight, mNinesliceWidth, mNinesliceHeight);
-    ImageInfo buttom = Scale(&mSlices[7], xOff + mNinesliceWidth, yOff + height - mNinesliceHeight, middleWidth, mNinesliceHeight);
+    ImageInfo bottom = Scale(&mSlices[7], xOff + mNinesliceWidth, yOff + height - mNinesliceHeight, middleWidth, mNinesliceHeight);
     ImageInfo bottomRight = Scale(&mSlices[8], xOff + width - mNinesliceWidth, yOff + height - mNinesliceHeight, mNinesliceWidth, mNinesliceHeight);
 
     glm::tvec2<float> uvScale(1.0f, 1.0f);
@@ -68,7 +68,7 @@ void Amethyst::NinesliceHelper::Draw(RectangleArea& rect, const mce::TexturePtr*
         uvScale,
         {left},
         {top},
-        {buttom},
+        {bottom},
         {right},
         {middle}};
 

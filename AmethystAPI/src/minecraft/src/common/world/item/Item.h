@@ -3,6 +3,9 @@
 #include <stdint.h>
 #include <string>
 #include "minecraft/src-deps/core/math/Color.h"
+#include "minecraft/src-deps/core/headerIncludes/gsl_includes.h"
+#include "minecraft/src-deps/core/string/StringHash.h"
+#include "minecraft/src/common/SharedPtr.h"
 
 class CompoundTag;
 class Level;
@@ -16,7 +19,6 @@ class ItemStackBase;
 class RenderParams;
 class SemVersion;
 class ItemComponent;
-class HashedString;
 class ItemColor {};
 class IFoodItemComponent;
 class BaseGameVersion;
@@ -43,6 +45,7 @@ class InteractionResult {};
 class IDataOutput;
 class Brightness;
 class ResolvedItemIconInfo {};
+class BlockLegacy;
 
 namespace Puv {
     namespace Legacy {
@@ -50,9 +53,39 @@ namespace Puv {
     }; 
 };
 
+enum class UseAnimation : unsigned char {
+    None,
+    Eat,
+    Drink,
+    Block,
+    Bow,
+    Camera,
+    Spear,
+    GlowStick,
+    Sparkler,
+    Crossbow,
+    Spyglass,
+    GoatHorn
+};
+
+enum class CreativeItemCategory : int { All,
+                                        Construction,
+                                        Nature,
+                                        Equipment,
+                                        Items,
+                                        ItemCommandOnly,
+                                        Undefined,
+                                        NUM_CATEGORIES
+};
+
 // vtable for Item 0x1453C9B70
 
-#pragma pack(push, 1)
+// Item tag extends hashed string, doesn't declare anything so eh
+using ItemTag = HashedString;
+class FoodItemComponentLegacy;
+class SeedItemComponentLegacy;
+class CameraItemComponentLegacy;
+
 class Item {
 public:
     std::byte padding0[104];
@@ -68,10 +101,55 @@ public:
     std::string mNamespace; // this + 248
     std::byte padding5[320];
 
+    //
+    // things seem misaligned? so leaving out for now..
+    //
+
+    /*std::string mTextureAtlasFile;
+    int frameCount;
+    bool mAnimatesInToolbar;
+    bool mIsMirroredArt;
+    UseAnimation mUseAnim;
+    string_span mHoverTextColorFormat;
+    int mIconFrame;
+    int mAtlasFrame;
+    int mAtlasTotalFrames;
+    std::string mIconName;
+    std::string mAtlasName;
+    byte mMaxStackSize;
+    short mId;
+    std::string mDescriptionId;
+    HashedString mRawNameId;
+    std::string mNamespace;
+    HashedString mFullName;
+    short mMaxDamage;
+    bool mIsGlint : 1;
+    bool mHandEquipped : 1;
+    bool mIsStackedByData : 1;
+    bool mRequiresWorldBuilder : 1;
+    bool mExplodable : 1;
+    bool mFireResistant : 1;
+    bool mShouldDespawn : 1;
+    bool mAllowOffhand : 1;
+    bool mIgnoresPermissions : 1;
+    int mMaxUseDuration;
+    std::byte mMinRequiredBaseGameVersion[120];
+    WeakPtr<BlockLegacy> mLegacyBlock;
+    CreativeItemCategory mCreativeCategory;
+    Item* mCraftingRemainingItem;
+    std::string mCreativeGroup;
+    float mFurnaceBurnIntervalModifier;
+    float mFurnaceXPmultiplier;
+    std::weak_ptr<FoodItemComponentLegacy> mFoodComponentLegacy;
+    std::weak_ptr<SeedItemComponentLegacy> mSeedComponent;
+    std::weak_ptr<CameraItemComponentLegacy> mCameraComponentLegacy;
+    std::byte mOnResetBAIcallbacks[24]; 
+    std::vector<ItemTag> mTags;*/
+
 //virtuals:
 public:
     virtual ~Item();
-    virtual bool initServer(Json::Value&, SemVersion const&, bool, Experiments const&);
+    /*virtual bool initServer(Json::Value&, SemVersion const&, bool, Experiments const&);
     virtual void tearDown();
     virtual Item& setDescriptionId(std::string const&);
     virtual std::string const& getDescriptionId() const;
@@ -189,15 +267,16 @@ private:
     virtual bool _checkUseOnPermissions(Actor&, ItemStackBase&, unsigned char const&, BlockPos const&) const;
     virtual bool _calculatePlacePos(ItemStackBase&, Actor&, unsigned char&, BlockPos&) const;
     virtual bool _shouldAutoCalculatePlacePos() const;
-    virtual InteractionResult _useOn(ItemStack&, Actor&, BlockPos, unsigned char, Vec3 const&) const;
+    virtual InteractionResult _useOn(ItemStack&, Actor&, BlockPos, unsigned char, Vec3 const&) const;*/
 
 public:
+    Item(const std::string&, short);
     short getDamageValue(CompoundTag* mUserData) const;
+    
 
 //hooks:
     // 40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 49 8B F1 4C 89 44 24 ? 4C 8B F2 48 8B D9
     typedef void(__thiscall* _appendFormattedHovertext)(Item*, const ItemStackBase&, Level&, std::string&, uint8_t);
 };
-#pragma pack(pop)
 
 static_assert(sizeof(Item) == 600);
