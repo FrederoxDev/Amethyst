@@ -1,0 +1,1 @@
+#include "minecraft/src/common/world/item/registry/ItemRegistryRef.h"

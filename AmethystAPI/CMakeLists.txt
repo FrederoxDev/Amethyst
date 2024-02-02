@@ -21,7 +21,6 @@ add_library(${PROJECT_NAME} STATIC
     src/minecraft/src/common/world/item/Item.asm
 )
 
-
 # Amethyst Dependencies
 target_include_directories(${PROJECT_NAME} PUBLIC 
     ${CMAKE_CURRENT_SOURCE_DIR}/include
@@ -31,6 +30,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 target_link_libraries(${PROJECT_NAME} PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/lib/fmt.lib
 )
+
 
 # EnTT Compile options
 target_compile_definitions(${PROJECT_NAME} PUBLIC ENTT_PACKED_PAGE=128)

@@ -4,11 +4,10 @@ section .text
 
 extern Item_vtable
 
-global ??1Item@@UEAA@XZ
-??1Item@@UEAA@XZ:
-	mov rax, [rel Item_vtable]
-	jmp [rax + 0]
-
+;global ??1Item@@UEAA@XZ
+;??1Item@@UEAA@XZ:
+;	mov rax, [rel Item_vtable]
+;	jmp [rax + 0]
 
 global ?initServer@Item@@UEAA_NAEAVValue@Json@@AEBVSemVersion@@_NAEBVExperiments@@@Z
 ?initServer@Item@@UEAA_NAEAVValue@Json@@AEBVSemVersion@@_NAEBVExperiments@@@Z:

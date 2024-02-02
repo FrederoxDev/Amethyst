@@ -17,6 +17,10 @@ short Item::getDamageValue(CompoundTag* mUserData) const
     return func(this, mUserData);
 }
 
+Item::~Item() {
+
+}
+
 //
 //uint64_t Item::getMaxDamage() const
 //{
