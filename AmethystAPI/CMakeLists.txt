@@ -5,14 +5,19 @@ include(FetchContent)
 # Amethyst folder location
 set(AmethystFolder "$ENV{localappdata}/Packages/Microsoft.MinecraftUWP_8wekyb3d8bbwe/AC/Amethyst/")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELWITHDEBINFO "${AmethystFolder}/lib")
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG "${AmethystFolder}/lib")
 
 # C++ Compile Options
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CONFIGURATION_TYPES "RelWithDebInfo" CACHE STRING "Build configurations" FORCE)
 set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Choose the type of build, options are: RelWithDebInfo" FORCE)
 
+add_compile_definitions(_ITERATOR_DEBUG_LEVEL=0)
+set_property(GLOBAL PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
+
 file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.c" "src/*.asm")
 file(GLOB_RECURSE HEADERS "src/*.h" "src/*.hpp")
+
 
 # Create AmethystAPI as a .lib
 add_library(${PROJECT_NAME} STATIC 

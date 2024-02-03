@@ -6,12 +6,6 @@ class ItemRegistryRef {
 public:
     std::weak_ptr<ItemRegistry> mItemRegistry;
 
-    // 1.20.51.1 - 40 53 56 57 48 83 EC ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 44 24 ? 41 0F B7 F1
-    template <typename Item>
-    static WeakPtr<Item> registerItem(const HashedString* itemName, short legacyItemId) 
-    {
-        using function = WeakPtr<Item>(__thiscall*)(const HashedString*, short);
-        static auto func = reinterpret_cast<function>(SigScan("40 53 56 57 48 83 EC ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 44 24 ? 41 0F B7 F1"));
-        return func(itemName, legacyItemId);
-    }
+    // 1.20.51.1 - 48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 44 24 ? 48 8B DA 4C 8B C1
+    std::shared_ptr<ItemRegistry>** _lockRegistry(std::shared_ptr<ItemRegistry>** result) const;
 };
