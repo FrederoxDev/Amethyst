@@ -4,17 +4,17 @@ SafetyHookInline _assignDefaultMapping;
 SafetyHookInline _addFullKeyboardGamePlayControls;
 SafetyHookInline __registerInputHandlers;
 
-static void assignDefaultMapping(RemappingLayout* self, std::vector<Keymapping>** mapping)
+static void assignDefaultMapping(RemappingLayout* self, std::vector<Keymapping>&& mapping)
 {
     RuntimeInputManager* inputManager = AmethystRuntime::getInputManager();
 
     for (auto& input : inputManager->mInputActions) {
         std::string keyName = "key." + input.mActionName;
         Keymapping keymapping(keyName, {input.mDefaultKey}, input.mAllowRemapping);
-        (*mapping)->emplace_back(keymapping);
+        mapping.emplace_back(keymapping);
     }
 
-    _assignDefaultMapping.call<void, RemappingLayout*, std::vector<Keymapping>**>(self, mapping);
+    _assignDefaultMapping.call<void, RemappingLayout*, std::vector<Keymapping>>(self, std::move(mapping));
 }
 
 static void addFullKeyboardGamePlayControls(VanillaClientInputMappingFactory* self, KeyboardInputMapping* keyboard, MouseInputMapping* mouse)
