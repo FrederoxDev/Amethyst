@@ -457,12 +457,12 @@ global ?getCooldownTime@Item@@UEBAHXZ
 global ?fixupCommon@Item@@UEBAXAEAVItemStackBase@@@Z
 ?fixupCommon@Item@@UEBAXAEAVItemStackBase@@@Z:
 	mov rax, [rel Item_vtable]
-	jmp [rax + 720]
+	jmp [rax + 728] ; switched with other fixupCommon for different vtable ordering
 
 global ?fixupCommon@Item@@UEBAXAEAVItemStackBase@@AEAVLevel@@@Z
 ?fixupCommon@Item@@UEBAXAEAVItemStackBase@@AEAVLevel@@@Z:
 	mov rax, [rel Item_vtable]
-	jmp [rax + 728]
+	jmp [rax + 720] ; switched with other fixupCommon for different vtable ordering
 
 global ?getInHandUpdateType@Item@@UEBA?AW4InHandUpdateType@@AEBVPlayer@@AEBVItemInstance@@1_N2@Z
 ?getInHandUpdateType@Item@@UEBA?AW4InHandUpdateType@@AEBVPlayer@@AEBVItemInstance@@1_N2@Z:

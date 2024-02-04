@@ -1,11 +1,13 @@
 #pragma once
 #include "amethyst/Memory.h"
-#include <stdint.h>
+#include <cstdint>
 #include <string>
 #include "minecraft/src-deps/core/math/Color.h"
 #include "minecraft/src-deps/core/headerIncludes/gsl_includes.h"
 #include "minecraft/src-deps/core/string/StringHash.h"
 #include "minecraft/src/common/SharedPtr.h"
+#include "minecraft/src/common/world/item/UseAnim.h"
+#include "minecraft/src/common/world/item/ItemCategory.h"
 #include <cstddef>
 
 class CompoundTag;
@@ -52,31 +54,6 @@ namespace Puv {
     namespace Legacy {
         enum LevelSoundEvent {};
     }; 
-};
-
-enum class UseAnimation : unsigned char {
-    None,
-    Eat,
-    Drink,
-    Block,
-    Bow,
-    Camera,
-    Spear,
-    GlowStick,
-    Sparkler,
-    Crossbow,
-    Spyglass,
-    GoatHorn
-};
-
-enum class CreativeItemCategory : int { All,
-                                        Construction,
-                                        Nature,
-                                        Equipment,
-                                        Items,
-                                        ItemCommandOnly,
-                                        Undefined,
-                                        NUM_CATEGORIES
 };
 
 // vtable for Item 0x1453C9B70

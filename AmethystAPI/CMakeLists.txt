@@ -24,6 +24,7 @@ add_library(${PROJECT_NAME} STATIC
     ${SOURCES}
     ${HEADERS}
     src/minecraft/src/common/world/item/Item.asm
+        src/minecraft/src/common/world/item/ItemCategory.h
 )
 
 # Amethyst Dependencies
