@@ -2,6 +2,7 @@
 #include "amethyst/events/Event.h"
 #include "minecraft/src-client/common/client/game/ClientInstance.h"
 #include "minecraft/src-client/common/client/gui/ScreenView.h"
+#include "minecraft/src/common/world/item/registry/ItemRegistry.h"
 
 namespace Amethyst {
 class EventManager {
@@ -10,6 +11,7 @@ public:
     Event<ScreenView*, UIRenderContext*> onRenderUI;
     Event<> beforeTick;
     Event<> afterTick;
+    Event<ItemRegistry*> registerItems;
 
     /*
     Clear any events that have been registered
@@ -20,6 +22,7 @@ public:
         onRenderUI.Shutdown();
         beforeTick.Shutdown();
         afterTick.Shutdown();
+        registerItems.Shutdown();
     }
 };
 } // namespace Amethyst

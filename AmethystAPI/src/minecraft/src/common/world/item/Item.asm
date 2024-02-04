@@ -84,7 +84,6 @@ global ?isDye@Item@@UEBA_NXZ
 	mov rax, [rel Item_vtable]
 	jmp [rax + 120]
 
-?getItemColor@Item@@UEBA?AVItemColor@@XZ
 global ?getItemColor@Item@@UEBA?AW4ItemColor@@XZ
 ?getItemColor@Item@@UEBA?AW4ItemColor@@XZ:
 	mov rax, [rel Item_vtable]

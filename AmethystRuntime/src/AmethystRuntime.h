@@ -14,6 +14,7 @@
 #include <iostream>
 #include <vector>
 #include <minecraft/src/common/world/item/Item.h>
+#include <amethyst/MinecraftVtables.h>
 
 namespace fs = std::filesystem;
 

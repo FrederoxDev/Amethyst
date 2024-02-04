@@ -3,15 +3,16 @@
 SafetyHookInline _ScreenView_setupAndRender;
 SafetyHookInline _ClientInstance_onStartJoinGame;
 SafetyHookInline _Minecraft_update;
+SafetyHookInline _VanillaItems_registerItems;
 
-static void* ScreenView_setupAndRender(ScreenView* self, UIRenderContext* ctx)
+void* ScreenView_setupAndRender(ScreenView* self, UIRenderContext* ctx)
 {
     Amethyst::EventManager* events = AmethystRuntime::getEventManager();
     events->onRenderUI.Invoke(self, ctx);
     return _ScreenView_setupAndRender.call<void*, ScreenView*, UIRenderContext*>(self, ctx);
 }
 
-static int64_t ClientInstance_onStartJoinGame(ClientInstance* self, int64_t a2, int64_t a3, uint64_t a4)
+int64_t ClientInstance_onStartJoinGame(ClientInstance* self, int64_t a2, int64_t a3, uint64_t a4)
 {
     Amethyst::EventManager* events = AmethystRuntime::getEventManager();
     events->onStartJoinGame.Invoke(self);
@@ -19,7 +20,7 @@ static int64_t ClientInstance_onStartJoinGame(ClientInstance* self, int64_t a2, 
     return _ClientInstance_onStartJoinGame.call<int64_t, ClientInstance*, int64_t, int64_t, uint64_t>(self, a2, a3, a4);
 }
 
-static bool Minecraft_update(Minecraft* self) {
+bool Minecraft_update(Minecraft* self) {
     Amethyst::EventManager* events = AmethystRuntime::getEventManager();
 
     events->beforeTick.Invoke();
@@ -27,6 +28,26 @@ static bool Minecraft_update(Minecraft* self) {
     events->afterTick.Invoke();
 
     return value;
+}
+
+void* VanillaItems_registerItems(
+    const ItemRegistryRef itemRegistry,
+    const BaseGameVersion* baseGameVersion,
+    const Experiments* experiments,
+    void* enableExperimentalGameplay) 
+{
+    Amethyst::EventManager* events = AmethystRuntime::getEventManager();
+
+    // Allow Vanilla to register its own items first
+    void* result = _VanillaItems_registerItems.fastcall<void*>(&itemRegistry, baseGameVersion, experiments, enableExperimentalGameplay);
+
+    std::shared_ptr<ItemRegistry>* sharedRegistryPtr = new std::shared_ptr<ItemRegistry>();
+    itemRegistry._lockRegistry(&sharedRegistryPtr);
+
+    ItemRegistry* registry = sharedRegistryPtr->get();
+    events->registerItems.Invoke(registry);
+
+    return result;
 }
 
 void CreateModFunctionHooks() {
@@ -40,4 +61,7 @@ void CreateModFunctionHooks() {
 
     hookManager->RegisterFunction(&ClientInstance::onStartJoinGame, "40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 45 8B F1");
     hookManager->CreateHook(&ClientInstance::onStartJoinGame, _ClientInstance_onStartJoinGame, &ClientInstance_onStartJoinGame);
+
+    hookManager->RegisterFunction(&VanillaItems::registerItems, "40 55 53 56 57 41 54 41 56 41 57 48 8D AC 24 ? ? ? ? B8 ? ? ? ? E8 ? ? ? ? 48 2B E0 0F 29 B4 24");
+    hookManager->CreateHook(&VanillaItems::registerItems, _VanillaItems_registerItems, &VanillaItems_registerItems);
 }

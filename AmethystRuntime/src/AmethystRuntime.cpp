@@ -7,6 +7,7 @@ extern DWORD gMcThreadId;
 void AmethystRuntime::Start()
 {
     Log::Info("[AmethystRuntime] Using 'AmethystRuntime@{}'", MOD_VERSION);
+    InitializeVtablePtrs();
 
     // Prompt a debugger if they are in developer mode
     if (mLauncherConfig.promptDebugger) PromptDebugger();
