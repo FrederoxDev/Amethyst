@@ -1,7 +1,7 @@
 #pragma once
 #include "amethyst/Memory.h"
 #include "minecraft/src/common/SharedPtr.h"
-#include <stdint.h>
+#include <cstdint>
 #include <string>
 
 class Item;

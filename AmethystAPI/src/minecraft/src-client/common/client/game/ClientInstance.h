@@ -3,7 +3,7 @@
 #include "minecraft/src-client/common/client/gui/gui/GuiData.h"
 #include "minecraft/src-client/common/client/player/LocalPlayer.h"
 #include "minecraft/src/common/world/level/BlockSource.h"
-#include <stdint.h>
+#include <cstdint>
 
 class Minecraft;
 class ClientInputHandler;

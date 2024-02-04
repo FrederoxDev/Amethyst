@@ -1,6 +1,6 @@
 #pragma once
 #include <memory>
-#include <stdint.h>
+#include <cstdint>
 #include <string>
 
 class IDataOutput;

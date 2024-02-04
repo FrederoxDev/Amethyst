@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include <stdint.h>
+#include <cstdint>
 #include "minecraft/src-client/common/client/input/Keymapping.h"
 
 class RemappingLayout {

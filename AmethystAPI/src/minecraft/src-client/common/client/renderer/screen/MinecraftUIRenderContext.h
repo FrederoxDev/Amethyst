@@ -5,7 +5,7 @@
 #include "minecraft/src-deps/core/math/Color.h"
 #include "minecraft/src-deps/core/string/StringHash.h"
 #include "minecraft/src/common/world/phys/Vec2.h"
-#include <stdint.h>
+#include <cstdint>
 #include <string>
 #include "minecraft/src-client/common/client/renderer/NinesliceInfo.h"
 

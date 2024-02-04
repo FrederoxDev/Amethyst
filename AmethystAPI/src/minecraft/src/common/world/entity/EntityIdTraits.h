@@ -1,6 +1,6 @@
 #pragma once
 #include "entt/entt.hpp"
-#include <stdint.h>
+#include <cstdint>
 
 class EntityId;
 
