@@ -304,23 +304,23 @@ global ?getColor@Item@@UEBA?AVColor@mce@@PEBVCompoundTag@@AEBVItemDescriptor@@@Z
 	mov rax, [rel Item_vtable]
 	jmp [rax + 472]
 
-global ?hasCustomColor@Item@@UEBA_NAEBVItemStackBase@@@Z
-?hasCustomColor@Item@@UEBA_NAEBVItemStackBase@@@Z:
-	mov rax, [rel Item_vtable]
-	jmp [rax + 480]
-
 global ?hasCustomColor@Item@@UEBA_NPEBVCompoundTag@@@Z
 ?hasCustomColor@Item@@UEBA_NPEBVCompoundTag@@@Z:
 	mov rax, [rel Item_vtable]
-	jmp [rax + 488]
+	jmp [rax + 480]
 
-global ?clearColor@Item@@UEBAXAEAVItemStackBase@@@Z
-?clearColor@Item@@UEBAXAEAVItemStackBase@@@Z:
+global ?hasCustomColor@Item@@UEBA_NAEBVItemStackBase@@@Z
+?hasCustomColor@Item@@UEBA_NAEBVItemStackBase@@@Z:
 	mov rax, [rel Item_vtable]
-	jmp [rax + 496]
+	jmp [rax + 488]
 
 global ?clearColor@Item@@UEBAXPEAVCompoundTag@@@Z
 ?clearColor@Item@@UEBAXPEAVCompoundTag@@@Z:
+	mov rax, [rel Item_vtable]
+	jmp [rax + 496]
+
+global ?clearColor@Item@@UEBAXAEAVItemStackBase@@@Z
+?clearColor@Item@@UEBAXAEAVItemStackBase@@@Z:
 	mov rax, [rel Item_vtable]
 	jmp [rax + 504]
 
@@ -394,13 +394,13 @@ global ?hitBlock@Item@@UEBAXAEAVItemStack@@AEBVBlock@@AEBVBlockPos@@AEAVMob@@@Z
 	mov rax, [rel Item_vtable]
 	jmp [rax + 616]
 
-global ?mineBlock@Item@@UEBA_NAEAVItemInstance@@AEBVBlock@@HHHPEAVActor@@@Z
-?mineBlock@Item@@UEBA_NAEAVItemInstance@@AEBVBlock@@HHHPEAVActor@@@Z:
+global ?mineBlock@Item@@UEBA_NAEAVItemStack@@AEBVBlock@@HHHPEAVActor@@@Z
+?mineBlock@Item@@UEBA_NAEAVItemStack@@AEBVBlock@@HHHPEAVActor@@@Z:
 	mov rax, [rel Item_vtable]
 	jmp [rax + 624]
 
-global ?mineBlock@Item@@UEBA_NAEAVItemStack@@AEBVBlock@@HHHPEAVActor@@@Z
-?mineBlock@Item@@UEBA_NAEAVItemStack@@AEBVBlock@@HHHPEAVActor@@@Z:
+global ?mineBlock@Item@@UEBA_NAEAVItemInstance@@AEBVBlock@@HHHPEAVActor@@@Z
+?mineBlock@Item@@UEBA_NAEAVItemInstance@@AEBVBlock@@HHHPEAVActor@@@Z:
 	mov rax, [rel Item_vtable]
 	jmp [rax + 632]
 
@@ -454,23 +454,23 @@ global ?getCooldownTime@Item@@UEBAHXZ
 	mov rax, [rel Item_vtable]
 	jmp [rax + 712]
 
-global ?fixupCommon@Item@@UEBAXAEAVItemStackBase@@@Z
-?fixupCommon@Item@@UEBAXAEAVItemStackBase@@@Z:
-	mov rax, [rel Item_vtable]
-	jmp [rax + 728] ; switched with other fixupCommon for different vtable ordering
-
 global ?fixupCommon@Item@@UEBAXAEAVItemStackBase@@AEAVLevel@@@Z
 ?fixupCommon@Item@@UEBAXAEAVItemStackBase@@AEAVLevel@@@Z:
 	mov rax, [rel Item_vtable]
-	jmp [rax + 720] ; switched with other fixupCommon for different vtable ordering
+	jmp [rax + 720]
 
-global ?getInHandUpdateType@Item@@UEBA?AW4InHandUpdateType@@AEBVPlayer@@AEBVItemInstance@@1_N2@Z
-?getInHandUpdateType@Item@@UEBA?AW4InHandUpdateType@@AEBVPlayer@@AEBVItemInstance@@1_N2@Z:
+global ?fixupCommon@Item@@UEBAXAEAVItemStackBase@@@Z
+?fixupCommon@Item@@UEBAXAEAVItemStackBase@@@Z:
 	mov rax, [rel Item_vtable]
-	jmp [rax + 736]
+	jmp [rax + 728]
 
 global ?getInHandUpdateType@Item@@UEBA?AW4InHandUpdateType@@AEBVPlayer@@AEBVItemStack@@1_N2@Z
 ?getInHandUpdateType@Item@@UEBA?AW4InHandUpdateType@@AEBVPlayer@@AEBVItemStack@@1_N2@Z:
+	mov rax, [rel Item_vtable]
+	jmp [rax + 736]
+
+global ?getInHandUpdateType@Item@@UEBA?AW4InHandUpdateType@@AEBVPlayer@@AEBVItemInstance@@1_N2@Z
+?getInHandUpdateType@Item@@UEBA?AW4InHandUpdateType@@AEBVPlayer@@AEBVItemInstance@@1_N2@Z:
 	mov rax, [rel Item_vtable]
 	jmp [rax + 744]
 
@@ -593,5 +593,3 @@ global ?_useOn@Item@@EEBA?AVInteractionResult@@AEAVItemStack@@AEAVActor@@VBlockP
 ?_useOn@Item@@EEBA?AVInteractionResult@@AEAVItemStack@@AEAVActor@@VBlockPos@@EAEBVVec3@@@Z:
 	mov rax, [rel Item_vtable]
 	jmp [rax + 936]
-
-
