@@ -25,7 +25,7 @@ enum MaterialType : unsigned int {
     TopSnow, 
     Snow, 
     PowderSnow, 
-    Amethyst, 
+    _Amethyst, // had to change name to _Amethyt from Amethyst because we declare the Amethyst namespace lmfao
     Cactus, 
     Clay, 
     Vegetable, 

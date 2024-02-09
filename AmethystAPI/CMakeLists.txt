@@ -23,11 +23,7 @@ add_library(${PROJECT_NAME} STATIC
     ${SOURCES}
     ${HEADERS}
     src/minecraft/src/common/world/item/Item.asm
-        src/minecraft/src/common/world/item/ItemCategory.h
-        src/minecraft/src/common/world/level/block/BlockLegacy.cpp
-        src/minecraft/src/common/world/level/block/BlockLegacy.h
-        src/minecraft/src/common/world/level/material/MaterialType.h
-        src/minecraft/src/common/world/level/material/Material.h
+    src/minecraft/src/common/world/level/block/BlockLegacy.asm
 )
 
 # Amethyst Dependencies
