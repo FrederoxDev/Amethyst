@@ -64,20 +64,38 @@ class FoodItemComponentLegacy;
 class SeedItemComponentLegacy;
 class CameraItemComponentLegacy;
 
+//struct = [("short", "mId", 2, 162),
+//          ("short", "mMaxDamage", 2, 164),
+//          ("WeakPtr<BlockLegacy>", "mLegacyBlock", 8, 456),
+//          ("std::string", "mTextureAtlasFile", 32, 8),
+//          ("std::string", "mDescriptionId", 32, 168),
+//          ("std::string", "mNamespace", 32, 248),
+//          ("CreativeItemCategory", "mCreativeCategory", 4, 464),
+//          ("bool", "mIsMirroredArt", 1, 44),
+//          ("HashedString", "mRawNameId", 48, 200),
+//          ("string_span", "mHoverTextColorFormat", 16, 64),
+//          ("short", "mMaxUseDuration", 2, 328)]
+
 class Item {
 public:
-    std::byte padding0[104];
-    void* qword70; // this + 112
-    std::byte padding1[24];
-    void* qword90; // this + 144
-    std::byte padding2[10];
-    int16_t mId;        // this + 162
-    int16_t mMaxDamage; // this + 164
-    std::byte padding3[2];
-    std::string* mItemName; // this + 168
-    std::byte padding4[72];
-    std::string mNamespace; // this + 248
-    std::byte padding5[320];
+    /* this + 8   */ std::string mTextureAtlasFile;
+    /* this + 40  */ std::byte padding40[4];
+    /* this + 44  */ bool mIsMirroredArt;
+    /* this + 45  */ std::byte padding45[19];
+    /* this + 64  */ string_span mHoverTextColorFormat;
+    /* this + 80  */ std::byte padding80[82];
+    /* this + 162 */ short mId;
+    /* this + 164 */ short mMaxDamage;
+    /* this + 166 */ std::byte padding166[2];
+    /* this + 168 */ std::string mDescriptionId;
+    /* this + 200 */ HashedString mRawNameId;
+    /* this + 248 */ std::string mNamespace;
+    /* this + 280 */ std::byte padding280[48];
+    /* this + 328 */ short mMaxUseDuration;
+    /* this + 330 */ std::byte padding330[126];
+    /* this + 456 */ WeakPtr<BlockLegacy> mLegacyBlock;
+    /* this + 464 */ CreativeItemCategory mCreativeCategory;
+    /* this + 468 */ std::byte padding468[132];
 
 //virtuals:
 public:

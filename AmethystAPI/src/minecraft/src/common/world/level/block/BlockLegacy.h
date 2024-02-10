@@ -51,17 +51,17 @@ enum class FlameOdds : char {INSTANT = 60, EASY = 30, MEDIUM = 15, HARD = 5, NEV
 
 enum class BurnOdds : char {INSTANT = 100, EASY = 60, MEDIUM = 20, HARD = 5, NEVER = 0};
 
-//struct = [
-//#Type, Name, Size(bytes), Offset(bytes)
-//    ("BurnOdds", "mBurnOdds", 1, 95),
-//    ("FlameOdds", "mFlameOdds", 1, 94),
-//    ("bool", "mIsVanilla", 1, 544),
-//    ("const Material&", "mMaterial", 8, 296),
-//    ("unsigned short", "mID", 2, 422),
-//    ("BaseGameVersion", "mMinRequiredBaseGameVersion", 120, 424)
-//]
-//
-//    is_virtual = True struct_size = 944
+//struct_size = 944
+//#(Type, Name, Size(in bytes), Offset(in bytes))
+//    struct
+//    = [("BurnOdds", "mBurnOdds", 1, 95),
+//       ("FlameOdds", "mFlameOdds", 1, 94),
+//       ("bool", "mIsVanilla", 1, 544),
+//       ("const Material&", "mMaterial", 8, 296),
+//       ("unsigned short", "mID", 2, 422),
+//       ("BaseGameVersion", "mMinRequiredBaseGameVersion", 120, 424),
+//       ("unsigned char", "mLightEmission", 1, 374),
+//       ("unsigned char", "mLightBlock", 1, 373)]
 
 #pragma pack(push, 1)
 class BlockLegacy {
@@ -71,11 +71,14 @@ public:
     /* this + 95  */ BurnOdds mBurnOdds;
     /* this + 96  */ std::byte padding1[200];
     /* this + 296 */ const Material& mMaterial;
-    /* this + 304 */ std::byte padding2[118];
+    /* this + 304 */ std::byte padding2[69];
+    /* this + 373 */ unsigned char mLightBlock;
+    /* this + 374 */ unsigned char mLightEmission;
+    /* this + 375 */ std::byte padding3[47];
     /* this + 422 */ unsigned short mID;
     /* this + 424 */ BaseGameVersion mMinRequiredBaseGameVersion;
     /* this + 544 */ bool mIsVanilla;
-    /* this + 545 */ std::byte padding3[399];
+    /* this + 545 */ std::byte padding4[399];
 
 public:
     virtual ~BlockLegacy();
@@ -251,6 +254,7 @@ private:
 
 public:
     BlockLegacy(const std::string& nameId, short id, const Material& material);
+    short getBlockItemId();
 };
 #pragma pack(pop)
 

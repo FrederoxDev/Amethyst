@@ -9,8 +9,6 @@ global ??0BlockLegacy@@QEAA@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocat
     mov rax, [rel BlockLegacy_ctor]
     jmp rax
 
-; Failed to find (index: 0, linux symbol: '_ZN11BlockLegacyD2Ev')
-
 global ?newBlockEntity@BlockLegacy@@UEBA?AV?$shared_ptr@VBlockActor@@@std@@AEBVBlockPos@@AEBVBlock@@@Z
 ?newBlockEntity@BlockLegacy@@UEBA?AV?$shared_ptr@VBlockActor@@@std@@AEBVBlockPos@@AEBVBlock@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
