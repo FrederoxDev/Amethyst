@@ -10,6 +10,8 @@
 #include "minecraft/src-deps/core/utility/optional_ref.h"
 #include "minecraft/src/common/world/Direction.h"
 #include "minecraft/src/common/world/item/FertilizerType.h"
+#include "minecraft/src-deps/core/string/StringHash.h"
+#include "minecraft/src/common/resources/BaseGameVersion.h"
 
 class Container;
 class Random;
@@ -29,7 +31,6 @@ class BlockSource;
 class CopperBehavior;
 class Block;
 class BaseGameVersion;
-class HashedString;
 class Player;
 class ItemStack;
 class IConstBlockSource;
@@ -46,10 +47,35 @@ enum BlockSupportType;
 enum BlockRenderLayer;
 enum Flip;
 
+enum class FlameOdds : char {INSTANT = 60, EASY = 30, MEDIUM = 15, HARD = 5, NEVER = 0};
 
+enum class BurnOdds : char {INSTANT = 100, EASY = 60, MEDIUM = 20, HARD = 5, NEVER = 0};
+
+//struct = [
+//#Type, Name, Size(bytes), Offset(bytes)
+//    ("BurnOdds", "mBurnOdds", 1, 95),
+//    ("FlameOdds", "mFlameOdds", 1, 94),
+//    ("bool", "mIsVanilla", 1, 544),
+//    ("const Material&", "mMaterial", 8, 296),
+//    ("unsigned short", "mID", 2, 422),
+//    ("BaseGameVersion", "mMinRequiredBaseGameVersion", 120, 424)
+//]
+//
+//    is_virtual = True struct_size = 944
+
+#pragma pack(push, 1)
 class BlockLegacy {
 public:
-    std::byte padding0[936];
+    /* this + 8   */ std::byte padding0[86];
+    /* this + 94  */ FlameOdds mFlameOdds;
+    /* this + 95  */ BurnOdds mBurnOdds;
+    /* this + 96  */ std::byte padding1[200];
+    /* this + 296 */ const Material& mMaterial;
+    /* this + 304 */ std::byte padding2[118];
+    /* this + 422 */ unsigned short mID;
+    /* this + 424 */ BaseGameVersion mMinRequiredBaseGameVersion;
+    /* this + 544 */ bool mIsVanilla;
+    /* this + 545 */ std::byte padding3[399];
 
 public:
     virtual ~BlockLegacy();
@@ -70,7 +96,7 @@ public:
     virtual Vec3 randomlyModifyPosition(const BlockPos& pos) const;
     virtual void onProjectileHit(BlockSource& region, const BlockPos& pos, const Actor& projectile) const;
     virtual void onLightningHit(BlockSource& region, const BlockPos& pos) const;
-    virtual bool liquidCanFlowIntoFromDirection(unsigned char, const std::function<const Block&(const BlockPos&)>&, const BlockPos&) const;
+    virtual bool liquidCanFlowIntoFromDirection(unsigned char, std::function<const Block&(const BlockPos&)>, const BlockPos&) const;
     virtual bool hasVariableLighting() const;
     virtual bool isStrippable(const Block& srcBlock) const;
     virtual const Block& getStrippedBlock(const Block& srcBlock) const;
@@ -224,7 +250,8 @@ private:
     virtual void entityInside(BlockSource&, const BlockPos&, Actor&) const;
 
 public:
-    BlockLegacy(const std::string& nameId, int id, const Material& material);
+    BlockLegacy(const std::string& nameId, short id, const Material& material);
 };
+#pragma pack(pop)
 
 static_assert(sizeof(BlockLegacy) == 944);

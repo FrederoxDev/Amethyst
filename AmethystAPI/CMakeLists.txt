@@ -24,6 +24,10 @@ add_library(${PROJECT_NAME} STATIC
     ${HEADERS}
     src/minecraft/src/common/world/item/Item.asm
     src/minecraft/src/common/world/level/block/BlockLegacy.asm
+        src/minecraft/src/common/world/level/block/registry/VanillaBlockTypeRegistry.h
+        src/minecraft/src/common/world/level/block/registry/VanillaBlockTypeRegistry.h
+        src/minecraft/src/common/world/level/block/registry/BlockTypeRegistry.h
+        src/minecraft/src/common/world/level/block/definition/BlockDefinitionGroup.h
 )
 
 # Amethyst Dependencies
@@ -63,6 +67,7 @@ foreach(HEADER ${HEADERS})
     configure_file(${HEADER} ${DESTINATION_PATH} COPYONLY)
 
 endforeach()
+
 
 # Copy Amethyst's dependencies to AmethystFolder/include
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${AmethystFolder}/include/)
