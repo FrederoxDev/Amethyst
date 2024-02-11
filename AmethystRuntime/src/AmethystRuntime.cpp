@@ -9,12 +9,11 @@ void AmethystRuntime::Start()
     Log::Info("[AmethystRuntime] Using 'AmethystRuntime@{}'", MOD_VERSION);
     InitializeVtablePtrs();
 
-    // Prompt a debugger if they are in developer mode
-    if (mLauncherConfig.promptDebugger) PromptDebugger();
-
     // read the config file and load in any mods
     ReadLauncherConfig();
-    if (mLauncherConfig.injectedMod == "Vanilla") return Shutdown();
+
+    // Prompt a debugger if they are in developer mode
+    if (mLauncherConfig.promptDebugger) PromptDebugger();
 
     LoadModDlls();
 
