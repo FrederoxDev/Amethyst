@@ -9,7 +9,7 @@
 #include "minecraft/src-deps/core/utility/StringUtils.h"
 
 typedef std::map<HashedString, SharedPtr<BlockLegacy>> BlockLookupMap;
-typedef entt::dense_map<unsigned long, HashedString> BlockNameHashToHashedStringMap;
+typedef entt::dense_map<HashType64, HashedString> BlockNameHashToHashedStringMap;
 
 class BlockTypeRegistry {
 public:
@@ -71,7 +71,7 @@ public:
 
         // Add the hashed name to a lookup map
         BlockNameHashToHashedStringMap* hashedNameMap = BlockTypeRegistry::mBlockNameHashToStringMap();
-        hashedNameMap->insert(std::make_pair((unsigned long)hashedBlockName.getHash(), hashedBlockName));
+        hashedNameMap->emplace(std::make_pair(hashedBlockName.getHash(), hashedBlockName));
 
         return block;
     }
