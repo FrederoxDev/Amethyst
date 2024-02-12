@@ -2,7 +2,7 @@
 #include "minecraft/src/common/world/item/registry/ItemRegistryRef.h"
 
 class BaseGameVersion;
-class Experiements;
+class Experiments;
 
 class VanillaItems {
 public:
