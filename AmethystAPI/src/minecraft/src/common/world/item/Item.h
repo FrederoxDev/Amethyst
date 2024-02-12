@@ -8,6 +8,7 @@
 #include "minecraft/src/common/SharedPtr.h"
 #include "minecraft/src/common/world/item/UseAnim.h"
 #include "minecraft/src/common/world/item/ItemCategory.h"
+#include "minecraft/src/common/world/item/registry/ItemRegistryRef.h"
 #include <cstddef>
 
 class CompoundTag;
@@ -64,17 +65,19 @@ class FoodItemComponentLegacy;
 class SeedItemComponentLegacy;
 class CameraItemComponentLegacy;
 
-//struct = [("short", "mId", 2, 162),
-//          ("short", "mMaxDamage", 2, 164),
-//          ("WeakPtr<BlockLegacy>", "mLegacyBlock", 8, 456),
-//          ("std::string", "mTextureAtlasFile", 32, 8),
-//          ("std::string", "mDescriptionId", 32, 168),
-//          ("std::string", "mNamespace", 32, 248),
-//          ("CreativeItemCategory", "mCreativeCategory", 4, 464),
-//          ("bool", "mIsMirroredArt", 1, 44),
-//          ("HashedString", "mRawNameId", 48, 200),
-//          ("string_span", "mHoverTextColorFormat", 16, 64),
-//          ("short", "mMaxUseDuration", 2, 328)]
+//struct = [
+//("short", "mId", 2, 162),
+//("short", "mMaxDamage", 2, 164),
+//("WeakPtr<BlockLegacy>", "mLegacyBlock", 8, 456),
+//("std::string", "mTextureAtlasFile", 32, 8),
+//("std::string", "mDescriptionId", 32, 168),
+//("std::string", "mNamespace", 32, 248),
+//("CreativeItemCategory", "mCreativeCategory", 4, 464),
+//("bool", "mIsMirroredArt", 1, 44),
+//("HashedString", "mRawNameId", 48, 200),
+//("string_span", "mHoverTextColorFormat", 16, 64),
+//("short", "mMaxUseDuration", 2, 328)
+//]
 
 class Item {
 public:
@@ -96,6 +99,10 @@ public:
     /* this + 456 */ WeakPtr<BlockLegacy> mLegacyBlock;
     /* this + 464 */ CreativeItemCategory mCreativeCategory;
     /* this + 468 */ std::byte padding468[132];
+
+//statics:
+    // 0x5726CE8 - Found in VanillaItems::_addConstructionCategory
+    // static CreativeItemGroupCategory* mActiveCreativeItemCategory;
 
 //virtuals:
 public:
@@ -223,6 +230,9 @@ private:
 public:
     Item(const std::string&, short);
     short getDamageValue(CompoundTag* mUserData) const;
+
+    // 1.20.51.1 - 48 89 4C 24 ? 53 48 81 EC ? ? ? ? 48 8B D9 45 33 C9
+    static void addCreativeItem(ItemRegistryRef*, const Block*);
 };
 
 static_assert(sizeof(Item) == 600);

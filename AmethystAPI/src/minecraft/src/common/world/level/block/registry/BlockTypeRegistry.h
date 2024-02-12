@@ -34,6 +34,13 @@ public:
         return map;
     }
 
+    // 1.20.51.1 - 48 89 5C 24 ? 57 48 83 EC ? 33 FF 45 33 C9
+    static Block* getDefaultBlockState(const HashedString* name) {
+        using function = Block*(*)(const HashedString*);
+        static auto func = reinterpret_cast<function>(SigScan("48 89 5C 24 ? 57 48 83 EC ? 33 FF 45 33 C9"));
+        return func(name);
+    }
+
     // Re-Implemented
     template<typename T, typename... Args>
     static WeakPtr<T> registerBlock(const std::string& blockName, Args&&... args) {

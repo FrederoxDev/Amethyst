@@ -1,6 +1,6 @@
 #pragma once
 #include <memory>
-#include "minecraft/src/common/world/item/registry/ItemRegistry.h"
+class ItemRegistry;
 
 class ItemRegistryRef {
 public:

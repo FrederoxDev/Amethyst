@@ -1,4 +1,5 @@
 #include "minecraft/src/common/world/item/registry/ItemRegistryRef.h"
+#include "amethyst/Memory.h"
 
 std::shared_ptr<ItemRegistry>** ItemRegistryRef::_lockRegistry(std::shared_ptr<ItemRegistry>** result) const
 {

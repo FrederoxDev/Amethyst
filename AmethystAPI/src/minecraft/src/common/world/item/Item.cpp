@@ -21,6 +21,13 @@ Item::~Item() {
 
 }
 
+void Item::addCreativeItem(ItemRegistryRef* a1, const Block* a2)
+{
+    using function = void(*)(ItemRegistryRef*, const Block*);
+    static auto func = reinterpret_cast<function>(SigScan("48 89 4C 24 ? 53 48 81 EC ? ? ? ? 48 8B D9 45 33 C9"));
+    func(a1, a2);
+}
+
 //
 //uint64_t Item::getMaxDamage() const
 //{

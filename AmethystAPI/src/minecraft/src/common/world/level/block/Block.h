@@ -3,10 +3,17 @@
 #include "minecraft/src-deps/core/math/Color.h"
 #include "minecraft/src/common/world/level/BlockPos.h"
 #include "minecraft/src/common/world/level/BlockSource.h"
+#include "minecraft/src/common/world/level/block/BlockLegacy.h"
+
+using DataID = unsigned short;
 
 class Block {
 public:
-    /* Returns a ptr to the result parameter */
-    typedef mce::Color*(__thiscall* _getMapColor)(Block*, mce::Color*, BlockSource*, const BlockPos*);
-    mce::Color* getMapColor(mce::Color* result, BlockSource* a3, const BlockPos* a4) const;
+    uintptr_t** vtable;
+    /* this + 8   */ const DataID mData;
+    /* this + 10  */ std::byte padding10[6];
+    /* this + 16  */ BlockLegacy* mLegacyBlock;
+    /* this + 24  */ std::byte padding24[184];
 };
+
+static_assert(sizeof(Block) == 208);
