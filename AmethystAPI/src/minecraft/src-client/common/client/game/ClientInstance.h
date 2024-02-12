@@ -38,6 +38,7 @@ public:
     int64_t onStartJoinGame(ClientInstance*, int64_t, int64_t, int64_t);
 
     // vfuncs
+    BlockSource* getRegion();
     LocalPlayer* getLocalPlayer();
 };
 #pragma pack(pop)
