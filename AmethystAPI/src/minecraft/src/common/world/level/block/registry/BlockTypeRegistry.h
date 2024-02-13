@@ -13,6 +13,21 @@ typedef entt::dense_map<HashType64, HashedString> BlockNameHashToHashedStringMap
 
 class BlockTypeRegistry {
 public:
+    struct BlockComplexAliasBlockState {
+        HashedString stateName;
+        int value;
+    };
+
+    struct LookupByNameImplReturnType {
+        WeakPtr<BlockLegacy> blockLegacy;
+        std::vector<BlockComplexAliasBlockState> states;
+    };
+
+    enum LookupByNameImplResolve : int {
+        // idk I made this up, but getDefaultBlockState passes 0
+        DefaultBlockState = 0
+    };
+
     // Found in BlockTypeRegistry::registerBlock
     // 1.20.51.1 - 0x573E700
     static std::set<std::string>* mKnownNamespaces() {
@@ -35,8 +50,29 @@ public:
     }
 
     // 1.20.51.1 - 48 89 5C 24 ? 57 48 83 EC ? 33 FF 45 33 C9
-    static Block* getDefaultBlockState(const HashedString* name) {
-        using function = Block*(*)(const HashedString*);
+    static const Block* getDefaultBlockState(const HashedString& name) {
+        /*auto* lookupResult = new LookupByNameImplReturnType();
+        BlockTypeRegistry::_lookupByNameImpl(lookupResult, name, 0, DefaultBlockState);
+
+        const Block* ret = nullptr;
+
+        if (lookupResult != nullptr) {
+            // Client:
+            ret = reinterpret_cast<const Block*>(lookupResult->blockLegacy + 792);
+
+            // Server:
+            //ret = &lookupResult->blockLegacy->getRenderBlock();
+        }
+
+        else {
+            Log::Info("Lookup for {} failed in getDefaultBlockState", name.getString());
+            throw std::exception();
+        }
+
+        delete lookupResult;
+        return ret;*/
+
+        using function = Block*(*)(const HashedString&);
         static auto func = reinterpret_cast<function>(SigScan("48 89 5C 24 ? 57 48 83 EC ? 33 FF 45 33 C9"));
         return func(name);
     }
@@ -81,5 +117,13 @@ public:
         hashedNameMap->emplace(std::make_pair(hashedBlockName.getHash(), hashedBlockName));
 
         return block;
+    }
+
+    // 1.20.51.1 - 40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 45 8B E0 44 89 44 24
+    // pass 0 to both data and resolve
+    static LookupByNameImplReturnType* _lookupByNameImpl(LookupByNameImplReturnType* result, const HashedString& name, int data, LookupByNameImplResolve resolve) {
+        using function = LookupByNameImplReturnType*(*)(LookupByNameImplReturnType*, const HashedString&, int, LookupByNameImplResolve);
+        static auto func = reinterpret_cast<function>(SigScan(("40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 45 8B E0 44 89 44 24")));
+        return func(result, name, data, resolve);
     }
 };
