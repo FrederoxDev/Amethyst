@@ -1,6 +1,6 @@
 #pragma once
 #include "amethyst/Memory.h"
-#include <stdint.h>
+#include <cstdint>
 
 class ItemStack;
 class BaseActorRenderContext;

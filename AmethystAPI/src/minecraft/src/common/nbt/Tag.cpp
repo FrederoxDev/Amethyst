@@ -2,12 +2,12 @@
 
 Tag::Tag()
 {
-    vtable = 0x0;
+    // We should be calling the in game ctor for the tag...
+    vtable = nullptr;
 }
 
 Tag::~Tag()
 {
-    // If vtable was nullptr thats because the tag was constructed here, when we should be calling the in game ctor for the tag
     using function = void(__thiscall*)(Tag*);
     reinterpret_cast<function>(this->vtable[0])(this);
 }

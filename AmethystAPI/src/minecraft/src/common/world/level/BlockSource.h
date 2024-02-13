@@ -1,9 +1,8 @@
 #pragma once
-#include <stdint.h>
+#include <cstdint>
 
 class Block;
 class BlockPos;
-class ChunkSource;
 
 class BlockSource {
 private:

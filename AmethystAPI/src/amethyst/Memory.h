@@ -3,10 +3,11 @@
 #include <chrono>
 #include <cstdint>
 #include <psapi.h>
-#include <stdint.h>
+#include <cstdint>
 #include <string>
 #include <vector>
-#include <windows.h>
+#include <Windows.h>
+#include <string_view>
 
 /*
 Returns the position where Minecraft has been loaded into memory

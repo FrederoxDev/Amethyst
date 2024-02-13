@@ -55,6 +55,7 @@ public:
 private:
     HashType64 mStrHash = 0;
     std::string mStr;
+    const HashedString* mLastMatch;
 
     template <typename T>
     struct StringHasher {

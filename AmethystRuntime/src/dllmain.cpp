@@ -1,10 +1,10 @@
 #include "dllmain.h"
 
+HANDLE gMcThreadHandle;
+DWORD gMcThreadId;
+
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved)
 {
-    if (ul_reason_for_call == DLL_PROCESS_ATTACH) {
-        CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)Main, NULL, 0, NULL);
-    }
     return TRUE;
 }
 
@@ -43,8 +43,7 @@ DWORD WINAPI Main()
     }
     catch (std::exception& exception) {
         Log::Error("[AmethystRuntime] Uncaught Exception: {}", exception.what());
-        ShutdownWait();
-        return 1;
+        throw exception;
     }
 
     ShutdownWait();
@@ -75,4 +74,36 @@ void ShutdownWait()
     }
 
     Shutdown();
+}
+
+void __cdecl Init(DWORD dMcThreadID, HANDLE hMcThreadHandle)
+{
+    // Define a struct to hold the data
+    struct ThreadData {
+        DWORD dwThreadId;
+        HANDLE hThreadHandle;
+    };
+
+    // Create an instance of the ThreadData struct
+    ThreadData* pData = new ThreadData;
+    pData->dwThreadId = dMcThreadID;
+    pData->hThreadHandle = hMcThreadHandle;
+
+    auto mainCallLambda = [](LPVOID lpParameter) -> DWORD {
+        // Cast the parameter back to ThreadData
+        auto pData = static_cast<ThreadData*>(lpParameter);
+        Log::Info("[AmethystRuntime] McThreadID: {}, McThreadHandle: {}", pData->dwThreadId, pData->hThreadHandle);
+        
+        gMcThreadHandle = pData->hThreadHandle;
+        gMcThreadId = pData->dwThreadId;
+
+        DWORD result = Main();
+
+        // Return the result
+        delete pData;
+        return result;
+    };
+
+    // Create the thread and pass the lambda function and the ThreadData struct
+    CreateThread(nullptr, 0, mainCallLambda, pData, 0, nullptr);
 }

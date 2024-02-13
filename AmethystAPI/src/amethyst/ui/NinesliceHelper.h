@@ -17,7 +17,7 @@ namespace Amethyst {
         void Draw(RectangleArea& rect, const mce::TexturePtr* texture, MinecraftUIRenderContext* ctx);
 
     private: 
-        TextureUV Slice(int x, int y, int xSize, int ySize);
+        TextureUV Slice(int x, int y, int xSize, int ySize) const;
         ImageInfo Scale(TextureUV* slice, float x, float y, float xSize, float ySize);
 
     private:

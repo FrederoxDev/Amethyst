@@ -13,8 +13,8 @@ public:
         this->z = z;
     }
 
-    BlockPos below()
+    BlockPos below() const
     {
-        return BlockPos(this->x, this->y - 1, this->z);
+        return {this->x, this->y - 1, this->z};
     }
 };

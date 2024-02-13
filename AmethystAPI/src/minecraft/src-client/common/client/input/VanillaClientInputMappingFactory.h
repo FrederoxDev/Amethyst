@@ -73,5 +73,6 @@ public:
 
 //hooks:
     // 40 55 53 56 57 41 56 48 8B EC 48 83 EC ? 45 0F B6 F1
-    typedef void(__thiscall* __addFullKeyboardGamePlayControls)(VanillaClientInputMappingFactory*, KeyboardInputMapping*, MouseInputMapping*);
+    //typedef void(__thiscall* __addFullKeyboardGamePlayControls)(VanillaClientInputMappingFactory*, KeyboardInputMapping*, MouseInputMapping*);
+    void _addFullKeyboardGamePlayControls(KeyboardInputMapping*, MouseInputMapping*);
 };

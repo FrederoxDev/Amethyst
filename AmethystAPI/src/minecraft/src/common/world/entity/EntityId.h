@@ -2,7 +2,7 @@
 #include "entt/entt.hpp"
 #include "minecraft/src/common/world/entity/EntityIdTraits.h"
 #include <concepts>
-#include <stdint.h>
+#include <cstdint>
 
 template <>
 class entt::entt_traits<EntityId> : public entt::basic_entt_traits<EntityIdTraits> {
