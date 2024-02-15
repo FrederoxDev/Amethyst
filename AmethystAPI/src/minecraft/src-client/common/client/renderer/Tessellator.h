@@ -38,6 +38,19 @@ namespace mce {
     static_assert(sizeof(Mesh) == 536);
 }
 
+//is_virtual = False
+//hide_vtable = False
+//struct_size = 562
+//
+//# (Type, Name, Size (in bytes), Offset (in bytes))
+//struct = [
+//("mce::MeshData", "mMeshData", 0xf0, 8),
+//("bool", "mNoColor", 1, 484),
+//("bool", "mTessellating", 1, 532),
+//("bool", "mBuildFaceData", 1, 561),
+//("std::vector<TessellatorQuadInfo>", "mQuadInfoList", 24, 376)
+//]
+
 class Tessellator {
 public:
     /* this + 0   */ std::byte padding0[8];

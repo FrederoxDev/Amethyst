@@ -4,6 +4,7 @@
 #include "minecraft/src-client/common/client/player/LocalPlayer.h"
 #include "minecraft/src/common/world/level/BlockSource.h"
 #include <cstdint>
+#include "minecraft/src-deps/renderer/Camera.h"
 
 class Minecraft;
 class ClientInputHandler;
@@ -11,26 +12,19 @@ class ItemRenderer;
 
 #pragma pack(push, 1)
 class ClientInstance {
-private:
-    uintptr_t** vtable;
-    std::byte padding0[192];
-
 public:
-    MinecraftGame* minecraftGame; // this + 200
-    Minecraft* minecraft;         // this + 208
-
-private:
-    std::byte padding1[56];
-
-public:
-    ClientInputHandler* inputHandler; // this + 272
-
-private:
-    std::byte padding2[1088];
-
-public:
-    ItemRenderer* itemRenderer; // this + 1368
-    GuiData* guiData; // this + 1376
+    /* this + 0    */ uintptr_t** vtable;
+    /* this + 8    */ std::byte padding8[192];
+    /* this + 200  */ MinecraftGame* minecraftGame;
+    /* this + 208  */ Minecraft* minecraft;
+    /* this + 216  */ std::byte padding216[56];
+    /* this + 272  */ ClientInputHandler* inputHandler;
+    /* this + 280  */ std::byte padding280[344];
+    /* this + 624  */ mce::Camera camera;
+    /* this + 1136 */ std::byte padding1136[232];
+    /* this + 1368 */ ItemRenderer* itemRenderer;
+    /* this + 1376 */ GuiData* guiData;
+    /* this + 1384 */ std::byte padding1384[1848];
 
 public:
     // 1.20.51.1 - index 11
