@@ -6,6 +6,15 @@
 #include "minecraft/src/common/world/level/block/BlockLegacy.h"
 #include "minecraft/src-deps/core/headerIncludes/gsl_includes.h"
 
+//is_virtual = True
+//hide_vtable = False
+//struct_size = 208
+//
+//# (Type, Name, Size (in bytes), Offset (in bytes))
+//struct = [
+//("gsl::not_null<BlockLegacy*>", "mLegacyBlock", 8, 0x30),
+//]
+
 using DataID = unsigned short;
 
 class Block {

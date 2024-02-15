@@ -45,3 +45,6 @@ add_custom_target(ClangFormat
     -i
     ${CPP_SOURCES} ${H_FILES}
 )
+
+# Write a mod.json file to provide meta data about the mod
+configure_file(mod.json.in "${AmethystFolder}/mods/${PROJECT_NAME}@${MOD_VERSION}/mod.json" @ONLY)
