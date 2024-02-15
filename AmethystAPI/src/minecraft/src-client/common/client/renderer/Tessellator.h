@@ -52,7 +52,7 @@ public:
     /* this + 561 */ bool mBuildFaceData;
 
 public:
-    void begin(const mce::PrimitiveMode mode, const int maxVertices);
+    void begin(const mce::PrimitiveMode mode, const int maxVertices, const bool unknown = false);
     void vertex(float x, float y, float z);
     mce::Mesh* end(mce::Mesh* ret, uint64_t a3, std::string_view debugName, int a5);
 };

@@ -1,14 +1,14 @@
 #include "minecraft/src-client/common/client/renderer/Tessellator.h"
 
-void Tessellator::begin(const mce::PrimitiveMode mode, const int maxVertices) {
-    using function = void(__thiscall*)(Tessellator*, const mce::PrimitiveMode, const int);
+void Tessellator::begin(const mce::PrimitiveMode mode, const int maxVertices, const bool unknown) {
+    using function = void(__thiscall*)(Tessellator*, const mce::PrimitiveMode, const int, const bool);
 
     if (this->mTessellating) {
         throw std::exception("Already tessellating!");
     }
 
     static auto func = reinterpret_cast<function>(SigScan("48 89 5C 24 ? 56 48 83 EC ? 80 B9"));
-    func(this, mode, maxVertices);
+    func(this, mode, maxVertices, unknown);
 }
 
 void Tessellator::vertex(float x, float y, float z) {
