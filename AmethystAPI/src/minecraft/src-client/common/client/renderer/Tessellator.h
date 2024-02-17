@@ -67,8 +67,18 @@ public:
         /* this + 561 */ bool mBuildFaceData;
 
 public:
-    void begin(const mce::PrimitiveMode mode, const int maxVertices);
+    void begin(mce::PrimitiveMode mode, int maxVertices);
+
     void vertex(float x, float y, float z);
     void vertex(const Vec3&);
+
+    void setPostTransformOffset(float xo, float yo, float zo);
+    void setPosTransformOffset(Vec3 v);
+    Vec3* getPostTransformOffset();
+    void addPostTransformOffset(float x, float y, float z);
+    void addPostTransformOffset(Vec3 v);
+
+    void resetPostTransformScale();
+
     mce::Mesh* end(mce::Mesh* ret, uint64_t a3, std::string_view debugName, int a5);
 };

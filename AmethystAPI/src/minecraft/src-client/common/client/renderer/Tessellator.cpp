@@ -1,7 +1,7 @@
 #include "minecraft/src-client/common/client/renderer/Tessellator.h"
 
-void Tessellator::begin(const mce::PrimitiveMode mode, const int maxVertices) {
-    using function = void(__thiscall*)(Tessellator*, const mce::PrimitiveMode, const int);
+void Tessellator::begin(mce::PrimitiveMode mode, int maxVertices) {
+    using function = void(__thiscall*)(Tessellator*, mce::PrimitiveMode, int);
 
     if (this->mTessellating) {
         throw std::exception("Already tessellating!");
@@ -25,4 +25,32 @@ mce::Mesh* Tessellator::end(mce::Mesh* ret, uint64_t a3, std::string_view debugN
     using function = mce::Mesh*(__thiscall*)(Tessellator*, mce::Mesh*, uint64_t, std::string_view, int);
     static auto func = reinterpret_cast<function>(SigScan("48 8B C4 48 89 58 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D A8 ? ? ? ? 48 81 EC ? ? ? ? 0F 29 70 ? 0F 29 78 ? 44 0F 29 40 ? 44 0F 29 48 ? 44 0F 29 90 ? ? ? ? 44 0F 29 98 ? ? ? ? 44 0F 29 A0 ? ? ? ? 44 0F 29 A8 ? ? ? ? 44 0F 29 B0 ? ? ? ? 44 0F 29 B8 ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4D 8B F9"));
     return func(this, ret, a3, debugName, a5);
+}
+
+void Tessellator::setPostTransformOffset(float xo, float yo, float zo) {
+    this->mPostTransformOffset.x = xo;
+    this->mPostTransformOffset.y = yo;
+    this->mPostTransformOffset.z = zo;
+}
+
+void Tessellator::setPosTransformOffset(Vec3 v) {
+    this->mPostTransformOffset = v;
+}
+
+Vec3 *Tessellator::getPostTransformOffset() {
+    return &this->mPostTransformOffset;
+}
+
+void Tessellator::addPostTransformOffset(float x, float y, float z) {
+    this->mPostTransformOffset.x += x;
+    this->mPostTransformOffset.y += y;
+    this->mPostTransformOffset.z += z;
+}
+
+void Tessellator::addPostTransformOffset(Vec3 v) {
+    this->mPostTransformOffset = this->mPostTransformOffset + v;
+}
+
+void Tessellator::resetPostTransformScale() {
+    this->mPostTransformScale = Vec3(1.0f, 1.0f, 1.0f);
 }
