@@ -9,6 +9,22 @@
 class Minecraft;
 class ClientInputHandler;
 class ItemRenderer;
+class BlockTessellator;
+
+//is_virtual = True
+//hide_vtable = False
+//struct_size = 3232
+//
+//# (Type, Name, Size (in bytes), Offset (in bytes))
+//struct = [
+//("MinecraftGame*", "minecraftGame", 8, 200),
+//("Minecraft*", "minecraft", 8, 208),
+//("ClientInputHandler*", "inputHandler", 8, 272),
+//("ItemRenderer*", "itemRenderer", 8, 1368),
+//("GuiData*", "guiData", 8, 1376),
+//("mce::Camera", "camera", 512, 624),
+//("BlockTessellator*", "mBlockTessellator", 8, 1320)
+//]
 
 #pragma pack(push, 1)
 class ClientInstance {
@@ -21,7 +37,9 @@ public:
     /* this + 272  */ ClientInputHandler* inputHandler;
     /* this + 280  */ std::byte padding280[344];
     /* this + 624  */ mce::Camera camera;
-    /* this + 1136 */ std::byte padding1136[232];
+    /* this + 625  */ std::byte padding625[695];
+    /* this + 1320 */ BlockTessellator* mBlockTessellator;
+    /* this + 1328 */ std::byte padding1328[40];
     /* this + 1368 */ ItemRenderer* itemRenderer;
     /* this + 1376 */ GuiData* guiData;
     /* this + 1384 */ std::byte padding1384[1848];
@@ -39,3 +57,5 @@ public:
     LocalPlayer* getLocalPlayer();
 };
 #pragma pack(pop)
+
+static_assert(sizeof(ClientInstance) == 3232);

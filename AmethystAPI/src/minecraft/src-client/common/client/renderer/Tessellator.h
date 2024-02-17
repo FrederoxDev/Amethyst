@@ -3,6 +3,9 @@
 #include "minecraft/src/common/world/phys/Vec3.h"
 #include "amethyst/Memory.h"
 #include <cstdint>
+#include "glm/glm.hpp"
+#include "minecraft/src-deps/minecraftrenderer/renderer/MeshData.h"
+#include "minecraft/src-deps/minecraftrenderer/renderer/Mesh.h"
 
 struct TessellatorQuadInfo {
 public:
@@ -22,20 +25,6 @@ namespace mce {
         LineList = 4,
         LineStrip = 5,
     };
-
-    class MeshData {
-        std::byte padding[0xf0];
-    };
-
-    class Mesh {
-        std::byte padding0[536];
-    };
-
-    class MaterialPtr {
-        std::byte padding0[1000]; // temp
-    };
-
-    static_assert(sizeof(Mesh) == 536);
 }
 
 //is_virtual = False
@@ -48,24 +37,38 @@ namespace mce {
 //("bool", "mNoColor", 1, 484),
 //("bool", "mTessellating", 1, 532),
 //("bool", "mBuildFaceData", 1, 561),
-//("std::vector<TessellatorQuadInfo>", "mQuadInfoList", 24, 376)
+//("std::vector<TessellatorQuadInfo>", "mQuadInfoList", 24, 376),
+//("Vec3", "mPostTransformOffset", 12, 348),
+//("unsigned int", "mCount", 4, 552),
+//("bool", "mIsFormatFixed", 1, 0),
+//("bool", "mApplyTransform", 1, 416),
+//("Vec3", "mPostTransformScale", 12, 360)
 //]
 
 class Tessellator {
 public:
-    /* this + 0   */ std::byte padding0[8];
-    /* this + 8   */ mce::MeshData mMeshData;
-    /* this + 248 */ std::byte padding248[128];
-    /* this + 376 */ std::vector<TessellatorQuadInfo> mQuadInfoList;
-    /* this + 400 */ std::byte padding400[84];
-    /* this + 484 */ bool mNoColor;
-    /* this + 485 */ std::byte padding485[47];
-    /* this + 532 */ bool mTessellating;
-    /* this + 533 */ std::byte padding533[28];
-    /* this + 561 */ bool mBuildFaceData;
+        /* this + 0   */ bool mIsFormatFixed;
+        /* this + 1   */ std::byte padding1[7];
+        /* this + 8   */ mce::MeshData mMeshData;
+        /* this + 248 */ std::byte padding248[100];
+        /* this + 348 */ Vec3 mPostTransformOffset;
+        /* this + 360 */ Vec3 mPostTransformScale;
+        /* this + 372 */ std::byte padding372[4];
+        /* this + 376 */ std::vector<TessellatorQuadInfo> mQuadInfoList;
+        /* this + 400 */ std::byte padding400[16];
+        /* this + 416 */ bool mApplyTransform;
+        /* this + 417 */ std::byte padding417[67];
+        /* this + 484 */ bool mNoColor;
+        /* this + 485 */ std::byte padding485[47];
+        /* this + 532 */ bool mTessellating;
+        /* this + 533 */ std::byte padding533[19];
+        /* this + 552 */ unsigned int mCount;
+        /* this + 556 */ std::byte padding556[5];
+        /* this + 561 */ bool mBuildFaceData;
 
 public:
     void begin(const mce::PrimitiveMode mode, const int maxVertices);
     void vertex(float x, float y, float z);
+    void vertex(const Vec3&);
     mce::Mesh* end(mce::Mesh* ret, uint64_t a3, std::string_view debugName, int a5);
 };

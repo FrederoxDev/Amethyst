@@ -24,10 +24,6 @@ add_library(${PROJECT_NAME} STATIC
     ${HEADERS}
     src/minecraft/src/common/world/item/Item.asm
     src/minecraft/src/common/world/level/block/BlockLegacy.asm
-        src/minecraft/src-deps/renderer/Camera.h
-        src/minecraft/src-deps/renderer/Matrix.h
-        src/minecraft/src-deps/renderer/MatrixStack.h
-        src/minecraft/src-client/common/client/renderer/game/LevelRenderer.h
 )
 
 # Amethyst Dependencies
