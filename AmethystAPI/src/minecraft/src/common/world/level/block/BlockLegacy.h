@@ -224,7 +224,7 @@ public:
     virtual const Block* tryGetInfested(const Block&) const;
     virtual const Block* tryGetUninfested(const Block&) const;
     virtual void _addHardCodedBlockComponents();
-protected:
+//protected:
     virtual void onRemove(BlockSource& region, const BlockPos& pos) const;
     virtual void onExploded(BlockSource& region, const BlockPos& pos, Actor* entitySource) const;
     virtual void onStandOn(EntityContext& entity, const BlockPos& pos) const;
@@ -249,7 +249,7 @@ protected:
     virtual ItemInstance getResourceItem(Randomize&, const Block&, int) const;
     virtual int getResourceCount(Randomize&, const Block&, int) const;
     virtual ItemInstance getSilkTouchItemInstance(const Block&) const;
-private:
+//private:
     virtual void entityInside(BlockSource&, const BlockPos&, Actor&) const;
 
 public:

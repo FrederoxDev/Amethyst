@@ -719,127 +719,127 @@ global ?_addHardCodedBlockComponents@BlockLegacy@@UEAAXXZ
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 1136]
 
-global ?onRemove@BlockLegacy@@MEBAXAEAVBlockSource@@AEBVBlockPos@@@Z
-?onRemove@BlockLegacy@@MEBAXAEAVBlockSource@@AEBVBlockPos@@@Z:
+global ?onRemove@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@@Z
+?onRemove@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 1144]
 
-global ?onExploded@BlockLegacy@@MEBAXAEAVBlockSource@@AEBVBlockPos@@PEAVActor@@@Z
-?onExploded@BlockLegacy@@MEBAXAEAVBlockSource@@AEBVBlockPos@@PEAVActor@@@Z:
+global ?onExploded@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@PEAVActor@@@Z
+?onExploded@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@PEAVActor@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 1152]
 
-global ?onStandOn@BlockLegacy@@MEBAXAEAVEntityContext@@AEBVBlockPos@@@Z
-?onStandOn@BlockLegacy@@MEBAXAEAVEntityContext@@AEBVBlockPos@@@Z:
+global ?onStandOn@BlockLegacy@@UEBAXAEAVEntityContext@@AEBVBlockPos@@@Z
+?onStandOn@BlockLegacy@@UEBAXAEAVEntityContext@@AEBVBlockPos@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 1160]
 
-global ?onPlace@BlockLegacy@@MEBAXAEAVBlockSource@@AEBVBlockPos@@@Z
-?onPlace@BlockLegacy@@MEBAXAEAVBlockSource@@AEBVBlockPos@@@Z:
+global ?onPlace@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@@Z
+?onPlace@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 1168]
 
-global ?onFallOn@BlockLegacy@@MEBAXAEAVBlockSource@@AEBVBlockPos@@AEAVActor@@M@Z
-?onFallOn@BlockLegacy@@MEBAXAEAVBlockSource@@AEBVBlockPos@@AEAVActor@@M@Z:
+global ?onFallOn@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@AEAVActor@@M@Z
+?onFallOn@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@AEAVActor@@M@Z:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 1176]
 
-global ?shouldTickOnSetBlock@BlockLegacy@@MEBA_NXZ
-?shouldTickOnSetBlock@BlockLegacy@@MEBA_NXZ:
+global ?shouldTickOnSetBlock@BlockLegacy@@UEBA_NXZ
+?shouldTickOnSetBlock@BlockLegacy@@UEBA_NXZ:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 1184]
 
-global ?tick@BlockLegacy@@MEBAXAEAVBlockSource@@AEBVBlockPos@@AEAVRandom@@@Z
-?tick@BlockLegacy@@MEBAXAEAVBlockSource@@AEBVBlockPos@@AEAVRandom@@@Z:
+global ?tick@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@AEAVRandom@@@Z
+?tick@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@AEAVRandom@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 1192]
 
-global ?randomTick@BlockLegacy@@MEBAXAEAVBlockSource@@AEBVBlockPos@@AEAVRandom@@@Z
-?randomTick@BlockLegacy@@MEBAXAEAVBlockSource@@AEBVBlockPos@@AEAVRandom@@@Z:
+global ?randomTick@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@AEAVRandom@@@Z
+?randomTick@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@AEAVRandom@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 1200]
 
-global ?isInteractiveBlock@BlockLegacy@@MEBA_NXZ
-?isInteractiveBlock@BlockLegacy@@MEBA_NXZ:
+global ?isInteractiveBlock@BlockLegacy@@UEBA_NXZ
+?isInteractiveBlock@BlockLegacy@@UEBA_NXZ:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 1208]
 
-global ?use@BlockLegacy@@MEBA_NAEAVPlayer@@AEBVBlockPos@@E@Z
-?use@BlockLegacy@@MEBA_NAEAVPlayer@@AEBVBlockPos@@E@Z:
+global ?use@BlockLegacy@@UEBA_NAEAVPlayer@@AEBVBlockPos@@E@Z
+?use@BlockLegacy@@UEBA_NAEAVPlayer@@AEBVBlockPos@@E@Z:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 1216]
 
-global ?use@BlockLegacy@@MEBA_NAEAVPlayer@@AEBVBlockPos@@EV?$optional@VVec3@@@std@@@Z
-?use@BlockLegacy@@MEBA_NAEAVPlayer@@AEBVBlockPos@@EV?$optional@VVec3@@@std@@@Z:
+global ?use@BlockLegacy@@UEBA_NAEAVPlayer@@AEBVBlockPos@@EV?$optional@VVec3@@@std@@@Z
+?use@BlockLegacy@@UEBA_NAEAVPlayer@@AEBVBlockPos@@EV?$optional@VVec3@@@std@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 1224]
 
-global ?allowStateMismatchOnPlacement@BlockLegacy@@MEBA_NAEBVBlock@@0@Z
-?allowStateMismatchOnPlacement@BlockLegacy@@MEBA_NAEBVBlock@@0@Z:
+global ?allowStateMismatchOnPlacement@BlockLegacy@@UEBA_NAEBVBlock@@0@Z
+?allowStateMismatchOnPlacement@BlockLegacy@@UEBA_NAEBVBlock@@0@Z:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 1232]
 
-global ?canSurvive@BlockLegacy@@MEBA_NAEAVBlockSource@@AEBVBlockPos@@@Z
-?canSurvive@BlockLegacy@@MEBA_NAEAVBlockSource@@AEBVBlockPos@@@Z:
+global ?canSurvive@BlockLegacy@@UEBA_NAEAVBlockSource@@AEBVBlockPos@@@Z
+?canSurvive@BlockLegacy@@UEBA_NAEAVBlockSource@@AEBVBlockPos@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 1240]
 
-global ?getRenderLayer@BlockLegacy@@MEBA?AW4BlockRenderLayer@@AEBVBlock@@AEAVBlockSource@@AEBVBlockPos@@@Z
-?getRenderLayer@BlockLegacy@@MEBA?AW4BlockRenderLayer@@AEBVBlock@@AEAVBlockSource@@AEBVBlockPos@@@Z:
+global ?getRenderLayer@BlockLegacy@@UEBA?AW4BlockRenderLayer@@AEBVBlock@@AEAVBlockSource@@AEBVBlockPos@@@Z
+?getRenderLayer@BlockLegacy@@UEBA?AW4BlockRenderLayer@@AEBVBlock@@AEAVBlockSource@@AEBVBlockPos@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 1248]
 
-global ?getRenderLayer@BlockLegacy@@MEBA?AW4BlockRenderLayer@@XZ
-?getRenderLayer@BlockLegacy@@MEBA?AW4BlockRenderLayer@@XZ:
+global ?getRenderLayer@BlockLegacy@@UEBA?AW4BlockRenderLayer@@XZ
+?getRenderLayer@BlockLegacy@@UEBA?AW4BlockRenderLayer@@XZ:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 1256]
 
-global ?getExtraRenderLayers@BlockLegacy@@MEBAHXZ
-?getExtraRenderLayers@BlockLegacy@@MEBAHXZ:
+global ?getExtraRenderLayers@BlockLegacy@@UEBAHXZ
+?getExtraRenderLayers@BlockLegacy@@UEBAHXZ:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 1264]
 
-global ?getLight@BlockLegacy@@MEBA?AUBrightness@@AEBVBlock@@@Z
-?getLight@BlockLegacy@@MEBA?AUBrightness@@AEBVBlock@@@Z:
+global ?getLight@BlockLegacy@@UEBA?AUBrightness@@AEBVBlock@@@Z
+?getLight@BlockLegacy@@UEBA?AUBrightness@@AEBVBlock@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 1272]
 
-global ?getLightEmission@BlockLegacy@@MEBA?AUBrightness@@AEBVBlock@@@Z
-?getLightEmission@BlockLegacy@@MEBA?AUBrightness@@AEBVBlock@@@Z:
+global ?getLightEmission@BlockLegacy@@UEBA?AUBrightness@@AEBVBlock@@@Z
+?getLightEmission@BlockLegacy@@UEBA?AUBrightness@@AEBVBlock@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 1280]
 
-global ?getEmissiveBrightness@BlockLegacy@@MEBA?AUBrightness@@AEBVBlock@@@Z
-?getEmissiveBrightness@BlockLegacy@@MEBA?AUBrightness@@AEBVBlock@@@Z:
+global ?getEmissiveBrightness@BlockLegacy@@UEBA?AUBrightness@@AEBVBlock@@@Z
+?getEmissiveBrightness@BlockLegacy@@UEBA?AUBrightness@@AEBVBlock@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 1288]
 
-global ?getMapColor@BlockLegacy@@MEBA?AVColor@mce@@AEAVBlockSource@@AEBVBlockPos@@AEBVBlock@@@Z
-?getMapColor@BlockLegacy@@MEBA?AVColor@mce@@AEAVBlockSource@@AEBVBlockPos@@AEBVBlock@@@Z:
+global ?getMapColor@BlockLegacy@@UEBA?AVColor@mce@@AEAVBlockSource@@AEBVBlockPos@@AEBVBlock@@@Z
+?getMapColor@BlockLegacy@@UEBA?AVColor@mce@@AEAVBlockSource@@AEBVBlockPos@@AEBVBlock@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 1296]
 
-global ?playerDestroy@BlockLegacy@@MEBAXAEAVPlayer@@AEBVBlockPos@@AEBVBlock@@@Z
-?playerDestroy@BlockLegacy@@MEBAXAEAVPlayer@@AEBVBlockPos@@AEBVBlock@@@Z:
+global ?playerDestroy@BlockLegacy@@UEBAXAEAVPlayer@@AEBVBlockPos@@AEBVBlock@@@Z
+?playerDestroy@BlockLegacy@@UEBAXAEAVPlayer@@AEBVBlockPos@@AEBVBlock@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 1304]
 
-global ?getResourceItem@BlockLegacy@@MEBA?AVItemInstance@@AEAVRandomize@@AEBVBlock@@H@Z
-?getResourceItem@BlockLegacy@@MEBA?AVItemInstance@@AEAVRandomize@@AEBVBlock@@H@Z:
+global ?getResourceItem@BlockLegacy@@UEBA?AVItemInstance@@AEAVRandomize@@AEBVBlock@@H@Z
+?getResourceItem@BlockLegacy@@UEBA?AVItemInstance@@AEAVRandomize@@AEBVBlock@@H@Z:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 1312]
 
-global ?getResourceCount@BlockLegacy@@MEBAHAEAVRandomize@@AEBVBlock@@H@Z
-?getResourceCount@BlockLegacy@@MEBAHAEAVRandomize@@AEBVBlock@@H@Z:
+global ?getResourceCount@BlockLegacy@@UEBAHAEAVRandomize@@AEBVBlock@@H@Z
+?getResourceCount@BlockLegacy@@UEBAHAEAVRandomize@@AEBVBlock@@H@Z:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 1320]
 
-global ?getSilkTouchItemInstance@BlockLegacy@@MEBA?AVItemInstance@@AEBVBlock@@@Z
-?getSilkTouchItemInstance@BlockLegacy@@MEBA?AVItemInstance@@AEBVBlock@@@Z:
+global ?getSilkTouchItemInstance@BlockLegacy@@UEBA?AVItemInstance@@AEBVBlock@@@Z
+?getSilkTouchItemInstance@BlockLegacy@@UEBA?AVItemInstance@@AEBVBlock@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 1328]
 
-global ?entityInside@BlockLegacy@@EEBAXAEAVBlockSource@@AEBVBlockPos@@AEAVActor@@@Z
-?entityInside@BlockLegacy@@EEBAXAEAVBlockSource@@AEBVBlockPos@@AEAVActor@@@Z:
+global ?entityInside@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@AEAVActor@@@Z
+?entityInside@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@AEAVActor@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 1336]
