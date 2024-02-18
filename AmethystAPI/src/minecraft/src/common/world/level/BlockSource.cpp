@@ -1,7 +1,7 @@
 #include "minecraft/src/common/world/level/BlockSource.h"
 
-const Block* BlockSource::getBlock(const BlockPos& pos)
-{
-    typedef const Block*(__thiscall * _getBlock)(const BlockPos&);
-    return reinterpret_cast<_getBlock>(this->vftable[3])(pos);
-}
+//const Block* BlockSource::getBlock(int x, int y, int z) const
+//{
+//    using function = const Block*(__thiscall*)(const BlockSource*, int, int, int);
+//    return reinterpret_cast<function>(this->vtable[3])(this, x, y, z);
+//}
