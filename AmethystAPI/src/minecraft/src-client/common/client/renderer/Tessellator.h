@@ -42,35 +42,41 @@ namespace mce {
 //("unsigned int", "mCount", 4, 552),
 //("bool", "mIsFormatFixed", 1, 0),
 //("bool", "mApplyTransform", 1, 416),
-//("Vec3", "mPostTransformScale", 12, 360)
+//("Vec3", "mPostTransformScale", 12, 360),
+//("bool", "mIsFormatFixed", 1, 0),
+//("std::optional<unsigned int>", "mNextColor", 8, 328)
 //]
 
 class Tessellator {
 public:
-        /* this + 0   */ bool mIsFormatFixed;
-        /* this + 1   */ std::byte padding1[7];
-        /* this + 8   */ mce::MeshData mMeshData;
-        /* this + 248 */ std::byte padding248[100];
-        /* this + 348 */ Vec3 mPostTransformOffset;
-        /* this + 360 */ Vec3 mPostTransformScale;
-        /* this + 372 */ std::byte padding372[4];
-        /* this + 376 */ std::vector<TessellatorQuadInfo> mQuadInfoList;
-        /* this + 400 */ std::byte padding400[16];
-        /* this + 416 */ bool mApplyTransform;
-        /* this + 417 */ std::byte padding417[67];
-        /* this + 484 */ bool mNoColor;
-        /* this + 485 */ std::byte padding485[47];
-        /* this + 532 */ bool mTessellating;
-        /* this + 533 */ std::byte padding533[19];
-        /* this + 552 */ unsigned int mCount;
-        /* this + 556 */ std::byte padding556[5];
-        /* this + 561 */ bool mBuildFaceData;
+    /* this + 0   */ bool mIsFormatFixed;
+    /* this + 1   */ std::byte padding1[7];
+    /* this + 8   */ mce::MeshData mMeshData;
+    /* this + 248 */ std::byte padding248[80];
+    /* this + 328 */ std::optional<unsigned int> mNextColor;
+    /* this + 336 */ std::byte padding336[12];
+    /* this + 348 */ Vec3 mPostTransformOffset;
+    /* this + 360 */ Vec3 mPostTransformScale;
+    /* this + 372 */ std::byte padding372[4];
+    /* this + 376 */ std::vector<TessellatorQuadInfo> mQuadInfoList;
+    /* this + 400 */ std::byte padding400[16];
+    /* this + 416 */ bool mApplyTransform;
+    /* this + 417 */ std::byte padding417[67];
+    /* this + 484 */ bool mNoColor;
+    /* this + 485 */ std::byte padding485[47];
+    /* this + 532 */ bool mTessellating;
+    /* this + 533 */ std::byte padding533[19];
+    /* this + 552 */ unsigned int mCount;
+    /* this + 556 */ std::byte padding556[5];
+    /* this + 561 */ bool mBuildFaceData;
 
 public:
     void begin(mce::PrimitiveMode mode, int maxVertices);
 
     void vertex(float x, float y, float z);
     void vertex(const Vec3&);
+
+    void color(float r, float g, float b, float a);
 
     void setPostTransformOffset(float xo, float yo, float zo);
     void setPosTransformOffset(Vec3 v);

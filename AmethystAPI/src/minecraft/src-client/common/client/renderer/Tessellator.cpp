@@ -54,3 +54,25 @@ void Tessellator::addPostTransformOffset(Vec3 v) {
 void Tessellator::resetPostTransformScale() {
     this->mPostTransformScale = Vec3(1.0f, 1.0f, 1.0f);
 }
+
+void Tessellator::color(float r, float g, float b, float a) {
+    struct PackedColors {
+        union {
+            struct {
+                char r;
+                char g;
+                char b;
+                char a;
+            };
+            unsigned int intValue;
+        };
+    };
+
+    PackedColors result {};
+    result.r = static_cast<char>(r * 255.0f);
+    result.g = static_cast<char>(g * 255.0f);
+    result.b = static_cast<char>(b * 255.0f);
+    result.a = static_cast<char>(a * 255.0f);
+
+    mNextColor = result.intValue;
+}
