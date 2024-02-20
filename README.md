@@ -2,8 +2,6 @@
 
 Project Amethyst is an open source-project for building client-side mods for Minecraft Bedrock `1.20.51.1`, client-side mods are able to stretch past the limitations of addons and have full control over the game such as using Minecraft's input system, creating your own user interfaces, changing vanilla functionality, and more. Please consider starring ⭐ the repository, doing this takes a significant of work.
 
-![image](https://github.com/FrederoxDev/Amethyst/assets/69014593/68882aec-0d4c-4c1a-9a6c-2777fc91a859)
-
 We have a community discord server here: [discord.gg/Cxrj9UXnDB](https://discord.gg/Cxrj9UXnDB)
 
 ## Mods built with Amethyst
