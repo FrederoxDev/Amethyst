@@ -44,7 +44,8 @@ namespace mce {
 //("bool", "mApplyTransform", 1, 416),
 //("Vec3", "mPostTransformScale", 12, 360),
 //("bool", "mIsFormatFixed", 1, 0),
-//("std::optional<unsigned int>", "mNextColor", 8, 328)
+//("std::optional<unsigned int>", "mNextColor", 8, 328),
+//("bool", "mVoidBeginEnd", 1, 485)
 //]
 
 class Tessellator {
@@ -63,7 +64,8 @@ public:
     /* this + 416 */ bool mApplyTransform;
     /* this + 417 */ std::byte padding417[67];
     /* this + 484 */ bool mNoColor;
-    /* this + 485 */ std::byte padding485[47];
+    /* this + 485 */ bool mVoidBeginEnd;
+    /* this + 486 */ std::byte padding486[46];
     /* this + 532 */ bool mTessellating;
     /* this + 533 */ std::byte padding533[19];
     /* this + 552 */ unsigned int mCount;
@@ -72,6 +74,7 @@ public:
 
 public:
     void begin(mce::PrimitiveMode mode, int maxVertices);
+    void beginOverride();
 
     void vertex(float x, float y, float z);
     void vertex(const Vec3&);
@@ -86,5 +89,7 @@ public:
 
     void resetPostTransformScale();
 
-    mce::Mesh* end(mce::Mesh* ret, uint64_t a3, std::string_view debugName, int a5);
+    mce::Mesh end( uint64_t a3, std::string_view debugName, int a5);
+    void clear();
+    mce::Mesh endOverride(uint64_t a3, std::string_view debugName, int a5);
 };
