@@ -25,6 +25,7 @@ add_library(${PROJECT_NAME} STATIC
     src/minecraft/src/common/world/item/Item.asm
     src/minecraft/src/common/world/level/block/BlockLegacy.asm
     src/minecraft/src-deps/minecraftrenderer/renderer/MaterialPtr.asm
+        src/minecraft/src/common/world/level/BlockSourceListener.h
 )
 
 
