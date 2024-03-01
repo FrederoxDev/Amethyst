@@ -26,6 +26,9 @@ add_library(${PROJECT_NAME} STATIC
     src/minecraft/src/common/world/level/block/BlockLegacy.asm
     src/minecraft/src-deps/minecraftrenderer/renderer/MaterialPtr.asm
         src/minecraft/src/common/world/level/BlockSourceListener.h
+        src/amethyst/runtime/input/InputManager.h
+        src/amethyst/runtime/input/InputManager.cpp
+        src/amethyst/runtime/input/InputAction.h
 )
 
 

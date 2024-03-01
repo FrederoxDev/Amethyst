@@ -77,16 +77,6 @@ void AmethystRuntime::PromptDebugger()
 
 void AmethystRuntime::CreateOwnHooks()
 {
-    /*static bool hasRegisteredInputsBefore = false;
-
-    if (!hasRegisteredInputsBefore) {
-        for (auto& registerInputFunc : mModRegisterInputs) {
-            registerInputFunc(getInputManager());
-        }
-
-        hasRegisteredInputsBefore = true;
-    }*/
-
     CreateInputHooks();
 
     CreateModFunctionHooks();
@@ -96,7 +86,7 @@ void AmethystRuntime::RunMods()
 {
     // Invoke mods to initialize and setup hooks, etc..
     for (auto& modInitialize : mModInitialize)
-        modInitialize(getHookManager(), getEventManager(), getInputManager());
+        modInitialize(getHookManager(), getEventManager());
 
     ResumeGameThread();
 
@@ -117,15 +107,10 @@ void AmethystRuntime::RunMods()
 void AmethystRuntime::Shutdown()
 {
     // Prompt all mods to do any final code before shutdown
-    mEventManager.beforeModShutdown.Invoke();
-
     mEventManager.Shutdown();
 
     // Remove any of the runtime mods hooks
     mHookManager.Shutdown();
-
-    // Unload any input action callbacks from Mod Dlls
-    mInputManager.Shutdown();
 
     // Unload all mod Dlls
     for (auto& mod : mLoadedMods) {

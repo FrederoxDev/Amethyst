@@ -18,6 +18,8 @@
 
 namespace fs = std::filesystem;
 
+typedef void (*ModInitialize)(HookManager* hookManager, Amethyst::EventManager* eventManager);
+
 /*
  Entry:
  - Initialize console
@@ -49,11 +51,6 @@ public:
         return &AmethystRuntime::getInstance()->mHookManager;
     }
 
-    static RuntimeInputManager* getInputManager()
-    {
-        return &AmethystRuntime::getInstance()->mInputManager;
-    }
-
     static Amethyst::EventManager* getEventManager() 
     {
         return &AmethystRuntime::getInstance()->mEventManager;
@@ -77,7 +74,6 @@ private:
 private:
     Config mLauncherConfig;
     HookManager mHookManager;
-    RuntimeInputManager mInputManager;
     Amethyst::EventManager mEventManager;
     std::vector<Mod> mLoadedMods;
 

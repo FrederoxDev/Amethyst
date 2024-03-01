@@ -5,4 +5,4 @@
 #include <amethyst/events/EventManager.h>
 #include <amethyst/HookManager.h>
 
-typedef void (*ModInitialize)(HookManager* hookManager, Amethyst::EventManager* eventManager, InputManager* inputManager);
+typedef void (*ModInitialize)(HookManager* hookManager, Amethyst::EventManager* eventManager);

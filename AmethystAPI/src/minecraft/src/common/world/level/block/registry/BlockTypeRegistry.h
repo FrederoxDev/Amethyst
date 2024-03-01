@@ -51,27 +51,6 @@ public:
 
     // 1.20.51.1 - 48 89 5C 24 ? 57 48 83 EC ? 33 FF 45 33 C9
     static const Block* getDefaultBlockState(const HashedString& name) {
-        /*auto* lookupResult = new LookupByNameImplReturnType();
-        BlockTypeRegistry::_lookupByNameImpl(lookupResult, name, 0, DefaultBlockState);
-
-        const Block* ret = nullptr;
-
-        if (lookupResult != nullptr) {
-            // Client:
-            ret = reinterpret_cast<const Block*>(lookupResult->blockLegacy + 792);
-
-            // Server:
-            //ret = &lookupResult->blockLegacy->getRenderBlock();
-        }
-
-        else {
-            Log::Info("Lookup for {} failed in getDefaultBlockState", name.getString());
-            throw std::exception();
-        }
-
-        delete lookupResult;
-        return ret;*/
-
         using function = Block*(*)(const HashedString&);
         static auto func = reinterpret_cast<function>(SigScan("48 89 5C 24 ? 57 48 83 EC ? 33 FF 45 33 C9"));
         return func(name);

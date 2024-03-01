@@ -1,5 +1,5 @@
 #pragma once
-#include "amethyst/events/Event.h"
+#include "Event.h"
 #include "minecraft/src-client/common/client/game/ClientInstance.h"
 #include "minecraft/src-client/common/client/gui/ScreenView.h"
 #include "minecraft/src/common/world/item/registry/ItemRegistry.h"

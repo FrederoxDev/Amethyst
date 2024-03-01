@@ -11,13 +11,13 @@ struct InputAction {
     std::function<void(FocusImpact, IClientInstance&)> mButtonUpHandler = NULL;
 };
 
-class RuntimeInputManager : public InputManager {
-public:
-    std::vector<InputAction> mInputActions;
-
-public:
-    virtual void RegisterInput(const std::string& actionName, int defaultButton, bool allowRemapping = true) override;
-    virtual void AddButtonDownHandler(const std::string& actionName, std::function<void(FocusImpact, IClientInstance&)> handler) override;
-    virtual void AddButtonUpHandler(const std::string& actionName, std::function<void(FocusImpact, IClientInstance&)> handler) override;
-    void Shutdown();
-};
+//class RuntimeInputManager : public InputManager {
+//public:
+//    std::vector<InputAction> mInputActions;
+//
+//public:
+//    virtual void RegisterInput(const std::string& actionName, int defaultButton, bool allowRemapping = true) override;
+//    virtual void AddButtonDownHandler(const std::string& actionName, std::function<void(FocusImpact, IClientInstance&)> handler) override;
+//    virtual void AddButtonUpHandler(const std::string& actionName, std::function<void(FocusImpact, IClientInstance&)> handler) override;
+//    void Shutdown();
+//};

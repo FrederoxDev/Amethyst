@@ -1,5 +1,5 @@
 #pragma once
-#include <amethyst-deps/safetyhook.hpp>
+#include "amethyst-deps/safetyhook.hpp"
 #include "amethyst/Log.h"
 #include "amethyst/Memory.h"
 #include <unordered_map>

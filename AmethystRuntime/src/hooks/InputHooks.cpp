@@ -4,9 +4,9 @@ SafetyHookInline _assignDefaultMapping;
 SafetyHookInline _addFullKeyboardGamePlayControls;
 SafetyHookInline __registerInputHandlers;
 
-static void assignDefaultMapping(RemappingLayout* self, std::vector<Keymapping>&& mapping)
+void assignDefaultMapping(RemappingLayout* self, std::vector<Keymapping>&& mapping)
 {
-    RuntimeInputManager* inputManager = AmethystRuntime::getInputManager();
+    /*RuntimeInputManager* inputManager = AmethystRuntime::getInputManager();
 
     for (auto& input : inputManager->mInputActions) {
         std::string keyName = "key." + input.mActionName;
@@ -14,12 +14,12 @@ static void assignDefaultMapping(RemappingLayout* self, std::vector<Keymapping>&
         mapping.emplace_back(keymapping);
     }
 
-    _assignDefaultMapping.call<void, RemappingLayout*, std::vector<Keymapping>>(self, std::move(mapping));
+    _assignDefaultMapping.call<void, RemappingLayout*, std::vector<Keymapping>>(self, std::move(mapping));*/
 }
 
-static void addFullKeyboardGamePlayControls(VanillaClientInputMappingFactory* self, KeyboardInputMapping* keyboard, MouseInputMapping* mouse)
+void addFullKeyboardGamePlayControls(VanillaClientInputMappingFactory* self, KeyboardInputMapping* keyboard, MouseInputMapping* mouse)
 {
-    _addFullKeyboardGamePlayControls
+    /*_addFullKeyboardGamePlayControls
         .call<void, VanillaClientInputMappingFactory*, KeyboardInputMapping*, MouseInputMapping*>(self, keyboard, mouse);
 
     RuntimeInputManager* inputManager = AmethystRuntime::getInputManager();
@@ -28,37 +28,38 @@ static void addFullKeyboardGamePlayControls(VanillaClientInputMappingFactory* se
         std::string keyName = "key." + input.mActionName;
         std::string buttonName = "button." + input.mActionName;
         self->createKeyboardAndMouseBinding(keyboard, mouse, &buttonName, &keyName);
-    }
+    }*/
 }
 
-static void _registerInputHandlers(MinecraftInputHandler* self)
+void _registerInputHandlers(MinecraftInputHandler* self)
 {
-    __registerInputHandlers.call<void, MinecraftInputHandler*>(self);
-    RuntimeInputManager* inputManager = AmethystRuntime::getInputManager();
+    //__registerInputHandlers.call<void, MinecraftInputHandler*>(self);
+    //RuntimeInputManager* inputManager = AmethystRuntime::getInputManager();
+    //InputHandler* inputHandler = self->mInputHandler.get();
 
-    for (auto& input : inputManager->mInputActions) {
-        std::string buttonName = "button." + input.mActionName;
+    //for (auto& input : inputManager->mInputActions) {
+    //    std::string buttonName = "button." + input.mActionName;
 
-        // Register a callback to minecraft which checks if the button has its own callback
-        // If so call the mods callback else do nothing
-        auto it = self->mInputHandler->mButtonDownHandlerMap.begin();
+    //    // Register a callback to minecraft which checks if the button has its own callback
+    //    // If so call the mods callback else do nothing
+    //    auto it = self->mInputHandler->mButtonDownHandlerMap.begin();
 
-        self->mInputHandler->registerButtonDownHandler(
-            buttonName, [&input](FocusImpact focus, IClientInstance client) {
-                Log::Info("pressed");
-            }, false);
-       
+    //    self->mInputHandler->registerButtonDownHandler(
+    //        buttonName, [&input](FocusImpact focus, IClientInstance client) {
+    //            Log::Info("pressed");
+    //        }, false);    
 
+    //    self->mInputHandler->registerButtonUpHandler(
+    //        buttonName, [&input, inputHandler, buttonName](FocusImpact focus, IClientInstance client) {
+    //            Log::Info("released, unregistering");
 
-        self->mInputHandler->registerButtonUpHandler(
-            buttonName, [&input](FocusImpact focus, IClientInstance client) {
-                Log::Info("released");
+    //            inputHandler->unregisterHandlersByName(buttonName);
 
-                /*if (input.mButtonUpHandler == NULL) return;
-                input.mButtonUpHandler(focus, client);*/
-            },
-            false);
-    }
+    //            /*if (input.mButtonUpHandler == NULL) return;
+    //            input.mButtonUpHandler(focus, client);*/
+    //        },
+    //        false);
+    //}
 }
 
 void CreateInputHooks()

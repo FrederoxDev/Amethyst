@@ -12,9 +12,9 @@ Item::Item(const std::string& stringId, short numericalId)
 
 short Item::getDamageValue(CompoundTag* mUserData) const
 {
-    using function = short(__thiscall*)(const Item*, CompoundTag*);
-    static auto func = reinterpret_cast<function>(SigScan("48 89 5C 24 ? 57 48 83 EC ? 48 8B DA 48 85 D2"));
-    return func(this, mUserData);
+    using function = decltype(&Item::getDamageValue);
+    static auto func = std::bit_cast<function>(SigScan("48 89 5C 24 ? 57 48 83 EC ? 48 8B DA 48 85 D2"));
+    return (this->*func)(mUserData);
 }
 
 Item::~Item() {
