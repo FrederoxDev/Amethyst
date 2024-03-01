@@ -83,7 +83,5 @@ private:
 
 public:
     // Mod Functions
-    std::vector<ModRegisterInputs> mModRegisterInputs;
     std::vector<ModInitialize> mModInitialize;
-    std::vector<ModShutdown> mModShutdown;
 };

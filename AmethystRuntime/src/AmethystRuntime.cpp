@@ -56,10 +56,7 @@ void AmethystRuntime::LoadModDlls()
     // Load all mod functions
     for (auto& mod : mLoadedMods) {
         Log::Info("[AmethystRuntime] Loading '{}'", mod.modName);
-
-        _LoadModFunc(&mModRegisterInputs, mod, "RegisterInputs");
         _LoadModFunc(&mModInitialize, mod, "Initialize");
-        _LoadModFunc(&mModShutdown, mod, "Shutdown");
     }
 }
 
@@ -80,7 +77,7 @@ void AmethystRuntime::PromptDebugger()
 
 void AmethystRuntime::CreateOwnHooks()
 {
-    static bool hasRegisteredInputsBefore = false;
+    /*static bool hasRegisteredInputsBefore = false;
 
     if (!hasRegisteredInputsBefore) {
         for (auto& registerInputFunc : mModRegisterInputs) {
@@ -88,9 +85,10 @@ void AmethystRuntime::CreateOwnHooks()
         }
 
         hasRegisteredInputsBefore = true;
-    }
+    }*/
 
     CreateInputHooks();
+
     CreateModFunctionHooks();
 }
 
@@ -118,6 +116,9 @@ void AmethystRuntime::RunMods()
 
 void AmethystRuntime::Shutdown()
 {
+    // Prompt all mods to do any final code before shutdown
+    mEventManager.beforeModShutdown.Invoke();
+
     mEventManager.Shutdown();
 
     // Remove any of the runtime mods hooks
@@ -125,10 +126,6 @@ void AmethystRuntime::Shutdown()
 
     // Unload any input action callbacks from Mod Dlls
     mInputManager.Shutdown();
-
-    // Prompt all mods to shutdown
-    for (auto& modShutdown : mModShutdown)
-        modShutdown();
 
     // Unload all mod Dlls
     for (auto& mod : mLoadedMods) {
@@ -138,9 +135,7 @@ void AmethystRuntime::Shutdown()
     mLoadedMods.clear();
 
     // Clear all mod functions
-    mModRegisterInputs.clear();
     mModInitialize.clear();
-    mModShutdown.clear();
 }
 
 void AmethystRuntime::ResumeGameThread()

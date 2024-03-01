@@ -21,6 +21,8 @@ namespace Amethyst {
         Event<ItemRegistry*> registerItems;
         Event<BlockDefinitionGroup*> registerBlocks;
 
+        Event<> beforeModShutdown;
+
         /*
         Clear any events that have been registered
         */
@@ -33,6 +35,7 @@ namespace Amethyst {
             update.Shutdown();
             registerItems.Shutdown();
             registerBlocks.Shutdown();
+            beforeModShutdown.Shutdown();
         }
     };
 } // namespace Amethyst

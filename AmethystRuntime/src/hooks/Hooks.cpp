@@ -61,13 +61,13 @@ void* VanillaItems_registerItems(
     return result;
 }
 
-void BlockDefinitionGroup_registerBlocks(BlockDefinitionGroup* self) {
-    Amethyst::EventManager* events = AmethystRuntime::getEventManager();
-
-    events->registerBlocks.Invoke(self);
-
-    _BlockDefinitionGroup_registerBlocks.thiscall<void>(self);
-}
+//void BlockDefinitionGroup_registerBlocks(BlockDefinitionGroup* self) {
+//    Amethyst::EventManager* events = AmethystRuntime::getEventManager();
+//
+//    events->registerBlocks.Invoke(self);
+//
+//    _BlockDefinitionGroup_registerBlocks.thiscall<void>(self);
+//}
 
 void* LevelRenderer_renderLevel(LevelRenderer* self, ScreenContext* screenContext, FrameRenderObject* frameRenderObject) {
     Amethyst::EventManager* events = AmethystRuntime::getEventManager();
@@ -93,6 +93,6 @@ void CreateModFunctionHooks() {
     hookManager->CreateHook(&ClientInstance::onStartJoinGame, _ClientInstance_onStartJoinGame, &ClientInstance_onStartJoinGame);
     hookManager->CreateHook(&ClientInstance::requestLeaveGame, _ClientInstance_requestLeaveGame, &ClientInstance_requestLeaveGame);
     hookManager->CreateHook(&VanillaItems::registerItems, _VanillaItems_registerItems, &VanillaItems_registerItems);
-    hookManager->CreateHook(&BlockDefinitionGroup::registerBlocks, _BlockDefinitionGroup_registerBlocks, &BlockDefinitionGroup_registerBlocks);
+    //hookManager->CreateHook(&BlockDefinitionGroup::registerBlocks, _BlockDefinitionGroup_registerBlocks, &BlockDefinitionGroup_registerBlocks);
     hookManager->CreateHook(&LevelRenderer::renderLevel, _LevelRenderer_renderLevel, &LevelRenderer_renderLevel);
 }

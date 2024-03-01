@@ -6,12 +6,14 @@
 // }
 
 BlockSource* ClientInstance::getRegion() {
-    using function = BlockSource*(__thiscall*)(ClientInstance*);
-    return reinterpret_cast<function>(this->vtable[27])(this);
+    using function = BlockSource*(ClientInstance::*)();
+    auto func = std::bit_cast<function>(this->vtable[27]);
+    return (this->*func)();
 }
 
 LocalPlayer* ClientInstance::getLocalPlayer()
 {
-    using function = LocalPlayer*(__thiscall*)(ClientInstance*);
-    return reinterpret_cast<function>(this->vtable[28])(this);
+    using function = LocalPlayer*(ClientInstance::*)();
+    auto func = std::bit_cast<function>(this->vtable[28]);
+    return (this->*func)();
 }

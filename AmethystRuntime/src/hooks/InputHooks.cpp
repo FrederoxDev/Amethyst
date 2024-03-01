@@ -41,17 +41,21 @@ static void _registerInputHandlers(MinecraftInputHandler* self)
 
         // Register a callback to minecraft which checks if the button has its own callback
         // If so call the mods callback else do nothing
+        auto it = self->mInputHandler->mButtonDownHandlerMap.begin();
+
         self->mInputHandler->registerButtonDownHandler(
             buttonName, [&input](FocusImpact focus, IClientInstance client) {
-                if (input.mButtonDownHandler == NULL) return;
-                input.mButtonDownHandler(focus, client);
-            },
-            false);
+                Log::Info("pressed");
+            }, false);
+       
+
 
         self->mInputHandler->registerButtonUpHandler(
             buttonName, [&input](FocusImpact focus, IClientInstance client) {
-                if (input.mButtonUpHandler == NULL) return;
-                input.mButtonUpHandler(focus, client);
+                Log::Info("released");
+
+                /*if (input.mButtonUpHandler == NULL) return;
+                input.mButtonUpHandler(focus, client);*/
             },
             false);
     }
