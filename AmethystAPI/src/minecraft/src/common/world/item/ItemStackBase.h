@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <string>
 #include <optional>
+#include <chrono>
 
 class Item;
 class CompoundTag;
@@ -17,8 +18,10 @@ public:
     /* this + 8   */ WeakPtr<Item> mItem;
     /* this + 16  */ CompoundTag* mUserData;
     /* this + 24  */ const Block* mBlock;
-    /* this + 32  */ byte mCount;
-    /* this + 33  */ std::byte padding33[15];
+    /* this + 32  */ short mAuxValue;
+    /* this + 34  */ byte mCount;
+    /* this + 35  */ std::byte padding35[5];
+    /* this + 40  */ std::chrono::steady_clock::time_point mPickupTime;
     /* this + 48  */ bool mShowPickup;
     /* this + 49  */ std::byte padding49[7];
     /* this + 56  */ std::vector<const BlockLegacy*> mCanPlaceOn;
