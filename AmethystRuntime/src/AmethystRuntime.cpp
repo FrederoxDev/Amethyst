@@ -77,7 +77,7 @@ void AmethystRuntime::PromptDebugger()
 
 void AmethystRuntime::CreateOwnHooks()
 {
-    CreateInputHooks();
+    //CreateInputHooks();
 
     CreateModFunctionHooks();
 }
@@ -86,7 +86,7 @@ void AmethystRuntime::RunMods()
 {
     // Invoke mods to initialize and setup hooks, etc..
     for (auto& modInitialize : mModInitialize)
-        modInitialize(getHookManager(), getEventManager());
+        modInitialize(&mAmethystContext);
 
     ResumeGameThread();
 
@@ -107,10 +107,10 @@ void AmethystRuntime::RunMods()
 void AmethystRuntime::Shutdown()
 {
     // Prompt all mods to do any final code before shutdown
-    mEventManager.Shutdown();
+    getEventManager()->Shutdown();
 
     // Remove any of the runtime mods hooks
-    mHookManager.Shutdown();
+    getEventManager()->Shutdown();
 
     // Unload all mod Dlls
     for (auto& mod : mLoadedMods) {

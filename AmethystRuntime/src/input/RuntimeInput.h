@@ -1,15 +1,15 @@
 #pragma once
-#include <amethyst/InputManager.h>
-#include <amethyst/Log.h>
-#include <functional>
-
-struct InputAction {
-    const std::string mActionName;
-    int mDefaultKey = 0;
-    bool mAllowRemapping = 0;
-    std::function<void(FocusImpact, IClientInstance&)> mButtonDownHandler = NULL;
-    std::function<void(FocusImpact, IClientInstance&)> mButtonUpHandler = NULL;
-};
+//#include <amethyst/runtime/input/InputManager.h>
+//#include <amethyst/Log.h>
+//#include <functional>
+//
+//struct InputAction {
+//    const std::string mActionName;
+//    int mDefaultKey = 0;
+//    bool mAllowRemapping = 0;
+//    std::function<void(FocusImpact, IClientInstance&)> mButtonDownHandler = NULL;
+//    std::function<void(FocusImpact, IClientInstance&)> mButtonUpHandler = NULL;
+//};
 
 //class RuntimeInputManager : public InputManager {
 //public:

@@ -1,14 +1,12 @@
 #pragma once
+#include <amethyst/runtime/AmethystContext.h>
 #include "hooks/Hooks.h"
 #include "hooks/InputHooks.h"
 #include "input/RuntimeInput.h"
 #include "mod/Mod.h"
-#include "mod/ModFunctions.h"
 #include <amethyst/Config.h>
-#include <amethyst/HookManager.h>
 #include <amethyst/Log.h>
-#include <amethyst/events/Event.h>
-#include <amethyst/events/EventManager.h>
+#include <amethyst/runtime/events/Event.h>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -16,9 +14,10 @@
 #include <minecraft/src/common/world/item/Item.h>
 #include <amethyst/MinecraftVtables.h>
 
+
 namespace fs = std::filesystem;
 
-typedef void (*ModInitialize)(HookManager* hookManager, Amethyst::EventManager* eventManager);
+typedef void (*ModInitialize)(AmethystContext* context);
 
 /*
  Entry:
@@ -46,14 +45,18 @@ public:
         return instance;
     }
 
+    static AmethystContext* getContext() {
+        return &AmethystRuntime::getInstance()->mAmethystContext;
+    }
+
     static HookManager* getHookManager()
     {
-        return &AmethystRuntime::getInstance()->mHookManager;
+        return &AmethystRuntime::getInstance()->mAmethystContext.mHookManager;
     }
 
     static Amethyst::EventManager* getEventManager() 
     {
-        return &AmethystRuntime::getInstance()->mEventManager;
+        return &AmethystRuntime::getInstance()->mAmethystContext.mEventManager;
     }
 
     void Start();
@@ -73,9 +76,8 @@ private:
 
 private:
     Config mLauncherConfig;
-    HookManager mHookManager;
-    Amethyst::EventManager mEventManager;
     std::vector<Mod> mLoadedMods;
+    AmethystContext mAmethystContext;
 
 public:
     // Mod Functions
