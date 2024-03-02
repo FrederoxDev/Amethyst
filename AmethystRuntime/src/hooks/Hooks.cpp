@@ -7,6 +7,7 @@ SafetyHookInline _Minecraft_update;
 SafetyHookInline _VanillaItems_registerItems;
 SafetyHookInline _BlockDefinitionGroup_registerBlocks;
 SafetyHookInline _LevelRenderer_renderLevel;
+SafetyHookInline _ClientInstance_ClientInstance;
 
 void* ScreenView_setupAndRender(ScreenView* self, UIRenderContext* ctx)
 {
@@ -77,6 +78,14 @@ void* LevelRenderer_renderLevel(LevelRenderer* self, ScreenContext* screenContex
     return _LevelRenderer_renderLevel.thiscall<void*>(self, screenContext, frameRenderObject);
 }
 
+void* ClientInstance_ClientInstance(ClientInstance* self, uint64_t a2, uint64_t a3, uint64_t a4, char a5, void* a6, void* a7, uint64_t a8, void* a9) {
+    void* ret = _ClientInstance_ClientInstance.call<void*>(self, a2, a3, a4, a5, a6, a7, a8, a9);
+
+    AmethystRuntime::getContext()->mClientInstance = self;
+
+    return ret;
+}
+
 void CreateModFunctionHooks() {
     HookManager* hookManager = AmethystRuntime::getHookManager();
 
@@ -87,7 +96,7 @@ void CreateModFunctionHooks() {
     hookManager->RegisterFunction(&VanillaItems::registerItems, "40 55 53 56 57 41 54 41 56 41 57 48 8D AC 24 ? ? ? ? B8 ? ? ? ? E8 ? ? ? ? 48 2B E0 0F 29 B4 24");
     hookManager->RegisterFunction(&BlockDefinitionGroup::registerBlocks, "48 89 5C 24 ? 48 89 6C 24 ? 56 57 41 54 41 56 41 57 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 84 24 ? ? ? ? 4C 8B F9");
     hookManager->RegisterFunction(&LevelRenderer::renderLevel, "48 89 5C 24 ? 48 89 74 24 ? 55 57 41 56 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 49 8B F0 48 8B DA 4C 8B F1");
-    
+
     hookManager->CreateHook(&ScreenView::setupAndRender, _ScreenView_setupAndRender, &ScreenView_setupAndRender);
     hookManager->CreateHook(&Minecraft::update, _Minecraft_update, &Minecraft_update);
     hookManager->CreateHook(&ClientInstance::onStartJoinGame, _ClientInstance_onStartJoinGame, &ClientInstance_onStartJoinGame);
@@ -95,4 +104,7 @@ void CreateModFunctionHooks() {
     hookManager->CreateHook(&VanillaItems::registerItems, _VanillaItems_registerItems, &VanillaItems_registerItems);
     //hookManager->CreateHook(&BlockDefinitionGroup::registerBlocks, _BlockDefinitionGroup_registerBlocks, &BlockDefinitionGroup_registerBlocks);
     hookManager->CreateHook(&LevelRenderer::renderLevel, _LevelRenderer_renderLevel, &LevelRenderer_renderLevel);
+
+    // C++ does not allow doing a reference to get the addresses of constructors...
+    hookManager->CreateHookAbsolute(_ClientInstance_ClientInstance, SigScan("48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 49 8B F9 49 8B D8 4C 8B E2"), &ClientInstance_ClientInstance);
 }
