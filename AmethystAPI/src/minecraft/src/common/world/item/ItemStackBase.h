@@ -13,6 +13,26 @@ class BlockLegacy;
 class Block;
 class ItemInstance;
 
+//is_virtual = True
+//    hide_vtable = True
+//        struct_size = 0x88
+//
+//#(Type, Name, Size(in bytes), Offset(in bytes))
+//    struct
+//    = [("WeakPtr<Item>", "mItem", 8, 8),
+//       ("CompoundTag*", "mUserData", 8, 16),
+//       ("short", "mAuxValue", 2, 32),
+//       ("byte", "mCount", 1, 34),
+//       ("bool", "mShowPickup", 1, 48),
+//       ("const Block*", "mBlock", 8, 24),
+//       ("std::vector<const BlockLegacy*>", "mCanPlaceOn", 24, 56),
+//       ("std::vector<const BlockLegacy*>", "mCanDestroy", 24, 88),
+//       ("std::unique_ptr<ItemInstance>", "mChargedItem", 8, 128),
+//       ("size_t", "mCanPlaceOnHash", 8, 80),
+//       ("Tick", "mBlockingTick", 8, 120),
+//       ("size_t", "mCanDestroyHash", 8, 112),
+//       ("std::chrono::steady_clock::time_point", "mPickupTime", 8, 40)]
+
 class ItemStackBase {
 public:
     /* this + 8   */ WeakPtr<Item> mItem;

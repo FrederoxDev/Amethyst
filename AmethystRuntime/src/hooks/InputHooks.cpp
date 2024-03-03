@@ -6,34 +6,37 @@ SafetyHookInline __registerInputHandlers;
 
 void assignDefaultMapping(RemappingLayout* self, std::vector<Keymapping>&& mapping)
 {
-    /*RuntimeInputManager* inputManager = AmethystRuntime::getInputManager();
+    Amethyst::InputManager* inputManager = AmethystRuntime::getInputManager();
+    _assignDefaultMapping.call(self, std::move(mapping));
 
-    for (auto& input : inputManager->mInputActions) {
-        std::string keyName = "key." + input.mActionName;
-        Keymapping keymapping(keyName, {input.mDefaultKey}, input.mAllowRemapping);
+    for (auto& input : inputManager->mInputActions)
+    {
+        std::string keyName = "key." + input.mInputName;
+        Keymapping keymapping(keyName, {input.mDefaultButton}, input.mAllowRemapping);
         mapping.emplace_back(keymapping);
     }
 
-    _assignDefaultMapping.call<void, RemappingLayout*, std::vector<Keymapping>>(self, std::move(mapping));*/
+    Log::Info("assignDefaultMapping");
 }
 
 void addFullKeyboardGamePlayControls(VanillaClientInputMappingFactory* self, KeyboardInputMapping* keyboard, MouseInputMapping* mouse)
 {
-    /*_addFullKeyboardGamePlayControls
-        .call<void, VanillaClientInputMappingFactory*, KeyboardInputMapping*, MouseInputMapping*>(self, keyboard, mouse);
+    Amethyst::InputManager* inputManager = AmethystRuntime::getInputManager();
+   _addFullKeyboardGamePlayControls.call(self, keyboard, mouse);
 
-    RuntimeInputManager* inputManager = AmethystRuntime::getInputManager();
+   for (auto& input : inputManager->mInputActions) {
+       std::string keyName = "key." + input.mInputName;
+       std::string buttonName = "button." + input.mInputName;
+       self->createKeyboardAndMouseBinding(keyboard, mouse, &buttonName, &keyName);
+   }
 
-    for (auto& input : inputManager->mInputActions) {
-        std::string keyName = "key." + input.mActionName;
-        std::string buttonName = "button." + input.mActionName;
-        self->createKeyboardAndMouseBinding(keyboard, mouse, &buttonName, &keyName);
-    }*/
+   Log::Info("addFullKeyboardGamePlayControls");
 }
 
 void _registerInputHandlers(MinecraftInputHandler* self)
 {
-    //__registerInputHandlers.call<void, MinecraftInputHandler*>(self);
+    __registerInputHandlers.call(self);
+
     //RuntimeInputManager* inputManager = AmethystRuntime::getInputManager();
     //InputHandler* inputHandler = self->mInputHandler.get();
 

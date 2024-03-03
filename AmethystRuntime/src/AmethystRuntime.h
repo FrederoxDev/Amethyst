@@ -2,7 +2,6 @@
 #include <amethyst/runtime/AmethystContext.h>
 #include "hooks/Hooks.h"
 #include "hooks/InputHooks.h"
-#include "input/RuntimeInput.h"
 #include "mod/Mod.h"
 #include <amethyst/Config.h>
 #include <amethyst/Log.h>
@@ -45,7 +44,8 @@ public:
         return instance;
     }
 
-    static AmethystContext* getContext() {
+    static AmethystContext* getContext() 
+    {
         return &AmethystRuntime::getInstance()->mAmethystContext;
     }
 
@@ -57,6 +57,11 @@ public:
     static Amethyst::EventManager* getEventManager() 
     {
         return &AmethystRuntime::getInstance()->mAmethystContext.mEventManager;
+    }
+
+    static Amethyst::InputManager* getInputManager() 
+    {
+        return &AmethystRuntime::getInstance()->mAmethystContext.mInputManager;
     }
 
     void Start();
