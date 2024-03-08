@@ -9,9 +9,10 @@
 namespace Amethyst {
     class InputManager {
     public:
-        void RegisterNewInput(const std::string& inputName, int defaultButton, bool allowRemapping);
-
-    private:
         std::vector<InputAction> mInputActions;
+
+    public:
+        void RegisterNewInput(const std::string& inputName, int defaultButton, bool allowRemapping);
+        void Shutdown();
     };
 }

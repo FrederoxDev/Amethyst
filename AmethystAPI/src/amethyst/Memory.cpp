@@ -2,6 +2,7 @@
 #include <libhat/Scanner.hpp>
 #include <mutex>
 #include <thread>
+#include <optional>
 
 uintptr_t GetMinecraftBaseAddress()
 {
@@ -25,7 +26,7 @@ uintptr_t SlideAddress(uintptr_t offset)
     return GetMinecraftBaseAddress() + offset;
 }
 
-uintptr_t SigScan(std::string_view signature)
+std::optional<uintptr_t> SigScanSafe(std::string_view signature)
 {
     const auto parsed = hat::parse_signature(signature);
     if (!parsed.has_value()) {
@@ -37,12 +38,19 @@ uintptr_t SigScan(std::string_view signature)
     const auto end = begin + GetMinecraftSize();
     const auto result = hat::find_pattern(begin, end, parsed.value());
 
-    if (!result.has_result()) {
-        Log::Error("Sigscan failed! {:s}", signature);
-        throw std::exception();
+    if (!result.has_result()) return std::nullopt;
+    return reinterpret_cast<uintptr_t>(result.get());
+}
+
+uintptr_t SigScan(std::string_view signature) {
+    auto result = SigScanSafe(signature);
+
+    if (!result.has_value()) {
+        std::string errorMessage = fmt::format("Failed to find signature \"{:s}\"", signature);
+        throw std::exception(errorMessage.c_str());
     }
 
-    return reinterpret_cast<uintptr_t>(result.get());
+    return result.value();
 }
 
 size_t FindOffsetOfPointer(void* _base, void* _pointer, size_t maxSearchSize)

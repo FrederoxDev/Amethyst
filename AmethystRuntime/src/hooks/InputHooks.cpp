@@ -6,8 +6,8 @@ SafetyHookInline __registerInputHandlers;
 
 void assignDefaultMapping(RemappingLayout* self, std::vector<Keymapping>&& mapping)
 {
+    Log::Info("assignDefaultMapping");
     Amethyst::InputManager* inputManager = AmethystRuntime::getInputManager();
-    _assignDefaultMapping.call(self, std::move(mapping));
 
     for (auto& input : inputManager->mInputActions)
     {
@@ -16,7 +16,7 @@ void assignDefaultMapping(RemappingLayout* self, std::vector<Keymapping>&& mappi
         mapping.emplace_back(keymapping);
     }
 
-    Log::Info("assignDefaultMapping");
+    _assignDefaultMapping.call(self, std::move(mapping));
 }
 
 void addFullKeyboardGamePlayControls(VanillaClientInputMappingFactory* self, KeyboardInputMapping* keyboard, MouseInputMapping* mouse)
@@ -29,8 +29,6 @@ void addFullKeyboardGamePlayControls(VanillaClientInputMappingFactory* self, Key
        std::string buttonName = "button." + input.mInputName;
        self->createKeyboardAndMouseBinding(keyboard, mouse, &buttonName, &keyName);
    }
-
-   Log::Info("addFullKeyboardGamePlayControls");
 }
 
 void _registerInputHandlers(MinecraftInputHandler* self)
@@ -69,12 +67,13 @@ void CreateInputHooks()
 {
     HookManager* hookManager = AmethystRuntime::getHookManager();
 
-    hookManager->RegisterFunction(&RemappingLayout::assignDefaultMapping, "48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8B EC 48 83 EC ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 4C 8B C2");
-    hookManager->CreateHook(&RemappingLayout::assignDefaultMapping, _assignDefaultMapping, &assignDefaultMapping);
+    /*hookManager->RegisterFunction(&RemappingLayout::assignDefaultMapping, "48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8B EC 48 83 EC ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 4C 8B C2");
+    hookManager->CreateHook(&RemappingLayout::assignDefaultMapping, _assignDefaultMapping, &assignDefaultMapping);*/
 
-    hookManager->RegisterFunction(&VanillaClientInputMappingFactory::_addFullKeyboardGamePlayControls, "40 55 53 56 57 41 56 48 8B EC 48 83 EC ? 45 0F B6 F1");
-    hookManager->CreateHook(&VanillaClientInputMappingFactory::_addFullKeyboardGamePlayControls, _addFullKeyboardGamePlayControls, &addFullKeyboardGamePlayControls);
+    /*hookManager->RegisterFunction(&VanillaClientInputMappingFactory::_addFullKeyboardGamePlayControls, "40 55 53 56 57 41 56 48 8B EC 48 83 EC ? 45 0F B6 F1");
+    hookManager->CreateHook(&VanillaClientInputMappingFactory::_addFullKeyboardGamePlayControls, _addFullKeyboardGamePlayControls, &addFullKeyboardGamePlayControls);*/
 
-    hookManager->RegisterFunction(&MinecraftInputHandler::_registerInputHandlers, "48 89 5C 24 ? 55 56 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B F1 48 8D 05");
-    hookManager->CreateHook(&MinecraftInputHandler::_registerInputHandlers, __registerInputHandlers, &_registerInputHandlers);
+    // 48 89 5C 24 ? 55 56 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B F1 48 8D 05
+    /*hookManager->RegisterFunction(&MinecraftInputHandler::_registerInputHandlers, "48 89 5C 24 ? 55 56 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B F1 48 8D 05");
+    hookManager->CreateHook(&MinecraftInputHandler::_registerInputHandlers, __registerInputHandlers, &_registerInputHandlers);*/
 }

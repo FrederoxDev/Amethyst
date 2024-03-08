@@ -40,7 +40,14 @@ public:
         // If the event has not yet been created, make it, else re-use
         if (mFuncHashToOriginalAddress.find(hash) == mFuncHashToOriginalAddress.end()) 
         {
-            mFuncHashToOriginalAddress[hash] = SigScan(signature);
+            auto result = SigScanSafe(signature);
+
+            if (!result.has_value()) {
+                std::string error = fmt::format("Failed to find function: \"{}\"\nUsing signature: \"{}\"", typeid(function).name(), signature);
+                throw std::exception(error.c_str());
+            }
+
+            mFuncHashToOriginalAddress[hash] = result.value();
         }
     }
 

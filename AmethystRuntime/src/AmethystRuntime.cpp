@@ -77,7 +77,7 @@ void AmethystRuntime::PromptDebugger()
 
 void AmethystRuntime::CreateOwnHooks()
 {
-    CreateInputHooks();
+    // CreateInputHooks();
 
     CreateModFunctionHooks();
 }
@@ -97,6 +97,7 @@ void AmethystRuntime::RunMods()
         if (GetAsyncKeyState(VK_NUMPAD0)) break;
         if (GetAsyncKeyState('R') & 0x8000) {
             Log::Info("\n========================= Beginning hot-reload! =========================");
+
 
             Shutdown();
             return Start();
