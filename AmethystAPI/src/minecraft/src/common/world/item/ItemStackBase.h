@@ -6,6 +6,7 @@
 #include <string>
 #include <optional>
 #include <chrono>
+#include "minecraft/src/common/nbt/CompoundTag.h"
 
 class Item;
 class CompoundTag;
@@ -35,15 +36,15 @@ class ItemInstance;
 
 class ItemStackBase {
 public:
+    /* this + 0   */ uintptr_t** vtable;
     /* this + 8   */ WeakPtr<Item> mItem;
     /* this + 16  */ CompoundTag* mUserData;
     /* this + 24  */ const Block* mBlock;
-    /* this + 32  */ short mAuxValue;
+    /* this + 32  */ unsigned short mAuxValue;
     /* this + 34  */ byte mCount;
-    /* this + 35  */ std::byte padding35[5];
+    /* this + 35  */ bool mValid;
     /* this + 40  */ std::chrono::steady_clock::time_point mPickupTime;
     /* this + 48  */ bool mShowPickup;
-    /* this + 49  */ std::byte padding49[7];
     /* this + 56  */ std::vector<const BlockLegacy*> mCanPlaceOn;
     /* this + 80  */ size_t mCanPlaceOnHash;
     /* this + 88  */ std::vector<const BlockLegacy*> mCanDestroy;
@@ -52,15 +53,19 @@ public:
     /* this + 128 */ std::unique_ptr<ItemInstance> mChargedItem;
 
 public:
-    virtual ~ItemStackBase();
-    virtual void reinit(const Item& item, int count, int auxValue);
-    virtual void reinit(const BlockLegacy& block, int count);
-    virtual void reinit(std::string_view name, int count, int auxValue);
-    virtual void setNull(std::optional<std::string> reason);
-    virtual std::string toString() const;
-    virtual std::string toDebugString() const;
+    /* Virtuals */
+    ~ItemStackBase();
+    void reinit(const Item& item, int count, int auxValue);
+    void reinit(const BlockLegacy& block, int count);
+    void reinit(std::string_view name, int count, int auxValue);
+    void setNull(std::optional<std::string> reason);
+    std::string toString() const;
+    std::string toDebugString() const;
 
 public:
+    ItemStackBase();
+    ItemStackBase& operator=(const ItemStackBase&);
+
     // 1.20.51.1 - 48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 48 89 54 24 ? 57 48 83 EC ? 48 8B FA 48 8B E9 33 F6
     std::string getRawNameId() const;
 

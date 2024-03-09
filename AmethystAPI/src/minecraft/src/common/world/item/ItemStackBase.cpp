@@ -19,3 +19,79 @@ void ItemStackBase::_loadItem(const CompoundTag* a1) {
 
     (this->*func)(a1);
 }
+
+void ItemStackBase::reinit(const Item& item, int count, int auxValue)
+{
+    using function = void(ItemStackBase::*)(const Item&, int, int);
+    auto func = std::bit_cast<function>(vtable[1]);
+    (this->*func)(item, count, auxValue);
+}
+
+void ItemStackBase::reinit(const BlockLegacy& block, int count)
+{
+    using function = void (ItemStackBase::*)(const BlockLegacy&, int);
+    auto func = std::bit_cast<function>(vtable[2]);
+    (this->*func)(block, count);
+}
+
+void ItemStackBase::reinit(std::string_view name, int count, int auxValue)
+{
+    using function = void (ItemStackBase::*)(std::string_view, int, int);
+    auto func = std::bit_cast<function>(vtable[3]);
+    (this->*func)(name, count, auxValue);
+}
+
+void ItemStackBase::setNull(std::optional<std::string> reason)
+{
+    using function = void(ItemStackBase::*)(std::optional<std::string>);
+    auto func = std::bit_cast<function>(vtable[4]);
+    (this->*func)(reason);
+}
+
+std::string ItemStackBase::toString() const
+{
+    using function = std::string(ItemStackBase::*)() const;
+    auto func = std::bit_cast<function>(vtable[5]);
+    return (this->*func)();
+}
+
+std::string ItemStackBase::toDebugString() const
+{
+    using function = std::string(ItemStackBase::*)() const;
+    auto func = std::bit_cast<function>(vtable[6]);
+    return (this->*func)();
+}
+
+ItemStackBase::ItemStackBase() {
+    this->vtable = reinterpret_cast<uintptr_t**>(SlideAddress(0x53F2C98));
+    this->mUserData = nullptr;
+    this->mBlock = nullptr;
+    this->mAuxValue = 0b1000000000000000;
+    this->mCount = 0;
+    this->mValid = false;
+    this->mShowPickup = true;
+    this->mCanPlaceOnHash = 0;
+    this->mCanDestroyHash = 0;
+    this->mChargedItem = nullptr;
+    this->setNull(std::nullopt);
+}
+
+ItemStackBase::~ItemStackBase() = default;
+
+ItemStackBase &ItemStackBase::operator=(const ItemStackBase& rhs) {
+    mCount = rhs.mCount;
+    mAuxValue = rhs.mAuxValue;
+    mItem = rhs.mItem;
+    mBlock = rhs.mBlock;
+    mValid = rhs.mValid;
+    mPickupTime = rhs.mPickupTime;
+
+    mUserData = nullptr;
+    //if (rhs.mUserData) {
+    //    mUserData = rhs.mUserData->clone();
+    //}
+
+    //_makeChargedItemFromUserData();
+    //_cloneComponents(rhs);
+    return *this;
+}

@@ -1,12 +1,7 @@
 #pragma once
 #include "minecraft/src/common/world/item/ItemStackBase.h"
 #include "amethyst/Memory.h"
-
-class ItemStackNetIdVariant {
-    std::byte padding0[24];
-};
-
-static_assert(sizeof(ItemStackNetIdVariant) == 24);
+#include "minecraft/src/common/world/inventory/network/ItemStackNetIdVariant.h"
 
 class ItemStack : public ItemStackBase {
 public:

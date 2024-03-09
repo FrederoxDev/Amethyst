@@ -116,3 +116,17 @@ void CompoundTag::putString(std::string name, std::string value) {
     StringTag stringTag(value);
     mTags[name].emplace<StringTag>(stringTag);
 }
+
+const IntTag* CompoundTag::getIntTag(std::string_view name) const {
+    return get<IntTag>(name);
+}
+
+IntTag* CompoundTag::getIntTag(std::string_view name) {
+    return get<IntTag>(name);
+}
+
+int CompoundTag::getInt(std::string_view name) const {
+    auto tag = getIntTag(name);
+    if (tag) return tag->data;
+    return 0;
+}

@@ -10,8 +10,8 @@
 #include "minecraft/src/common/world/item/ItemCategory.h"
 #include "minecraft/src/common/world/item/registry/ItemRegistryRef.h"
 #include <cstddef>
+#include "minecraft/src/common/nbt/CompoundTag.h"
 
-class CompoundTag;
 class Level;
 class ItemStackBase;
 namespace Json {
@@ -230,6 +230,7 @@ private:
 public:
     Item(const std::string&, short);
     short getDamageValue(CompoundTag* mUserData) const;
+    const std::string& getRawNameId() const;
 
     // 1.20.51.1 - 48 89 4C 24 ? 53 48 81 EC ? ? ? ? 48 8B D9 45 33 C9
     static void addCreativeItem(ItemRegistryRef*, const Block*);

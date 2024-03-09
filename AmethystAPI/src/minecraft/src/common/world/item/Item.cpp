@@ -10,11 +10,11 @@ Item::Item(const std::string& stringId, short numericalId)
 }
 #pragma warning(pop)
 
-short Item::getDamageValue(CompoundTag* mUserData) const
+short Item::getDamageValue(CompoundTag* userData) const
 {
-    using function = decltype(&Item::getDamageValue);
-    static auto func = std::bit_cast<function>(SigScan("48 89 5C 24 ? 57 48 83 EC ? 48 8B DA 48 85 D2"));
-    return (this->*func)(mUserData);
+    if (userData == nullptr) return 0;
+    if (!userData->contains("Damage")) return 0;
+    return (short)userData->getInt("Damage");
 }
 
 Item::~Item() {
@@ -26,6 +26,10 @@ void Item::addCreativeItem(ItemRegistryRef* a1, const Block* a2)
     using function = void(*)(ItemRegistryRef*, const Block*);
     static auto func = reinterpret_cast<function>(SigScan("48 89 4C 24 ? 53 48 81 EC ? ? ? ? 48 8B D9 45 33 C9"));
     func(a1, a2);
+}
+
+const std::string& Item::getRawNameId() const {
+    return mRawNameId.getString();
 }
 
 //

@@ -3,6 +3,7 @@
 #include "minecraft/src/common/nbt/ByteTag.h"
 #include "minecraft/src/common/nbt/ListTag.h"
 #include "minecraft/src/common/nbt/StringTag.h"
+#include "minecraft/src/common/nbt/IntTag.h"
 #include <map>
 #include <string_view>
 
@@ -32,6 +33,10 @@ public:
     StringTag* getStringTag(std::string_view name);
     const std::string* getString(std::string_view name) const;
     void putString(std::string name, std::string value);
+
+    const IntTag* getIntTag(std::string_view name) const;
+    IntTag* getIntTag(std::string_view name);
+    int getInt(std::string_view name) const;
 
 private:
     template <typename T>
