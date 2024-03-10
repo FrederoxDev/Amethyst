@@ -21,6 +21,10 @@ public:
     bool contains(std::string_view name) const;
     bool contains(std::string_view name, Tag::Type type) const;
 
+    void clear();
+    void deepCopy(const CompoundTag& other);
+    std::unique_ptr<CompoundTag> clone() const;
+
     const ListTag* getList(std::string_view name) const;
     ListTag* getList(std::string_view name);
 

@@ -62,6 +62,7 @@ std::string ItemStackBase::toDebugString() const
     return (this->*func)();
 }
 
+// 1.20.51.1 Reimplementation - Complete
 ItemStackBase::ItemStackBase() {
     this->vtable = reinterpret_cast<uintptr_t**>(SlideAddress(0x53F2C98));
     this->mUserData = nullptr;
@@ -78,6 +79,7 @@ ItemStackBase::ItemStackBase() {
 
 ItemStackBase::~ItemStackBase() = default;
 
+// 1.20.51.1 Reimplementation - Incomplete
 ItemStackBase &ItemStackBase::operator=(const ItemStackBase& rhs) {
     mCount = rhs.mCount;
     mAuxValue = rhs.mAuxValue;
@@ -86,12 +88,13 @@ ItemStackBase &ItemStackBase::operator=(const ItemStackBase& rhs) {
     mValid = rhs.mValid;
     mPickupTime = rhs.mPickupTime;
 
-    mUserData = nullptr;
-    //if (rhs.mUserData) {
-    //    mUserData = rhs.mUserData->clone();
-    //}
+    /*std::unique_ptr<CompoundTag> clonedData = nullptr;
 
-    //_makeChargedItemFromUserData();
-    //_cloneComponents(rhs);
+    if (rhs.mUserData) {
+        clonedData = rhs.mUserData->clone();
+    }*/
+
+    // setUserData(clonedData);
+    // _cloneComponents(rhs)
     return *this;
 }
