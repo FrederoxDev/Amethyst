@@ -40,7 +40,8 @@ public:
     template <typename OriginalFn>
     void CreateHook(OriginalFn function, SafetyHookInline& trampoline, void* hook)
     {
-        size_t hash = function_id::template hash_code<OriginalFn>();
+        //size_t hash = function_id::template hash_code<OriginalFn>();
+        size_t hash = typeid(function).hash_code();
 
         if (mFuncHashToOriginalAddress.find(hash) == mFuncHashToOriginalAddress.end()) {
             // Log::Error("[AmethystAPI] '{}' has not registered!", typeid(function).name());
@@ -65,7 +66,8 @@ public:
     void RegisterFunction(Func function, std::string_view signature)
     {
         // Converts the function to a unique hashed number
-        size_t hash = function_id::hash_code<Func>();
+        // size_t hash = function_id::hash_code<Func>();
+        size_t hash = typeid(function).hash_code();
 
         // If the event has not yet been created, make it, else re-use
         if (mFuncHashToOriginalAddress.find(hash) == mFuncHashToOriginalAddress.end()) {
@@ -84,7 +86,8 @@ public:
     void RegisterFunction(Func function, uintptr_t address)
     {
         // Converts the function to a unique hashed number
-        size_t hash = function_id::hash_code<Func>();
+        //size_t hash = function_id::hash_code<Func>();
+        size_t hash = typeid(function).hash_code();
 
         // If the event has not yet been created, make it, else re-use
         if (mFuncHashToOriginalAddress.find(hash) == mFuncHashToOriginalAddress.end()) {
