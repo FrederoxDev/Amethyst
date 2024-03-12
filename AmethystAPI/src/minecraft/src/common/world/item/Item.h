@@ -127,11 +127,12 @@ public:
 	virtual bool isFood() const;
 	virtual bool isThrowable() const;
 	virtual bool isUseable() const;
+	virtual bool isTrimAllowed() const;
 	virtual ItemComponent* getComponent(const HashedString&) const;
 	virtual IFoodItemComponent* getFood() const;
 	virtual Item& setMaxDamage(int maxDamage);
 	virtual Item& setMaxUseDuration(int maxUseDuration);
-	virtual std::unique_ptr<CompoundTag, std::default_delete<CompoundTag>> buildNetworkTag() const;
+	virtual std::unique_ptr<CompoundTag> buildNetworkTag() const;
 	virtual void initializeFromNetwork(const CompoundTag& tag);
 	virtual std::vector<std::string> validateFromNetwork(const CompoundTag&);
 	virtual BlockShape getBlockShape() const;
@@ -184,7 +185,6 @@ public:
 	virtual void hurtActor(ItemStack& itemStack, Actor& actor, Mob& attacker) const;
 	virtual void hitActor(ItemStack& itemStack, Actor& actor, Mob& attacker) const;
 	virtual void hitBlock(ItemStack& instance, const Block& block, const BlockPos& blockPos, Mob& attacker) const;
-	virtual bool mineBlock(ItemInstance& instance, const Block& block, int x, int y, int z, Actor* owner) const;
 	virtual bool mineBlock(ItemStack& instance, const Block& block, int x, int y, int z, Actor* owner) const;
 	virtual std::string buildDescriptionName(const ItemStackBase&) const;
 	virtual std::string buildDescriptionId(const ItemDescriptor&, const CompoundTag*) const;
@@ -207,9 +207,9 @@ public:
 	virtual bool shouldSendInteractionGameEvents() const;
 	virtual bool useInterruptedByAttacking() const;
 	virtual bool hasSameRelevantUserData(const ItemStackBase&, const ItemStackBase&) const;
-    virtual void initClient(Json::Value& data, const SemVersion& engineVersion, bool, const Experiments&);
+	virtual void initClient(Json::Value& data, const SemVersion& engineVersion, bool, const Experiments&);
 	virtual Item& setIconInfo(const std::string& name, int index);
-	virtual ResolvedItemIconInfo getIconInfo(const ItemStackBase& retstr, int, bool) const;
+	virtual ResolvedItemIconInfo getIconInfo(const ItemStackBase&, int, bool) const;
 	virtual std::string getInteractText(const Player&) const;
 	virtual int getAnimationFrameFor(Mob* holder, bool asItemEntity, const ItemStack* item, bool shouldAnimate) const;
 	virtual bool isEmissive(int auxValue) const;
@@ -220,7 +220,6 @@ public:
 	virtual float getFurnaceXPmultiplier(const ItemStackBase& instance) const;
 	virtual std::string getAuxValuesDescription() const;
 	virtual bool calculatePlacePos(ItemStackBase& instance, Actor& entity, unsigned char& face, BlockPos& pos) const;
-
 private:
 	virtual bool _checkUseOnPermissions(Actor& entity, ItemStackBase& item, const unsigned char& face, const BlockPos& pos) const;
 	virtual bool _calculatePlacePos(ItemStackBase& instance, Actor& entity, unsigned char& face, BlockPos& pos) const;
