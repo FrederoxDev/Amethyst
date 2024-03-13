@@ -15,6 +15,6 @@ public:
     glm::tvec2<float> mOffset; // this + 96
 
 //hooks:
-	// 48 8B C4 48 89 58 ? 48 89 70 ? 48 89 78 ? 4C 89 70 ? 55 48 8D 68 ? 48 81 EC ? ? ? ? 0F 29 70 ? 0F 29 78 ? 44 0F 29 40 ? 49 8B D9
+	// 1.20.51.1 - 48 8B C4 48 89 58 ? 48 89 70 ? 48 89 78 ? 4C 89 70 ? 55 48 8D 68 ? 48 81 EC ? ? ? ? 0F 29 70 ? 0F 29 78 ? 44 0F 29 40 ? 49 8B D9
     void _renderHoverBox(MinecraftUIRenderContext*, IClientInstance*, RectangleArea*, float);
 };

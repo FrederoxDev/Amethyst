@@ -14,54 +14,82 @@
 #include <variant>
 
 class CompoundTagVariant {
-public:
-    std::variant<EndTag, ByteTag, ShortTag, IntTag, Int64Tag, FloatTag, DoubleTag, ByteArrayTag, StringTag,
-                 ListTag, CompoundTag, IntArrayTag> mTagStorage;
+    typedef std::variant<EndTag, ByteTag, ShortTag, IntTag, Int64Tag, FloatTag, DoubleTag, ByteArrayTag, StringTag, ListTag, CompoundTag, IntArrayTag> Variant;
 
 public:
+    Variant mTagStorage;
+
+    CompoundTagVariant() {}
+    CompoundTagVariant(CompoundTagVariant&&) = default;
+    CompoundTagVariant(const CompoundTagVariant&) = delete;
+    CompoundTagVariant(Tag&&);
+    CompoundTagVariant& operator=(CompoundTagVariant&&) = default;
+    CompoundTagVariant& operator=(const CompoundTagVariant&) = delete;
+    Tag& emplace(Tag&&);
+
+    CompoundTagVariant copy() const
+    {
+        return std::visit([](const auto& tag) {
+            return CompoundTagVariant(std::move(*tag.copy()));
+        },
+        mTagStorage);
+    }
+
+    const Tag* operator->() const
+    {
+        return get();
+    }
+
+    Tag* operator->()
+    {
+        return get();
+    }
+
     const Tag* get() const
     {
         return std::visit([](const auto& tag) -> const Tag* {
             return &tag;
-        }, mTagStorage);
+        },
+        mTagStorage);
     }
 
     Tag* get()
     {
         return std::visit([](auto& tag) -> Tag* {
             return &tag;
-        }, mTagStorage);
+        },
+        mTagStorage);
+    }
+
+    const Tag& operator*() const
+    {
+        return *get();
+    }
+
+    Tag& operator*()
+    {
+        return *get();
+    }
+
+    template <typename T, typename... Type>
+    T& emplace(Type&&... args)
+    {
+        return mTagStorage.emplace<T>(std::forward<Type>(args)...);
     }
 
     template <typename T>
     const T* get() const
     {
         auto tag = std::get_if<T>(&mTagStorage);
-
-        if (tag) {
-            return tag;
-        }
-        else {
-            return nullptr;
-        }
+        if (!tag) return nullptr;
+        return tag;
     }
 
     template <typename T>
     T* get()
     {
         auto tag = std::get_if<T>(&mTagStorage);
-
-        if (tag) {
-            return tag;
-        }
-        else {
-            return nullptr;
-        }
-    }
-
-    template <typename T, typename... Args>
-    void emplace(Args&&... args)
-    {
-        mTagStorage.emplace<T>(std::forward<Args>(args)...);
+        if (!tag) return nullptr;
+        return tag;
     }
 };

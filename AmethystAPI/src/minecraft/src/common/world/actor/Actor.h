@@ -23,10 +23,18 @@ public:
     Vec3* getPosition();
 
     template <typename T>
-    const T* tryGetComponent() const;
+    const T* tryGetComponent() const
+    {
+        const auto& registry = mEntityContext.getRegistry();
+        return registry.try_get<T>(mEntityContext.mEntity);
+    }
 
     template <typename T>
-    T* tryGetComponent();
+    T* tryGetComponent()
+    {
+        auto& registry = mEntityContext.getRegistry();
+        return registry.try_get<T>(mEntityContext.mEntity);
+    }
 };
 
 static_assert(sizeof(Actor) == 1224);

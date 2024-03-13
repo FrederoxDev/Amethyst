@@ -22,6 +22,4 @@ void InitializeVtablePtrs() {
     BlockItem_ctor = reinterpret_cast<void*>(SigScan("48 89 5C 24 ? 48 89 74 24 ? 48 89 4C 24 ? 57 48 83 EC ? 48 8B F2 48 8B F9 E8 ? ? ? ? 90 48 8D 05"));
 
     MaterialPtr_ctor = reinterpret_cast<void*>(SigScan("48 89 4C 24 ? 53 48 83 EC ? 4C 8B CA 48 8B D9 33 C0"));
-
-//    mce::RenderMaterialGroup::switchable = reinterpret_cast<mce::RenderMaterialGroupBase*>(SlideAddress(0x572BBB0));
 }

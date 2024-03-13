@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.12)
 project(AmethystRuntime)
-set(MOD_VERSION "1.2.0")
+set(MOD_VERSION "1.2.1")
+
+# Runtime Build Options
+option(AMETHYST_INPUT_SYSTEM "Enables AmethystAPI's input system" OFF)
 
 # C++ Build Settings
 set(CMAKE_CONFIGURATION_TYPES "RelWithDebInfo" CACHE STRING "Build configurations" FORCE)
@@ -14,6 +17,11 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO "${AmethystFolder}/mods/${PROJ
 # Include Amethyst
 find_library(AMETHYST_API AmethystAPI PATHS "${AmethystFolder}/lib")
 include_directories(${AmethystFolder}/include "src/")
+
+# Compile definitions 
+if (AMETHYST_INPUT_SYSTEM) 
+    add_compile_definitions(AMETHYST_INPUT_SYSTEM)
+endif()
 
 # Project Files
 file(GLOB_RECURSE CPP_SOURCES "src/*.cpp")

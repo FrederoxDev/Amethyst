@@ -1,15 +1,37 @@
 #include "minecraft/src-deps/input/InputHandler.h"
+#include "minecraft/src-deps/core/string/StringHash.h"
 
-void InputHandler::registerButtonDownHandler(std::string a1, std::function<void(FocusImpact, IClientInstance&)> a2, bool a3)
-{
-    using function = void(__thiscall*)(InputHandler*, std::string, std::function<void(FocusImpact, IClientInstance&)>, bool);
-    static auto func = reinterpret_cast<function>(SlideAddress(0x3AFC790));
-    return func(this, a1, a2, a3);
+// This seems to be a 32 bit variation of a hashed string?
+int StringToNameId(const std::string& str) {
+    int hashed = -2128831035;
+
+    for (char c : str) {
+        hashed = 16777619 * (hashed ^ c);
+    }
+
+    return hashed;
 }
 
-void InputHandler::registerButtonUpHandler(std::string a1, std::function<void(FocusImpact, IClientInstance&)> a2, bool a3)
+void InputHandler::registerButtonDownHandler(std::string buttonName, std::function<void(FocusImpact, IClientInstance&)> handler, bool suspendable)
 {
-    using function = void(__thiscall*)(InputHandler*, std::string, std::function<void(FocusImpact, IClientInstance&)>, bool);
-    static auto func = reinterpret_cast<function>(SlideAddress(0x3AFCA10));
-    return func(this, a1, a2, a3);
+    this->mButtonDownHandlerMap.emplace(StringToNameId(buttonName), std::make_pair(suspendable, std::move(handler)));
+}
+
+void InputHandler::registerButtonUpHandler(std::string buttonName, std::function<void(FocusImpact, IClientInstance&)> handler, bool suspendable)
+{
+    this->mButtonUpHandlerMap.emplace(StringToNameId(buttonName), std::make_pair(suspendable, std::move(handler)));
+}
+
+void InputHandler::unregisterHandlersByName(const std::string& buttonName) {
+    int hashedName = StringToNameId(buttonName);
+
+    auto downHandlerRange = mButtonDownHandlerMap.equal_range(hashedName);
+    if (downHandlerRange.first != mButtonDownHandlerMap.end()) {
+        mButtonDownHandlerMap.erase(downHandlerRange.first, downHandlerRange.second);
+    }
+
+    auto upHandlerRange = mButtonUpHandlerMap.equal_range(hashedName);
+    if (upHandlerRange.first != mButtonUpHandlerMap.end()) {
+        mButtonUpHandlerMap.erase(upHandlerRange.first, upHandlerRange.second);
+    }
 }

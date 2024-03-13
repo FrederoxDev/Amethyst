@@ -56,10 +56,7 @@ void AmethystRuntime::LoadModDlls()
     // Load all mod functions
     for (auto& mod : mLoadedMods) {
         Log::Info("[AmethystRuntime] Loading '{}'", mod.modName);
-
-        _LoadModFunc(&mModRegisterInputs, mod, "RegisterInputs");
         _LoadModFunc(&mModInitialize, mod, "Initialize");
-        _LoadModFunc(&mModShutdown, mod, "Shutdown");
     }
 }
 
@@ -80,17 +77,10 @@ void AmethystRuntime::PromptDebugger()
 
 void AmethystRuntime::CreateOwnHooks()
 {
-    static bool hasRegisteredInputsBefore = false;
-
-    if (!hasRegisteredInputsBefore) {
-        for (auto& registerInputFunc : mModRegisterInputs) {
-            registerInputFunc(getInputManager());
-        }
-
-        hasRegisteredInputsBefore = true;
-    }
-
+    #ifdef AMETHYST_INPUT_SYSTEM
     CreateInputHooks();
+    #endif
+
     CreateModFunctionHooks();
 }
 
@@ -98,7 +88,7 @@ void AmethystRuntime::RunMods()
 {
     // Invoke mods to initialize and setup hooks, etc..
     for (auto& modInitialize : mModInitialize)
-        modInitialize(getHookManager(), getEventManager(), getInputManager());
+        modInitialize(&mAmethystContext);
 
     ResumeGameThread();
 
@@ -110,6 +100,7 @@ void AmethystRuntime::RunMods()
         if (GetAsyncKeyState('R') & 0x8000) {
             Log::Info("\n========================= Beginning hot-reload! =========================");
 
+
             Shutdown();
             return Start();
         }
@@ -118,17 +109,11 @@ void AmethystRuntime::RunMods()
 
 void AmethystRuntime::Shutdown()
 {
-    mEventManager.Shutdown();
+    // Prompt all mods to do any final code before shutdown
+    getEventManager()->Shutdown();
 
     // Remove any of the runtime mods hooks
-    mHookManager.Shutdown();
-
-    // Unload any input action callbacks from Mod Dlls
-    mInputManager.Shutdown();
-
-    // Prompt all mods to shutdown
-    for (auto& modShutdown : mModShutdown)
-        modShutdown();
+    getEventManager()->Shutdown();
 
     // Unload all mod Dlls
     for (auto& mod : mLoadedMods) {
@@ -138,9 +123,7 @@ void AmethystRuntime::Shutdown()
     mLoadedMods.clear();
 
     // Clear all mod functions
-    mModRegisterInputs.clear();
     mModInitialize.clear();
-    mModShutdown.clear();
 }
 
 void AmethystRuntime::ResumeGameThread()

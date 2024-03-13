@@ -1,7 +1,7 @@
 #include "minecraft/src-client/common/client/renderer/Tessellator.h"
 
 void Tessellator::begin(mce::PrimitiveMode mode, int maxVertices) {
-    using function = void(Tessellator::*)(mce::PrimitiveMode, int);
+    using function = decltype(&Tessellator::begin);
 
     if (this->mTessellating) {
         throw std::exception("Already tessellating!");
@@ -22,7 +22,7 @@ void Tessellator::vertex(const Vec3& vec) {
 }
 
 mce::Mesh Tessellator::end(uint64_t a3, std::string_view debugName, int a5) {
-    using function = mce::Mesh(Tessellator::*)(uint64_t, std::string_view, int);
+    using function = decltype(&Tessellator::end);
     static auto func = std::bit_cast<function>(SigScan("48 8B C4 48 89 58 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D A8 ? ? ? ? 48 81 EC ? ? ? ? 0F 29 70 ? 0F 29 78 ? 44 0F 29 40 ? 44 0F 29 48 ? 44 0F 29 90 ? ? ? ? 44 0F 29 98 ? ? ? ? 44 0F 29 A0 ? ? ? ? 44 0F 29 A8 ? ? ? ? 44 0F 29 B0 ? ? ? ? 44 0F 29 B8 ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4D 8B F9"));
     return (this->*func)(a3, debugName, a5);
 }
@@ -83,7 +83,7 @@ void Tessellator::beginOverride() {
 }
 
 void Tessellator::clear() {
-    using function = void(Tessellator::*)();
+    using function = decltype(&Tessellator::clear);
     static auto func = std::bit_cast<function>(SigScan("48 83 EC ? C7 81 ? ? ? ? ? ? ? ? 4C 8B C9"));
     (this->*func)();
 }

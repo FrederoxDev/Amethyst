@@ -3,6 +3,7 @@
 #include "minecraft/src/common/nbt/ByteTag.h"
 #include "minecraft/src/common/nbt/ListTag.h"
 #include "minecraft/src/common/nbt/StringTag.h"
+#include "minecraft/src/common/nbt/IntTag.h"
 #include <map>
 #include <string_view>
 
@@ -20,6 +21,10 @@ public:
     bool contains(std::string_view name) const;
     bool contains(std::string_view name, Tag::Type type) const;
 
+    void clear();
+    void deepCopy(const CompoundTag& other);
+    std::unique_ptr<CompoundTag> clone() const;
+
     const ListTag* getList(std::string_view name) const;
     ListTag* getList(std::string_view name);
 
@@ -32,6 +37,10 @@ public:
     StringTag* getStringTag(std::string_view name);
     const std::string* getString(std::string_view name) const;
     void putString(std::string name, std::string value);
+
+    const IntTag* getIntTag(std::string_view name) const;
+    IntTag* getIntTag(std::string_view name);
+    int getInt(std::string_view name) const;
 
 private:
     template <typename T>

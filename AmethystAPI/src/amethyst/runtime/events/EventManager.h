@@ -1,5 +1,5 @@
 #pragma once
-#include "amethyst/events/Event.h"
+#include "Event.h"
 #include "minecraft/src-client/common/client/game/ClientInstance.h"
 #include "minecraft/src-client/common/client/gui/ScreenView.h"
 #include "minecraft/src/common/world/item/registry/ItemRegistry.h"
@@ -21,6 +21,8 @@ namespace Amethyst {
         Event<ItemRegistry*> registerItems;
         Event<BlockDefinitionGroup*> registerBlocks;
 
+        Event<> beforeModShutdown;
+
         /*
         Clear any events that have been registered
         */
@@ -33,6 +35,7 @@ namespace Amethyst {
             update.Shutdown();
             registerItems.Shutdown();
             registerBlocks.Shutdown();
+            beforeModShutdown.Shutdown();
         }
     };
 } // namespace Amethyst

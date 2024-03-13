@@ -2,6 +2,7 @@
 #include "amethyst/Memory.h"
 #include <functional>
 #include <string>
+#include <map>
 
 enum FocusImpact : char {
     Neutral = 0x0,
@@ -14,13 +15,12 @@ using IClientInstance = ClientInstance;
 
 class InputHandler {
 public:
-    // Found in MinecraftInputHandler::_registerInputHandlers
-    // 0x3AFC790 - 1.20.51.1
-    // 48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 49 8B F0 4C 8B F2 4C 8B F9 48 89 55 ? 4C 89 45 ? 45 33 ED 48 83 7A ? ? 72 ? 48 8B 12 BB ? ? ? ? 48 C7 C1 ? ? ? ? 48 FF C1 80 3C 0A ? 75 ? 48 85 C9 74 ? 0F 1F 40 ? 66 66 0F 1F 84 00 ? ? ? ? 0F BE 02 48 8D 52 ? 33 C3 69 D8 ? ? ? ? 48 83 E9 ? 75 ? 49 83 C7 ? 44 88 4D ? 48 8D 45 ? 48 89 45 ? 4C 89 6D ? 49 8B 48 ? 48 85 C9 74 ? 48 8B 01 48 8D 55 ? 48 8B 00 FF 15 ? ? ? ? 48 89 45 ? 4D 8B 27 4C 89 7D ? 4C 89 6D ? E8 ? ? ? ? 4C 8B C0 48 8B 08 48 8B 41 ? BA ? ? ? ? 49 8B C8 FF 15 ? ? ? ? 48 8B F8 48 85 C0 75 ? 48 C7 44 24 ? ? ? ? ? 48 8D 05 ? ? ? ? 48 89 44 24 ? 4C 8D 0D ? ? ? ? 44 8D 47 ? 48 8D 15 ? ? ? ? 48 8D 0D ? ? ? ? E8 ? ? ? ? 84 C0 74 ? C7 04 25 ? ? ? ? ? ? ? ? 48 89 7D ? 89 5F ? 0F B6 45 ? 88 47 ? 4C 89 6F ? 48 8B 4D ? 48 85 C9 74 ? 48 8D 45 ? 48 3B C8 75 ? 48 8B 01 48 8D 57 ? 48 8B 40 ? FF 15 ? ? ? ? 48 89 47 ? 48 8B 4D ? 48 85 C9 74 ? 48 8B 01 48 8D 55 ? 48 3B CA 0F 95 C2 48 8B 40 ? FF 15 ? ? ? ? EB ? 48 89 4F ? 4C 89 6D ? 4C 89 27 4C 89 67 ? 4C 89 67 ? 66 C7 47 ? ? ? 49 8B 07 48 8B 48 ? 48 89 4D ? 44 89 6D ? 80 79 ? ? 75 ? 8B 47 ? 48 89 4D ? 3B 41 ? 73 ? C7 45 ? ? ? ? ? 48 8B 09 EB ? 44 89 6D ? 48 8B 49 ? 80 79 ? ? 74 ? 48 B8 ? ? ? ? ? ? ? ? 49 39 47 ? 0F 84 ? ? ? ? 0F 10 45 ? 0F 29 45 ? 4C 8B C7 48 8D 55 ? 49 8B CF E8 ? ? ? ? 90 48 8B 4D ? 48 85 C9 74 ? 48 8B 01 48 8D 55 ? 48 3B CA 0F 95 C2 48 8B 40 ? FF 15 ? ? ? ? 90 49 8B CE E8 ? ? ? ? 90 48 8B 4E ? 48 85 C9 74 ? 48 8B 01 48 3B CE 0F 95 C2 48 8B 40 ? FF 15 ? ? ? ? 4C 89 6E ? 48 8B 4D ? 48 33 CC E8 ? ? ? ? 48 8B 9C 24 ? ? ? ? 48 81 C4 ? ? ? ? 41 5F 41 5E 41 5D 41 5C 5F 5E 5D C3 E8 ? ? ? ? 90 CC CC CC CC CC CC 48 89 5C 24 ? 55
-    void registerButtonDownHandler(std::string buttonName, std::function<void(FocusImpact, IClientInstance&)> handler, bool suspendable);
+    /* this + 0   */ std::byte padding0[24];
+    /* this + 24  */ std::multimap<unsigned int, std::pair<bool, std::function<void(enum FocusImpact, IClientInstance &)>>> mButtonDownHandlerMap;
+    /* this + 40  */ std::multimap<unsigned int, std::pair<bool, std::function<void(enum FocusImpact, IClientInstance&)>>> mButtonUpHandlerMap;
 
-    // Found in MinecraftInputHandler::_registerInputHandlers
-    // 0x3AFCA10 - 1.20.51.1
-    // 48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 49 8B F0 4C 8B F2 4C 8B F9 48 89 55 ? 4C 89 45 ? 45 33 ED 48 83 7A ? ? 72 ? 48 8B 12 BB ? ? ? ? 48 C7 C1 ? ? ? ? 48 FF C1 80 3C 0A ? 75 ? 48 85 C9 74 ? 0F 1F 40 ? 66 66 0F 1F 84 00 ? ? ? ? 0F BE 02 48 8D 52 ? 33 C3 69 D8 ? ? ? ? 48 83 E9 ? 75 ? 49 83 C7 ? 44 88 4D ? 48 8D 45 ? 48 89 45 ? 4C 89 6D ? 49 8B 48 ? 48 85 C9 74 ? 48 8B 01 48 8D 55 ? 48 8B 00 FF 15 ? ? ? ? 48 89 45 ? 4D 8B 27 4C 89 7D ? 4C 89 6D ? E8 ? ? ? ? 4C 8B C0 48 8B 08 48 8B 41 ? BA ? ? ? ? 49 8B C8 FF 15 ? ? ? ? 48 8B F8 48 85 C0 75 ? 48 C7 44 24 ? ? ? ? ? 48 8D 05 ? ? ? ? 48 89 44 24 ? 4C 8D 0D ? ? ? ? 44 8D 47 ? 48 8D 15 ? ? ? ? 48 8D 0D ? ? ? ? E8 ? ? ? ? 84 C0 74 ? C7 04 25 ? ? ? ? ? ? ? ? 48 89 7D ? 89 5F ? 0F B6 45 ? 88 47 ? 4C 89 6F ? 48 8B 4D ? 48 85 C9 74 ? 48 8D 45 ? 48 3B C8 75 ? 48 8B 01 48 8D 57 ? 48 8B 40 ? FF 15 ? ? ? ? 48 89 47 ? 48 8B 4D ? 48 85 C9 74 ? 48 8B 01 48 8D 55 ? 48 3B CA 0F 95 C2 48 8B 40 ? FF 15 ? ? ? ? EB ? 48 89 4F ? 4C 89 6D ? 4C 89 27 4C 89 67 ? 4C 89 67 ? 66 C7 47 ? ? ? 49 8B 07 48 8B 48 ? 48 89 4D ? 44 89 6D ? 80 79 ? ? 75 ? 8B 47 ? 48 89 4D ? 3B 41 ? 73 ? C7 45 ? ? ? ? ? 48 8B 09 EB ? 44 89 6D ? 48 8B 49 ? 80 79 ? ? 74 ? 48 B8 ? ? ? ? ? ? ? ? 49 39 47 ? 0F 84 ? ? ? ? 0F 10 45 ? 0F 29 45 ? 4C 8B C7 48 8D 55 ? 49 8B CF E8 ? ? ? ? 90 48 8B 4D ? 48 85 C9 74 ? 48 8B 01 48 8D 55 ? 48 3B CA 0F 95 C2 48 8B 40 ? FF 15 ? ? ? ? 90 49 8B CE E8 ? ? ? ? 90 48 8B 4E ? 48 85 C9 74 ? 48 8B 01 48 3B CE 0F 95 C2 48 8B 40 ? FF 15 ? ? ? ? 4C 89 6E ? 48 8B 4D ? 48 33 CC E8 ? ? ? ? 48 8B 9C 24 ? ? ? ? 48 81 C4 ? ? ? ? 41 5F 41 5E 41 5D 41 5C 5F 5E 5D C3 E8 ? ? ? ? 90 CC CC CC CC CC CC 48 89 5C 24 ? 48 89 74 24
+public:
+    void registerButtonDownHandler(std::string buttonName, std::function<void(FocusImpact, IClientInstance&)> handler, bool suspendable);
     void registerButtonUpHandler(std::string buttonName, std::function<void(FocusImpact, IClientInstance&)> handler, bool suspendable);
+    void unregisterHandlersByName(const std::string& buttonName);
 };

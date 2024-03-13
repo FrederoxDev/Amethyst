@@ -17,7 +17,7 @@ set_property(GLOBAL PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
 
 file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.c" "src/*.asm")
 file(GLOB_RECURSE HEADERS "src/*.h" "src/*.hpp")
-
+  
 # Create AmethystAPI as a .lib
 add_library(${PROJECT_NAME} STATIC 
     ${SOURCES}
@@ -25,7 +25,6 @@ add_library(${PROJECT_NAME} STATIC
     src/minecraft/src/common/world/item/Item.asm
     src/minecraft/src/common/world/level/block/BlockLegacy.asm
     src/minecraft/src-deps/minecraftrenderer/renderer/MaterialPtr.asm
-        src/minecraft/src/common/world/level/BlockSourceListener.h
 )
 
 

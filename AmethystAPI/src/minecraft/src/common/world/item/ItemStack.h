@@ -1,14 +1,14 @@
 #pragma once
 #include "minecraft/src/common/world/item/ItemStackBase.h"
 #include "amethyst/Memory.h"
+#include "minecraft/src/common/world/inventory/network/ItemStackNetIdVariant.h"
 
 class ItemStack : public ItemStackBase {
 public:
-    ItemStack();
+    ItemStackNetIdVariant mNetIdVariant;
 
-//vfuncs:
-    void reinit(std::string_view name, int count, int auxValue);
-    void reinit(const Item*, int count, int auxValue);
+public:
+    ItemStack();
 };
 
 static_assert(sizeof(ItemStack) == 0xA0);

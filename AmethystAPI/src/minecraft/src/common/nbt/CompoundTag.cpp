@@ -58,6 +58,26 @@ bool CompoundTag::contains(std::string_view name, Tag::Type type) const
     return false;
 }
 
+void CompoundTag::clear()
+{
+    mTags.clear();
+}
+
+void CompoundTag::deepCopy(const CompoundTag& other)
+{
+    clear();
+    for (auto& it : other.mTags) {
+        mTags.emplace(it.first, it.second.copy());
+    }
+}
+
+std::unique_ptr<CompoundTag> CompoundTag::clone() const
+{
+    auto newCompound = std::make_unique<CompoundTag>();
+    newCompound->deepCopy(*this);
+    return newCompound;
+}
+
 const ListTag* CompoundTag::getList(std::string_view name) const
 {
     return get<ListTag>(name);
@@ -115,4 +135,18 @@ const std::string* CompoundTag::getString(std::string_view name) const
 void CompoundTag::putString(std::string name, std::string value) {
     StringTag stringTag(value);
     mTags[name].emplace<StringTag>(stringTag);
+}
+
+const IntTag* CompoundTag::getIntTag(std::string_view name) const {
+    return get<IntTag>(name);
+}
+
+IntTag* CompoundTag::getIntTag(std::string_view name) {
+    return get<IntTag>(name);
+}
+
+int CompoundTag::getInt(std::string_view name) const {
+    auto tag = getIntTag(name);
+    if (tag) return tag->data;
+    return 0;
 }
