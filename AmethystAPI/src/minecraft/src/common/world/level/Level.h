@@ -8,9 +8,7 @@ class BlockTypeRegistry;
 
 class Level {
 public:
-    /* this + 0    */ uintptr_t** vtable;
-    /* this + 8    */ std::byte padding8[340];
-    /* this + 348  */ const ItemRegistryRef mItemRegistry;
-    /* this + 364  */ std::weak_ptr<BlockTypeRegistry> mBlockRegistry;
-    /* this + 380  */ std::byte padding380[8620];
+    /* this + 0    */ std::byte padding0[840];
+    /* this + 840  */ const ItemRegistryRef mItemRegistry;
+    /* this + 856  */ std::byte padding856[8144];
 };
