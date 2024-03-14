@@ -4,6 +4,5 @@
 
 class MatrixStack {
 public:
-//    std::stack<Matrix> stack;
-//    bool _isDirty;
+    std::stack<Matrix> stack;
 };

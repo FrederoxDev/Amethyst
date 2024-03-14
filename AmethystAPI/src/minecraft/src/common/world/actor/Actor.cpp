@@ -2,5 +2,5 @@
 
 Vec3* Actor::getPosition()
 {
-    return &mStateVectorComponent->mPos;
+    return &tryGetComponent<StateVectorComponent>()->mPos;
 }

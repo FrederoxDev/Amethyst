@@ -10,7 +10,7 @@ using IClientInstance = ClientInstance;
 #pragma pack(push, 1)
 class ScreenContext : public UIScreenContext, public mce::MeshContext {
 public:
-    std::byte padding0[168];
+    std::byte padding0[124];
     Tessellator& tessellator; // this + 192
 };
 #pragma pack(pop)

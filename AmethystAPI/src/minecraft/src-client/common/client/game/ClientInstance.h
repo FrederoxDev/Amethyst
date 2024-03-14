@@ -37,7 +37,7 @@ public:
     /* this + 272  */ ClientInputHandler* inputHandler;
     /* this + 280  */ std::byte padding280[344];
     /* this + 624  */ mce::Camera camera;
-    /* this + 625  */ std::byte padding625[695];
+    /* this + 1136 */ std::byte padding1136[184];
     /* this + 1320 */ BlockTessellator* mBlockTessellator;
     /* this + 1328 */ std::byte padding1328[40];
     /* this + 1368 */ ItemRenderer* itemRenderer;
