@@ -5,9 +5,10 @@
 namespace mce {
     class Camera {
     public:
-        /* this + 0   */ std::byte padding0[216];
-        /* this + 216 */ glm::tmat4x4<float> mInverseViewMatrix;
-        /* this + 280 */ std::byte padding280[232];
+        /* this + 0   */ MatrixStack viewMatrixStack;
+        /* this + 64  */ std::byte padding64[128];
+        /* this + 192 */ glm::tmat4x4<float> mInverseViewMatrix;
+        /* this + 256 */ std::byte padding256[256];
     };
 };
 
