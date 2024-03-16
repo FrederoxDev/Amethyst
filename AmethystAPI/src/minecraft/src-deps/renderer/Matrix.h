@@ -4,7 +4,7 @@
 
 class Matrix {
 public:
-	glm::tmat4x4<float> _m;
+	glm::mat4x4 _m;
 
 public:
 	void translate(float x, float y, float z);
