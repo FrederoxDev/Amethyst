@@ -8,6 +8,8 @@
 #include <vector>
 #include <Windows.h>
 #include <string_view>
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
 
 /*
 Returns the position where Minecraft has been loaded into memory
@@ -39,3 +41,13 @@ uintptr_t SigScan(std::string_view signature);
  * returns SIZE_MAX if it fails
 */
 size_t FindOffsetOfPointer(void* _base, void* _pointer, size_t maxSearchSize);
+
+/**
+ * Unprotects the memory region 
+*/
+bool UnprotectMemory(void* address, size_t size, DWORD* oldProtection);
+
+/**
+ * Reprotects the memory region
+*/
+bool ProtectMemory(void* address, size_t size, DWORD protectionData, DWORD* oldProtection = nullptr);

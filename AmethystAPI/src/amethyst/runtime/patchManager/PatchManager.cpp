@@ -66,11 +66,4 @@ namespace Amethyst {
 		this->m_Patches.clear();
     }
 
-    bool PatchManager::UnprotectMemory(PatchAddress address, size_t size, DWORD* oldProtection) {
-        return VirtualProtect(address, size, PAGE_EXECUTE_READWRITE, oldProtection);
-    }
-    bool PatchManager::ProtectMemory(PatchAddress address, size_t size, DWORD oldProtection) {
-        DWORD oldOldProtection; // Only exists so windows doesnt have a hissy fit
-        return VirtualProtect(address, size, oldProtection, &oldOldProtection);
-    }
 } // namespace Amethyst

@@ -23,9 +23,6 @@ namespace Amethyst {
 
 		void RemoveAllPatches();
 	private:
-         bool UnprotectMemory(PatchAddress address, size_t size, DWORD* oldProtection);
-         bool ProtectMemory(PatchAddress address, size_t size, DWORD oldProtection);
-
     private:
 		struct OriginalMemory {
 			uint8_t* original = nullptr;
