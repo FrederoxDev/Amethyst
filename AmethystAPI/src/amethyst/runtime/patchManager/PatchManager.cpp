@@ -48,9 +48,8 @@ namespace Amethyst {
 
     void PatchManager::RemoveAllPatches()
     {
-        uintptr_t address = -1;
 		for (auto it = this->mPatches.rbegin(); it != this->mPatches.rend(); it++) {
-			address = it->address;
+            uintptr_t address = it->address;
 			DWORD oldProtection;
 			if (!UnprotectMemory(address, it->original.size, &oldProtection)) {
 				Assert("Failed to unprotect memory at address: 0x{0:x}", address);
