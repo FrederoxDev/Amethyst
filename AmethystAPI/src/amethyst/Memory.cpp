@@ -66,18 +66,18 @@ size_t FindOffsetOfPointer(void* _base, void* _pointer, size_t maxSearchSize)
     return SIZE_MAX;
 }
 
-bool UnprotectMemory(void* address, size_t size, DWORD* oldProtection)
+bool UnprotectMemory(uintptr_t address, size_t size, DWORD* oldProtection)
 {
     return ProtectMemory(address, size, PAGE_EXECUTE_READWRITE, oldProtection);
 }
 
-bool ProtectMemory(void* address, size_t size, DWORD protectionData, DWORD* oldProtection)
+bool ProtectMemory(uintptr_t address, size_t size, DWORD protectionData, DWORD* oldProtection)
 {
     DWORD oldProtect;
     if (oldProtection != nullptr) oldProtect = *oldProtection;
 	else oldProtect = DWORD();
-    if (!VirtualProtect(address, size, protectionData, &oldProtect)) {
-		Log::Error("Failed to reprotect memory at 0x{:X}! Error: {}", reinterpret_cast<uintptr_t>(address), GetLastError());
+    if (!VirtualProtect(reinterpret_cast<void*>(address), size, protectionData, &oldProtect)) {
+		Log::Error("Failed to reprotect memory at 0x{:X}! Error: {}", address, GetLastError());
 		return false;
 	}
 
