@@ -34,5 +34,6 @@ namespace Log {
         throw std::exception(formatted_string.c_str());
     }
      
-    #define Assert(...) _Assert(__FUNCTION__, __LINE__, __VA_ARGS__)
-    }; // namespace Log
+}; // namespace Log
+
+#define Assert(...) Log::_Assert(__FUNCTION__, __LINE__, __VA_ARGS__)
