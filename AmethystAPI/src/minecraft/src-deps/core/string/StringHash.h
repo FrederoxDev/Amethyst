@@ -4,110 +4,114 @@
 
 typedef uint64_t HashType64;
 
-// FNV-1
-template <std::size_t V>
-HashType64 calculate_string_hash()
-{
-    return V;
-}
-
-template <std::size_t V, char C, char... Cs>
-HashType64 calculate_string_hash()
-{
-    return calculate_string_hash<(V * 0x100000001B3) ^ C, Cs...>();
-}
-
-template <std::size_t... N, typename Literal>
-HashType64 templatize_string_to_chars(std::index_sequence<N...>, Literal)
-{
-    return calculate_string_hash<0xCBF29CE484222325, Literal::get(N)...>();
-}
-
-#define STRING_LITERAL_HASH(s)                                            \
-    templatize_string_to_chars(std::make_index_sequence<sizeof(s) - 1>(), \
-                               []() {                                     \
-                                   struct Literal {                       \
-                                       static constexpr char get(int i)   \
-                                       {                                  \
-                                           return s[i];                   \
-                                       }                                  \
-                                   };                                     \
-                                   return Literal{};                      \
-                               }())
-
-namespace RunTime {
-inline uint64_t hash64(const char* str)
-{
-    uint64_t ret = 0xCBF29CE484222325;
-    if (str) {
-        while (*str) {
-            ret = (ret * 0x100000001B3) ^ *str++;
-        }
-    }
-    return ret;
-}
-} // namespace RunTime
-
 class HashedString {
 public:
     static HashedString defaultErrorValue;
+    const static HashedString EMPTY;
 
 private:
-    HashType64 mStrHash = 0;
+    HashType64 mStrHash{};
     std::string mStr;
-    const HashedString* mLastMatch;
-
-    template <typename T>
-    struct StringHasher {
-        static HashType64 hash(T str) { return 0; }
-    };
-
-    template <typename T>
-    static HashType64 hash(const T& str)
-    {
-        return HashedString::StringHasher<T>::hash(str);
-    }
+    mutable const HashedString* mLastMatch{};
 
 public:
-    HashedString() = default;
-    HashedString(std::nullptr_t);
-    HashedString(const HashedString&);
-    HashedString(HashedString&&) noexcept;
-    HashedString(HashType64 hash, const char* str);
-    HashedString(const char* str);
-    HashedString(const std::string& str);
-    HashedString(HashType64 hash, std::string str);
-    HashedString& operator=(const HashedString&);
-    bool operator==(const HashedString&) const;
-    bool operator!=(const HashedString&) const;
-    bool operator<(const HashedString&) const;
+    constexpr HashedString() = default;
+    constexpr HashedString(std::nullptr_t) {}
 
-    operator string_span() const
+    constexpr HashedString(const HashedString& o) : mStrHash(o.mStrHash), mStr(o.mStr) {}
+    constexpr HashedString(HashedString&& o) noexcept : mStrHash(std::exchange(o.mStrHash, 0)), mStr(std::move(o.mStr)) {}
+
+    constexpr HashedString& operator=(const HashedString& o)
+    {
+        if (this != &o)
+        {
+            this->mStrHash = o.mStrHash;
+            this->mStr = o.mStr;
+        }
+        return *this;
+    }
+
+    constexpr HashedString& operator=(HashedString&& o) noexcept
+    {
+        if (this != &o)
+        {
+            this->mStrHash = std::exchange(o.mStrHash, 0);
+            this->mStr = std::move(o.mStr);
+        }
+        return *this;
+    }
+
+    constexpr HashedString(std::string str) : HashedString(computeHash(str), std::move(str)) {}
+    constexpr HashedString(const HashType64 hash, std::string str) : mStrHash(hash), mStr(std::move(str)) {}
+
+    constexpr bool operator==(const HashedString& rhs) const {
+        if (this->mStrHash != rhs.mStrHash) return false;
+        if (this->mLastMatch == &rhs && rhs.mLastMatch == this) return true;
+        if (this->mStr != rhs.mStr) return false;
+        this->mLastMatch = &rhs;
+        rhs.mLastMatch = this;
+        return true;
+    }
+
+    constexpr bool operator<(const HashedString& o) const
+    {
+        if (this->mStrHash < o.mStrHash) return true;
+        if (this->mStrHash == o.mStrHash) return this->mStr < o.mStr;
+        return false;
+    }
+
+    constexpr operator string_span() const
     {
         return string_span(mStr);
     }
 
-    HashType64 getHash() const;
-    const std::string& getString() const;
-    const char* c_str() const;
-    bool isEmpty() const;
-    bool empty() const;
-    void clear();
-    static const HashedString& getEmptyString();
-    static HashType64 computeHash(const char* str);
-    static HashType64 computeHash(const std::string& str);
+    constexpr HashType64 getHash() const
+    {
+        return mStrHash;
+    }
 
-private:
-    template <>
-    struct StringHasher<const char*> {
-    public:
-        static HashType64 hash(const char* str)
-        {
-            // never compiled without const char*
-            return RunTime::hash64(str);
+    constexpr const std::string& getString() const
+    {
+        return mStr;
+    }
+
+    constexpr const char* c_str() const
+    {
+        return mStr.c_str();
+    }
+
+    constexpr bool isEmpty() const
+    {
+        return mStr.empty();
+    }
+
+    constexpr bool empty() const
+    {
+        return mStr.empty();
+    }
+
+    constexpr void clear()
+    {
+        this->mStrHash = 0;
+        this->mStr.clear();
+    }
+
+    static constexpr HashType64 computeHash(const std::string_view str)
+    {
+        if (str.empty()) return 0;
+        uint64_t hash = 0xCBF29CE484222325;
+        for (const char c : str) {
+            hash *= 0x100000001B3; // 64bit Prime Multiplier
+            hash ^= static_cast<uint64_t>(c);
         }
-    };
+        return hash;
+    }
 };
+
+static_assert(HashedString{}.getHash() == 0);
+static_assert(HashedString{"amethyst"}.getHash() == 0x8846F44C0E605820);
+
+constexpr inline HashedString HashedString::EMPTY{};
 
 template <>
 struct std::hash<HashedString> {
