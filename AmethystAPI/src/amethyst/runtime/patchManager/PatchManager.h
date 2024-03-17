@@ -16,6 +16,7 @@ namespace Amethyst {
         bool ApplyPatch(PatchAddress address, T patch){
 			return ApplyPatch(address, (uint8_t*)&patch, sizeof(T));
 		}
+
         bool ApplyPatch(PatchAddress address, uint8_t* patch, size_t size);
 
 		void RemovePatch(PatchAddress address);
