@@ -3,11 +3,10 @@
 #include "../../Memory.h"
 namespace Amethyst {
     // Returns false if the patch failed to apply
-    bool PatchManager::ApplyPatch(uintptr_t address, uint8_t* patch, size_t size){
+    void PatchManager::ApplyPatch(uintptr_t address, uint8_t* patch, size_t size){
         DWORD oldProtection;
         if (!UnprotectMemory(address, size, &oldProtection)) {
             Assert("Failed to unprotect memory at address: 0x{0:x}", address);
-			return false;
 		}
 
         uint64_t boundsLow = address;
@@ -37,10 +36,7 @@ namespace Amethyst {
         this->mPatches.emplace_back(ptch);
         if (!ProtectMemory(address, size, oldProtection)) {
             Assert("Failed to protect memory at address: 0x{0:x}", address);
-            return false;
         }
-		return true;
-
     }
 
     void PatchManager::RemovePatch(uintptr_t address) {

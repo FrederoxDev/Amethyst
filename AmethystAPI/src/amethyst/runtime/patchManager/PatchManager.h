@@ -10,11 +10,11 @@ namespace Amethyst {
         ~PatchManager() { RemoveAllPatches(); }
 		
 		template<typename T>
-        bool ApplyPatch(uintptr_t address, T patch){
+        void ApplyPatch(uintptr_t address, T patch){
 			return ApplyPatch(address, (uint8_t*)&patch, sizeof(T));
 		}
 
-        bool ApplyPatch(uintptr_t address, uint8_t* patch, size_t size);
+        void ApplyPatch(uintptr_t address, uint8_t* patch, size_t size);
 
         void RemovePatch(uintptr_t address);
 
