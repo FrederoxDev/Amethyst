@@ -64,6 +64,12 @@ public:
         return &AmethystRuntime::getInstance()->mAmethystContext.mInputManager;
     }
 
+    static Amethyst::PatchManager* getPatchManager() 
+	{
+		return &AmethystRuntime::getInstance()->mAmethystContext.mPatchManager;
+	}
+
+
     void Start();
     void Shutdown();
 
