@@ -26,7 +26,6 @@ namespace Amethyst {
 			ptch.original = original;
         }
         ptch.address = address;
-        Log::Info("Applying patch at address: 0x{0:x}, Size: 0x{0:x}", address, ptch.original.size);
         memcpy(reinterpret_cast<void*>(address), patch, size);
         this->m_Patches[address] = ptch;
 
