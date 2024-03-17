@@ -5,9 +5,7 @@ namespace Amethyst {
     // Returns false if the patch failed to apply
     void PatchManager::ApplyPatch(uintptr_t address, uint8_t* patch, size_t size){
         DWORD oldProtection;
-        if (!UnprotectMemory(address, size, &oldProtection)) {
-            Assert("Failed to unprotect memory at address: 0x{0:x}", address);
-		}
+        UnprotectMemory(address, size, &oldProtection);
 
         uint64_t boundsLow = address;
         uint64_t boundsHigh = address + size;
@@ -34,9 +32,8 @@ namespace Amethyst {
         ptch.address = address;
         memcpy(reinterpret_cast<void*>(address), patch, size);
         this->mPatches.emplace_back(ptch);
-        if (!ProtectMemory(address, size, oldProtection)) {
-            Assert("Failed to protect memory at address: 0x{0:x}", address);
-        }
+        ProtectMemory(address, size, oldProtection);
+        
     }
 
     void PatchManager::RemovePatch(uintptr_t address) {
@@ -47,13 +44,9 @@ namespace Amethyst {
 		for (auto it = this->mPatches.rbegin(); it != this->mPatches.rend(); it++) {
             uintptr_t address = it->address;
 			DWORD oldProtection;
-			if (!UnprotectMemory(address, it->original.size, &oldProtection)) {
-				Assert("Failed to unprotect memory at address: 0x{0:x}", address);
-			}
+            UnprotectMemory(address, it->original.size, &oldProtection);
 			memcpy(reinterpret_cast<void*>(address), it->original.original, it->original.size);
-			if (!ProtectMemory(address, it->original.size, oldProtection)) {
-				Assert("Failed to protect memory at address: 0x{0:x}", address);
-			}
+            ProtectMemory(address, it->original.size, oldProtection);
 			free(it->original.original);
 		}
 		this->mPatches.clear();

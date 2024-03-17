@@ -45,9 +45,9 @@ size_t FindOffsetOfPointer(void* _base, void* _pointer, size_t maxSearchSize);
 /**
  * Unprotects the memory region 
 */
-bool UnprotectMemory(uintptr_t address, size_t size, DWORD* oldProtection);
+void UnprotectMemory(uintptr_t address, size_t size, DWORD* oldProtection);
 
 /**
  * Reprotects the memory region
 */
-bool ProtectMemory(uintptr_t address, size_t size, DWORD protectionData, DWORD* oldProtection = nullptr);
+void ProtectMemory(uintptr_t address, size_t size, DWORD protectionData, DWORD* oldProtection = nullptr);
