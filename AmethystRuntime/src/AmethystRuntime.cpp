@@ -122,6 +122,8 @@ void AmethystRuntime::Shutdown()
 
     mLoadedMods.clear();
 
+    getPatchManager()->RemoveAllPatches();
+
     // Clear all mod functions
     mModInitialize.clear();
 }
