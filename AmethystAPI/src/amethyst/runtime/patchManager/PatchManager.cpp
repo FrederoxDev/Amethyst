@@ -1,6 +1,7 @@
 #include "PatchManager.h"
-#include "../../Log.h"
-#include "../../Memory.h"
+#include "amethyst/Log.h"
+#include "amethyst/Memory.h"
+
 namespace Amethyst {
     // Returns false if the patch failed to apply
     void PatchManager::ApplyPatch(uintptr_t address, uint8_t* patch, size_t size){
