@@ -10,7 +10,7 @@ namespace Amethyst {
 	class PatchManager {
 	public:
 		PatchManager() {}
-		~PatchManager() {}
+        ~PatchManager() { RemoveAllPatches(); }
 		
 		template<typename T>
         bool ApplyPatch(PatchAddress address, T patch){
