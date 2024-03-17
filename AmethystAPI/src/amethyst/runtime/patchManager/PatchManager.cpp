@@ -6,31 +6,37 @@ namespace Amethyst {
     bool PatchManager::ApplyPatch(uintptr_t address, uint8_t* patch, size_t size){
         DWORD oldProtection;
         if (!UnprotectMemory(address, size, &oldProtection)) {
-            Log::Error("Failed to unprotect memory at address: 0x{0:x}", address);
+            Assert("Failed to unprotect memory at address: 0x{0:x}", address);
 			return false;
 		}
-        Patch ptch;
-        auto it = this->m_Patches.find(address);
-        if (it != this->m_Patches.end()) [[unlikely]] {
-            if (memcmp(reinterpret_cast<void*>(it->second.address), patch, size)) {
-                Log::Warning("Patch already applied at address: 0x{0:x}", address);
-                ptch.original = it->second.original;
-            }
+
+        uint64_t boundsLow = address;
+        uint64_t boundsHigh = address + size;
+        for (auto& establishedPatch : this->mPatches) {
+			if (establishedPatch.address == address) {
+                Log::Warning("Patch already exists at address: 0x{0:x}", address);
+			}
+            uint64_t establishedBoundsLow = establishedPatch.address;
+            uint64_t establishedBoundsHigh = establishedPatch.address + establishedPatch.original.size;
+            if (boundsLow >= establishedBoundsLow && boundsLow <= establishedBoundsHigh
+                || boundsHigh >= establishedBoundsLow && boundsHigh <= establishedBoundsHigh) {
+                Log::Warning("Patch at address: 0x{0:x} overlaps with existing patch at address: 0x{1:x}", address, establishedPatch.address);
+			}
 		}
-        if (ptch.original.original == nullptr) {
-			OriginalMemory original;
-			uint8_t* originalMemory = (uint8_t*)malloc(size);
-            memcpy(originalMemory, reinterpret_cast<void*>(address), size);
-			original.original = originalMemory;
-            original.size = size;
-			ptch.original = original;
-        }
+        Patch ptch;
+		OriginalMemory original;
+		uint8_t* originalMemory = (uint8_t*)malloc(size);
+        if (!originalMemory) 
+			Assert("Failed to allocate memory for original bytes at address: 0x{0:x}", address);
+        memcpy(originalMemory, reinterpret_cast<void*>(address), size);
+		original.original = originalMemory;
+        original.size = size;
+		ptch.original = original;
         ptch.address = address;
         memcpy(reinterpret_cast<void*>(address), patch, size);
-        this->m_Patches[address] = ptch;
-
+        this->mPatches.emplace_back(ptch);
         if (!ProtectMemory(address, size, oldProtection)) {
-            Log::Error("Failed to protect memory at address: 0x{0:x}", address);
+            Assert("Failed to protect memory at address: 0x{0:x}", address);
             return false;
         }
 		return true;
@@ -38,30 +44,24 @@ namespace Amethyst {
     }
 
     void PatchManager::RemovePatch(uintptr_t address) {
-        auto it = this->m_Patches.find(address);
-		if (it != this->m_Patches.end()) {
-			DWORD oldProtection;
-            if (!UnprotectMemory(address, it->second.original.size, &oldProtection)) {
-				Log::Error("Failed to unprotect memory at address: 0x{0:x}", address);
-				return;
-			}
-            memcpy(reinterpret_cast<void*>(address), it->second.original.original, it->second.original.size);
-                if (!ProtectMemory(address, it->second.original.size, oldProtection)) {
-				Log::Error("Failed to protect memory at address: 0x{0:x}", address);
-				return;
-			}
-			free(it->second.original.original);
-			this->m_Patches.erase(it);
-		}
-
     }
 
     void PatchManager::RemoveAllPatches()
     {
-		for (auto it = this->m_Patches.begin(); it != this->m_Patches.end(); it++) {
-            RemovePatch(it->first);
+        uintptr_t address = -1;
+		for (auto it = this->mPatches.rbegin(); it != this->mPatches.rend(); it++) {
+			address = it->address;
+			DWORD oldProtection;
+			if (!UnprotectMemory(address, it->original.size, &oldProtection)) {
+				Assert("Failed to unprotect memory at address: 0x{0:x}", address);
+			}
+			memcpy(reinterpret_cast<void*>(address), it->original.original, it->original.size);
+			if (!ProtectMemory(address, it->original.size, oldProtection)) {
+				Assert("Failed to protect memory at address: 0x{0:x}", address);
+			}
+			free(it->original.original);
 		}
-		this->m_Patches.clear();
+		this->mPatches.clear();
     }
 
 } // namespace Amethyst
