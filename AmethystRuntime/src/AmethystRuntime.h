@@ -1,18 +1,17 @@
 #pragma once
-#include <amethyst/runtime/AmethystContext.h>
 #include "hooks/Hooks.h"
 #include "hooks/InputHooks.h"
 #include "mod/Mod.h"
 #include <amethyst/Config.h>
 #include <amethyst/Log.h>
+#include <amethyst/MinecraftVtables.h>
+#include <amethyst/runtime/AmethystContext.h>
 #include <amethyst/runtime/events/Event.h>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
-#include <vector>
 #include <minecraft/src/common/world/item/Item.h>
-#include <amethyst/MinecraftVtables.h>
-
+#include <vector>
 
 namespace fs = std::filesystem;
 
@@ -65,9 +64,14 @@ public:
     }
 
     static Amethyst::PatchManager* getPatchManager() 
-	{
-		return &AmethystRuntime::getInstance()->mAmethystContext.mPatchManager;
-	}
+    {
+        return &AmethystRuntime::getInstance()->mAmethystContext.mPatchManager;
+    }
+
+    static std::vector<Amethyst::ModInfo>* getModInfo()
+    {
+        return &AmethystRuntime::getInstance()->mAmethystContext.mModInfo;
+    }
 
 
     void Start();

@@ -48,10 +48,48 @@ void AmethystRuntime::ReadLauncherConfig()
 
 void AmethystRuntime::LoadModDlls()
 {
+    std::vector<Amethyst::ModInfo> modInfo = {};
+
     // Load all mods from the launcher_config.json
     for (auto& modName : mLauncherConfig.mods) {
+
+        // Ensure the mod exists
+        std::string modConfigPath = GetAmethystFolder() + "mods/" + modName + "/" + "mod.json";
+
+        if (!fs::exists(modConfigPath)) {
+            Log::Error("mod.json could not be found for {}!", modName);
+            continue;
+        }
+
+        // Try to read it to a std::string
+        std::ifstream modConfigFile(modConfigPath);
+        if (!modConfigFile.is_open()) {
+            Log::Error("Failed to open mod.json for {}!", modName);
+            continue;
+        }
+
+        // Read into a std::string
+        std::stringstream buffer;
+        buffer << modConfigFile.rdbuf();
+        modConfigFile.close();
+        std::string fileContents = buffer.str();
+
+        std::optional<Amethyst::ModInfo> modInfoResult = Amethyst::ModInfo::getModInfoFromText(modName, fileContents);
+
+        // Look if mod info could be read correctly
+        if (modInfoResult.has_value())
+        {
+            modInfo.push_back(modInfoResult.value());
+        }
+        else {
+            Log::Error("Failed to read/parse mod.json for {}!", modName);
+            continue;
+        }
+
         mLoadedMods.emplace_back(modName);
     }
+
+    this->mAmethystContext.mModInfo = modInfo;
 
     // Load all mod functions
     for (auto& mod : mLoadedMods) {
