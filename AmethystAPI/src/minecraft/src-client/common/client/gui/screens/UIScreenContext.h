@@ -4,9 +4,11 @@
 #pragma pack(push, 8)
 class UIScreenContext {
 public:
-    /* 0x0000 */ public: const int32_t xm;
-    /* 0x0004 */ public: const int32_t ym;
-    /* 0x0008 */ public: const float a;
-    std::byte padding[4];
+    /* this + 0  */ public: const int32_t xm;
+    /* this + 4  */ public: const int32_t ym;
+    /* this + 8  */ public: const float a;
+    /* this + 12 */ std::byte padding12[4];
 };
 #pragma pack(pop)
+
+static_assert(sizeof(UIScreenContext) == 16);
