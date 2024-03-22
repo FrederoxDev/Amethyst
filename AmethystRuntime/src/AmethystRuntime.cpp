@@ -57,15 +57,15 @@ void AmethystRuntime::LoadModDlls()
         std::string modConfigPath = GetAmethystFolder() + "mods/" + modName + "/" + "mod.json";
 
         if (!fs::exists(modConfigPath)) {
-            Log::Error("mod.json could not be found for {}!", modName);
-            continue;
+            Log::Error("[AmethystRuntime] mod.json could not be found, for {}!", modName);
+            throw std::exception();
         }
 
         // Try to read it to a std::string
         std::ifstream modConfigFile(modConfigPath);
         if (!modConfigFile.is_open()) {
-            Log::Error("Failed to open mod.json for {}!", modName);
-            continue;
+            Log::Error("[AmethystRuntime] Failed to open mod.json, for {}!", modName);
+            throw std::exception();
         }
 
         // Read into a std::string
@@ -80,10 +80,6 @@ void AmethystRuntime::LoadModDlls()
         if (modInfoResult.has_value())
         {
             modInfo.push_back(modInfoResult.value());
-        }
-        else {
-            Log::Error("Failed to read/parse mod.json for {}!", modName);
-            continue;
         }
 
         mLoadedMods.emplace_back(modName);

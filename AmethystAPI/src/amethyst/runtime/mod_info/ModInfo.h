@@ -12,7 +12,7 @@ namespace Amethyst {
         struct Meta {
             std::string name;
             std::string version;
-            std::string author;
+            std::vector<std::string> author;
         };
 
     public:
