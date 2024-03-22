@@ -1,7 +1,6 @@
 #pragma once
 #include "hooks/Hooks.h"
 #include "hooks/InputHooks.h"
-#include "mod/Mod.h"
 #include <amethyst/Config.h>
 #include <amethyst/Log.h>
 #include <amethyst/MinecraftVtables.h>
@@ -68,9 +67,9 @@ public:
         return &AmethystRuntime::getInstance()->mAmethystContext.mPatchManager;
     }
 
-    static std::vector<Amethyst::ModInfo>* getModInfo()
+    static std::vector<Mod>* getMods()
     {
-        return &AmethystRuntime::getInstance()->mAmethystContext.mModInfo;
+        return AmethystRuntime::getInstance()->mAmethystContext.mMods;
     }
 
 
