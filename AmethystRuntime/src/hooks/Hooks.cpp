@@ -109,5 +109,5 @@ void CreateModFunctionHooks() {
     //hookManager->CreateHook<&LevelRenderer::renderLevel>(_LevelRenderer_renderLevel, &LevelRenderer_renderLevel);
 
     // C++ does not allow doing a reference to get the addresses of constructors...                                            
-    hookManager->CreateHookAbsolute(_ClientInstance_ClientInstance, SigScan("48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 49 8B F9 49 8B D8 4C 8B E2"), &ClientInstance_ClientInstance);
+    // hookManager->CreateHookAbsolute(_ClientInstance_ClientInstance, SigScan("48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 49 8B F9 49 8B D8 4C 8B E2"), &ClientInstance_ClientInstance);
 }

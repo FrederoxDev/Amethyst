@@ -51,65 +51,58 @@ namespace mce {
 class TexturePtr;
 };
 
+namespace Core {
+class Path;
+}
+
 class ResourceLocation;
+class UIScene;
+class ComponentRenderBatch;
+class CustomRenderComponent;
 
 class MinecraftUIRenderContext {
-private:
-    uintptr_t** vtable;
+public:
+    /* this + 8   */ IClientInstance* mClient;
+    /* this + 16  */ ScreenContext* mScreenContext;
+    /* this + 24  */ std::byte padding24[224];
+    /* this + 248 */ const UIScene* mCurrentScene;
 
 public:
-    IClientInstance* mClient;      // this + 8
-    ScreenContext* mScreenContext; // this + 16
-private:
-    std::byte padding0[224];
-
-public:
-    void* mCurrentScene; // const UIScene*, this + 248
-
-public:
-    // 48 89 5C 24 ? 48 89 74 24 ? 48 89 4C 24 ? 57 48 83 EC ? 49 8B F9 48 8B DA 48 8B F1 48 8D 05
-    typedef MinecraftUIRenderContext*(__thiscall* _MinecraftUIRenderContext)(MinecraftUIRenderContext*, IClientInstance&, ScreenContext&, const UIScene&);
     MinecraftUIRenderContext(IClientInstance& client, ScreenContext& screenContext, const UIScene& currentScene);
 
 public:
     // vfuncs:
-    // ~MinecraftUIRenderContext();
-
-    float getLineLength(Font& font, const std::string& text, float fontSize, bool showColorSymbol);
-    float getTextAlpha();
-    void setTextAlpha(float alpha);
-    void drawDebugText(const RectangleArea* rect, const std::string* text, const mce::Color* color, float alpha, ui::TextAlignment alignment, const TextMeasureData* textData, const CaretMeasureData* caretData);
-    void drawText(Font& font, const RectangleArea& rect, const std::string& text, const mce::Color& color, float alpha, ui::TextAlignment alignment, const TextMeasureData& textData, const CaretMeasureData& caretData);
-    void flushText(float deltaTime);
-    void drawImage(const mce::TexturePtr& texture, const glm::tvec2<float>* position, const glm::tvec2<float>* size, glm::tvec2<float>* uv, glm::tvec2<float>* uvSize, int degree);
-    void drawNineslice(const mce::TexturePtr* texture, const NinesliceInfo* nineslice);
-    void flushImages(const mce::Color& color, float alpha, const HashedString& materialNameHash);
-
-    // beginSharedMeshBatch(ComponentRenderBatch &);
-    // endSharedMeshBatch(ComponentRenderBatch &);
-
-    void drawRectangle(const RectangleArea* rect, const mce::Color* color, float alpha, int thickness);
-    void fillRectangle(const RectangleArea* rect, const mce::Color* color, float alpha);
-
-    // increaseStencilRef(void);
-    // decreaseStencilRef(void);
-    // resetStencilRef(void);
-    // fillRectangleStencil(RectangleArea const &);
-    // enableScissorTest(RectangleArea const &);
-    // disableScissorTest(void);
-    // setClippingRectangle(RectangleArea const &);
-    // setFullClippingRectangle(void);
-    // saveCurrentClippingRectangle(void);
-    // restoreSavedClippingRectangle(void);
-    // getFullClippingRectangle(void);
-    // updateCustom(gsl::not_null<CustomRenderComponent *>);
-    // renderCustom(gsl::not_null<CustomRenderComponent *>, int, RectangleArea &);
-    // cleanup(void);
-    // removePersistentMeshes(void);
-
-    mce::TexturePtr* getTexture(mce::TexturePtr* result, const ResourceLocation* resourceLocation, bool forceReload);
-
-    // getZippedTexture(Core::Path const &, ResourceLocation const &, bool);
+    virtual ~MinecraftUIRenderContext();
+    virtual float getLineLength(Font& font, const std::string& text, float fontSize, bool showColorSymbol);
+    virtual float getTextAlpha();
+    virtual void setTextAlpha(float alpha);
+    virtual void drawDebugText(const RectangleArea* rect, const std::string* text, const mce::Color* color, float alpha, ui::TextAlignment alignment, const TextMeasureData* textData, const CaretMeasureData* caretData);
+    virtual void drawText(Font& font, const RectangleArea& rect, const std::string& text, const mce::Color& color, float alpha, ui::TextAlignment alignment, const TextMeasureData& textData, const CaretMeasureData& caretData);
+    virtual void flushText(float deltaTime);
+    virtual void drawImage(const mce::TexturePtr& texture, const glm::tvec2<float>* position, const glm::tvec2<float>* size, glm::tvec2<float>* uv, glm::tvec2<float>* uvSize, int degree);
+    virtual void drawNineslice(const mce::TexturePtr* texture, const NinesliceInfo* nineslice);
+    virtual void flushImages(const mce::Color& color, float alpha, const HashedString& materialNameHash);
+    virtual void beginSharedMeshBatch(ComponentRenderBatch& renderBatch);
+    virtual void endSharedMeshBatch(ComponentRenderBatch& renderBatch);
+    virtual void drawRectangle(const RectangleArea* rect, const mce::Color* color, float alpha, int thickness);
+    virtual void fillRectangle(const RectangleArea* rect, const mce::Color* color, float alpha);
+    virtual void increaseStencilRef();
+    virtual void decreaseStencilRef();
+    virtual void resetStencilRef();
+    virtual void fillRectangleStencil(const RectangleArea& rect);
+    virtual void enableScissorTest(const RectangleArea& rect);
+    virtual void disableScissorTest();
+    virtual void setClippingRectangle(const RectangleArea& rect);
+    virtual void setFullClippingRectangle();
+    virtual void saveCurrentClippingRectangle();
+    virtual void restoreSavedClippingRectangle();
+    virtual RectangleArea getFullClippingRectangle();
+    virtual bool updateCustom(gsl::not_null<CustomRenderComponent*> customRenderer);
+    virtual void renderCustom(gsl::not_null<CustomRenderComponent*> customRenderer, int pass, RectangleArea& renderAABB);
+    virtual void cleanup();
+    virtual void removePersistentMeshes();
+    virtual mce::TexturePtr getTexture(const ResourceLocation* resourceLocation, bool forceReload);
+    virtual mce::TexturePtr getZippedTexture(const Core::Path& zippedFolderPath, const ResourceLocation& resourceLocation, bool forceReload);
     // unloadTexture(ResourceLocation const &);
     // getUITextureInfo(ResourceLocation const &, bool);
     // touchTexture(ResourceLocation const &);

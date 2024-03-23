@@ -66,19 +66,21 @@ enum class BurnOdds : char {INSTANT = 100, EASY = 60, MEDIUM = 20, HARD = 5, NEV
 #pragma pack(push, 1)
 class BlockLegacy {
 public:
-    /* this + 8   */ std::byte padding0[86];
+    /* this + 8   */ std::byte padding8[86];
     /* this + 94  */ FlameOdds mFlameOdds;
     /* this + 95  */ BurnOdds mBurnOdds;
-    /* this + 96  */ std::byte padding1[200];
+    /* this + 96  */ std::byte padding96[200];
     /* this + 296 */ const Material& mMaterial;
-    /* this + 304 */ std::byte padding2[69];
+    /* this + 304 */ std::byte padding304[69];
     /* this + 373 */ unsigned char mLightBlock;
     /* this + 374 */ unsigned char mLightEmission;
-    /* this + 375 */ std::byte padding3[47];
+    /* this + 375 */ std::byte padding375[21];
+    /* this + 396 */ mce::Color mMapColor;
+    /* this + 412 */ std::byte padding412[10];
     /* this + 422 */ unsigned short mID;
     /* this + 424 */ BaseGameVersion mMinRequiredBaseGameVersion;
     /* this + 544 */ bool mIsVanilla;
-    /* this + 545 */ std::byte padding4[399];
+    /* this + 545 */ std::byte padding545[399];
 
 public:
     virtual ~BlockLegacy();
