@@ -13,14 +13,11 @@ Mod::Mod(std::string modName)
 
         switch (error) {
         case 0x5:
-            Log::Error("[AmethystRuntime] '{}' does not have the required privileges!", dllPath.string());
-            throw std::exception();
+            Assert("[AmethystRuntime] '{}' does not have the required privileges!", dllPath.string());
         case 0x7e:
-            Log::Error("[AmethystRuntime] Failed to find '{}'", dllPath.string());
-            throw std::exception();
+            Assert("[AmethystRuntime] Failed to find '{}'", dllPath.string());
         default:
-            Log::Error("[AmethystRuntime] Failed to load '{}.dll', error code: 0x{:x}", modName, error);
-            throw std::exception();
+            Assert("[AmethystRuntime] Failed to load '{}.dll', error code: 0x{:x}", modName, error);
         }
     }
 
@@ -45,7 +42,6 @@ Mod::MetaData Mod::GetMetaData(std::string modName)
 
     if (!fs::exists(modConfigPath)) {
         Assert("[AmethystRuntime] mod.json could not be found, for {}!", modName);
-        throw std::exception();
     }
 
     // Try to read it to a std::string
@@ -72,7 +68,8 @@ Mod::MetaData Mod::ParseMetaData(std::string modName, std::string fileContents)
         data = json::parse(fileContents);
     }
     catch (std::exception e) {
-        Assert("[AmethystRuntime] Failed to parse mod.json, for {}\n Error: {}", modName, e.what());
+        Log::Error("[AmethystRuntime] Failed to parse mod.json, for {}\n Error: {}", modName, e.what());
+        throw e;
     }
 
     // Verify all fields are correct in config.json
@@ -129,8 +126,7 @@ fs::path Mod::GetTempDll()
 
     fs::path originalDll = GetAmethystFolder() + "mods/" + modName + "/" + modShortened + ".dll";
     if (!fs::exists(originalDll)) {
-        Log::Error("[AmethystRuntime] Could not find '{}.dll'", modShortened);
-        throw std::exception();
+        Assert("[AmethystRuntime] Could not find '{}.dll'", modShortened);
     }
 
     fs::path tempDll = tempDir.string() + modShortened + ".dll";
@@ -139,8 +135,7 @@ fs::path Mod::GetTempDll()
         fs::copy_file(originalDll, tempDll, fs::copy_options::overwrite_existing);
     }
     catch (const std::filesystem::filesystem_error& e) {
-        Log::Error("[AmethystRuntime] {} (Error code: {})", e.what(), e.code().value());
-        throw std::exception();
+        Assert("[AmethystRuntime] {} (Error code: {})", e.what(), e.code().value());
     }
 
     return tempDll;

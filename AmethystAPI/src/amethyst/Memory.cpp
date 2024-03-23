@@ -30,8 +30,7 @@ std::optional<uintptr_t> SigScanSafe(std::string_view signature)
 {
     const auto parsed = hat::parse_signature(signature);
     if (!parsed.has_value()) {
-        Log::Error("Invalid signature! {:s}", signature);
-        throw std::exception();
+        Assert("Invalid signature! {:s}", signature);
     }
 
     const auto begin = reinterpret_cast<std::byte*>(GetMinecraftBaseAddress());

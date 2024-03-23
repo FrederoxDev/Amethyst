@@ -34,8 +34,7 @@ public:
         constexpr size_t hash = function_id::hash_code<OriginalFn>();
 
         if (!mFuncHashToOriginalAddress.contains(hash)) {
-            Log::Error("[AmethystAPI] '{}' has not registered!", function_id::name<OriginalFn>());
-            throw std::exception();
+            Assert("[AmethystAPI] '{}' has not registered!", function_id::name<OriginalFn>());
         }
 
         uintptr_t original_addr = mFuncHashToOriginalAddress[hash];
