@@ -67,7 +67,7 @@ public:
         return &AmethystRuntime::getInstance()->mAmethystContext.mPatchManager;
     }
 
-    static std::vector<Mod>* getMods()
+    static std::vector<Mod> getMods()
     {
         return AmethystRuntime::getInstance()->mAmethystContext.mMods;
     }
