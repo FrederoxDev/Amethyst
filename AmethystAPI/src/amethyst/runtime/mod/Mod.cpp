@@ -22,7 +22,7 @@ Mod::Mod(std::string modName)
     }
 
     // Load the metadata
-    this->metaData = Mod::GetMetaData(modName);
+    this->metadata = Mod::GetMetadata(modName);
 }
 
 FARPROC Mod::GetFunction(const char* functionName)
@@ -35,7 +35,7 @@ void Mod::Shutdown()
     FreeLibrary(hModule);
 }
 
-Mod::MetaData Mod::GetMetaData(std::string modName)
+Mod::Metadata Mod::GetMetadata(std::string modName)
 {
     // Ensure the mod exists
     std::string modConfigPath = GetAmethystFolder() + "mods/" + modName + "/" + "mod.json";
@@ -56,10 +56,10 @@ Mod::MetaData Mod::GetMetaData(std::string modName)
     modConfigFile.close();
     std::string fileContents = buffer.str();
 
-    return Mod::ParseMetaData(modName, fileContents);
+    return Mod::ParseMetadata(modName, fileContents);
 }
 
-Mod::MetaData Mod::ParseMetaData(std::string modName, std::string fileContents)
+Mod::Metadata Mod::ParseMetadata(std::string modName, std::string fileContents)
 {
     // Parse config.json into json
     json data;
@@ -102,7 +102,7 @@ Mod::MetaData Mod::ParseMetaData(std::string modName, std::string fileContents)
     }
 
     // Set values
-    MetaData meta;
+    Metadata meta;
 
     meta.name = data["meta"]["name"];
     meta.author = authors;

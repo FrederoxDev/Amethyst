@@ -16,7 +16,7 @@ private:
     HMODULE hModule;
 
 public:
-    struct MetaData {
+    struct Metadata {
         std::string name;
         std::string version;
         std::vector<std::string> author;
@@ -24,7 +24,7 @@ public:
 
 public:
     std::string modName;
-    MetaData metaData;
+    Metadata metadata;
 
 public:
     Mod(std::string modName);
@@ -32,8 +32,8 @@ public:
     void Shutdown();
 
 public:
-    static Mod::MetaData GetMetaData(std::string modName);
-    static Mod::MetaData ParseMetaData(std::string modName, std::string fileContents);
+    static Mod::Metadata GetMetadata(std::string modName);
+    static Mod::Metadata ParseMetadata(std::string modName, std::string fileContents);
 
 private:
     fs::path GetTempDll();
