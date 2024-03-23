@@ -1,4 +1,6 @@
 #include "amethyst/Utility.h"
+#include <codecvt>
+#include <locale>
 
 std::string GetAmethystFolder()
 {
@@ -19,4 +21,16 @@ std::string GetAmethystFolder()
     }
 
     return amethystFolder;
+}
+
+std::string StringFromWstring(const std::wstring& wstring)
+{
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+    return converter.to_bytes(wstring);
+}
+
+std::wstring WstringFromString(const std::string& string)
+{
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
+    return converter.from_bytes(string);
 }
