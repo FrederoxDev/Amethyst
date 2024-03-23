@@ -99,9 +99,6 @@ Mod::MetaData Mod::ParseMetaData(std::string modName, std::string fileContents)
             }
         }
     }
-    else {
-        Assert("[AmethystRuntime] Required field \"author\" in \"meta\" should be of type \"string\" | \"string[]\" in mod.json, for {}", modName);
-    }
 
     if (!data["meta"]["version"].is_string()) {
         Assert("[AmethystRuntime] Required field \"version\" in \"meta\" should be of type \"string\" in mod.json, for {}", modName);
