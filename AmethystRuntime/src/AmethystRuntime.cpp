@@ -50,13 +50,11 @@ void AmethystRuntime::LoadModDlls()
 {
     // Load all mods from the launcher_config.json
     for (auto& modName : mLauncherConfig.mods) {
-        mLoadedMods.emplace_back(modName);
+        this->mAmethystContext.mMods.emplace_back(modName);
     }
 
-    this->mAmethystContext.mMods = mLoadedMods;
-
     // Load all mod functions
-    for (auto& mod : mLoadedMods) {
+    for (auto& mod : this->mAmethystContext.mMods) {
         Log::Info("[AmethystRuntime] Loading '{}'", mod.modName);
         _LoadModFunc(&mModInitialize, mod, "Initialize");
     }
@@ -118,11 +116,11 @@ void AmethystRuntime::Shutdown()
     getEventManager()->Shutdown();
 
     // Unload all mod Dlls
-    for (auto& mod : mLoadedMods) {
+    for (auto& mod : this->mAmethystContext.mMods) {
         mod.Shutdown();
     }
 
-    mLoadedMods.clear();
+    this->mAmethystContext.mMods.clear();
 
     getPatchManager()->RemoveAllPatches();
 

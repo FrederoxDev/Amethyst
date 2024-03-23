@@ -90,7 +90,6 @@ private:
 
 private:
     Config mLauncherConfig;
-    std::vector<Mod> mLoadedMods;
     AmethystContext mAmethystContext;
 
 public:
