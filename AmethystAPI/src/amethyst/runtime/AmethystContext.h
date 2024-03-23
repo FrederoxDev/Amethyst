@@ -16,7 +16,7 @@ public:
     Amethyst::EventManager mEventManager;
     Amethyst::InputManager mInputManager;
     Amethyst::PatchManager mPatchManager;
-    std::vector<Mod>* mMods;
+    std::vector<Mod> mMods;
 
     /**
      * Minecraft Specific stuff

@@ -53,7 +53,7 @@ void AmethystRuntime::LoadModDlls()
         mLoadedMods.emplace_back(modName);
     }
 
-    this->mAmethystContext.mMods = &mLoadedMods;
+    this->mAmethystContext.mMods = mLoadedMods;
 
     // Load all mod functions
     for (auto& mod : mLoadedMods) {
