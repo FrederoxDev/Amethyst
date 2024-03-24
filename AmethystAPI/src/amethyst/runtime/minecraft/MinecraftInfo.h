@@ -3,17 +3,17 @@
 #include <winrt/Windows.ApplicationModel.h>
 
 namespace Amethyst {
-    struct MinecraftInfo {
+    class MinecraftInfo {
     public:
         std::string name;
         std::string fullname;
         std::string familyName;
         std::string publisher;
         SemVersion version;
-        winrt::Windows::ApplicationModel::Package package;
+        winrt::Windows::ApplicationModel::Package package = winrt::Windows::ApplicationModel::Package(nullptr);
 
     public:
-        static MinecraftInfo getMinecraftInfo();
+        MinecraftInfo();
     };
 }
 
