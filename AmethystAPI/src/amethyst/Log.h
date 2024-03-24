@@ -17,7 +17,6 @@ namespace Log {
         fmt::print("{}\n", formatted_string);
     }
 
-    // For wstring
     template <typename... T>
     void Info(fmt::wformat_string<T...> fmt, T&&... args) {
         std::wstring formatted_string = fmt::format(fmt, args...);
@@ -30,7 +29,6 @@ namespace Log {
         fmt::print(fg(fmt::rgb(0xf5f556)) | fmt::emphasis::bold, "{}\n", formatted_string);
     }
 
-    // For wstring
     template <typename... T>
     void Warning(fmt::wformat_string<T...> fmt, T&&... args) {
         std::wstring formatted_wstring = fmt::format(fmt, args...);
@@ -44,7 +42,6 @@ namespace Log {
         fmt::print(fg(fmt::rgb(0xf55762)) | fmt::emphasis::bold, "{}\n", formatted_string);
     }
 
-    // For wstring
     template <typename... T>
     void Error(fmt::wformat_string<T...> fmt, T&&... args) {
         std::wstring formatted_wstring = fmt::format(fmt, args...);
