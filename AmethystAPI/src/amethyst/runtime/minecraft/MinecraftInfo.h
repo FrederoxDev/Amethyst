@@ -5,12 +5,12 @@
 namespace Amethyst {
     class MinecraftInfo {
     public:
-        std::string name;
-        std::string fullname;
-        std::string familyName;
-        std::string publisher;
-        SemVersion version;
-        winrt::Windows::ApplicationModel::Package package = winrt::Windows::ApplicationModel::Package(nullptr);
+        std::string mName;
+        std::string mFullname;
+        std::string mFamilyName;
+        std::string mPublisher;
+        SemVersion mVersion;
+        winrt::Windows::ApplicationModel::Package mPackage = winrt::Windows::ApplicationModel::Package(nullptr);
 
     public:
         MinecraftInfo();
