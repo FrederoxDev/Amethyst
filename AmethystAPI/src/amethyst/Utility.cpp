@@ -1,11 +1,5 @@
 #include "amethyst/Utility.h"
-#include <codecvt>
-#include <locale>
-
-// std::wstring_convert<std::codecvt_utf8<wchar_t>> is deprecated
-// but there is no replacement for it currently (as of C++23)
-// TODO find a working replacement
-#define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
+#include <winrt/base.h>
 
 std::string GetAmethystFolder()
 {
@@ -30,12 +24,10 @@ std::string GetAmethystFolder()
 
 std::string StringFromWstring(std::wstring wstring)
 {
-    std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
-    return converter.to_bytes(wstring);
+    return winrt::to_string(wstring);
 }
 
 std::wstring WstringFromString(std::string string)
 {
-    std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
-    return converter.from_bytes(string);
+    return winrt::to_hstring(string).data();
 }
