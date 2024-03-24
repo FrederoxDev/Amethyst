@@ -2,6 +2,11 @@
 #include <codecvt>
 #include <locale>
 
+// std::wstring_convert<std::codecvt_utf8<wchar_t>> is deprecated
+// but there is no replacement for it currently (as of C++23)
+// TODO find a working replacement
+#define _SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
+
 std::string GetAmethystFolder()
 {
     static std::string amethystFolder;
@@ -23,13 +28,13 @@ std::string GetAmethystFolder()
     return amethystFolder;
 }
 
-std::string StringFromWstring(const std::wstring& wstring)
+std::string StringFromWstring(std::wstring wstring)
 {
     std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
     return converter.to_bytes(wstring);
 }
 
-std::wstring WstringFromString(const std::string& string)
+std::wstring WstringFromString(std::string string)
 {
     std::wstring_convert<std::codecvt_utf8<wchar_t>> converter;
     return converter.from_bytes(string);
