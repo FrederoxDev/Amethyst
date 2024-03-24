@@ -51,7 +51,8 @@ enum class FlameOdds : char {INSTANT = 60, EASY = 30, MEDIUM = 15, HARD = 5, NEV
 
 enum class BurnOdds : char {INSTANT = 100, EASY = 60, MEDIUM = 20, HARD = 5, NEVER = 0};
 
-//struct_size = 944
+//struct_size = 944 is_virtual = True
+//    hide_vtable = True
 //#(Type, Name, Size(in bytes), Offset(in bytes))
 //    struct
 //    = [("BurnOdds", "mBurnOdds", 1, 95),
@@ -61,7 +62,8 @@ enum class BurnOdds : char {INSTANT = 100, EASY = 60, MEDIUM = 20, HARD = 5, NEV
 //       ("unsigned short", "mID", 2, 422),
 //       ("BaseGameVersion", "mMinRequiredBaseGameVersion", 120, 424),
 //       ("unsigned char", "mLightEmission", 1, 374),
-//       ("unsigned char", "mLightBlock", 1, 373)]
+//       ("unsigned char", "mLightBlock", 1, 373),
+//       ("mce::Color", "mMapColor", 16, 396)]
 
 #pragma pack(push, 1)
 class BlockLegacy {

@@ -39,13 +39,13 @@ public:
     /* this + 624  */ mce::Camera camera;
     /* this + 1136 */ std::byte padding1136[184];
     /* this + 1320 */ BlockTessellator* mBlockTessellator;
-    /* this + 1328 */ std::byte padding1328[40];
-    /* this + 1368 */ ItemRenderer* itemRenderer;
-    /* this + 1376 */ GuiData* guiData;
-    /* this + 1384 */ std::byte padding1384[1848];
+    /* this + 1328 */ std::byte padding1328[32];
+    /* this + 1360 */ ItemRenderer* itemRenderer;
+    /* this + 1368 */ GuiData* guiData;
+    /* this + 1376 */ std::byte padding1376[1856];
 
 public:
-    // 1.20.51.1 - 48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 49 8B F9 49 8B D8 4C 8B E2
+    // 1.20.71.1 - 48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 49 8B F9 49 8B D8 4C 8B E2
     ClientInstance();
 
     // 1.20.51.1 - 40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 45 8B F1
