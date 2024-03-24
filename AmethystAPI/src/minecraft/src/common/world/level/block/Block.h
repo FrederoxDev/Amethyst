@@ -5,6 +5,7 @@
 #include "minecraft/src/common/world/level/BlockSource.h"
 #include "minecraft/src/common/world/level/block/BlockLegacy.h"
 #include "minecraft/src-deps/core/headerIncludes/gsl_includes.h"
+#include "minecraft/src/common/world/level/block/components/BlockComponentStorage.h"
 
 //is_virtual = True
 //hide_vtable = False
@@ -17,12 +18,12 @@
 
 using DataID = unsigned short;
 
-class Block {
+class Block : public BlockComponentStorage {
 public:
-    /* this + 0   */ uintptr_t** vtable;
-    /* this + 8   */ std::byte padding8[40];
+    /* this + 40  */ std::byte padding40[8];
     /* this + 48  */ gsl::not_null<BlockLegacy*> mLegacyBlock;
     /* this + 56  */ std::byte padding56[152];
 };
 
 static_assert(sizeof(Block) == 208);
+static_assert(offsetof(Block, mLegacyBlock) == 48);
