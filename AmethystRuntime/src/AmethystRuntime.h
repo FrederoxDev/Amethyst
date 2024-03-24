@@ -72,6 +72,10 @@ public:
         return &AmethystRuntime::getInstance()->mAmethystContext.mMods;
     }
 
+    static Amethyst::MinecraftPackageInfo* getMinecraftPackageInfo()
+    {
+        return &AmethystRuntime::getInstance()->mAmethystContext.mMinecraftPackageInfo;
+    }
 
     void Start();
     void Shutdown();

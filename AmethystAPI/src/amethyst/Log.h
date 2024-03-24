@@ -1,8 +1,11 @@
 #pragma once
+#include "Utility.h"
 #include <Windows.h>
 #include <fmt/color.h>
 #include <fmt/core.h>
 #include <iostream>
+#include <fmt/xchar.h>
+#include <fmt/format.h>
 
 namespace Log {
     void InitializeConsole();
@@ -15,14 +18,34 @@ namespace Log {
     }
 
     template <typename... T>
+    void Info(fmt::wformat_string<T...> fmt, T&&... args) {
+        std::wstring formatted_string = fmt::format(fmt, args...);
+        fmt::print(L"{}\n", formatted_string);
+    }
+
+    template <typename... T>
     void Warning(fmt::format_string<T...> fmt, T&&... args) {
         std::string formatted_string = fmt::format(fmt, std::forward<T>(args)...);
         fmt::print(fg(fmt::rgb(0xf5f556)) | fmt::emphasis::bold, "{}\n", formatted_string);
     }
 
     template <typename... T>
+    void Warning(fmt::wformat_string<T...> fmt, T&&... args) {
+        std::wstring formatted_wstring = fmt::format(fmt, args...);
+        std::string formatted_string = StringFromWstring(formatted_wstring);
+        fmt::print(fg(fmt::rgb(0xf5f556)) | fmt::emphasis::bold, "{}\n", formatted_string);
+    }
+
+    template <typename... T>
     void Error(fmt::format_string<T...> fmt, T&&... args) {
         std::string formatted_string = fmt::format(fmt, std::forward<T>(args)...);
+        fmt::print(fg(fmt::rgb(0xf55762)) | fmt::emphasis::bold, "{}\n", formatted_string);
+    }
+
+    template <typename... T>
+    void Error(fmt::wformat_string<T...> fmt, T&&... args) {
+        std::wstring formatted_wstring = fmt::format(fmt, args...);
+        std::string formatted_string = StringFromWstring(formatted_wstring);
         fmt::print(fg(fmt::rgb(0xf55762)) | fmt::emphasis::bold, "{}\n", formatted_string);
     }
 

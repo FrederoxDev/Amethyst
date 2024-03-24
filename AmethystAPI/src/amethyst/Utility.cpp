@@ -1,4 +1,5 @@
 #include "amethyst/Utility.h"
+#include <winrt/base.h>
 
 std::string GetAmethystFolder()
 {
@@ -19,4 +20,14 @@ std::string GetAmethystFolder()
     }
 
     return amethystFolder;
+}
+
+std::string StringFromWstring(std::wstring wstring)
+{
+    return winrt::to_string(wstring);
+}
+
+std::wstring WstringFromString(std::string string)
+{
+    return winrt::to_hstring(string).data();
 }

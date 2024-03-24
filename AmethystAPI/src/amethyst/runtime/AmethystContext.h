@@ -2,6 +2,7 @@
 #include "amethyst/runtime/HookManager.h"
 #include "amethyst/runtime/events/EventManager.h"
 #include "amethyst/runtime/input/InputManager.h"
+#include "amethyst/runtime/minecraft/MinecraftPackageInfo.h"
 #include "amethyst/runtime/mod/Mod.h"
 #include "amethyst/runtime/patchManager/PatchManager.h"
 #include "minecraft/src-client/common/client/game/ClientInstance.h"
@@ -17,6 +18,7 @@ public:
     Amethyst::InputManager mInputManager;
     Amethyst::PatchManager mPatchManager;
     std::vector<Mod> mMods;
+    Amethyst::MinecraftPackageInfo mMinecraftPackageInfo;
 
     /**
      * Minecraft Specific stuff
