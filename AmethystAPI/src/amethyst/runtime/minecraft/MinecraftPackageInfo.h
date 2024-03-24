@@ -3,7 +3,7 @@
 #include <winrt/Windows.ApplicationModel.h>
 
 namespace Amethyst {
-    class MinecraftInfo {
+    class MinecraftPackageInfo {
     public:
         std::string mName;
         std::string mFullname;
@@ -13,7 +13,7 @@ namespace Amethyst {
         winrt::Windows::ApplicationModel::Package mPackage = winrt::Windows::ApplicationModel::Package(nullptr);
 
     public:
-        MinecraftInfo();
+        MinecraftPackageInfo();
     };
 }
 

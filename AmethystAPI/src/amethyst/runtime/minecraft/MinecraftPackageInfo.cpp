@@ -1,8 +1,8 @@
-#include "MinecraftInfo.h"
+#include "MinecraftPackageInfo.h"
 #include "amethyst/Log.h"
 #include "amethyst/Utility.h"
 
-Amethyst::MinecraftInfo::MinecraftInfo()
+Amethyst::MinecraftPackageInfo::MinecraftPackageInfo()
 {
     // Get the current uwp package
     auto package = winrt::Windows::ApplicationModel::Package::Current();
