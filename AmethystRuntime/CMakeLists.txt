@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 3.12)
 project(AmethystRuntime)
 set(MOD_VERSION "1.2.1")
 
+set(MOD_TARGET_VERSION_MAJOR 1)
+set(MOD_TARGET_VERSION_MINOR 20)
+set(MOD_TARGET_VERSION_PATCH 7101)
+
 # Runtime Build Options
 option(AMETHYST_INPUT_SYSTEM "Enables AmethystAPI's input system" OFF)
 
@@ -40,7 +44,12 @@ foreach(source IN LISTS CPP_SOURCES H_FILES)
 endforeach()
 
 # Pass MOD_VERSION to the source code
-target_compile_definitions(${PROJECT_NAME} PRIVATE MOD_VERSION="${MOD_VERSION}")
+target_compile_definitions(${PROJECT_NAME} PRIVATE 
+MOD_VERSION="${MOD_VERSION}"  
+MOD_TARGET_VERSION_MAJOR=${MOD_TARGET_VERSION_MAJOR}
+MOD_TARGET_VERSION_MINOR=${MOD_TARGET_VERSION_MINOR}
+MOD_TARGET_VERSION_PATCH=${MOD_TARGET_VERSION_PATCH}
+)
 
 # Link libraries
 target_link_libraries(${PROJECT_NAME} PRIVATE ${AMETHYST_API})

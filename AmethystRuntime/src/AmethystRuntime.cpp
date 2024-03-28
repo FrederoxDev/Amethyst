@@ -9,6 +9,20 @@ void AmethystRuntime::Start()
     Log::Info("[AmethystRuntime] Using 'AmethystRuntime@{}'", MOD_VERSION);
     InitializeVtablePtrs();
 
+    SemVersion version = getMinecraftPackageInfo()->mVersion;
+
+    if (version.mMajor != MOD_TARGET_VERSION_MAJOR || version.mMinor != MOD_TARGET_VERSION_MINOR || version.mPatch != MOD_TARGET_VERSION_PATCH) 
+    {
+        Log::Warning("\nAmethystRuntime@{} has been made for Minecraft version {}.{}.{}, detected version {}.{}.{}\n\t> It should be expected that things may break on this version.\n\t> We will not provide support for unintended versions.\n", 
+            MOD_VERSION, 
+            MOD_TARGET_VERSION_MAJOR, MOD_TARGET_VERSION_MINOR, MOD_TARGET_VERSION_PATCH,
+            version.mMajor, version.mMinor, version.mPatch
+        );
+    }
+    else {
+        Log::Info("[AmethystRuntime] Minecraft Version: {}.{}.{}", version.mMajor, version.mMinor, version.mPatch);
+    }
+
     // read the config file and load in any mods
     ReadLauncherConfig();
 
