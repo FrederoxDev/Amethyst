@@ -5,7 +5,7 @@
 
 namespace Bedrock {
     //template <typename T>
-    using typeid_t = uint64_t;
+    using typeid_t = uint16_t;
 }
 
 class BlockComponentStorage {
@@ -14,6 +14,7 @@ public:
     /* this + 32 */ bool mAllowAddingComponents;
     /* this + 33 */ bool mAllowComponentReplacement;
     /* this + 34 */ bool mAllowTryGetComponentBeforeFinalization;
+    /* this + 35 */ std::byte padding35[5];
 
 public:
     virtual ~BlockComponentStorage() = default;

@@ -109,22 +109,22 @@ void AmethystRuntime::RunMods()
 
 void AmethystRuntime::Shutdown()
 {
-    // Prompt all mods to do any final code before shutdown
+    // Allow mods to do any shutdown logic.
+    getEventManager()->beforeModShutdown.Invoke();
+
+    // Destroy all listeners on amethysts event manager.
     getEventManager()->Shutdown();
 
-    // Remove any of the runtime mods hooks
-    getEventManager()->Shutdown();
+    // Remove any patches that were applied to the game.
+    getPatchManager()->RemoveAllPatches();
 
-    // Unload all mod Dlls
+    // Unload all mod dll's.
     for (auto& mod : mAmethystContext.mMods) {
         mod.Shutdown();
     }
 
+    // Clear lists of mods & functions.
     mAmethystContext.mMods.clear();
-
-    getPatchManager()->RemoveAllPatches();
-
-    // Clear all mod functions
     mModInitialize.clear();
 }
 
