@@ -1,12 +1,14 @@
 #pragma once
 #include <vector>
 #include <memory>
+#include <minecraft/src-client/common/client/input/RemappingLayout.h>
 
-class KeyboardRemappingLayout;
+using KeyboardRemappingLayout = RemappingLayout;
 
 class Options {
 public:
-    std::byte padding0[5984];
-    // Found in Options::_readKeyboardMapping in call to RemappingLayout::setMapping
-    std::vector<std::shared_ptr<KeyboardRemappingLayout>> mKeyboardRemappings;
+    /* this + 0    */ std::byte padding0[6112];
+    /* this + 6112 */ std::vector<std::shared_ptr<KeyboardRemappingLayout>> mKeyboardRemappings;
+
+    void* _readKeyboardMapping(char* a2, char* a3);
 };

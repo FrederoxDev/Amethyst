@@ -12,19 +12,18 @@ class ItemRenderer;
 class BlockTessellator;
 
 //is_virtual = True
-//hide_vtable = False
-//struct_size = 3232
+//    hide_vtable = False
+//        struct_size = 3232
 //
-//# (Type, Name, Size (in bytes), Offset (in bytes))
-//struct = [
-//("MinecraftGame*", "minecraftGame", 8, 200),
-//("Minecraft*", "minecraft", 8, 208),
-//("ClientInputHandler*", "inputHandler", 8, 272),
-//("ItemRenderer*", "itemRenderer", 8, 1368),
-//("GuiData*", "guiData", 8, 1376),
-//("mce::Camera", "camera", 512, 624),
-//("BlockTessellator*", "mBlockTessellator", 8, 1320)
-//]
+//#(Type, Name, Size(in bytes), Offset(in bytes))
+//    struct
+//    = [("MinecraftGame*", "minecraftGame", 8, 200),
+//       ("Minecraft*", "minecraft", 8, 208),
+//       ("ClientInputHandler*", "inputHandler", 8, 272),
+//       ("ItemRenderer*", "itemRenderer", 8, 1360),
+//       ("GuiData*", "guiData", 8, 1368),
+//       ("mce::Camera", "camera", 512, 624),
+//       ("BlockTessellator*", "mBlockTessellator", 8, 1320)]
 
 #pragma pack(push, 1)
 class ClientInstance {

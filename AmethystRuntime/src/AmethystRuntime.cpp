@@ -91,9 +91,7 @@ void AmethystRuntime::PromptDebugger()
 
 void AmethystRuntime::CreateOwnHooks()
 {
-    #ifdef AMETHYST_INPUT_SYSTEM
-    CreateInputHooks();
-    #endif
+    // CreateInputHooks();
 
     CreateModFunctionHooks();
 }

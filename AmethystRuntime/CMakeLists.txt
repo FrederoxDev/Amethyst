@@ -6,8 +6,6 @@ set(MOD_TARGET_VERSION_MAJOR 1)
 set(MOD_TARGET_VERSION_MINOR 20)
 set(MOD_TARGET_VERSION_PATCH 7101)
 
-# Runtime Build Options
-option(AMETHYST_INPUT_SYSTEM "Enables AmethystAPI's input system" OFF)
 
 # C++ Build Settings
 set(CMAKE_CONFIGURATION_TYPES "RelWithDebInfo" CACHE STRING "Build configurations" FORCE)

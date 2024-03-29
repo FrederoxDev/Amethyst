@@ -7,6 +7,7 @@
 #include "amethyst/runtime/patchManager/PatchManager.h"
 #include "minecraft/src-client/common/client/game/ClientInstance.h"
 #include "minecraft/src-client/common/client/input/MinecraftInputHandler.h"
+#include "minecraft/src-client/common/client/options/Options.h"
 
 class AmethystContext {
 public:
@@ -25,4 +26,5 @@ public:
      */
     ClientInstance* mClientInstance = nullptr;
     MinecraftInputHandler* mMcInputHandler = nullptr;
+    Options* mOptions = nullptr;
 };

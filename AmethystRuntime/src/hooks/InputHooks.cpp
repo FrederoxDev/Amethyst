@@ -4,9 +4,12 @@ SafetyHookInline _assignDefaultMapping;
 SafetyHookInline _addFullKeyboardGamePlayControls;
 SafetyHookInline __registerInputHandlers;
 
+Options* opt;
+
 void assignDefaultMapping(RemappingLayout* self, std::vector<Keymapping>&& mapping)
 {
-    Log::Info("assignDefaultMapping");
+    Log::Info("assignDefaultMapping 0x{:x}", reinterpret_cast<uintptr_t>(self));
+
     Amethyst::InputManager* inputManager = AmethystRuntime::getInputManager();
 
     for (auto& input : inputManager->mInputActions)
@@ -63,12 +66,26 @@ void _registerInputHandlers(MinecraftInputHandler* self)
     //}
 }
 
+
+SafetyHookInline __readKeyboardMapping;
+
+void* _readKeyboardMapping(Options* self, char* a1, char* a2) 
+{
+    AmethystRuntime::getContext()->mOptions = self;
+    return __readKeyboardMapping.call<void*>(self, a1, a2);
+}
+
 void CreateInputHooks()
 {
     HookManager* hookManager = AmethystRuntime::getHookManager();
 
-    /*hookManager->RegisterFunction(&RemappingLayout::assignDefaultMapping, "48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8B EC 48 83 EC ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 4C 8B C2");
-    hookManager->CreateHook(&RemappingLayout::assignDefaultMapping, _assignDefaultMapping, &assignDefaultMapping);*/
+    Log::Info("CreateInput");
+
+    hookManager->RegisterFunction<&RemappingLayout::assignDefaultMapping>("48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8B EC 48 83 EC ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 4C 8B C2");
+    hookManager->CreateHook<&RemappingLayout::assignDefaultMapping>(_assignDefaultMapping, &assignDefaultMapping);
+
+    hookManager->RegisterFunction<&Options::_readKeyboardMapping>("48 89 5C 24 ? 48 89 74 24 ? 55 57 41 54 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 4C 8B F2 4C 8B F9 0F 57 C9");
+    hookManager->CreateHook<&Options::_readKeyboardMapping>(__readKeyboardMapping, &_readKeyboardMapping);
 
     /*hookManager->RegisterFunction(&VanillaClientInputMappingFactory::_addFullKeyboardGamePlayControls, "40 55 53 56 57 41 56 48 8B EC 48 83 EC ? 45 0F B6 F1");
     hookManager->CreateHook(&VanillaClientInputMappingFactory::_addFullKeyboardGamePlayControls, _addFullKeyboardGamePlayControls, &addFullKeyboardGamePlayControls);*/

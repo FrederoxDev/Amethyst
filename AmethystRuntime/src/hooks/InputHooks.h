@@ -5,5 +5,6 @@
 #include <minecraft/src-client/common/client/input/MinecraftInputHandler.h>
 #include <minecraft/src-client/common/client/input/RemappingLayout.h>
 #include <minecraft/src-client/common/client/input/VanillaClientInputMappingFactory.h>
+#include <minecraft/src-client/common/client/options/Options.h>
 
 void CreateInputHooks();
