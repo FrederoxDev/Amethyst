@@ -18,12 +18,12 @@ Amethyst::MinecraftPackageInfo::MinecraftPackageInfo()
         package.Id().Version().Major,
         package.Id().Version().Minor,
         package.Id().Version().Build,
-        std::format(
+        fmt::format(
             "{}",
             package.Id().Version().Revision
             ),
         "",
-        std::format(
+        fmt::format(
             "{}.{}.{}.{}",
             package.Id().Version().Major,
             package.Id().Version().Minor,
