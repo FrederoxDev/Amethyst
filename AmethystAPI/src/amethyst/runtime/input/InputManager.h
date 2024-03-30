@@ -1,18 +1,19 @@
 #pragma once
-#include "minecraft/src-deps/input/InputHandler.h"
-#include "amethyst/runtime/input/InputAction.h"
 #include <vector>
+#include "minecraft/src-client/common/client/options/Options.h"
+#include "amethyst/Log.h"
 
-/**
- * Manages creating inputs for an Amethyst Mod
- */
+class AmethystContext;
+
 namespace Amethyst {
     class InputManager {
     public:
-        std::vector<InputAction> mInputActions;
-
-    public:
-        void RegisterNewInput(const std::string& inputName, int defaultButton, bool allowRemapping);
+        InputManager(AmethystContext* amethyst);
+        void RegisterNewInput(std::string actionName, std::vector<int> keys, bool allowRemapping = true);
         void Shutdown();
+
+    private:
+        AmethystContext* mAmethyst;
+        std::vector<std::string> mRegisteredInputs;
     };
 }

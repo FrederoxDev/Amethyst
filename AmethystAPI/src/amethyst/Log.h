@@ -56,7 +56,6 @@ namespace Log {
         formatted_string += fmt::format("\n\tin: {}, line: {}", function, line);
         throw std::exception(formatted_string.c_str());
     }
-     
 }; // namespace Log
 
 #define Assert(...) Log::_Assert(__FUNCTION__, __LINE__, __VA_ARGS__)
