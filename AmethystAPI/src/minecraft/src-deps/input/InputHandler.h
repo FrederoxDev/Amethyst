@@ -13,6 +13,8 @@ enum FocusImpact : char {
 class ClientInstance;
 using IClientInstance = ClientInstance;
 
+int StringToNameId(const std::string& str);
+
 class InputHandler {
 public:
     /* this + 0   */ std::byte padding0[24];

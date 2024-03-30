@@ -26,8 +26,21 @@ void Amethyst::InputManager::RegisterNewInput(
 }
 
 void Amethyst::InputManager::Shutdown() {
+    Options* opt = mAmethyst->mOptions;
+
     for (auto& actionName : mRegisteredInputs) {
-        Log::Info("Removing {}", actionName);
+        for (auto& mapping : opt->mKeyboardRemappings) {
+            auto newEnd = std::remove_if(
+                    mapping->mKeymappings.begin(),
+                    mapping->mKeymappings.end(),
+                [&actionName](const Keymapping& keymapping)
+            {
+                  return keymapping.mAction == std::string("key." + actionName);
+            });
+
+            // Erase the removed elements from the vector.
+            mapping->mKeymappings.erase(newEnd, mapping->mKeymappings.end());
+        }
     }
 
     mRegisteredInputs.clear();

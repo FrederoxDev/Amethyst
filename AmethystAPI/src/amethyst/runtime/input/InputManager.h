@@ -12,8 +12,10 @@ namespace Amethyst {
         void RegisterNewInput(std::string actionName, std::vector<int> keys, bool allowRemapping = true);
         void Shutdown();
 
+    public:
+        std::vector<std::string> mRegisteredInputs;
+
     private:
         AmethystContext* mAmethyst;
-        std::vector<std::string> mRegisteredInputs;
     };
 }
