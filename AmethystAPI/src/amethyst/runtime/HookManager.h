@@ -62,8 +62,7 @@ public:
             auto result = SigScanSafe(signature);
 
             if (!result.has_value()) {
-                std::string error = fmt::format("Failed to find function: \"{}\"\nUsing signature: \"{}\"", function_id::name<Func>(), signature);
-                throw std::exception(error.c_str());
+                Assert("Failed to find function: \"{}\"\nUsing signature: \"{}\"", function_id::name<Func>(), signature);
             }
 
             mFuncHashToOriginalAddress[hash] = result.value();
