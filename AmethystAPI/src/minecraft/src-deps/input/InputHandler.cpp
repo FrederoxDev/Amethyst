@@ -21,17 +21,3 @@ void InputHandler::registerButtonUpHandler(std::string buttonName, std::function
 {
     this->mButtonUpHandlerMap.emplace(StringToNameId(buttonName), std::make_pair(suspendable, std::move(handler)));
 }
-
-void InputHandler::unregisterHandlersByName(const std::string& buttonName) {
-    int hashedName = StringToNameId(buttonName);
-
-    auto downHandlerRange = mButtonDownHandlerMap.equal_range(hashedName);
-    if (downHandlerRange.first != mButtonDownHandlerMap.end()) {
-        mButtonDownHandlerMap.erase(downHandlerRange.first, downHandlerRange.second);
-    }
-
-    auto upHandlerRange = mButtonUpHandlerMap.equal_range(hashedName);
-    if (upHandlerRange.first != mButtonUpHandlerMap.end()) {
-        mButtonUpHandlerMap.erase(upHandlerRange.first, upHandlerRange.second);
-    }
-}

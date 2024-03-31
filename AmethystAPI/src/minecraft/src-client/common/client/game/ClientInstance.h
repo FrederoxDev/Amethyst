@@ -45,7 +45,9 @@ public:
 
 public:
     // 1.20.71.1 - 48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 49 8B F9 49 8B D8 4C 8B E2
-    ClientInstance();
+    ClientInstance(uint64_t a2, uint64_t a3, uint64_t a4, char a5, void* a6, void* a7, uint64_t a8, void* a9);
+    // Fake Ctor for hooking.
+    void _ClientInstance(uint64_t a2, uint64_t a3, uint64_t a4, char a5, void* a6, void* a7, uint64_t a8, void* a9);
 
     // 1.20.51.1 - 40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 45 8B F1
     int64_t onStartJoinGame(ClientInstance*, int64_t, int64_t, int64_t);
