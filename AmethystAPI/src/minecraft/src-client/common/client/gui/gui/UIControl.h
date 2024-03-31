@@ -30,6 +30,9 @@ public:
     /* this + 160 */ std::vector<std::shared_ptr<UIControl>> mChildren; 
     /* this + 184 */ std::byte padding184[8];
     /* this + 192 */ std::vector<std::unique_ptr<UIComponent>> mComponents;
+
+    template <typename T>
+    T* getComponent();
 };
 
 static_assert(offsetof(UIControl, mChildren) == 160);
