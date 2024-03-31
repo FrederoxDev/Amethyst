@@ -15,7 +15,8 @@ namespace Amethyst {
         Event<> onRequestLeaveGame;
 
         Event<LevelRenderer*, ScreenContext*, FrameRenderObject*> onRenderLevel;
-        Event<ScreenView*, UIRenderContext*> onRenderUI;
+        Event<ScreenView*, UIRenderContext*> beforeRenderUI;
+        Event<ScreenView*, UIRenderContext*> afterRenderUI;
         Event<> update;
 
         Event<ItemRegistry*> registerItems;
@@ -30,7 +31,8 @@ namespace Amethyst {
         {
             onStartJoinGame.Shutdown();
             onRequestLeaveGame.Shutdown();
-            onRenderUI.Shutdown();
+            beforeRenderUI.Shutdown();
+            afterRenderUI.Shutdown();
             onRenderLevel.Shutdown();
             update.Shutdown();
             registerItems.Shutdown();

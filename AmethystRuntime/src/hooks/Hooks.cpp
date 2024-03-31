@@ -12,8 +12,10 @@ SafetyHookInline _ClientInstance_ClientInstance;
 void* ScreenView_setupAndRender(ScreenView* self, UIRenderContext* ctx)
 {
     Amethyst::EventManager* events = AmethystRuntime::getEventManager();
-    events->onRenderUI.Invoke(self, ctx);
-    return _ScreenView_setupAndRender.call<void*, ScreenView*, UIRenderContext*>(self, ctx);
+    events->beforeRenderUI.Invoke(self, ctx);
+    void* res = _ScreenView_setupAndRender.call<void*, ScreenView*, UIRenderContext*>(self, ctx);
+    events->afterRenderUI.Invoke(self, ctx);
+    return res;
 }
 
 int64_t ClientInstance_onStartJoinGame(ClientInstance* self, int64_t a2, int64_t a3, uint64_t a4)
