@@ -24,5 +24,4 @@ public:
 public:
     void registerButtonDownHandler(std::string buttonName, std::function<void(FocusImpact, IClientInstance&)> handler, bool suspendable);
     void registerButtonUpHandler(std::string buttonName, std::function<void(FocusImpact, IClientInstance&)> handler, bool suspendable);
-    void unregisterHandlersByName(const std::string& buttonName);
 };
