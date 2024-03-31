@@ -91,8 +91,7 @@ void AmethystRuntime::PromptDebugger()
 
 void AmethystRuntime::CreateOwnHooks()
 {
-    // CreateInputHooks();
-
+    CreateInputHooks();
     CreateModFunctionHooks();
 }
 
@@ -101,6 +100,13 @@ void AmethystRuntime::RunMods()
     // Invoke mods to initialize and setup hooks, etc..
     for (auto& modInitialize : mModInitialize)
         modInitialize(&mAmethystContext);
+
+    // If we have hot-reloaded this will be true, so prompt mods to create their inputs.
+    if (AmethystRuntime::getContext()->mOptions != nullptr) {
+        AmethystRuntime::getEventManager()->registerInputs.Invoke(
+            AmethystRuntime::getInputManager()
+        );
+    }
 
     ResumeGameThread();
 
@@ -111,7 +117,6 @@ void AmethystRuntime::RunMods()
         if (GetAsyncKeyState(VK_NUMPAD0)) break;
         if (GetAsyncKeyState('R') & 0x8000) {
             Log::Info("\n========================= Beginning hot-reload! =========================");
-
 
             Shutdown();
             return Start();
@@ -124,8 +129,14 @@ void AmethystRuntime::Shutdown()
     // Allow mods to do any shutdown logic.
     getEventManager()->beforeModShutdown.Invoke();
 
+    // Unregister any input listeners and remove created input types
+    getInputManager()->Shutdown();
+
     // Destroy all listeners on amethysts event manager.
     getEventManager()->Shutdown();
+
+    // Remove any hooks and clear data for the next load
+    getHookManager()->Shutdown();
 
     // Remove any patches that were applied to the game.
     getPatchManager()->RemoveAllPatches();

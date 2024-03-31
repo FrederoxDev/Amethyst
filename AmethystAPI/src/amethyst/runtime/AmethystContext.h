@@ -27,4 +27,8 @@ public:
     ClientInstance* mClientInstance = nullptr;
     MinecraftInputHandler* mMcInputHandler = nullptr;
     Options* mOptions = nullptr;
+
+    AmethystContext()
+        : mInputManager(this)
+    {}
 };

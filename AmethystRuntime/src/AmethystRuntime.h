@@ -97,6 +97,5 @@ private:
     AmethystContext mAmethystContext;
 
 public:
-    // Mod Functions
     std::vector<ModInitialize> mModInitialize;
 };

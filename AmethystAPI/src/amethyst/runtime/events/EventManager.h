@@ -5,6 +5,7 @@
 #include "minecraft/src/common/world/item/registry/ItemRegistry.h"
 #include "minecraft/src/common/world/level/block/definition/BlockDefinitionGroup.h"
 #include "minecraft/src-client/common/client/renderer/game/LevelRenderer.h"
+#include "amethyst/runtime/input/InputManager.h"
 
 class FrameRenderObject;
 
@@ -19,6 +20,7 @@ namespace Amethyst {
         Event<ScreenView*, UIRenderContext*> afterRenderUI;
         Event<> update;
 
+        Event<InputManager*> registerInputs;
         Event<ItemRegistry*> registerItems;
         Event<BlockDefinitionGroup*> registerBlocks;
 
@@ -35,6 +37,7 @@ namespace Amethyst {
             afterRenderUI.Shutdown();
             onRenderLevel.Shutdown();
             update.Shutdown();
+            registerInputs.Shutdown();
             registerItems.Shutdown();
             registerBlocks.Shutdown();
             beforeModShutdown.Shutdown();
