@@ -4,6 +4,7 @@
 #include "minecraft/src/common/world/phys/Vec2.h"
 #include <memory>
 #include <vector>
+#include "minecraft/src-client/common/client/gui/controls/UIComponent.h"
 
 class UIPropertyBag;
 
@@ -27,6 +28,8 @@ public:
     /* this + 136 */ std::weak_ptr<UIControl> mParent;
     /* this + 152 */ std::byte padding152[8]; // +8 idk
     /* this + 160 */ std::vector<std::shared_ptr<UIControl>> mChildren; 
+    /* this + 184 */ std::byte padding184[8];
+    /* this + 192 */ std::vector<std::unique_ptr<UIComponent>> mComponents;
 };
 
 static_assert(offsetof(UIControl, mChildren) == 160);

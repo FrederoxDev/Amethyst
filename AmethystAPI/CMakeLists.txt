@@ -27,7 +27,6 @@ add_library(${PROJECT_NAME} STATIC
     src/minecraft/src-deps/minecraftrenderer/renderer/MaterialPtr.asm
 )
 
-
 # Amethyst Dependencies
 target_include_directories(${PROJECT_NAME} PUBLIC 
     ${CMAKE_CURRENT_SOURCE_DIR}/include
