@@ -1,5 +1,5 @@
-#include "minecraft/src-deps/input/InputHandler.h"
-#include "minecraft/src-deps/core/string/StringHash.h"
+#include "minecraft/src-deps/input/InputHandler.hpp"
+#include "minecraft/src-deps/core/string/StringHash.hpp"
 
 // This seems to be a 32 bit variation of a hashed string?
 int StringToNameId(const std::string& str) {

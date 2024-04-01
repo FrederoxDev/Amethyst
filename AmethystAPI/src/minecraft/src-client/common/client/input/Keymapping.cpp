@@ -1,4 +1,4 @@
-#include "minecraft/src-client/common/client/input/Keymapping.h"
+#include "minecraft/src-client/common/client/input/Keymapping.hpp"
 
 Keymapping::Keymapping(const std::string& actionName, int key, bool allowRemapping) {
     mAction = actionName;

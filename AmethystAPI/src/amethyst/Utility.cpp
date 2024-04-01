@@ -1,4 +1,4 @@
-#include "amethyst/Utility.h"
+#include "amethyst/Utility.hpp"
 #include <winrt/base.h>
 
 std::string GetAmethystFolder()

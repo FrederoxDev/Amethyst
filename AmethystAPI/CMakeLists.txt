@@ -16,7 +16,7 @@ add_compile_definitions(_ITERATOR_DEBUG_LEVEL=0)
 set_property(GLOBAL PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
 
 file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.c" "src/*.asm")
-file(GLOB_RECURSE HEADERS "src/*.h" "src/*.hpp")
+file(GLOB_RECURSE HEADERS "src/*.hpp")
   
 # Create AmethystAPI as a .lib
 add_library(${PROJECT_NAME} STATIC 

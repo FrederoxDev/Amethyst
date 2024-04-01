@@ -1,4 +1,4 @@
-#include "hooks/Hooks.h"
+#include "hooks/Hooks.hpp"
 
 SafetyHookInline _ScreenView_setupAndRender;
 SafetyHookInline _ClientInstance_onStartJoinGame;

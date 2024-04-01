@@ -1,8 +1,8 @@
-#include "minecraft/src-client/common/client/gui/gui/UIControl.h"
-#include <minecraft/src-client/common/client/gui/controls/ToggleComponent.h>
-#include <minecraft/src-client/common/client/gui/controls/SliderComponent.h>
-#include <minecraft/src-client/common/client/gui/controls/TextComponent.h>
-#include <amethyst/Memory.h>
+#include "minecraft/src-client/common/client/gui/gui/UIControl.hpp"
+#include <minecraft/src-client/common/client/gui/controls/ToggleComponent.hpp>
+#include <minecraft/src-client/common/client/gui/controls/SliderComponent.hpp>
+#include <minecraft/src-client/common/client/gui/controls/TextComponent.hpp>
+#include <amethyst/Memory.hpp>
 
 std::string UIControl::getPathedName()
 {

@@ -1,4 +1,4 @@
-#include "minecraft/src/common/world/phys/Vec3.h"
+#include "minecraft/src/common/world/phys/Vec3.hpp"
 
 Vec3::Vec3(float x, float y, float z)
 {

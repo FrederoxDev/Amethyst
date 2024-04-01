@@ -1,6 +1,6 @@
-#include "PatchManager.h"
-#include "amethyst/Log.h"
-#include "amethyst/Memory.h"
+#include "PatchManager.hpp"
+#include "amethyst/Log.hpp"
+#include "amethyst/Memory.hpp"
 
 namespace Amethyst {
     // Returns false if the patch failed to apply

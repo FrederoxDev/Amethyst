@@ -1,4 +1,4 @@
-#include "minecraft/src/common/world/level/BlockSource.h"
+#include "minecraft/src/common/world/level/BlockSource.hpp"
 
 //const Block* BlockSource::getBlock(int x, int y, int z) const
 //{

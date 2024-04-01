@@ -1,4 +1,4 @@
-#include "minecraft/src/common/world/item/ItemStackBase.h"
+#include "minecraft/src/common/world/item/ItemStackBase.hpp"
 
 //std::string ItemStackBase::getRawNameId() const
 //{

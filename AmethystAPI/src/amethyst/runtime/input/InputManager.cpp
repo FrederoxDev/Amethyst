@@ -1,7 +1,7 @@
 #include <utility>
 
-#include "amethyst/runtime/input/InputManager.h"
-#include "amethyst/runtime/AmethystContext.h"
+#include "amethyst/runtime/input/InputManager.hpp"
+#include "amethyst/runtime/AmethystContext.hpp"
 
 Amethyst::InputManager::InputManager(AmethystContext *amethyst) {
     mAmethyst = amethyst;
