@@ -25,11 +25,13 @@ public:
     /* this + 120 */ uint32_t mClipChangeEventId; 
     /* this + 124 */ std::byte padding124[4];  
     /* this + 128 */ std::unique_ptr<UIPropertyBag> mPropertyBag;
-    /* this + 136 */ std::weak_ptr<UIControl> mParent;
-    /* this + 152 */ std::byte padding152[8]; // +8 idk
+    /* this + 136 */ std::byte padding136[8]; // +8 idk
+    /* this + 144 */ std::weak_ptr<UIControl> mParent;
     /* this + 160 */ std::vector<std::shared_ptr<UIControl>> mChildren; 
     /* this + 184 */ std::byte padding184[8];
     /* this + 192 */ std::vector<std::unique_ptr<UIComponent>> mComponents;
+
+    std::string getPathedName();
 
     template <typename T>
     T* getComponent();
