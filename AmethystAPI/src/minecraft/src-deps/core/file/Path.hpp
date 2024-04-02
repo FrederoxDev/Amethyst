@@ -9,14 +9,13 @@ public:
 
 template <class ContainerType>
 class PathBuffer {
-private:
+public:
     ContainerType mContainer;
 };
 
 class Path {
-    PathPart mPathPart;
-
 public:
+    PathPart mPathPart;
     Path(const std::string&);
 };
 } // namespace Core

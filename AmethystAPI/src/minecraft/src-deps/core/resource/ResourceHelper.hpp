@@ -4,6 +4,29 @@
 #include "minecraft/src-deps/core/resource/ResourceUtil.hpp"
 #include <string>
 
+// Why does mojang define this in ResourceHelper?
+enum class PackCategory : int {
+    _Unknown,
+    _RealmsUnknown,
+    Standard,
+    Premium,
+    Custom,
+    Subpack
+};
+
+enum class PackType : char {
+    Invalid,
+    Addon,
+    Cached,
+    CopyProtected,
+    Behavior,
+    PersonaPiece,
+    Resources,
+    Skins,
+    WorldTemplate,
+    Count
+};
+
 class ResourceLocation {
 private:
     ResourceFileSystem mFileSystem; // this + 0x0
