@@ -1,4 +1,4 @@
-#include "minecraft/src/common/world/level/dimension/Dimension.h"
+#include "minecraft/src/common/world/level/dimension/Dimension.hpp"
 
 BlockSource* Dimension::getBlockSourceFromMainChunkSource()
 {

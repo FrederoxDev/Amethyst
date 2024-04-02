@@ -1,4 +1,4 @@
-#include "hooks/InputHooks.h"
+#include "hooks/InputHooks.hpp"
 
 SafetyHookInline _addFullKeyboardGamePlayControls;
 SafetyHookInline _createInputMappingTemplates;

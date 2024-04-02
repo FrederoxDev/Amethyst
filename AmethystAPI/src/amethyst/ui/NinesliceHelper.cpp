@@ -1,4 +1,4 @@
-#include "amethyst/ui/NinesliceHelper.h"
+#include "amethyst/ui/NinesliceHelper.hpp"
 
 Amethyst::NinesliceHelper::NinesliceHelper(int textureWidth, int textureHeight, int ninesliceWidth, int ninesliceHeight)
 {

@@ -1,4 +1,4 @@
-#include "amethyst/Memory.h"
+#include "amethyst/Memory.hpp"
 #include <libhat/Scanner.hpp>
 #include <mutex>
 #include <thread>

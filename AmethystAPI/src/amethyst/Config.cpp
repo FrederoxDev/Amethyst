@@ -1,4 +1,4 @@
-#include "amethyst/Config.h"
+#include "amethyst/Config.hpp"
 
 Config::Config()
 {

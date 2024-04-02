@@ -1,6 +1,6 @@
-#include "amethyst/MinecraftVtables.h"
-#include "minecraft/src/common/world/level/block/BlockLegacy.h"
-#include "minecraft/src-client/common/client/renderer/RenderMaterialGroup.h"
+#include "amethyst/MinecraftVtables.hpp"
+#include "minecraft/src/common/world/level/block/BlockLegacy.hpp"
+#include "minecraft/src-client/common/client/renderer/RenderMaterialGroup.hpp"
 
 extern "C" void* Item_vtable = nullptr;
 

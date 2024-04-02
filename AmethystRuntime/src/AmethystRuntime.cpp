@@ -1,4 +1,4 @@
-#include "AmethystRuntime.h"
+#include "AmethystRuntime.hpp"
 
 AmethystRuntime* AmethystRuntime::instance = nullptr;
 extern HANDLE gMcThreadHandle;

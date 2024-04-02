@@ -1,4 +1,4 @@
-#include "dllmain.h"
+#include "dllmain.hpp"
 
 HANDLE gMcThreadHandle;
 DWORD gMcThreadId;

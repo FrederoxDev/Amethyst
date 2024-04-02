@@ -1,4 +1,4 @@
-#include "minecraft/src-client/common/client/renderer/actor/ItemRenderer.h"
+#include "minecraft/src-client/common/client/renderer/actor/ItemRenderer.hpp"
 
 void ItemRenderer::renderGuiItemNew(BaseActorRenderContext* renderContext, const ItemStack* item, uint32_t frame, float x, float y, bool forceEnchantmentFoil, float transparency, float lightMultiplyer, float scale)
 {

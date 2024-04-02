@@ -26,15 +26,15 @@ if (AMETHYST_INPUT_SYSTEM)
 endif()
 
 # Project Files
-file(GLOB_RECURSE CPP_SOURCES "src/*.cpp")
-file(GLOB_RECURSE H_FILES "src/*.h" )
-add_library(${PROJECT_NAME} SHARED ${CPP_SOURCES} ${H_FILES})
+file(GLOB_RECURSE SOURCES "src/*.cpp")
+file(GLOB_RECURSE HEADERS "src/*.hpp" )
+add_library(${PROJECT_NAME} SHARED ${SOURCES} ${HEADERS})
 
 # EnTT Config Options
 target_compile_definitions(${PROJECT_NAME} PUBLIC ENTT_PACKED_PAGE=128)
 
 # Organize source files into virtual folders in Visual Studio
-foreach(source IN LISTS CPP_SOURCES H_FILES)
+foreach(source IN LISTS SOURCES HEADERS)
     get_filename_component(source_path "${source}" DIRECTORY)
     string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}" "" source_path_relative "${source_path}")
     string(REPLACE "/" "\\" source_path_relative "${source_path_relative}")
@@ -58,7 +58,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE "${AmethystFolder}/lib/libhat.lib"
 add_custom_target(ClangFormat
     COMMAND clang-format
     -i
-    ${CPP_SOURCES} ${H_FILES}
+    ${SOURCES} ${HEADERS}
 )
 
 # Write a mod.json file to provide meta data about the mod

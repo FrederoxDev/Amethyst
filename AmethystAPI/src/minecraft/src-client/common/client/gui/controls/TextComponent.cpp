@@ -1,4 +1,4 @@
-#include "minecraft/src-client/common/client/gui/controls/TextComponent.h"
+#include "minecraft/src-client/common/client/gui/controls/TextComponent.hpp"
 
 void TextComponent::setText(const std::string& text) {
     using function = decltype(&TextComponent::setText);

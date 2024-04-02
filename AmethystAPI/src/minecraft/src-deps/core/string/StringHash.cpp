@@ -1,4 +1,4 @@
-#include "minecraft/src-deps/core/string/StringHash.h"
+#include "minecraft/src-deps/core/string/StringHash.hpp"
 
 bool StringKey::operator==(const StringKey& rha) const
 {
