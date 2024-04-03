@@ -18,7 +18,8 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.githubpages',
     'sphinxawesome_theme.highlighting',
-    'breathe'
+    'breathe',
+    'sphinx_design'
 ]
 
 templates_path = ['_templates']
@@ -34,12 +35,17 @@ html_theme_options = {
     # Add your theme options. For example:
     "show_breadcrumbs": True,
     "main_nav_links": {
-        "Api AutoDoc": "autodoc",
+        "AutoDoc": "autodoc",
+        "Examples": "autodoc",
     }
+}
+
+html_sidebars = {
+    "/": ["global_sidebar"]
 }
 
 # Breathe configuration
 breathe_projects = {
     'AmethystApi': 'doxygen'
 }
-breathe_default_project  = 'AmethystApi'
+breathe_default_project = 'AmethystApi'
