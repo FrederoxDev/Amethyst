@@ -38,20 +38,17 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r docs/requirements.txt
 
+      - name: Navigate into docs
+        run: cd docs
+
       - name: Build Doxygen data
-        run: |
-          cd docs
-          make doxygen
+        run: make doxygen
 
       - name: Build Breathe apidoc
-        run: |
-          cd docs
-          breathe_apidoc
+        run: make breathe_apidoc
 
       - name: Build sphinx docs
-        run: |
-          cd docs
-          make sphinx_build
+        run: make sphinx_build
         
       - name: Run ghp-import
         run: | 
