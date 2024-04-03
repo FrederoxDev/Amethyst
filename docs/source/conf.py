@@ -30,6 +30,14 @@ exclude_patterns = []
 html_theme = 'sphinxawesome_theme'
 html_static_path = ['_static']
 
+html_theme_options = {
+    # Add your theme options. For example:
+    "show_breadcrumbs": True,
+    "main_nav_links": {
+        "Api AutoDoc": "/autodoc",
+    }
+}
+
 # Breathe configuration
 breathe_projects = {
     'AmethystApi': 'doxygen'
