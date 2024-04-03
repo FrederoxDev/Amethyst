@@ -32,9 +32,6 @@ jobs:
            
       - name: Set up Doxygen
         run: sudo apt install doxygen
-
-      - name: Navigate into docs folder
-        run: cd docs
         
       - name: Install dependencies
         run: | 
@@ -43,16 +40,18 @@ jobs:
 
       - name: Build Doxygen data
         run: |
-          pwd
-          ls
-          cat Makefile
+          cd docs
           make doxygen
 
       - name: Build Breathe apidoc
-        run: make breathe_apidoc
+        run: |
+          cd docs
+          breathe_apidoc
 
       - name: Build sphinx docs
-        run: make sphinx_build
+        run: |
+          cd docs
+          make sphinx_build
         
       - name: Run ghp-import
         run: | 
