@@ -42,7 +42,11 @@ jobs:
           pip install -r docs/requirements.txt
 
       - name: Build Doxygen data
-        run: make doxygen
+        run: |
+          pwd
+          ls
+          cat Makefile
+          make doxygen
 
       - name: Build Breathe apidoc
         run: make breathe_apidoc
