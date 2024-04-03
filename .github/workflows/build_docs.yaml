@@ -44,7 +44,9 @@ jobs:
           make doxygen
 
       - name: Build Breathe apidoc
-        run: make breathe_apidoc
+        run: |
+          cd docs
+          make breathe_apidoc
 
       - name: Build sphinx docs
         run: make sphinx_build
