@@ -2,7 +2,7 @@ AmethystApi
 ===========
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 0
 
     breathe/classlist
     breathe/filelist

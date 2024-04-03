@@ -34,7 +34,7 @@ html_theme_options = {
     # Add your theme options. For example:
     "show_breadcrumbs": True,
     "main_nav_links": {
-        "Api AutoDoc": "/autodoc",
+        "Api AutoDoc": "autodoc",
     }
 }
 
