@@ -7,7 +7,7 @@
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = 'Amethyst'
-copyright = 'https://github.com/FrederoxDev/Amethyst/blob/main/LICENSE'
+copyright = ''
 author = 'https://github.com/FrederoxDev/Amethyst/graphs/contributors'
 release = ''
 
