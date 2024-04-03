@@ -32,17 +32,18 @@ html_theme = 'sphinxawesome_theme'
 html_static_path = ['_static']
 
 html_theme_options = {
-    # Add your theme options. For example:
-    "show_breadcrumbs": True,
-    "main_nav_links": {
-        "AutoDoc": "autodoc",
-        "Examples": "autodoc",
+    'show_breadcrumbs': True,
+    'main_nav_links': {
+        'Api AutoDocs': 'autodocs',
+        'Examples': 'examples/index',
+        'Getting Started': 'getting_started/index',
+        'Reverse Engineering': 'getting_started/index',
+        'How to Doc': 'how_to_doc/index',
     }
 }
 
-html_sidebars = {
-    "/": ["global_sidebar"]
-}
+# Pygments configuration
+pygments_style = "github-dark"
 
 # Breathe configuration
 breathe_projects = {
