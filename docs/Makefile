@@ -9,8 +9,8 @@ SOURCEDIR     = source
 BUILDDIR      = build
 
 BREATHE_DEFAULT_PROJECT = AmethystApi
-BREATHE_OUTPUT = source\breathe
-DOXYGEN_OUTPUT = source\doxygen
+BREATHE_OUTPUT = source/breathe
+DOXYGEN_OUTPUT = source/doxygen
 
 # Put it first so that "make" without argument is like "make help".
 help:

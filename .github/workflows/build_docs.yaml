@@ -49,7 +49,9 @@ jobs:
           make breathe_apidoc
 
       - name: Build sphinx docs
-        run: make sphinx_build
+        run:  |
+          cd docs
+          make sphinx_build
         
       - name: Run ghp-import
         run: | 
