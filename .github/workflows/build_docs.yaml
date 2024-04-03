@@ -1,6 +1,6 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Build-docs
+name: Build-Documentation
 
 # Controls when the workflow will run
 on:
@@ -34,7 +34,10 @@ jobs:
         run: sudo apt install doxygen
 
       - name: Navigate into docs folder
-        run: cd docs
+        run: |
+          cd docs
+          pwd
+          ls
         
       - name: Install dependencies
         run: | 
