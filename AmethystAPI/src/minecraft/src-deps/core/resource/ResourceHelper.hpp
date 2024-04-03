@@ -3,8 +3,9 @@
 #include "minecraft/src-deps/core/file/Path.hpp"
 #include "minecraft/src-deps/core/resource/ResourceUtil.hpp"
 #include <string>
+#include "minecraft/src-deps/core/semVer/SemVersion.hpp"
+#include "minecraft/src-deps/core/utility/UUID.hpp"
 
-// Why does mojang define this in ResourceHelper?
 enum class PackCategory : int {
     _Unknown,
     _RealmsUnknown,
@@ -25,6 +26,12 @@ enum class PackType : char {
     Skins,
     WorldTemplate,
     Count
+};
+
+struct PackIdVersion {
+    mce::UUID mId;
+    SemVersion mVersion;
+    PackType mPackType;
 };
 
 class ResourceLocation {
