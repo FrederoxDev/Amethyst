@@ -37,7 +37,7 @@ html_theme_options = {
         'Api AutoDocs': 'autodocs',
         'Examples': 'examples/index',
         'Getting Started': 'getting_started/index',
-        'Reverse Engineering': 'getting_started/index',
+        'Reverse Engineering': 'reverse_engineering/index',
         'How to Doc': 'how_to_doc/index',
     }
 }
