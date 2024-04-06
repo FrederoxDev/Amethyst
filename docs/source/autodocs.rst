@@ -1,13 +1,3 @@
-.. toctree::
-    :maxdepth: 10
-    :hidden:
-    :glob:
-
-    breathe/classlist
-    breathe/filelist
-    breathe/namespacelist
-    breathe/structlist
-
 AmethystApi
 ===========
 
@@ -17,3 +7,9 @@ AmethystApi
 .. card:: FileList
 
     :doc:`A list of all Files in the AmethystApi <breathe/filelist>`
+
+
+.. toctree::
+    :glob:
+
+    breathe/filelist

@@ -1,10 +1,3 @@
-.. toctree::
-    :maxdepth: 10
-    :hidden:
-    :glob:
-
-    networking/index
-
 Examples
 ========
 
@@ -21,3 +14,9 @@ Examples
 
 .. card:: Card Title
     Card content
+
+.. toctree::
+    :hidden:
+    :glob:
+
+    networking/index

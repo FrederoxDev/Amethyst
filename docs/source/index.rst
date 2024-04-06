@@ -1,14 +1,3 @@
-.. toctree::
-    :maxdepth: 10
-    :hidden:
-    :glob:
-
-    autodocs
-    examples/index
-    getting_started/index
-    reverse_engineering/index
-    how_to_doc/index
-
 .. image:: https://github.com/FrederoxDev/Amethyst/assets/69014593/08e43b26-05e2-4646-968b-0d3ab6699d78
     :width: 300
     :height: 300
@@ -24,3 +13,13 @@ Project Amethyst
 
 .. line-block::::
     We have a community discord server here: `discord.gg/Cxrj9UXnDB <https://discord.gg/Cxrj9UXnDB>`_.
+
+.. toctree::
+    :hidden:
+    :glob:
+
+    autodocs
+    examples/index
+    getting_started/index
+    reverse_engineering/index
+    how_to_doc/index
