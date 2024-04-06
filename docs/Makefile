@@ -28,7 +28,7 @@ doxygen:
 
 # Generate all rst files from the doxyfiles
 breathe_apidoc:
-	breathe-apidoc -o $(BREATHE_OUTPUT) -p $(BREATHE_DEFAULT_PROJECT) $(DOXYGEN_OUTPUT) -g $(BREATHE_GENERATION_OPTIONS)
+	breathe-apidoc -o $(BREATHE_OUTPUT) -p $(BREATHE_DEFAULT_PROJECT) -g $(BREATHE_GENERATION_OPTIONS) $(DOXYGEN_OUTPUT)
 
 .PHONY: breathe_apidoc Makefile
 
