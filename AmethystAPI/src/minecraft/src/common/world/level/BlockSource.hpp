@@ -61,8 +61,11 @@ public:
 
     /**
      * @note The Parameters are unknown, known options:
+     *
      *       (const AABB& box, float* actualSurfaceOffset, bool withUnloadedChunks, IActorMovementProxy* entity)
+     *
      *       (std::vector<AABB, std::allocator<AABB>>& shapes, const AABB& box, float* actualSurfaceOffset, bool withUnloadedChunks, optional_ref<const GetCollisionShapeInterface> entity)
+     *
      *       This is virtual void fetchCollisionShapes(std::vector<AABB>&, const AABB&, bool, optional_ref<const GetCollisionShapeInterface>, std::vector<AABB>*) const;
      */
     virtual void filler11();
@@ -82,7 +85,9 @@ public:
     virtual std::vector<AABB, std::allocator<AABB>>& fetchAABBs_(const AABB& intersectTestBox, bool withUnloadedChunks);
     /**
      * @note The Parameters are unknown, known options:
+     *
      *       (const AABB& box, float* actualSurfaceOffset, bool withUnloadedChunks, IActorMovementProxy* entity)
+     *
      *       (std::vector<AABB, std::allocator<AABB>>& shapes, const AABB& box, float* actualSurfaceOffset, bool withUnloadedChunks, optional_ref<const GetCollisionShapeInterface> entity)
      */
     virtual std::vector<AABB, std::allocator<AABB>>& fetchCollisionShapes(const AABB&, bool, std::optional<const EntityContext>, std::vector<AABB, std::allocator<AABB>>*);
@@ -115,7 +120,7 @@ public:
     virtual void filler7();
 
     /**
-     * @brief Allows you to get the dimension the block source is located in.
+     * @brief Allows to get the dimension the block source is located in
      *
      * @return Returns a constant Dimension object
      */
