@@ -42,6 +42,12 @@ html_theme_options = {
     }
 }
 
+html_favicon = "https://github.com/FrederoxDev/Amethyst/assets/69014593/08e43b26-05e2-4646-968b-0d3ab6699d78"
+
+html_sidebars = {
+    "**": ["sidebar_toc.html"]
+}
+
 # Pygments configuration
 pygments_style = "github-dark"
 
