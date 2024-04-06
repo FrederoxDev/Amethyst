@@ -1,3 +1,10 @@
+.. toctree::
+    :maxdepth: 10
+    :hidden:
+    :glob:
+
+    networking/index
+
 Examples
 ========
 

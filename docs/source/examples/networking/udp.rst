@@ -1,3 +1,8 @@
+.. toctree::
+    :maxdepth: 10
+    :hidden:
+    :glob:
+
 UDP Networking Example
 ======================
 
