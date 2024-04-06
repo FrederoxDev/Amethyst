@@ -10,6 +10,8 @@ BUILDDIR      = build
 
 BREATHE_DEFAULT_PROJECT = AmethystApi
 BREATHE_OUTPUT = source/breathe
+# possible are list of: class, interface, struct, union, file, namespace, group
+BREATHE_GENERATION_OPTIONS = file
 DOXYGEN_OUTPUT = source/doxygen
 
 # Put it first so that "make" without argument is like "make help".
@@ -26,7 +28,7 @@ doxygen:
 
 # Generate all rst files from the doxyfiles
 breathe_apidoc:
-	breathe-apidoc -o $(BREATHE_OUTPUT) -p $(BREATHE_DEFAULT_PROJECT) $(DOXYGEN_OUTPUT)
+	breathe-apidoc -o $(BREATHE_OUTPUT) -p $(BREATHE_DEFAULT_PROJECT) $(DOXYGEN_OUTPUT) -g $(BREATHE_GENERATION_OPTIONS)
 
 .PHONY: breathe_apidoc Makefile
 
