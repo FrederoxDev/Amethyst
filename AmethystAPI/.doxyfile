@@ -988,47 +988,11 @@ FILE_PATTERNS          = *.c \
                          *.cxx \
                          *.cpp \
                          *.c++ \
-                         *.java \
-                         *.ii \
-                         *.ixx \
-                         *.ipp \
-                         *.i++ \
-                         *.inl \
-                         *.idl \
-                         *.ddl \
-                         *.odl \
                          *.h \
                          *.hh \
                          *.hxx \
                          *.hpp \
-                         *.h++ \
-                         *.l \
-                         *.cs \
-                         *.d \
-                         *.php \
-                         *.php4 \
-                         *.php5 \
-                         *.phtml \
-                         *.inc \
-                         *.m \
-                         *.markdown \
-                         *.md \
-                         *.mm \
-                         *.dox \
-                         *.py \
-                         *.pyw \
-                         *.f90 \
-                         *.f95 \
-                         *.f03 \
-                         *.f08 \
-                         *.f18 \
-                         *.f \
-                         *.for \
-                         *.vhd \
-                         *.vhdl \
-                         *.ucf \
-                         *.qsf \
-                         *.ice
+                         *.h++
 
 # The RECURSIVE tag can be used to specify whether or not subdirectories should
 # be searched for input files as well.
@@ -1353,7 +1317,7 @@ HTML_STYLESHEET        =
 # documentation.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_EXTRA_STYLESHEET  = ../docs/source/doxygen-awesome/doxygen-awesome.css
+HTML_EXTRA_STYLESHEET  =
 
 # The HTML_EXTRA_FILES tag can be used to specify one or more extra images or
 # other source files which should be copied to the HTML output directory. Note
@@ -2225,7 +2189,7 @@ XML_PROGRAMLISTING     = YES
 # The default value is: NO.
 # This tag requires that the tag GENERATE_XML is set to YES.
 
-XML_NS_MEMB_FILE_SCOPE = NO
+XML_NS_MEMB_FILE_SCOPE = YES
 
 #---------------------------------------------------------------------------
 # Configuration options related to the DOCBOOK output
