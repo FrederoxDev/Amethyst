@@ -1,6 +1,6 @@
-#include "MinecraftPackageInfo.h"
-#include "amethyst/Log.h"
-#include "amethyst/Utility.h"
+#include "MinecraftPackageInfo.hpp"
+#include "amethyst/Log.hpp"
+#include "amethyst/Utility.hpp"
 
 Amethyst::MinecraftPackageInfo::MinecraftPackageInfo()
 {
@@ -18,13 +18,13 @@ Amethyst::MinecraftPackageInfo::MinecraftPackageInfo()
         package.Id().Version().Major,
         package.Id().Version().Minor,
         package.Id().Version().Build,
-        std::format(
-            "%i",
+        fmt::format(
+            "{}",
             package.Id().Version().Revision
             ),
         "",
-        std::format(
-            "%i.%i.%i.%i",
+        fmt::format(
+            "{}.{}.{}.{}",
             package.Id().Version().Major,
             package.Id().Version().Minor,
             package.Id().Version().Build,

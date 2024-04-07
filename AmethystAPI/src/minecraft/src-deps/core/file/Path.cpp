@@ -1,4 +1,4 @@
-#include "minecraft/src-deps/core/file/Path.h"
+#include "minecraft/src-deps/core/file/Path.hpp"
 
 Core::Path::Path(const std::string& path)
 {

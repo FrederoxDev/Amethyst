@@ -1,5 +1,5 @@
-#include "minecraft/src-deps/minecraftrenderer/renderer/Mesh.h"
-#include <amethyst/Memory.h>
+#include "minecraft/src-deps/minecraftrenderer/renderer/Mesh.hpp"
+#include <amethyst/Memory.hpp>
 
 void mce::Mesh::renderMesh(mce::MeshContext* meshContext, const mce::MaterialPtr *materialPtr) {
     // 1.20.71.1

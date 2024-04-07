@@ -1,4 +1,4 @@
-#include "Mod.h"
+#include "Mod.hpp"
 #include <fstream>
 
 Mod::Mod(std::string modName)

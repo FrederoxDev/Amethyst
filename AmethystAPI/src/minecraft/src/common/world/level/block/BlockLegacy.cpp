@@ -1,4 +1,4 @@
-#include "minecraft/src/common/world/level/block/BlockLegacy.h"
+#include "minecraft/src/common/world/level/block/BlockLegacy.hpp"
 
 
 BlockLegacy::~BlockLegacy() {

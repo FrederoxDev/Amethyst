@@ -1,4 +1,4 @@
-#include "AmethystRuntime.h"
+#include "AmethystRuntime.hpp"
 
 AmethystRuntime* AmethystRuntime::instance = nullptr;
 extern HANDLE gMcThreadHandle;
@@ -118,7 +118,6 @@ void AmethystRuntime::RunMods()
         if (GetAsyncKeyState('R') & 0x8000) {
             Log::Info("\n========================= Beginning hot-reload! =========================");
 
-
             Shutdown();
             return Start();
         }
@@ -135,6 +134,9 @@ void AmethystRuntime::Shutdown()
 
     // Destroy all listeners on amethysts event manager.
     getEventManager()->Shutdown();
+
+    // Remove any hooks and clear data for the next load
+    getHookManager()->Shutdown();
 
     // Remove any patches that were applied to the game.
     getPatchManager()->RemoveAllPatches();

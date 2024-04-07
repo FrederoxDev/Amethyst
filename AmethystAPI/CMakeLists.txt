@@ -17,7 +17,7 @@ add_compile_definitions(_ITERATOR_DEBUG_LEVEL=0)
 set_property(GLOBAL PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreadedDLL")
 
 file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.c" "src/*.asm")
-file(GLOB_RECURSE HEADERS "src/*.h" "src/*.hpp")
+file(GLOB_RECURSE HEADERS "src/*.hpp")
   
 # Create AmethystAPI as a .lib
 add_library(${PROJECT_NAME} STATIC 
@@ -26,8 +26,7 @@ add_library(${PROJECT_NAME} STATIC
     src/minecraft/src/common/world/item/Item.asm
     src/minecraft/src/common/world/level/block/BlockLegacy.asm
     src/minecraft/src-deps/minecraftrenderer/renderer/MaterialPtr.asm
-)
-
+) 
 
 # Amethyst Dependencies
 target_include_directories(${PROJECT_NAME} PUBLIC 
@@ -38,7 +37,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC
 target_link_libraries(${PROJECT_NAME} PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/lib/fmt.lib
 )
-
 
 # EnTT Compile options
 target_compile_definitions(${PROJECT_NAME} PUBLIC ENTT_PACKED_PAGE=128)

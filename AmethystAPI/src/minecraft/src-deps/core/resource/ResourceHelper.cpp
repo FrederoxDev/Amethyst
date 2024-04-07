@@ -1,4 +1,4 @@
-#include "minecraft/src-deps/core/resource/ResourceHelper.h"
+#include "minecraft/src-deps/core/resource/ResourceHelper.hpp"
 
 ResourceLocation::ResourceLocation()
 {

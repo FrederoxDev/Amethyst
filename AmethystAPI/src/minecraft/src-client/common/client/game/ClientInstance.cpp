@@ -1,4 +1,4 @@
-#include "minecraft/src-client/common/client/game/ClientInstance.h"
+#include "minecraft/src-client/common/client/game/ClientInstance.hpp"
 
 // void ClientInstance::requestLeaveGame(char switchScreen, char sync) {
 //     using function = void(__thiscall*)(ClientInstance*, char, char);

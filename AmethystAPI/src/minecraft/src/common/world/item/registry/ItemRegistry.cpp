@@ -1,4 +1,4 @@
-#include "minecraft/src/common/world/item/registry/ItemRegistry.h"
+#include "minecraft/src/common/world/item/registry/ItemRegistry.hpp"
 
 void ItemRegistry::registerItem(SharedPtr<Item> item)
 {

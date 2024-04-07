@@ -1,4 +1,4 @@
-#include "minecraft/src/common/world/actor/Actor.h"
+#include "minecraft/src/common/world/actor/Actor.hpp"
 
 Vec3* Actor::getPosition()
 {

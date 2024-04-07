@@ -1,12 +1,13 @@
-#include "HookManager.h"
+#include "HookManager.hpp"
+
+#include <ranges>
 
 /*
 Disables any hooks and un-caches any stored addresses
 */
 void HookManager::Shutdown()
 {
-    for (auto it = mHooks.rbegin(); it != mHooks.rend(); ++it) {
-        auto* hook = *it;
+    for (auto hook : std::ranges::reverse_view(mHooks)) {
         *hook = {};
     }
 

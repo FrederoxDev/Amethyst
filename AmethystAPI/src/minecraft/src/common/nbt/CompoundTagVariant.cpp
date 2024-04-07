@@ -1,4 +1,4 @@
-#include "minecraft/src/common/nbt/CompoundTagVariant.h"
+#include "minecraft/src/common/nbt/CompoundTagVariant.hpp"
 
 CompoundTagVariant::CompoundTagVariant(Tag&& tag)
 {

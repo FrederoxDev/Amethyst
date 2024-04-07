@@ -1,4 +1,4 @@
-#include "minecraft/src-client/common/client/renderer/block/BlockTessellator.h"
+#include "minecraft/src-client/common/client/renderer/block/BlockTessellator.hpp"
 
 //mce::Mesh* BlockTessellator::getMeshForBlock(Tessellator* tessellator, const Block* block) {
 //    using function = mce::Mesh*(BlockTessellator::*)(Tessellator*, const Block*);
