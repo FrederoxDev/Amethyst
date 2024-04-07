@@ -117,4 +117,4 @@ Additional Tips
 - Keep comments concise but informative.
 - Use proper formatting for better readability.
 - Update comments when code changes to keep documentation accurate.
-- Using ai to generate comments could be used, but the results should always be checked by a human.
+- Using ai to generate comments can be used, but results should always be checked for correctness by a human.
