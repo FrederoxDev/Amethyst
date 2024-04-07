@@ -1,7 +1,3 @@
-.. toctree::
-    :hidden:
-    :glob:
-
 UDP Networking Example
 ======================
 
