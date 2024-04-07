@@ -104,5 +104,11 @@ The final html files can be found in the ``/docs/build/html`` folder.
 Open the ``/docs/build/html/index.html`` file in your browser of choice
 and enjoy the amazing documentation.
 
-To modify the docs and learn how to write good doxygen comments/sphinx docs,
-look at the :doc:`Amethyst Sphinx docs <sphinx>` and the :doc:`Amethyst Doxygen docs <doxygen>` respectively.
+.. hint::
+    To modify the docs and learn how to write good doxygen comments/sphinx docs,
+    look at the :doc:`Amethyst Sphinx docs <sphinx>` and the :doc:`Amethyst Doxygen docs <doxygen>` respectively.
+
+.. caution::
+    It is recommended to not add these generated files (by breathe and doxygen) to your git,
+    they may end up in a pullrequest, this could cause a lot of problems.
+    That's also why they listed in the ``.gitignore``.
