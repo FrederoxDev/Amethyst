@@ -30,9 +30,7 @@ Please always use as many dashes as characters in the heading:
     Installation
     ------------
 
-others are: ``.``, ``#``, ``~``, ``^``, `````, ``+`` ...
-
-(and possibly others)
+others are: ``.``, ``#``, ``~``, ``^``, `````, ``+`` (and more...)
 
 Text Formatting
 ---------------
