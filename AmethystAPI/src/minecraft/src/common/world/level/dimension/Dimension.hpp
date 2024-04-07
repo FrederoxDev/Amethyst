@@ -13,6 +13,9 @@ private:
 public:
     std::byte filler0[192];
     HeightRange mHeightRange;
+    /**
+     * @note Minecraft's default Dimension constructor seems to set the mSeaLevel to 63
+     */
     int16_t mSeaLevel;
     std::byte filler1[122];
     std::string mName;
