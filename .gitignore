@@ -12,3 +12,8 @@ AmethystLauncher/build/
 AmethystLauncher/node_modules/
 AmethystLauncher/.vscode/
 AmethystLauncher/dist/
+
+venv
+docs/build/*
+docs/source/doxygen/*
+docs/source/breathe/*
