@@ -48,7 +48,7 @@ As well as:
 If one of these couldn't be found add the file to the system's path variable,
 like mentioned before.
 
-2. Install the Dependencies
+3. Install the Dependencies
 ---------------------------
 
 Open the terminal and navigate to your local amethyst repository clone.
@@ -60,7 +60,7 @@ Switch into the ``/docs`` directory and run:
 
 This install all the needed python dependencies.
 
-3. Install CMake
+4. Install CMake
 ----------------
 
 Go to `CMake's Download Page <https://cmake.org/download/>`_ and install it.
@@ -73,7 +73,7 @@ Validate if it was installed successfully with running this in your console:
 
 If cmake couldn't be found add the file to the system's path variable.
 
-4. Build using CMake
+5. Build using CMake
 --------------------
 
 Stay in the ``/docs`` directory in your local amethyst clone.
