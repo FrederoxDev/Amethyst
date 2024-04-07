@@ -22,7 +22,7 @@ help:
 
 # Generate all doxyfiles
 doxygen:
-	doxygen.exe ../AmethystAPI/.doxyfile
+	doxygen ../AmethystAPI/.doxyfile
 
 .PHONY: doxygen Makefile
 
