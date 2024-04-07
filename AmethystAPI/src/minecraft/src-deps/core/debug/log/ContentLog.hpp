@@ -1,4 +1,6 @@
+#pragma once
 #include <cstdint>
+#include "amethyst/Memory.hpp"
 
 enum class LogLevel : unsigned int {
     Verbose = 0,
@@ -55,5 +57,9 @@ public:
     uintptr_t** vtable;
 
     template<typename... Strings>
-    int Log(bool doNotRepeat, LogLevel logLevel, LogArea logArea, Strings... strings);
+    int Log(bool doNotRepeat, LogLevel logLevel, LogArea logArea, Strings... strings) {
+        using function = int (ContentLog::*)(bool, LogLevel, LogArea, Strings...);
+        auto func = std::bit_cast<function>(SigScan("44 89 4C 24 ? 48 83 EC"));
+        return (this->*func)(doNotRepeat, logLevel, logArea, strings...);
+    }
 };
