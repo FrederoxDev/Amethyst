@@ -238,9 +238,9 @@ public:
     /**
      * @brief Determines whether a block at a given position is solid
      *
-     * @param x The x position of the block as an int
-     * @param y The y position of the block as an int
-     * @param z The z position of the block as an int
+     * @param x The x position of the block
+     * @param y The y position of the block
+     * @param z The z position of the block
      *
      * @return Returns True if the block is solid, false if not
      */
