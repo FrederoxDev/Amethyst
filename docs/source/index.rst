@@ -12,11 +12,20 @@
 Project Amethyst
 ================
 
-
 Project Amethyst is an open source-project for building client-side mods for Minecraft Bedrock 1.20.71.1, client-side mods are able to stretch past the limitations of addons and have full control over the game such as using Minecraft's input system, creating your own user interfaces, changing vanilla functionality, and more.
 Please consider starring the `repository <https://github.com/FrederoxDev/Amethyst>`_, doing this takes a significant amount of work.
 
+Installation & Setup
+--------------------
 
+
+If you're someone keen on installing Amethyst for an enhanced modded MCBE adventure,
+check out the guide for
+:doc:`Installing Amethyst <getting_started/end_user/installing_amethyst>`.
+
+Alternatively,
+if you're a developer interested in crafting mods for MCBE with Amethyst,
+delve into the guide for :doc:`Making your first Amethyst Mod <getting_started/devs/compiling_amethyst>`.
 
 .. toctree::
     :hidden:
