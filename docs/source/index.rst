@@ -9,6 +9,13 @@
         </h1>
     </div>
 
+.. attention::
+    This documentation is still early work in progress,
+    changes may occur frequently and
+    provided data might be false.
+    That is why you should not use this documentation until it is finally released.
+
+
 Project Amethyst
 ================
 
