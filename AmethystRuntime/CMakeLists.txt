@@ -1,11 +1,10 @@
 cmake_minimum_required(VERSION 3.12)
 project(AmethystRuntime)
-set(MOD_VERSION "1.2.1")
+set(MOD_VERSION "1.2.2")
 
 set(MOD_TARGET_VERSION_MAJOR 1)
 set(MOD_TARGET_VERSION_MINOR 20)
 set(MOD_TARGET_VERSION_PATCH 7101)
-
 
 # C++ Build Settings
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /await")

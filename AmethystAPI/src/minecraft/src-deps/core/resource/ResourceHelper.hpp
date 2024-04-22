@@ -35,13 +35,19 @@ struct PackIdVersion {
 };
 
 class ResourceLocation {
-private:
+public:
     ResourceFileSystem mFileSystem; // this + 0x0
     std::string mPath;              // this + 0x8
     uint64_t mPathHash;             // this + 0x28
     uint64_t mFullHash;             // this + 0x30
 
 public:
+    ~ResourceLocation();
     ResourceLocation();
     ResourceLocation(const std::string& path);
+
+private:
+    void _computeHashes();
 };
+
+static_assert(offsetof(ResourceLocation, mPath) == 8);

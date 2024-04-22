@@ -65,7 +65,6 @@ foreach(HEADER ${HEADERS})
 
 endforeach()
 
-
 # Copy Amethyst's dependencies to AmethystFolder/include
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${AmethystFolder}/include/)
 file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/lib/ DESTINATION ${AmethystFolder}/lib/)

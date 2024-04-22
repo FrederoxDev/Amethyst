@@ -1,10 +1,12 @@
 #pragma once
 #include "minecraft/src-client/common/module/GameModuleClient.hpp"
+#include <amethyst/Memory.hpp>
 
 class Experiments;
 class IResourcePackRepository;
 class ResourcePackStack;
 class BaseGameVersion;
+struct PackIdVersion;
 
 class VanillaGameModuleClient {
 public:
