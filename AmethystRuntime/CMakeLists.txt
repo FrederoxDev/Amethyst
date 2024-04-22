@@ -13,12 +13,13 @@ set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Choose the type of build, op
 set(CMAKE_CXX_STANDARD 23)
 
 # Build into %appdata%/Amethyst
+set(AmethystInstallDirectory "$ENV{AppData}/Amethyst/")
 set(AmethystFolder "$ENV{localappdata}/Packages/Microsoft.MinecraftUWP_8wekyb3d8bbwe/AC/Amethyst/")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO "${AmethystFolder}/mods/${PROJECT_NAME}@${MOD_VERSION}")
 
 # Include Amethyst
-find_library(AMETHYST_API AmethystAPI PATHS "${AmethystFolder}/lib")
-include_directories(${AmethystFolder}/include "src/")
+find_library(AMETHYST_API AmethystAPI PATHS "${AmethystInstallDirectory}/lib")
+include_directories(${AmethystInstallDirectory}/include "src/")
 
 # Compile definitions 
 if (AMETHYST_INPUT_SYSTEM) 
@@ -51,8 +52,8 @@ MOD_TARGET_VERSION_PATCH=${MOD_TARGET_VERSION_PATCH}
 
 # Link libraries
 target_link_libraries(${PROJECT_NAME} PRIVATE ${AMETHYST_API})
-target_link_libraries(${PROJECT_NAME} PRIVATE "${AmethystFolder}/lib/fmt.lib")
-target_link_libraries(${PROJECT_NAME} PRIVATE "${AmethystFolder}/lib/libhat.lib")
+target_link_libraries(${PROJECT_NAME} PRIVATE "${AmethystInstallDirectory}/lib/fmt.lib")
+target_link_libraries(${PROJECT_NAME} PRIVATE "${AmethystInstallDirectory}/lib/libhat.lib")
 
 # Code Style
 add_custom_target(ClangFormat
