@@ -3,9 +3,9 @@ project(AmethystAPI CXX ASM_NASM)
 include(FetchContent)
 
 # Amethyst folder location
-set(AmethystFolder "$ENV{localappdata}/Packages/Microsoft.MinecraftUWP_8wekyb3d8bbwe/AC/Amethyst/")
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELWITHDEBINFO "${AmethystFolder}/lib")
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG "${AmethystFolder}/lib")
+set(AmethystInstallDirectory "$ENV{AppData}/Amethyst/")
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELWITHDEBINFO "${AmethystInstallDirectory}/lib")
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG "${AmethystInstallDirectory}/lib")
 
 # C++ Compile Options
 set(CMAKE_CXX_STANDARD 23)
@@ -60,14 +60,14 @@ set_property(
 foreach(HEADER ${HEADERS})
     file(RELATIVE_PATH HEADER_RELATIVE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/src ${HEADER})
     get_filename_component(HEADER_NAME ${HEADER} NAME)
-    set(DESTINATION_PATH ${AmethystFolder}/include/${HEADER_RELATIVE_PATH})
+    set(DESTINATION_PATH ${AmethystInstallDirectory}/include/${HEADER_RELATIVE_PATH})
     configure_file(${HEADER} ${DESTINATION_PATH} COPYONLY)
 
 endforeach()
 
 # Copy Amethyst's dependencies to AmethystFolder/include
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${AmethystFolder}/include/)
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/lib/ DESTINATION ${AmethystFolder}/lib/)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/include/ DESTINATION ${AmethystInstallDirectory}/include/)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/lib/ DESTINATION ${AmethystInstallDirectory}/lib/)
 
 # Create source groups to reflect the directory structure in Visual Studio
 foreach(_source IN ITEMS ${SOURCES} ${HEADERS})
