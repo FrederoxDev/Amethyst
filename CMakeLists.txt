@@ -1,10 +1,13 @@
 cmake_minimum_required(VERSION 3.12)
 project(Amethyst CXX ASM_NASM)
 include(FetchContent)
+include(ProcessorCount)
 
 # Compiler Options
 set(CMAKE_CXX_STANDARD 23)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+set(CMAKE_CONFIGURATION_TYPES "RelWithDebInfo" CACHE STRING "Build configurations" FORCE)
+set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Choose the type of build, options are: RelWithDebInfo" FORCE)
 
 # Amethyst Options
 set(MOD_VERSION "1.2.2")
@@ -41,6 +44,10 @@ target_link_libraries(AmethystAPI PRIVATE
     libhat
 )
 
+target_compile_options(AmethystAPI PRIVATE
+    $<$<COMPILE_LANGUAGE:CXX>:/MP>
+)
+
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/AmethystAPI/src" FILES ${AmethystAPI_All})
 
 # Create AmethystRuntime
@@ -69,6 +76,10 @@ target_compile_definitions(AmethystRuntime PRIVATE
     MOD_TARGET_VERSION_MAJOR=${MOD_TARGET_VERSION_MAJOR}
     MOD_TARGET_VERSION_MINOR=${MOD_TARGET_VERSION_MINOR}
     MOD_TARGET_VERSION_PATCH=${MOD_TARGET_VERSION_PATCH}
+)
+
+target_compile_options(AmethystRuntime PRIVATE
+    $<$<COMPILE_LANGUAGE:CXX>:/MP>
 )
 
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/AmethystRuntime/src" FILES ${AmethystRuntime_All})
