@@ -1,9 +1,19 @@
 # Amethyst Options
 set(MOD_VERSION "1.2.2")
+set(MOD_AUTHOR "FrederoxDev")
+
 set(MOD_TARGET_VERSION_MAJOR 1)
 set(MOD_TARGET_VERSION_MINOR 20)
 set(MOD_TARGET_VERSION_PATCH 7101)
 
+# Amethyst Minecraft Folder
+set(AmethystFolder "$ENV{localappdata}/Packages/Microsoft.MinecraftUWP_8wekyb3d8bbwe/AC/Amethyst/")
+
+# Configure to build within the Amethyst Folder
+configure_file(mod.json.in "${AmethystFolder}/mods/AmethystRuntime@${MOD_VERSION}/mod.json" @ONLY)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO "${AmethystFolder}/mods/AmethystRuntime@${MOD_VERSION}")
+
+# Create AmethystRuntime
 file(GLOB_RECURSE AmethystRuntime_All
     "src/*.cpp" 
     "src/*.c" 
@@ -38,4 +48,5 @@ target_compile_options(AmethystRuntime PRIVATE
 # EnTT Config Options
 target_compile_definitions(AmethystRuntime PUBLIC ENTT_PACKED_PAGE=128)
 
+# Make the folder structure with Visual Studio's virtual folders
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/src" FILES ${AmethystRuntime_All})
