@@ -1,1 +1,5 @@
 AmethystAPI/include/* linguist-vendored
+*.h linguist-language=C++
+*.hpp linguist-language=C++
+*.c linguist-language=C++
+*.cpp linguist-language=C++
