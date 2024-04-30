@@ -28,3 +28,13 @@ Better Inventory is an inventory improvement mod for Minecraft Bedrock edition, 
 | ![image](https://github.com/FrederoxDev/Amethyst/assets/69014593/c08ba235-3ac0-427a-b66b-3e5c69a56996) | ![image](https://github.com/FrederoxDev/Amethyst/assets/69014593/43c797db-4a67-470a-afae-5719bfbca1ce) |
 
 A small mod which adds in an "Optifine" like zoom into the game.
+
+### Using the API for other projects
+
+To link AmethystAPI with another mod, we use an environment variable `%amethyst_src%` to point to the cloned repository. Here is a quick list of commands to clone Amethyst into the Documents folder and setup the environment variable automatically.
+```ps
+powershell
+$destination = Join-Path $env:USERPROFILE "Documents/Amethyst"
+git clone https://github.com/FrederoxDev/Amethyst.git $destination
+[System.Environment]::SetEnvironmentVariable("amethyst_src", $destination, "User")
+```
