@@ -4,5 +4,5 @@
 class VisualTree {
 public:
     std::byte padding[8];
-    UIControl* mRootUiControl; // this + 8
+    UIControl* mRootControlName; // this + 8
 };
