@@ -63,9 +63,12 @@ std::string ItemStackBase::toDebugString() const
     return (this->*func)();
 }
 
-// 1.20.51.1 Reimplementation - Complete
 ItemStackBase::ItemStackBase() {
-    this->vtable = reinterpret_cast<uintptr_t**>(SlideAddress(0x53F2C98));
+    static uintptr_t itemStackBaseVtable = AddressFromLeaInstruction(
+        SigScan("4C 8D 35 ?? ?? ?? ?? 4C 89 74 24 ?? 48 89 74 24 ?? 48 89 74 24")
+    );
+
+    this->vtable = reinterpret_cast<uintptr_t**>(itemStackBaseVtable);
     this->mUserData = nullptr;
     this->mBlock = nullptr;
     this->mAuxValue = 0b1000000000000000;

@@ -82,3 +82,13 @@ void ProtectMemory(uintptr_t address, size_t size, DWORD protectionData, DWORD* 
 	if (oldProtection != nullptr) *oldProtection = oldProtect;
 }
 
+uintptr_t AddressFromLeaInstruction(uintptr_t leaInstructionAddress)
+{
+    // lea is 7 bytes long
+    // - first 3 is the opcode
+    // - last 4 is a signed offset to the target address, relative to the end of the instruction.
+    int32_t relativeOffset = *reinterpret_cast<int32_t*>(leaInstructionAddress + 3);
+    uintptr_t nextInstruction = leaInstructionAddress + 7;
+    return relativeOffset + nextInstruction;
+}
+

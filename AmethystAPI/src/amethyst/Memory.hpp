@@ -51,3 +51,8 @@ void UnprotectMemory(uintptr_t address, size_t size, DWORD* oldProtection);
  * Reprotects the memory region
 */
 void ProtectMemory(uintptr_t address, size_t size, DWORD protectionData, DWORD* oldProtection = nullptr);
+
+/*
+ * Returns the offset (in loaded memory space), to a pointer in a lea instruction
+ */
+uintptr_t AddressFromLeaInstruction(uintptr_t leaInstructionAddress);
