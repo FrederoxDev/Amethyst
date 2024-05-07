@@ -35,7 +35,7 @@ public:
     void deleteChildren();
     void write(IDataOutput&) const;
     void load(IDataInput&);
-    std::string* toString(std::string*) const;
+    std::string toString() const;
     Tag::Type getId() const;
     bool equals(const Tag&) const;
     void print(PrintStream&) const;

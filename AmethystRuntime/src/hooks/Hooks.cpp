@@ -45,21 +45,19 @@ bool Minecraft_update(Minecraft* self) {
 }
 
 void* VanillaItems_registerItems(
+    void* a1,
     const ItemRegistryRef itemRegistry,
     const BaseGameVersion* baseGameVersion,
-    const Experiments* experiments,
-    void* enableExperimentalGameplay) 
+    const Experiments* experiments) 
 {
     Amethyst::EventManager* events = AmethystRuntime::getEventManager();
 
     // Allow Vanilla to register its own items first
-    void* result = _VanillaItems_registerItems.fastcall<void*>(&itemRegistry, baseGameVersion, experiments, enableExperimentalGameplay);
+    void* result = _VanillaItems_registerItems.fastcall<void*>(a1, &itemRegistry, baseGameVersion, experiments);
 
-    std::shared_ptr<ItemRegistry>* sharedRegistryPtr = new std::shared_ptr<ItemRegistry>();
-    itemRegistry._lockRegistry(&sharedRegistryPtr);
+    std::shared_ptr<ItemRegistry> registry = itemRegistry.mItemRegistry.lock();
 
-    ItemRegistry* registry = sharedRegistryPtr->get();
-    events->registerItems.Invoke(registry);
+    events->registerItems.Invoke(registry.get());
 
     return result;
 }
@@ -91,13 +89,15 @@ void* ClientInstance_ClientInstance(ClientInstance* self, uint64_t a2, uint64_t 
 void CreateModFunctionHooks() {
     HookManager* hookManager = AmethystRuntime::getHookManager();
 
+    Log::Info("jidwjekdf");
+
     hookManager->RegisterFunction<&ScreenView::setupAndRender>("48 8B C4 48 89 58 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D A8 ? ? ? ? 48 81 EC ? ? ? ? 0F 29 70 ? 0F 29 78 ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4C 8B FA");
     hookManager->RegisterFunction<&Minecraft::update>("48 8B C4 48 89 58 ? 48 89 70 ? 48 89 78 ? 55 41 54 41 55 41 56 41 57 48 8D A8 ? ? ? ? 48 81 EC ? ? ? ? 0F 29 70 ? 0F 29 78 ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4C 8B E9 48");
     hookManager->RegisterFunction<&ClientInstance::onStartJoinGame>("40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 45 8B F1");
     hookManager->RegisterFunction<&ClientInstance::requestLeaveGame>("48 89 5C 24 ? 48 89 74 24 ? 55 57 41 54 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 45 0F B6 F0 44 0F B6 FA");
     hookManager->RegisterFunction<&ClientInstance::_ClientInstance>("48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 49 8B F9 49 8B D8 4C 8B E2");
     
-    //hookManager->RegisterFunction<&VanillaItems::registerItems>("40 55 53 56 57 41 54 41 56 41 57 48 8D AC 24 ? ? ? ? B8 ? ? ? ? E8 ? ? ? ? 48 2B E0 0F 29 B4 24");
+    hookManager->RegisterFunction<&VanillaItems::registerItems>("40 55 53 56 57 41 54 41 56 41 57 48 8D AC 24 ? ? ? ? B8 ? ? ? ? E8 ? ? ? ? 48 2B E0 0F 29 B4 24");
     //hookManager->RegisterFunction<&BlockDefinitionGroup::registerBlocks>("48 89 5C 24 ? 48 89 6C 24 ? 56 57 41 54 41 56 41 57 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 84 24 ? ? ? ? 4C 8B F9");
     //hookManager->RegisterFunction<&LevelRenderer::renderLevel>("48 89 5C 24 ? 48 89 74 24 ? 55 57 41 56 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 49 8B F0 48 8B DA 4C 8B F1");
 
@@ -108,7 +108,7 @@ void CreateModFunctionHooks() {
     hookManager->CreateHook<&ClientInstance::requestLeaveGame>(_ClientInstance_requestLeaveGame, &ClientInstance_requestLeaveGame);
     hookManager->CreateHook<&ClientInstance::_ClientInstance>(_ClientInstance_ClientInstance, &ClientInstance_ClientInstance);
 
-    //hookManager->CreateHook<&VanillaItems::registerItems>(_VanillaItems_registerItems, &VanillaItems_registerItems);
+    hookManager->CreateHook<&VanillaItems::registerItems>(_VanillaItems_registerItems, &VanillaItems_registerItems);
     // hookManager->CreateHook<&BlockDefinitionGroup::registerBlocks>(_BlockDefinitionGroup_registerBlocks, &BlockDefinitionGroup_registerBlocks);
     //hookManager->CreateHook<&LevelRenderer::renderLevel>(_LevelRenderer_renderLevel, &LevelRenderer_renderLevel);
 }

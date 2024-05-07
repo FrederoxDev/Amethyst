@@ -1,4 +1,5 @@
 #include "minecraft/src/common/nbt/Tag.hpp"
+#include <bit>
 
 Tag::Tag()
 {
@@ -30,10 +31,11 @@ void Tag::load(IDataInput& a1)
     return reinterpret_cast<function>(this->vtable[3])(this, a1);
 }
 
-std::string* Tag::toString(std::string* a1) const
+std::string Tag::toString() const
 {
-    using function = std::string*(__thiscall*)(const Tag*, std::string*);
-    return reinterpret_cast<function>(this->vtable[4])(this, a1);
+    using function = decltype(&Tag::toString);
+    auto func = std::bit_cast<function>(vtable[4]);
+    return (this->*func)();
 }
 
 Tag::Type Tag::getId() const
