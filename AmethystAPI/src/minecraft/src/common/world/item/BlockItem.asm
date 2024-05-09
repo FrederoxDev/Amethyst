@@ -21,30 +21,30 @@ global ?isValidAuxValue@BlockItem@@UEBA_NH@Z
 global ?buildDescriptionId@BlockItem@@UEBA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBVItemDescriptor@@PEBVCompoundTag@@@Z
 ?buildDescriptionId@BlockItem@@UEBA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBVItemDescriptor@@PEBVCompoundTag@@@Z:
 	mov rax, [rel BlockItem_vtable]
-	jmp [rax + 656]
+	jmp [rax + 648]
 
 global ?getIconInfo@BlockItem@@UEBA?AUResolvedItemIconInfo@@AEBVItemStackBase@@H_N@Z
 ?getIconInfo@BlockItem@@UEBA?AUResolvedItemIconInfo@@AEBVItemStackBase@@H_N@Z:
 	mov rax, [rel BlockItem_vtable]
-	jmp [rax + 832]
+	jmp [rax + 824]
 
 global ?getLightEmission@BlockItem@@UEBA?AUBrightness@@H@Z
 ?getLightEmission@BlockItem@@UEBA?AUBrightness@@H@Z:
 	mov rax, [rel BlockItem_vtable]
-	jmp [rax + 864]
+	jmp [rax + 856]
 
 global ?getIconYOffset@BlockItem@@UEBAHXZ
 ?getIconYOffset@BlockItem@@UEBAHXZ:
 	mov rax, [rel BlockItem_vtable]
-	jmp [rax + 872]
+	jmp [rax + 864]
 
 global ?_calculatePlacePos@BlockItem@@MEBA_NAEAVItemStackBase@@AEAVActor@@AEAEAEAVBlockPos@@@Z
 ?_calculatePlacePos@BlockItem@@MEBA_NAEAVItemStackBase@@AEAVActor@@AEAEAEAVBlockPos@@@Z:
 	mov rax, [rel BlockItem_vtable]
-	jmp [rax + 928]
+	jmp [rax + 904]
 
 global ?_useOn@BlockItem@@MEBA?AVInteractionResult@@AEAVItemStack@@AEAVActor@@VBlockPos@@EAEBVVec3@@@Z
 ?_useOn@BlockItem@@MEBA?AVInteractionResult@@AEAVItemStack@@AEAVActor@@VBlockPos@@EAEBVVec3@@@Z:
 	mov rax, [rel BlockItem_vtable]
-	jmp [rax + 944]
+	jmp [rax + 936]
 

@@ -14,6 +14,8 @@ file(GLOB_RECURSE AmethystAPI_All
     "src/*.asm"
     "src/*.hpp" 
     "src/*.h" 
+    minecraft/src/common/world/level/block/BlockLegacy.asm
+    minecraft/src/common/world/item/BlockItem.asm
 )
 
 add_library(AmethystAPI STATIC ${AmethystAPI_All})

@@ -62,13 +62,13 @@ void* VanillaItems_registerItems(
     return result;
 }
 
-//void BlockDefinitionGroup_registerBlocks(BlockDefinitionGroup* self) {
-//    Amethyst::EventManager* events = AmethystRuntime::getEventManager();
-//
-//    events->registerBlocks.Invoke(self);
-//
-//    _BlockDefinitionGroup_registerBlocks.thiscall<void>(self);
-//}
+void BlockDefinitionGroup_registerBlocks(BlockDefinitionGroup* self) {
+    Amethyst::EventManager* events = AmethystRuntime::getEventManager();
+
+    events->registerBlocks.Invoke(self);
+
+    _BlockDefinitionGroup_registerBlocks.thiscall<void>(self);
+}
 
 void* LevelRenderer_renderLevel(LevelRenderer* self, ScreenContext* screenContext, FrameRenderObject* frameRenderObject) {
     Amethyst::EventManager* events = AmethystRuntime::getEventManager();
@@ -98,7 +98,7 @@ void CreateModFunctionHooks() {
     hookManager->RegisterFunction<&ClientInstance::_ClientInstance>("48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 49 8B F9 49 8B D8 4C 8B E2");
     
     hookManager->RegisterFunction<&VanillaItems::registerItems>("40 55 53 56 57 41 54 41 56 41 57 48 8D AC 24 ? ? ? ? B8 ? ? ? ? E8 ? ? ? ? 48 2B E0 0F 29 B4 24");
-    //hookManager->RegisterFunction<&BlockDefinitionGroup::registerBlocks>("48 89 5C 24 ? 48 89 6C 24 ? 56 57 41 54 41 56 41 57 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 84 24 ? ? ? ? 4C 8B F9");
+    hookManager->RegisterFunction<&BlockDefinitionGroup::registerBlocks>("48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 57 41 54 41 55 41 56 41 57 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 84 24 ? ? ? ? 45 33 ED");
     //hookManager->RegisterFunction<&LevelRenderer::renderLevel>("48 89 5C 24 ? 48 89 74 24 ? 55 57 41 56 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 49 8B F0 48 8B DA 4C 8B F1");
 
     /* Make hooks */
@@ -109,6 +109,6 @@ void CreateModFunctionHooks() {
     hookManager->CreateHook<&ClientInstance::_ClientInstance>(_ClientInstance_ClientInstance, &ClientInstance_ClientInstance);
 
     hookManager->CreateHook<&VanillaItems::registerItems>(_VanillaItems_registerItems, &VanillaItems_registerItems);
-    // hookManager->CreateHook<&BlockDefinitionGroup::registerBlocks>(_BlockDefinitionGroup_registerBlocks, &BlockDefinitionGroup_registerBlocks);
+    hookManager->CreateHook<&BlockDefinitionGroup::registerBlocks>(_BlockDefinitionGroup_registerBlocks, &BlockDefinitionGroup_registerBlocks);
     //hookManager->CreateHook<&LevelRenderer::renderLevel>(_LevelRenderer_renderLevel, &LevelRenderer_renderLevel);
 }

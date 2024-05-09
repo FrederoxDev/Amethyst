@@ -41,7 +41,8 @@ public:
         return *this;
     }
 
-    constexpr HashedString(std::string str) : HashedString(computeHash(str), std::move(str)) {}
+    constexpr HashedString(std::string str) : HashedString(computeHash(str), str) {}
+
     constexpr HashedString(const HashType64 hash, std::string str) : mStrHash(hash), mStr(std::move(str)) {}
 
     constexpr bool operator==(const HashedString& rhs) const {

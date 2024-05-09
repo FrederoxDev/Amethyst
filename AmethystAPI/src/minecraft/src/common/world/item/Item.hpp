@@ -12,6 +12,7 @@
 #include <minecraft/src/common/world/level/BlockPos.hpp>
 #include <minecraft/src/common/world/level/block/BlockLegacy.hpp>
 #include <minecraft/src/common/world/item/registry/ItemRegistryRef.hpp>
+#include <minecraft/src/common/CommonTypes.hpp>
 
 // Auto-generated: Unknown complete types
 enum ItemColor {};
@@ -26,7 +27,6 @@ enum LevelSoundEvent {};
 }
 } // namespace Puv
 struct ResolvedItemIconInfo {};
-struct Brightness {};
 class InteractionResult {};
 
 // Auto-generated: Forward declarations
@@ -119,7 +119,7 @@ public:
     virtual bool isGlint(const ItemStackBase& stack) const;
     virtual bool isPattern() const;
     virtual int getPatternIndex() const;
-    virtual void _unknown_40() {};
+    virtual void _unknown_40();
     virtual bool isWearableThroughLootTable(const CompoundTag* userData) const;
     virtual bool canDestroyInCreative() const;
     virtual bool isDestructive(int auxValue) const;
@@ -146,7 +146,7 @@ public:
     virtual void clearColor(CompoundTag* userData) const;
     virtual void setColor(ItemStackBase& instance, const mce::Color& color) const;
     virtual void _unknown_66(){};
-    virtual void _unknown_67(){};
+    virtual void _unknown_67();
     virtual ActorDefinitionIdentifier getActorIdentifier(const ItemStack& a3) const;
     virtual int buildIdAux(short auxValue, const CompoundTag* a3) const;
     virtual bool canUseOnSimTick() const;

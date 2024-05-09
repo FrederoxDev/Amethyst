@@ -7,6 +7,7 @@
 #include "minecraft/src/common/SharedPtr.hpp"
 #include "entt/container/dense_map.hpp"
 #include "minecraft/src-deps/core/utility/StringUtils.hpp"
+#include "minecraft/src/common/world/level/block/Block.hpp"
 
 typedef std::map<HashedString, SharedPtr<BlockLegacy>> BlockLookupMap;
 typedef entt::dense_map<HashType64, HashedString> BlockNameHashToHashedStringMap;
@@ -19,33 +20,34 @@ public:
     };
 
     struct LookupByNameImplReturnType {
+    public:
         WeakPtr<BlockLegacy> blockLegacy;
         std::vector<BlockComplexAliasBlockState> states;
     };
 
-    enum LookupByNameImplResolve : int {
-        // idk I made this up, but getDefaultBlockState passes 0
-        DefaultBlockState = 0
+    enum LookupByNameImplResolve : uint32_t {
+        BlockLegacyResolve = 0,
+        BlockResolve = 1
     };
 
     // Found in BlockTypeRegistry::registerBlock
-    // 1.20.51.1 - 0x573E700
+    // 1.20.71.1 - 0x5874B30
     static std::set<std::string>* mKnownNamespaces() {
-        static auto* knownNamespaces = reinterpret_cast<std::set<std::string>*>(SlideAddress(0x573E700));
+        static auto* knownNamespaces = reinterpret_cast<std::set<std::string>*>(SlideAddress(0x5874B30));
         return knownNamespaces;
     }
 
     // Found in BlockTypeRegistry::forEachBlock
-    // 1.20.51.1 - 0x573E6F0
+    // 1.20.71.1 - 0x5874B00
     static BlockLookupMap* mBlockLookupMap() {
-        static auto* lookupMap = reinterpret_cast<BlockLookupMap*>(SlideAddress(0x573E6F0));
+        static auto* lookupMap = reinterpret_cast<BlockLookupMap*>(SlideAddress(0x5874B00));
         return lookupMap;
     }
 
     // Found in BlockTypeRegistry::getBlockNameFromNameHash
-    // 1.20.51.1 - 0x551F010
+    // 1.20.71.1 - 0x566FD40
     static BlockNameHashToHashedStringMap* mBlockNameHashToStringMap() {
-        static auto* map = reinterpret_cast<BlockNameHashToHashedStringMap*>(SlideAddress(0x551F010));
+        static auto* map = reinterpret_cast<BlockNameHashToHashedStringMap*>(SlideAddress(0x566FD40));
         return map;
     }
 
@@ -60,13 +62,12 @@ public:
     template<typename T, typename... Args>
     static WeakPtr<T> registerBlock(const std::string& blockName, Args&&... args) {
         HashedString hashedBlockName(blockName);
+        Log::Info("hashed: {}", hashedBlockName.getHash());
 
         // Ensure the block has a name
         if (blockName.empty()) {
             throw std::exception("BlockTypeRegistry: attempting to register a block without a name!");
         }
-
-        // BlockTypeRegistry::lockForRegistryModifications();
 
         SharedPtr<T> block = SharedPtr<T>::make(blockName, std::forward<Args>(args)...);
 
@@ -98,11 +99,10 @@ public:
         return block;
     }
 
-    // 1.20.51.1 - 40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 45 8B E0 44 89 44 24
-    // pass 0 to both data and resolve
-    static LookupByNameImplReturnType* _lookupByNameImpl(LookupByNameImplReturnType* result, const HashedString& name, int data, LookupByNameImplResolve resolve) {
-        using function = LookupByNameImplReturnType*(*)(LookupByNameImplReturnType*, const HashedString&, int, LookupByNameImplResolve);
-        static auto func = reinterpret_cast<function>(SigScan(("40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 45 8B E0 44 89 44 24")));
-        return func(result, name, data, resolve);
+    // 1.20.71.1 - 40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 45 8B F0 
+    static LookupByNameImplReturnType _lookupByNameImpl(const HashedString& name, int data, LookupByNameImplResolve resolve) {
+        using function = decltype(&BlockTypeRegistry::_lookupByNameImpl);
+        static auto func = std::bit_cast<function>(SigScan("40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 45 8B F0"));
+        return func(name, data, resolve);
     }
 };
