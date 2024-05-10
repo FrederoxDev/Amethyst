@@ -5,15 +5,9 @@ BlockLegacy::~BlockLegacy() {
 
 }
 
+// 1.20.71.1 - Re-Implemented
 short BlockLegacy::getBlockItemId()
 {
-    // Re-Implemented
-    short value = this->mID;
-    short result = 255 - value;
-
-    if (value <= 0xFF) {
-        return this->mID;
-    }
-
-    return result;
+    if (mID <= 0xFF) return mID;
+    return 255 - mID;
 }

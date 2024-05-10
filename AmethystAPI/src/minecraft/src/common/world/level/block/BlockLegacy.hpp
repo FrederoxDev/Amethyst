@@ -103,7 +103,7 @@ public:
     /* this + 422 */ unsigned short mID;
     /* this + 424 */ BaseGameVersion mMinRequiredBaseGameVersion;
     /* this + 544 */ bool mIsVanilla;
-    /* this + 545 */ std::byte padding545[399];
+    /* this + 545 */ std::byte padding545[439];
 
 public:
     virtual ~BlockLegacy();
@@ -284,4 +284,4 @@ public:
 };
 #pragma pack(pop)
 
-static_assert(sizeof(BlockLegacy) == 944);
+static_assert(sizeof(BlockLegacy) == 984);
