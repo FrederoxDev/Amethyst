@@ -11,3 +11,9 @@ short BlockLegacy::getBlockItemId()
     if (mID <= 0xFF) return mID;
     return 255 - mID;
 }
+
+void BlockLegacy::setDestroyTime(float destroyTime, float explosionResistance)
+{
+    mDestroySpeed = destroyTime;
+    mExplosionResistance = explosionResistance;
+}

@@ -13,10 +13,10 @@
 #include <minecraft/src/common/world/level/block/BlockLegacy.hpp>
 #include <minecraft/src/common/world/item/registry/ItemRegistryRef.hpp>
 #include <minecraft/src/common/CommonTypes.hpp>
+#include <minecraft/src/common/world/level/block/BlockShape.hpp>
 
 // Auto-generated: Unknown complete types
 enum ItemColor {};
-enum BlockShape {};
 struct ActorDefinitionIdentifier {};
 enum ItemUseMethod {};
 enum InHandUpdateType {};

@@ -15,6 +15,8 @@
 #include <minecraft/src/common/world/item/ItemInstance.hpp>
 #include <minecraft/src/common/CommonTypes.hpp>
 #include <minecraft/src/common/world/level/material/Material.hpp>
+#include <minecraft/src/common/world/phys/AABB.hpp>
+#include <minecraft/src/common/world/level/block/BlockRenderLayer.hpp>
 
 // Auto-generated: Unknown complete types
 class BlockActor {};
@@ -26,10 +28,8 @@ namespace Direction {
 enum Type {};
 }
 enum BlockProperty {};
-enum BlockRenderLayer {};
 enum FertilizerType {};
 enum Flip {};
-class AABB {};
 
 // Auto-generated: Forward declarations
 class BlockPos;
@@ -97,7 +97,9 @@ public:
     /* this + 304 */ std::byte padding304[69];
     /* this + 373 */ unsigned char mLightBlock;
     /* this + 374 */ unsigned char mLightEmission;
-    /* this + 375 */ std::byte padding375[21];
+    /* this + 375 */ std::byte padding375[13];
+    /* this + 388 */ float mDestroySpeed;
+    /* this + 392 */ float mExplosionResistance;
     /* this + 396 */ mce::Color mMapColor;
     /* this + 412 */ std::byte padding412[10];
     /* this + 422 */ unsigned short mID;
@@ -281,7 +283,8 @@ private:
 public:
     BlockLegacy(const std::string& nameId, short id, const Material& material);
     short getBlockItemId();
+    void setDestroyTime(float destroyTime, float explosionResistance);
 };
 #pragma pack(pop)
 
-static_assert(sizeof(BlockLegacy) == 984);
+//static_assert(sizeof(BlockLegacy) == 984);

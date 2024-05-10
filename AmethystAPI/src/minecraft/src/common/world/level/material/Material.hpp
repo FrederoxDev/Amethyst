@@ -6,7 +6,6 @@ public:
     MaterialType mType;
     bool mNeverBuildable;
     bool mAlwaysDestroyable;
-    bool mReplaceable;
     bool mLiquid;
     float mTranslucency;
     bool mBlocksMotion;
