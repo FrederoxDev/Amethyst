@@ -17,6 +17,7 @@
 #include <minecraft/src/common/world/level/material/Material.hpp>
 #include <minecraft/src/common/world/phys/AABB.hpp>
 #include <minecraft/src/common/world/level/block/BlockRenderLayer.hpp>
+#include <minecraft/src/common/world/level/block/BlockState.hpp>
 
 // Auto-generated: Unknown complete types
 class BlockActor {};
@@ -89,6 +90,17 @@ enum class BurnOdds : char {
 #pragma pack(push, 1)
 class BlockLegacy : public BlockComponentStorage {
 public:
+    class AlteredStateCollection {
+    public:
+        std::reference_wrapper<const BlockState> mBlockState;
+
+    public:
+        virtual std::optional<int> getState(const BlockLegacy& blockLegacy, int blockData) const = 0;
+        virtual const Block* setState(const BlockLegacy&, int, int) const = 0;
+        virtual ~AlteredStateCollection() = default;
+    };
+
+public:
     /* this + 40  */ std::byte padding40[54];
     /* this + 94  */ FlameOdds mFlameOdds;
     /* this + 95  */ BurnOdds mBurnOdds;
@@ -105,7 +117,15 @@ public:
     /* this + 422 */ unsigned short mID;
     /* this + 424 */ BaseGameVersion mMinRequiredBaseGameVersion;
     /* this + 544 */ bool mIsVanilla;
-    /* this + 545 */ std::byte padding545[439];
+    /* this + 545 */ std::byte padding545[135];
+    /* this + 680 */ std::map<uint64_t, BlockStateInstance> mStates;
+    /* this + 696 */ std::unordered_map<HashedString, uint64_t> mStateNameMap;
+    /* this + 760 */ std::byte padding760[192];
+    /* this + 952 */ std::vector<std::shared_ptr<BlockLegacy::AlteredStateCollection>> mAlteredStateCollections;
+    /* this + 976 */ std::byte padding976[8];
+
+    // aint that lovely, they're friends now
+    friend class Block;
 
 public:
     virtual ~BlockLegacy();
@@ -284,6 +304,10 @@ public:
     BlockLegacy(const std::string& nameId, short id, const Material& material);
     short getBlockItemId();
     void setDestroyTime(float destroyTime, float explosionResistance);
+    void addState(const BlockState& blockState);
+    
+private: 
+    std::optional<int> _tryLookupAlteredStateCollection(uint64_t stateId, uint16_t blockData);
 };
 #pragma pack(pop)
 
