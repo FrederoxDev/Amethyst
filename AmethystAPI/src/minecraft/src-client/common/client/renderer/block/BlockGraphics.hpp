@@ -5,6 +5,7 @@
 #include <minecraft/src/common/world/level/block/BlockRenderLayer.hpp>
 #include <minecraft/src/common/world/level/block/Block.hpp>
 #include <minecraft/src-client/common/client/renderer/texture/TextureAtlasItem.hpp>
+#include <minecraft/src/common/world/phys/AABB.hpp>
 
 class TextureItem {
 public:

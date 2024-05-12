@@ -27,7 +27,10 @@ enum LevelSoundEvent {};
 }
 } // namespace Puv
 struct ResolvedItemIconInfo {};
-class InteractionResult {};
+class InteractionResult {
+public:
+    int mResult;
+};
 
 // Auto-generated: Forward declarations
 namespace Json {
@@ -87,10 +90,10 @@ public:
     virtual int getMaxUseDuration(const ItemStack* instance) const;
     virtual bool isMusicDisk() const;
     virtual void executeEvent(ItemStackBase& item, const std::string& name, RenderParams& pars) const;
-    virtual void _unknown_8() {};
+    virtual void _unknown_8();
     virtual bool isArmor() const;
     virtual bool isBlockPlanterItem() const;
-    virtual void _unknown_11() {};
+    virtual void _unknown_11();
     virtual bool isCandle() const;
     virtual bool isDamageable() const;
     virtual bool isDyeable() const;
@@ -132,20 +135,20 @@ public:
     virtual int getEnchantValue() const;
     virtual int getArmorValue() const;
     virtual int getToughnessValue() const;
-    virtual void _unknown_53(){};
+    virtual void _unknown_53();
     virtual bool isValidAuxValue(int auxValue) const;
     virtual int getDamageChance(int unbreaking) const;
     virtual float getViewDamping() const;
-    virtual void _unknown_57(){};
-    virtual void _unknown_58(){};
-    virtual void _unknown_59(){};
+    virtual void _unknown_57();
+    virtual void _unknown_58();
+    virtual void _unknown_59();
     virtual mce::Color getColor(const CompoundTag* userData, const ItemDescriptor& instance) const;
     virtual bool hasCustomColor(const CompoundTag* userData) const;
-    virtual void _unknown_62(){};
+    virtual void _unknown_62();
     virtual void clearColor(ItemStackBase& instance) const;
     virtual void clearColor(CompoundTag* userData) const;
     virtual void setColor(ItemStackBase& instance, const mce::Color& color) const;
-    virtual void _unknown_66(){};
+    virtual void _unknown_66();
     virtual void _unknown_67();
     virtual ActorDefinitionIdentifier getActorIdentifier(const ItemStack& a3) const;
     virtual int buildIdAux(short auxValue, const CompoundTag* a3) const;
@@ -177,8 +180,8 @@ public:
     virtual void enchantProjectile(const ItemStackBase& weapon, Actor& projectile) const;
     virtual ActorLocation getEquipLocation() const;
     virtual Puv::Legacy::LevelSoundEvent getEquipSound() const;
-    virtual void _unknown_98(){};
-    virtual void _unknown_99(){};
+    virtual void _unknown_98();
+    virtual void _unknown_99();
     virtual bool hasSameRelevantUserData(const ItemStackBase&, const ItemStackBase&) const;
     virtual void initClient(Json::Value&, const SemVersion&, bool, const Experiments&);
     virtual Item& setIconInfo(const std::string& name, int index);

@@ -18,6 +18,7 @@
 #include <minecraft/src/common/world/phys/AABB.hpp>
 #include <minecraft/src/common/world/level/block/BlockRenderLayer.hpp>
 #include <minecraft/src/common/world/level/block/BlockState.hpp>
+#include <minecraft/src/common/world/level/block/Block.hpp>
 
 // Auto-generated: Unknown complete types
 class BlockActor {};
@@ -34,7 +35,6 @@ enum Flip {};
 
 // Auto-generated: Forward declarations
 class BlockPos;
-class Block;
 class BlockSource;
 class IConstBlockSource;
 class CopperBehavior;
@@ -120,7 +120,9 @@ public:
     /* this + 545 */ std::byte padding545[135];
     /* this + 680 */ std::map<uint64_t, BlockStateInstance> mStates;
     /* this + 696 */ std::unordered_map<HashedString, uint64_t> mStateNameMap;
-    /* this + 760 */ std::byte padding760[192];
+    /* this + 760 */ uint64_t mCreativeEnumState;
+    /* this + 768 */ std::vector<std::unique_ptr<Block>> mBlockPermutations;
+    /* this + 792 */ std::byte padding792[162];
     /* this + 952 */ std::vector<std::shared_ptr<BlockLegacy::AlteredStateCollection>> mAlteredStateCollections;
     /* this + 976 */ std::byte padding976[8];
 

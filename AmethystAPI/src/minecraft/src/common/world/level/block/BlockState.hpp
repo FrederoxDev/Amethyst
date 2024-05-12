@@ -1,6 +1,8 @@
 #pragma once
 #include <minecraft/src-deps/core/string/StringHash.hpp>
 
+class CompoundTag;
+
 class BlockState {
 public:
     struct StateListNode {

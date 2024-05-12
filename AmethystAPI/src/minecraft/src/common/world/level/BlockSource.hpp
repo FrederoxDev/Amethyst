@@ -4,6 +4,7 @@
 #include "dimension/Dimension.hpp"
 #include <optional>
 #include <vector>
+#include <minecraft/src/common/world/level/material/MaterialType.hpp>
 
 class BlockSource;
 class Block;
@@ -23,7 +24,6 @@ class WeakRefT;
 struct ActorBlockSyncMessage;
 struct SharePtrRefTraits;
 struct Bounds;
-enum MaterialType;
 
 class BlockSource {
 

@@ -44,6 +44,10 @@ global ?executeEvent@Item@@UEBAXAEAVItemStackBase@@AEBV?$basic_string@DU?$char_t
 	jmp [rax + 56]
 
 ; Item_vtable[8] is unknown
+global ?_unknown_8@Item@@UEAAXXZ
+?_unknown_8@Item@@UEAAXXZ:
+	mov rax, [rel Item_vtable]
+	jmp [rax + 64]
 
 global ?isArmor@Item@@UEBA_NXZ
 ?isArmor@Item@@UEBA_NXZ:
@@ -56,6 +60,10 @@ global ?isBlockPlanterItem@Item@@UEBA_NXZ
 	jmp [rax + 80]
 
 ; Item_vtable[11] is unknown
+global ?_unknown_11@Item@@UEAAXXZ
+?_unknown_11@Item@@UEAAXXZ:
+	mov rax, [rel Item_vtable]
+	jmp [rax + 88]
 
 global ?isCandle@Item@@UEBA_NXZ
 ?isCandle@Item@@UEBA_NXZ:
@@ -198,6 +206,10 @@ global ?getPatternIndex@Item@@UEBAHXZ
 	jmp [rax + 312]
 
 ; Item_vtable[40] is unknown
+global ?_unknown_40@Item@@UEAAXXZ
+?_unknown_40@Item@@UEAAXXZ:
+	mov rax, [rel Item_vtable]
+	jmp [rax + 320]
 
 global ?isWearableThroughLootTable@Item@@UEBA_NPEBVCompoundTag@@@Z
 ?isWearableThroughLootTable@Item@@UEBA_NPEBVCompoundTag@@@Z:
@@ -260,6 +272,10 @@ global ?getToughnessValue@Item@@UEBAHXZ
 	jmp [rax + 416]
 
 ; Item_vtable[53] is unknown
+global ?_unknown_53@Item@@UEAAXXZ
+?_unknown_53@Item@@UEAAXXZ:
+	mov rax, [rel Item_vtable]
+	jmp [rax + 424]
 
 global ?isValidAuxValue@Item@@UEBA_NH@Z
 ?isValidAuxValue@Item@@UEBA_NH@Z:
@@ -277,10 +293,22 @@ global ?getViewDamping@Item@@UEBAMXZ
 	jmp [rax + 448]
 
 ; Item_vtable[57] is unknown
+global ?_unknown_57@Item@@UEAAXXZ
+?_unknown_57@Item@@UEAAXXZ:
+	mov rax, [rel Item_vtable]
+	jmp [rax + 456]
 
 ; Item_vtable[58] is unknown
+global ?_unknown_58@Item@@UEAAXXZ
+?_unknown_58@Item@@UEAAXXZ:
+	mov rax, [rel Item_vtable]
+	jmp [rax + 464]
 
 ; Item_vtable[59] is unknown
+global ?_unknown_59@Item@@UEAAXXZ
+?_unknown_59@Item@@UEAAXXZ:
+	mov rax, [rel Item_vtable]
+	jmp [rax + 472]
 
 global ?getColor@Item@@UEBA?AVColor@mce@@PEBVCompoundTag@@AEBVItemDescriptor@@@Z
 ?getColor@Item@@UEBA?AVColor@mce@@PEBVCompoundTag@@AEBVItemDescriptor@@@Z:
@@ -293,6 +321,10 @@ global ?hasCustomColor@Item@@UEBA_NPEBVCompoundTag@@@Z
 	jmp [rax + 488]
 
 ; Item_vtable[62] is unknown
+global ?_unknown_62@Item@@UEAAXXZ
+?_unknown_62@Item@@UEAAXXZ:
+	mov rax, [rel Item_vtable]
+	jmp [rax + 496]
 
 global ?clearColor@Item@@UEBAXPEAVCompoundTag@@@Z
 ?clearColor@Item@@UEBAXPEAVCompoundTag@@@Z:
@@ -310,8 +342,16 @@ global ?setColor@Item@@UEBAXAEAVItemStackBase@@AEBVColor@mce@@@Z
 	jmp [rax + 520]
 
 ; Item_vtable[66] is unknown
+global ?_unknown_66@Item@@UEAAXXZ
+?_unknown_66@Item@@UEAAXXZ:
+	mov rax, [rel Item_vtable]
+	jmp [rax + 528]
 
 ; Item_vtable[67] is unknown
+global ?_unknown_67@Item@@UEAAXXZ
+?_unknown_67@Item@@UEAAXXZ:
+	mov rax, [rel Item_vtable]
+	jmp [rax + 536]
 
 global ?getActorIdentifier@Item@@UEBA?AUActorDefinitionIdentifier@@AEBVItemStack@@@Z
 ?getActorIdentifier@Item@@UEBA?AUActorDefinitionIdentifier@@AEBVItemStack@@@Z:
@@ -464,8 +504,16 @@ global ?getEquipSound@Item@@UEBA?AW4LevelSoundEvent@Legacy@Puv@@XZ
 	jmp [rax + 776]
 
 ; Item_vtable[98] is unknown
+global ?_unknown_98@Item@@UEAAXXZ
+?_unknown_98@Item@@UEAAXXZ:
+	mov rax, [rel Item_vtable]
+	jmp [rax + 784]
 
 ; Item_vtable[99] is unknown
+global ?_unknown_99@Item@@UEAAXXZ
+?_unknown_99@Item@@UEAAXXZ:
+	mov rax, [rel Item_vtable]
+	jmp [rax + 792]
 
 global ?hasSameRelevantUserData@Item@@UEBA_NAEBVItemStackBase@@0@Z
 ?hasSameRelevantUserData@Item@@UEBA_NAEBVItemStackBase@@0@Z:

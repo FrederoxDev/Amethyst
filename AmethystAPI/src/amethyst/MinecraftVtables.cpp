@@ -13,8 +13,10 @@ extern "C" void* BlockLegacy_ctor = nullptr;
 extern "C" void* MaterialPtr_ctor = nullptr;
 
 void InitializeVtablePtrs() {
-    // 1.20.51.1
-    Item_vtable = reinterpret_cast<void*>(SlideAddress(0x53C9B70));
+    // 1.20.71.1
+    Item_vtable = reinterpret_cast<void*>(AddressFromLeaInstruction(
+        SigScan("48 8D 05 ? ? ? ? 48 89 01 48 83 C1 ? 0F 57 C0 0F 11 01 4C 89 61 ? 4C 89 61 ? 45 8D 44 24"))
+    );
     
     // 1.20.71.1
     BlockLegacy_vtable = reinterpret_cast<void*>(AddressFromLeaInstruction(
