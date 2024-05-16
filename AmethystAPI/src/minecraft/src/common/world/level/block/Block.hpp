@@ -34,7 +34,9 @@ public:
     // Have to explictly declare each thing..
     template <typename T>
     gsl::strict_not_null<const Block*> setState(const BlockState& stateType, T value) const;
-}; 
+
+    mce::Color getMapColor(BlockSource& region, const BlockPos& pos) const;
+};
 
 static_assert(sizeof(Block) == 208);
 static_assert(offsetof(Block, mLegacyBlock) == 48);
