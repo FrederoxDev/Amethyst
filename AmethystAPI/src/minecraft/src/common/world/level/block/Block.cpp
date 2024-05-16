@@ -44,3 +44,9 @@ gsl::strict_not_null<const Block*> Block::setState(const BlockState& stateType, 
 }
 
 template gsl::strict_not_null<const Block*> Block::setState<int>(const BlockState& stateType, int value) const;
+
+// 1.20.71.1 - Partial reimplementation using `BlockLegacy::getMapColor`
+mce::Color Block::getMapColor(BlockSource& region, const BlockPos& pos) const
+{
+    return this->mLegacyBlock->getMapColor(region, pos, *this);
+}

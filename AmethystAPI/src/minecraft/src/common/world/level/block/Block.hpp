@@ -34,7 +34,12 @@ public:
     // Have to explictly declare each thing..
     template <typename T>
     gsl::strict_not_null<const Block*> setState(const BlockState& stateType, T value) const;
-}; 
+
+    // 1.20.71.1 - Partial reimplementation using `BlockLegacy::getMapColor`
+    // Needed because `BlockLegacy::getMapColor` is a protected function and the Block class
+    // is its friend, how adorable..
+    mce::Color getMapColor(BlockSource& region, const BlockPos& pos) const;
+};
 
 static_assert(sizeof(Block) == 208);
 static_assert(offsetof(Block, mLegacyBlock) == 48);
