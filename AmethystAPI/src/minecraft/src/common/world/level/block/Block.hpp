@@ -35,6 +35,9 @@ public:
     template <typename T>
     gsl::strict_not_null<const Block*> setState(const BlockState& stateType, T value) const;
 
+    // Just a partial reimplementation using `BlockLegacy::getMapColor`
+    // Needed because `BlockLegacy::getMapColor` is a protected function and the Block class
+    // is its friend, how adorable..
     mce::Color getMapColor(BlockSource& region, const BlockPos& pos) const;
 };
 
