@@ -245,7 +245,7 @@ public:
      * @return Returns True if the block is solid, false if not
      */
     virtual bool isSolidBlockingBlock(int x, int y, int z) const;
-    virtual bool areChunksFullyLoaded(const BlockPos& pos, int r) const;
+    virtual bool areChunksFullyLoaded(const BlockPos& pos, int chunkRadius) const;
 
     /**
      * @note The Parameters are unknown
