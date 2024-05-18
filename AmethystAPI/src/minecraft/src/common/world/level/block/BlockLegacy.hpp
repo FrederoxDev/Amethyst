@@ -100,11 +100,17 @@ public:
         virtual ~AlteredStateCollection() = default;
     };
 
+    struct NameInfo {
+        HashedString mRawName;
+        std::string mNamespaceName;
+        HashedString mFullName;
+        HashedString mPreFlatteningName;
+    };
+
 public:
-    /* this + 40  */ std::byte padding40[54];
-    /* this + 94  */ FlameOdds mFlameOdds;
-    /* this + 95  */ BurnOdds mBurnOdds;
-    /* this + 96  */ std::byte padding96[200];
+    /* this + 40  */ std::string mDescriptionId;
+    /* this + 72  */ BlockLegacy::NameInfo mNameInfo;
+    /* this + 248 */ std::byte padding248[48];
     /* this + 296 */ const Material& mMaterial;
     /* this + 304 */ std::byte padding304[69];
     /* this + 373 */ unsigned char mLightBlock;

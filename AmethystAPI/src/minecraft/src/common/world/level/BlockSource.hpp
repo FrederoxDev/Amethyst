@@ -24,6 +24,7 @@ class WeakRefT;
 struct ActorBlockSyncMessage;
 struct SharePtrRefTraits;
 struct Bounds;
+class GameEvent;
 
 class BlockSource {
 
@@ -258,4 +259,8 @@ public:
     virtual bool canDoContainedItemDrops() const;
 
     virtual bool isInstaticking(const BlockPos& pos) const;
+
+public:
+    // 1.20.71.1 - 48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 57 48 83 EC ? 48 8B 01 49 8B D9
+    void postGameEvent(Actor* source, const GameEvent& gameEvent, const BlockPos& originPos, const Block* affectedBlock);
 };
