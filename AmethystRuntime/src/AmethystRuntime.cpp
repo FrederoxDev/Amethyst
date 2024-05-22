@@ -7,7 +7,6 @@ extern DWORD gMcThreadId;
 void AmethystRuntime::Start()
 {
     Log::Info("[AmethystRuntime] Using 'AmethystRuntime@{}'", MOD_VERSION);
-    InitializeVtablePtrs();
 
     SemVersion version = getMinecraftPackageInfo()->mVersion;
 

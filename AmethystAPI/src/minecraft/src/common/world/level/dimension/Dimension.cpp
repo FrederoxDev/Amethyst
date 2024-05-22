@@ -1,7 +1,7 @@
 #include "minecraft/src/common/world/level/dimension/Dimension.hpp"
+#include <amethyst/Memory.hpp>
 
-BlockSource* Dimension::getBlockSourceFromMainChunkSource()
+BlockSource& Dimension::getBlockSourceFromMainChunkSource() const
 {
-    auto source = reinterpret_cast<BlockSource*>(this + 204);
-    return source;
+    return *mBlockSource;
 }

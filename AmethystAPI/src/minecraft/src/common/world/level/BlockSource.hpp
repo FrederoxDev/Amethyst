@@ -22,7 +22,6 @@ class ChunkSource;
 class AABB;
 class WeakRefT;
 struct ActorBlockSyncMessage;
-struct SharePtrRefTraits;
 struct Bounds;
 class GameEvent;
 

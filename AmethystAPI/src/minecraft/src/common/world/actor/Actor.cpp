@@ -4,3 +4,8 @@ Vec3* Actor::getPosition()
 {
     return &tryGetComponent<StateVectorComponent>()->mPos;
 }
+
+const Dimension& Actor::getDimensionConst() const
+{
+    return *mDimension.lock();
+}

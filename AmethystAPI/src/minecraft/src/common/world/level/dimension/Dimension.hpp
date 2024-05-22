@@ -1,5 +1,6 @@
 #pragma once
 #include "minecraft/src/common/world/level/dimension/HeightRange.hpp"
+#include "minecraft/src/common/gamerefs/OwnerPtr.hpp"
 #include <cstddef>
 #include <cstdint>
 #include <string>
@@ -7,24 +8,22 @@
 class BlockSource;
 
 class Dimension {
-private:
-    uintptr_t** vtable;
 
 public:
-    std::byte filler0[192];
-    HeightRange mHeightRange;
-    /**
-     * @note Minecraft's default Dimension constructor seems to set the mSeaLevel to 63
-     */
-    int16_t mSeaLevel;
-    std::byte filler1[122];
-    std::string mName;
-    uint8_t mId;
-    bool mUltraWarm;
-    bool mHasCeiling;
-    bool mHasWeather;
-    bool mHasSkylight;
+    /* this + 0   */ uintptr_t** vtable;
+    /* this + 8   */ std::byte filler8[192];
+    /* this + 200 */ HeightRange mHeightRange;
+    /* this + 204 */ int16_t mSeaLevel;
+    /* this + 206 */ std::byte padding206[2];
+    /* this + 208 */ OwnerPtr<BlockSource> mBlockSource;
+    /* this + 224 */ std::byte filler224[104];
+    /* this + 328 */ std::string mName;
+    /* this + 360 */ uint8_t mId;
+    /* this + 361 */ bool mUltraWarm;
+    /* this + 362 */ bool mHasCeiling;
+    /* this + 363 */ bool mHasWeather;
+    /* this + 364 */ bool mHasSkylight;
 
 public:
-    BlockSource* getBlockSourceFromMainChunkSource();
+    BlockSource& getBlockSourceFromMainChunkSource() const;
 };
