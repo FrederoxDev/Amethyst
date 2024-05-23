@@ -19,9 +19,10 @@
 #include <minecraft/src/common/world/level/block/BlockRenderLayer.hpp>
 #include <minecraft/src/common/world/level/block/BlockState.hpp>
 #include <minecraft/src/common/world/level/block/Block.hpp>
+#include "actor/BlockActorRendererId.hpp"
+#include <minecraft/src/common/world/level/block/actor/BlockActor.hpp>
 
 // Auto-generated: Unknown complete types
-class BlockActor {};
 class HitResult {};
 enum ShapeType {};
 class GetCollisionShapeInterface {};
@@ -110,7 +111,9 @@ public:
 public:
     /* this + 40  */ std::string mDescriptionId;
     /* this + 72  */ BlockLegacy::NameInfo mNameInfo;
-    /* this + 248 */ std::byte padding248[48];
+    /* this + 248 */ std::byte padding248[20];
+    /* this + 268 */ BlockActorType mBlockEntityType;
+    /* this + 272 */ std::byte padding272[24];
     /* this + 296 */ const Material& mMaterial;
     /* this + 304 */ std::byte padding304[69];
     /* this + 373 */ unsigned char mLightBlock;

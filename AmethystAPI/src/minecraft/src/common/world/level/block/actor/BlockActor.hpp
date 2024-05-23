@@ -24,6 +24,7 @@ class BlockActor;
 class BlockPos; 
 class IConstBlockSource; 
 class Player; 
+class BlockLegacy;
 
 class BlockActor {
 public:
@@ -93,6 +94,15 @@ protected:
 	virtual std::unique_ptr<BlockActorDataPacket> _getUpdatePacket(BlockSource& a2);
 	virtual void _onUpdatePacket(const CompoundTag& a2, BlockSource& a3);
 	virtual bool _playerCanUpdate(const Player& fromPlayer) const;
+
+public:
+	// 1.20.71.1 - 48 83 EC ? 45 33 C9 0F 29 34 24
+	BlockActor(BlockActorType type, const BlockPos& pos, const std::string& id);
 };
 
 static_assert(sizeof(BlockActor) == 200);
+
+class BlockActorFactory {
+public:
+    static std::shared_ptr<BlockActor> createBlockEntity(BlockActorType type, const BlockPos& pos, const BlockLegacy& block);
+};

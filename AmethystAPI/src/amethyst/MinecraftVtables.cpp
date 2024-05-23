@@ -12,6 +12,9 @@ extern "C" void* BlockLegacy_ctor = nullptr;
 
 extern "C" void* MaterialPtr_ctor = nullptr;
 
+extern "C" void* BlockActor_vtable = nullptr;
+extern "C" void* BlockActor_ctor = nullptr;
+
 void InitializeVtablePtrs() {
     // 1.20.71.1
     Item_vtable = reinterpret_cast<void*>(AddressFromLeaInstruction(
@@ -29,6 +32,13 @@ void InitializeVtablePtrs() {
         SigScan("48 8D 05 ? ? ? ? 48 89 07 0F B7 8F")
     ));
     BlockItem_ctor = reinterpret_cast<void*>(SigScan("48 89 5C 24 ? 48 89 74 24 ? 48 89 4C 24 ? 57 48 83 EC ? 48 8B F2 48 8B F9 E8 ? ? ? ? 90 48 8D 05 ? ? ? ? 48 89 07 0F B7 8F"));
+
+    // 1.20.71.1
+    BlockActor_vtable = reinterpret_cast<void*>(AddressFromLeaInstruction(
+        SigScan("48 8D 05 ? ? ? ? 4C 89 49 ? 48 89 01 44 89 49"))
+    );
+    BlockActor_ctor = reinterpret_cast<void*>(SigScan("48 83 EC ? 45 33 C9 0F 29 34 24"));
+
 
     // 1.20.51.1
     //MaterialPtr_ctor = reinterpret_cast<void*>(SigScan("48 89 4C 24 ? 53 48 83 EC ? 4C 8B CA 48 8B D9 33 C0"));
