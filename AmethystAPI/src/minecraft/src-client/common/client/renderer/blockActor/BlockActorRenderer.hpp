@@ -16,5 +16,5 @@ public:
     virtual void renderAlpha(BaseActorRenderContext&, BlockActorRenderData&) { return; };
     virtual std::vector<NameTagRenderObject> extractText(Tessellator&, BlockActor&, const std::string&, std::vector<int>&, Vec3, bool);
 
-    BlockActorRenderer() : BaseActorRenderer() {}
+    BlockActorRenderer() : BaseActorRenderer() {};
 };

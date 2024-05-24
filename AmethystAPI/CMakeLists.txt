@@ -19,9 +19,8 @@ file(GLOB_RECURSE AmethystAPI_All
     minecraft/src/common/world/item/Item.asm 
     minecraft/src/common/world/level/block/actor/BlockActor.asm
     minecraft/src-client/common/client/renderer/ActorShaderManager.asm
-    minecraft/src-client/common/client/renderer/BaseActorRenderer.asm
     minecraft/src-client/common/client/renderer/blockActor/BlockActorRenderer.asm
-)      
+)       
 
 add_library(AmethystAPI STATIC ${AmethystAPI_All})
 

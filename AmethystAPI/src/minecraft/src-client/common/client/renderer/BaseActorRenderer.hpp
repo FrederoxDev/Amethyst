@@ -8,5 +8,6 @@ public:
     /* this + 88  */ mce::MaterialPtr mDepthTestedNameTextMat;
     /* this + 104 */ mce::MaterialPtr mDepthTestedHealthMat;
 
+    virtual ~BaseActorRenderer() override;
     BaseActorRenderer();
 };
