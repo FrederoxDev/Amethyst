@@ -9,11 +9,26 @@ class MinecraftGame;
 using IMinecraftGame = MinecraftGame;
 
 class ItemRenderer;
+struct SortedMeshDrawList;
+struct BlockActorRenderDispatcher;
+class ActorRenderDispatcher;
+class ItemInHandRenderer;
+struct ActorBlockRenderer;
 
 class BaseActorRenderContext {
 public:
-    std::byte padding[0x58];
-    ItemRenderer* itemRenderer;
+    /* this + 0  */ uintptr_t** vtable;
+    /* this + 8  */ float mNumEntitiesRenderedThisFrame;
+    /* this + 12 */ float mLastFrameTime;
+    /* this + 16 */ SortedMeshDrawList* mSortedMeshDrawList;
+    /* this + 24 */ ClientInstance* mClientInstance;
+    /* this + 32 */ MinecraftGame* mMinecraftGame;
+    /* this + 40 */ ScreenContext* mScreenContext;
+    /* this + 48 */ BlockActorRenderDispatcher* mBlockEntityRenderDispatcher;
+    /* this + 56 */ std::shared_ptr<ActorRenderDispatcher> mEntityRenderDispatcher;
+    /* this + 72 */ ActorBlockRenderer* mEntityBlockRenderer;
+    /* this + 80 */ ItemInHandRenderer* mItemInHandRenderer;
+    /* this + 88 */ ItemRenderer* itemRenderer;
     std::byte padding1[0x238];
 
 public:

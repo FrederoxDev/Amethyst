@@ -7,6 +7,8 @@ class BlockActorRenderData;
 class NameTagRenderObject;
 class Tessellator;
 class BlockActor;
+class BlockSource;
+class Block;
 
 class BlockActorRenderer : public BaseActorRenderer {
 public:
@@ -17,4 +19,11 @@ public:
     virtual std::vector<NameTagRenderObject> extractText(Tessellator&, BlockActor&, const std::string&, std::vector<int>&, Vec3, bool);
 
     BlockActorRenderer() : BaseActorRenderer() {};
+};
+
+struct BlockActorRenderData {
+    /* this + 0  */ BlockSource& renderSource;
+    /* this + 8  */ BlockActor& entity;
+    /* this + 16 */ const Block& block;
+    /* this + 24 */ const Vec3& position;
 };
