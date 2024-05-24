@@ -84,6 +84,10 @@ void ProtectMemory(uintptr_t address, size_t size, DWORD protectionData, DWORD* 
 
 uintptr_t AddressFromLeaInstruction(uintptr_t leaInstructionAddress)
 {
+    if (IsBadReadPtr((void*)leaInstructionAddress, 7)) {
+        Assert("Bad Ptr to lea instruction");
+    }
+
     // lea is 7 bytes long
     // - first 3 is the opcode
     // - last 4 is a signed offset to the target address, relative to the end of the instruction.
