@@ -3,3 +3,5 @@
 
 struct Brightness : public NewType<unsigned char> {
 };
+
+using Height = short;

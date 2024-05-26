@@ -1,15 +1,18 @@
 #pragma once
+#include <unordered_map>
 #include "amethyst/Memory.hpp"
+#include <minecraft/src/common/world/level/ChunkBlockPos.hpp>
 
 class Block;
 class ChunkBlockPos;
 class BlockPos;
+class BlockActor;
 
 class LevelChunk {
 public:
-    typedef BlockPos&(__thiscall* _getTopRainBlockPos)(LevelChunk* a1, ChunkBlockPos* a2, void* a3);
+    /* this + 0    */ std::byte padding0[4184];
+    /* this + 4184 */ std::unordered_map<ChunkBlockPos, std::shared_ptr<BlockActor>> mBlockEntities;
 
-    // Found in BlockSource::getBlock(const BlockPos&)
-    // 1.20.30.02 - 0x3909E80
-    const Block* getBlock(const ChunkBlockPos& pos);
+public:
+    BlockActor* getBlockEntity(const ChunkBlockPos& chunkPos);
 };
