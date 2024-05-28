@@ -3,9 +3,10 @@
 
 class Player : public Mob {
 public:
-    std::byte __padding0[512];
-    PlayerInventory* playerInventory; // this + 2024
-    std::byte __padding1[5416];
+    std::byte __padding0[320];
+    PlayerInventory* playerInventory; // this + 1968
+    std::byte __padding1[5608];
 };
 
 static_assert(sizeof(Player) == 7584);
+//static_assert(offsetof(Player, playerInventory) == 1968);

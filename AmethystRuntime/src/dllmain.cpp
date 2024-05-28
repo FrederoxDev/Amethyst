@@ -1,4 +1,5 @@
 #include "dllmain.hpp"
+#include <AmethystDebugging.hpp>
 
 HANDLE gMcThreadHandle;
 DWORD gMcThreadId;
@@ -8,7 +9,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
     return TRUE;
 }
 
-LONG WINAPI ExceptionHandler(EXCEPTION_POINTERS* ExceptionInfo)
+LONG WINAPI AmethystUnhandledExceptionsHandler(EXCEPTION_POINTERS* ExceptionInfo)
 {
     if (ExceptionInfo == nullptr) {
         std::cerr << "ExceptionInfo is nullptr" << std::endl;
@@ -21,10 +22,13 @@ LONG WINAPI ExceptionHandler(EXCEPTION_POINTERS* ExceptionInfo)
     GetModuleFileName(hModule, szModuleName, MAX_PATH);
 
     EXCEPTION_RECORD* exceptionRecord = ExceptionInfo->ExceptionRecord;
-    uint64_t exceptionAddr = (uint64_t)exceptionRecord->ExceptionAddress - GetMinecraftBaseAddress();
+    uint64_t exceptionAddr = (uint64_t)exceptionRecord->ExceptionAddress;
     uint64_t exceptionCode = (uint64_t)exceptionRecord->ExceptionCode;
 
-    Log::Error("[AmethystRuntime] Exception thrown at 0x{:x} in {}. Exception code: 0x{:x}", exceptionAddr, szModuleName, exceptionCode);
+
+    Log::Error("[AmethystRuntime] Exception thrown at 0x{:x}\n", exceptionAddr - GetMinecraftBaseAddress(), szModuleName);
+    LogAssemblyOfExceptionCause(exceptionAddr);
+    Log::Error("\nError Code: 0x{:x}", exceptionCode);
 
     ShutdownWait();
     return ExceptionContinueSearch;
@@ -33,7 +37,7 @@ LONG WINAPI ExceptionHandler(EXCEPTION_POINTERS* ExceptionInfo)
 DWORD WINAPI Main()
 {
     Log::InitializeConsole();
-    SetUnhandledExceptionFilter(ExceptionHandler);
+    SetUnhandledExceptionFilter(AmethystUnhandledExceptionsHandler);
 
     // Create an instance of AmethystRuntime and invoke it to start
     AmethystRuntime* runtime = AmethystRuntime::getInstance();

@@ -11,9 +11,7 @@ void BlockSource::postGameEvent(Actor* source, const GameEvent& gameEvent, const
 
 BlockActor* BlockSource::getBlockEntity(const BlockPos& pos)
 {
-    LevelChunk* levelChunk = getChunkAt(pos);
-    if (!levelChunk) return nullptr;
-
-    ChunkBlockPos inChunkPos(pos, mMinHeight);
-    return levelChunk->getBlockEntity(inChunkPos);
+    using function = decltype(&BlockSource::getBlockEntity);
+    static auto func = std::bit_cast<function>(SigScan("40 53 56 57 48 83 EC ? 48 8B 01 48 8B FA"));
+    return (this->*func)(pos);
 }
