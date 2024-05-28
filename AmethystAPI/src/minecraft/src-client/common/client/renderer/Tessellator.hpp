@@ -78,6 +78,8 @@ public:
 
     void vertex(float x, float y, float z);
     void vertex(const Vec3&);
+    void vertexUV(float x, float y, float z, float uvX, float uvY);
+    void vertexUV(const Vec3&, float uvX, float uvY);
 
     void color(float r, float g, float b, float a);
 
