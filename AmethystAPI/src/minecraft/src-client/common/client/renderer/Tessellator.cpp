@@ -32,7 +32,7 @@ void Tessellator::vertexUV(float x, float y, float z, float uvX, float uvY)
 
 void Tessellator::vertexUV(const Vec3& vec, float uvX, float uvY)
 {
-    this -> vertexUV(vec.z, vec.y, vec.z, uvX, uvY);
+    this -> vertexUV(vec.x, vec.y, vec.z, uvX, uvY);
 }
 
 mce::Mesh Tessellator::end(uint64_t a3, std::string_view debugName, int a5) {
