@@ -9,7 +9,8 @@ struct RectangleArea;
 
 class HoverRenderer {
 public:
-    std::byte padding[56];
+    uintptr_t** vtable;
+    std::byte padding[48];
     std::string mFilteredContent; // this + 56
     glm::tvec2<float> mCursorPosition; // this + 88
     glm::tvec2<float> mOffset; // this + 96
