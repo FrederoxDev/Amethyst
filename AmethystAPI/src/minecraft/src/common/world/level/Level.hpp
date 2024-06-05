@@ -10,5 +10,6 @@ class Level {
 public:
     /* this + 0    */ std::byte padding0[840];
     /* this + 840  */ const ItemRegistryRef mItemRegistry;
-    /* this + 856  */ std::byte padding856[8144];
+    /* this + 856  */ std::byte padding856[4745];
+    /* this + 5601 */ bool isClientSide;
 };

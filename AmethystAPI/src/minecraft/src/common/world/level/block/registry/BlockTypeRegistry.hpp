@@ -1,13 +1,12 @@
 #pragma once
-
 #include <map>
 #include <set>
 #include "minecraft/src-deps/core/string/StringHash.hpp"
 #include "minecraft/src/common/world/level/block/BlockLegacy.hpp"
 #include "minecraft/src/common/SharedPtr.hpp"
 #include "entt/container/dense_map.hpp"
-#include "minecraft/src-deps/core/utility/StringUtils.hpp"
 #include "minecraft/src/common/world/level/block/Block.hpp"
+#include "minecraft/src-deps/core/utility/StringUtils.hpp"
 
 typedef std::map<HashedString, SharedPtr<BlockLegacy>> BlockLookupMap;
 typedef entt::dense_map<HashType64, HashedString> BlockNameHashToHashedStringMap;
@@ -51,10 +50,10 @@ public:
         return map;
     }
 
-    // 1.20.51.1 - 48 89 5C 24 ? 57 48 83 EC ? 33 FF 45 33 C9
+    // 1.20.51.1 - 48 89 5C 24 ? 57 48 83 EC ? 33 FF 45 31 C9
     static const Block* getDefaultBlockState(const HashedString& name) {
         using function = Block*(*)(const HashedString&);
-        static auto func = reinterpret_cast<function>(SigScan("48 89 5C 24 ? 57 48 83 EC ? 33 FF 45 33 C9"));
+        static auto func = reinterpret_cast<function>(SigScan("48 89 5C 24 ? 57 48 83 EC ? 33 FF 45 31 C9"));
         return func(name);
     }
 

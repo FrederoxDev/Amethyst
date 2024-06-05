@@ -18,6 +18,11 @@ public:
     {
         return {this->x, this->y - 1, this->z};
     }
+
+    BlockPos above() const
+    {
+        return {this->x, this->y + 1, this->z};
+    }
 };
 
 template <>

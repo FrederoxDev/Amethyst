@@ -61,7 +61,7 @@ public:
 	virtual bool isMovable(BlockSource& a2);
 	virtual bool isCustomNameSaved();
 	virtual void onPlace(BlockSource& a2);
-	virtual void _unknown_12();
+    virtual void onMove();
 	virtual void onRemoved(BlockSource& a2);
 	virtual bool isPreserved(BlockSource& a2) const;
 	virtual bool shouldPreserve(BlockSource& a2);
@@ -98,6 +98,7 @@ protected:
 public:
 	// 1.20.71.1 - 48 83 EC ? 45 33 C9 0F 29 34 24
 	BlockActor(BlockActorType type, const BlockPos& pos, const std::string& id);
+    void moveTo(const BlockPos& pos);
 };
 
 static_assert(sizeof(BlockActor) == 200);
