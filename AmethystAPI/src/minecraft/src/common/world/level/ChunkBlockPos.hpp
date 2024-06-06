@@ -29,7 +29,7 @@ template <>
     struct hash<ChunkBlockPos> {
         size_t operator()(const ChunkBlockPos& pos) const;
     };
-
+     
     inline size_t hash<ChunkBlockPos>::operator()(const ChunkBlockPos& pos) const
     {
         // this is a mix of mce::Math::accumulate and std::hash

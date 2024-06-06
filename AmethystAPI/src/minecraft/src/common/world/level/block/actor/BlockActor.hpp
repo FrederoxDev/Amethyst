@@ -9,11 +9,11 @@
 #include <minecraft/src/common/world/level/block/Block.hpp>
 #include <minecraft/src/common/world/actor/ActorTerrainInterlockData.hpp>
 #include <minecraft/src/common/world/level/block/actor/BlockActorRendererId.hpp>
+#include <minecraft/src/common/network/packet/BlockActorDataPacket.hpp>
 #include <gsl/gsl>
 
 // Auto-generated: Unknown complete types
 class UIProfanityContext {}; 
-class BlockActorDataPacket {}; 
 
 // Auto-generated: Forward declarations
 class Level; 
