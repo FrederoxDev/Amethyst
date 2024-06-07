@@ -43,6 +43,7 @@ extern "C" void* BlockLegacy_vtable = nullptr;
 extern "C" void* BlockActor_vtable = nullptr;
 extern "C" void* BaseActorRenderer_vtable = nullptr;
 extern "C" void* BlockActorRenderer_vtable = nullptr;
+extern "C" void* Packet_vtable = nullptr;
 
 // Constructors
 extern "C" void* BlockItem_ctor = nullptr;
@@ -67,4 +68,6 @@ void InitializeVtablePtrs() {
     InitializeCtor(BaseActorRenderer_ctor, "48 89 5C 24 ? 48 89 74 24 ? 55 57 41 54 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 4C 8B F1 48 89 4D");
 
     InitializeVtbl(BlockActorRenderer_vtable, "48 8D 05 ? ? ? ? 48 89 06 48 8D 05 ? ? ? ? 48 89 46 ? 40 88 BE");
+
+    InitializeVtbl(Packet_vtable, "48 89 01 F6 C2 ? 74 ? BA ? ? ? ? E8 ? ? ? ? 48 8B C3 48 83 C4 ? 5B C3 CC CC CC CC CC 48 89 5C 24 ? 57 48 83 EC ? 48 8B D9 49 8B F8");
 }
