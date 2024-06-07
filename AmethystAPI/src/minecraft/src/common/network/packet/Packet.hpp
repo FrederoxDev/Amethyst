@@ -250,3 +250,9 @@ public:
 public:
     Packet();
 };
+
+class MinecraftPackets {
+public:
+    // 1.20.71.1 - 40 53 48 83 EC ? 45 33 C0 48 8B D9 FF CA 81 FA
+    static std::shared_ptr<Packet> createPacket(MinecraftPacketIds id);
+};
