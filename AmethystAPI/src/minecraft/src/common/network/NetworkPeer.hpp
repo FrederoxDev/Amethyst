@@ -2,7 +2,7 @@
 
 class NetworkPeer {
 public:
-    enum Reliability : int {
+    enum class Reliability : int {
         Reliable, 
         ReliableOrdered, 
         Unreliable, 
