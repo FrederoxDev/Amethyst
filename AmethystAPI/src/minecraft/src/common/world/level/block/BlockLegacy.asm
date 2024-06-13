@@ -24,8 +24,8 @@ global ?getNextBlockPermutation@BlockLegacy@@UEBAPEBVBlock@@AEBV2@@Z
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 16]
 
-global ?waterSpreadCausesSpawn@BlockLegacy@@UEBA_NXZ
-?waterSpreadCausesSpawn@BlockLegacy@@UEBA_NXZ:
+global ?shouldConnectToRedstone@BlockLegacy@@UEBA_NAEAVBlockSource@@AEBVBlockPos@@W4Type@Direction@@@Z
+?shouldConnectToRedstone@BlockLegacy@@UEBA_NAEAVBlockSource@@AEBVBlockPos@@W4Type@Direction@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 24]
 
@@ -94,8 +94,8 @@ global ?randomlyModifyPosition@BlockLegacy@@UEBA?AVVec3@@AEBVBlockPos@@AEAH@Z
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 128]
 
-global ?onRedstoneUpdate@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@H_N@Z
-?onRedstoneUpdate@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@H_N@Z:
+global ?onProjectileHit@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@AEBVActor@@@Z
+?onProjectileHit@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@AEBVActor@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 136]
 
@@ -104,8 +104,8 @@ global ?onLightningHit@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@@Z
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 144]
 
-global ?liquidCanFlowIntoFromDirection@BlockLegacy@@UEAA_NEP6A?AV?$function@AEBVBlock@@@std@@AEBVBlockPos@@@Z@Z
-?liquidCanFlowIntoFromDirection@BlockLegacy@@UEAA_NEP6A?AV?$function@AEBVBlock@@@std@@AEBVBlockPos@@@Z@Z:
+global ?liquidCanFlowIntoFromDirection@BlockLegacy@@UEBA_NEAEBV?$function@$$A6AAEBVBlock@@AEBVBlockPos@@@Z@std@@AEBVBlockPos@@@Z
+?liquidCanFlowIntoFromDirection@BlockLegacy@@UEBA_NEAEBV?$function@$$A6AAEBVBlock@@AEBVBlockPos@@@Z@std@@AEBVBlockPos@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 152]
 
@@ -142,14 +142,14 @@ global ?canConnect@BlockLegacy@@UEBA_NAEBVBlock@@E0@Z
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 200]
 
-global ?tryGetCopperBehavior@BlockLegacy@@UEBAPEBVCopperBehavior@@XZ
-?tryGetCopperBehavior@BlockLegacy@@UEBAPEBVCopperBehavior@@XZ:
+; BlockLegacy_vtable[26] is unknown
+global ?_unknown_26@BlockLegacy@@UEAAXXZ
+?_unknown_26@BlockLegacy@@UEAAXXZ:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 208]
 
-; BlockLegacy_vtable[27] is unknown
-global ?_unknown_27@BlockLegacy@@UEAAXXZ
-?_unknown_27@BlockLegacy@@UEAAXXZ:
+global ?tryGetCopperBehavior@BlockLegacy@@UEBAPEBVCopperBehavior@@XZ
+?tryGetCopperBehavior@BlockLegacy@@UEBAPEBVCopperBehavior@@XZ:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 216]
 
@@ -177,14 +177,14 @@ global ?_unknown_31@BlockLegacy@@UEAAXXZ
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 248]
 
-global ?isWaterBlocking@BlockLegacy@@UEBA_NXZ
-?isWaterBlocking@BlockLegacy@@UEBA_NXZ:
+; BlockLegacy_vtable[32] is unknown
+global ?_unknown_32@BlockLegacy@@UEAAXXZ
+?_unknown_32@BlockLegacy@@UEAAXXZ:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 256]
 
-; BlockLegacy_vtable[33] is unknown
-global ?_unknown_33@BlockLegacy@@UEAAXXZ
-?_unknown_33@BlockLegacy@@UEAAXXZ:
+global ?isWaterBlocking@BlockLegacy@@UEBA_NXZ
+?isWaterBlocking@BlockLegacy@@UEBA_NXZ:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 264]
 
@@ -206,24 +206,24 @@ global ?_unknown_36@BlockLegacy@@UEAAXXZ
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 288]
 
+; BlockLegacy_vtable[37] is unknown
+global ?_unknown_37@BlockLegacy@@UEAAXXZ
+?_unknown_37@BlockLegacy@@UEAAXXZ:
+	mov rax, [rel BlockLegacy_vtable]
+	jmp [rax + 296]
+
 global ?isStairBlock@BlockLegacy@@UEBA_NXZ
 ?isStairBlock@BlockLegacy@@UEBA_NXZ:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 296]
+	jmp [rax + 304]
 
 global ?isSlabBlock@BlockLegacy@@UEBA_NXZ
 ?isSlabBlock@BlockLegacy@@UEBA_NXZ:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 304]
+	jmp [rax + 312]
 
 global ?isDoubleSlabBlock@BlockLegacy@@UEBA_NXZ
 ?isDoubleSlabBlock@BlockLegacy@@UEBA_NXZ:
-	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 312]
-
-; BlockLegacy_vtable[40] is unknown
-global ?_unknown_40@BlockLegacy@@UEAAXXZ
-?_unknown_40@BlockLegacy@@UEAAXXZ:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 320]
 
@@ -263,45 +263,45 @@ global ?_unknown_46@BlockLegacy@@UEAAXXZ
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 368]
 
-global ?canBeOriginalSurface@BlockLegacy@@UEBA_NXZ
-?canBeOriginalSurface@BlockLegacy@@UEBA_NXZ:
+; BlockLegacy_vtable[47] is unknown
+global ?_unknown_47@BlockLegacy@@UEAAXXZ
+?_unknown_47@BlockLegacy@@UEAAXXZ:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 376]
 
-; BlockLegacy_vtable[48] is unknown
-global ?_unknown_48@BlockLegacy@@UEAAXXZ
-?_unknown_48@BlockLegacy@@UEAAXXZ:
+global ?canBeOriginalSurface@BlockLegacy@@UEBA_NXZ
+?canBeOriginalSurface@BlockLegacy@@UEBA_NXZ:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 384]
+
+; BlockLegacy_vtable[49] is unknown
+global ?_unknown_49@BlockLegacy@@UEAAXXZ
+?_unknown_49@BlockLegacy@@UEAAXXZ:
+	mov rax, [rel BlockLegacy_vtable]
+	jmp [rax + 392]
 
 global ?isValidAuxValue@BlockLegacy@@UEBA_NH@Z
 ?isValidAuxValue@BlockLegacy@@UEBA_NH@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 392]
+	jmp [rax + 400]
 
 global ?canFillAtPos@BlockLegacy@@UEBA_NAEAVBlockSource@@AEBVBlockPos@@AEBVBlock@@@Z
 ?canFillAtPos@BlockLegacy@@UEBA_NAEAVBlockSource@@AEBVBlockPos@@AEBVBlock@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 400]
+	jmp [rax + 408]
 
 global ?sanitizeFillBlock@BlockLegacy@@UEBAAEBVBlock@@AEBV2@@Z
 ?sanitizeFillBlock@BlockLegacy@@UEBAAEBVBlock@@AEBV2@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 408]
+	jmp [rax + 416]
 
 global ?onFillBlock@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@AEBVBlock@@@Z
 ?onFillBlock@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@AEBVBlock@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 416]
+	jmp [rax + 424]
 
 global ?getDirectSignal@BlockLegacy@@UEBAHAEAVBlockSource@@AEBVBlockPos@@H@Z
 ?getDirectSignal@BlockLegacy@@UEBAHAEAVBlockSource@@AEBVBlockPos@@H@Z:
-	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 424]
-
-; BlockLegacy_vtable[54] is unknown
-global ?_unknown_54@BlockLegacy@@UEAAXXZ
-?_unknown_54@BlockLegacy@@UEAAXXZ:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 432]
 
@@ -311,272 +311,272 @@ global ?_unknown_55@BlockLegacy@@UEAAXXZ
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 440]
 
+; BlockLegacy_vtable[56] is unknown
+global ?_unknown_56@BlockLegacy@@UEAAXXZ
+?_unknown_56@BlockLegacy@@UEAAXXZ:
+	mov rax, [rel BlockLegacy_vtable]
+	jmp [rax + 448]
+
 global ?canContainLiquid@BlockLegacy@@UEBA_NXZ
 ?canContainLiquid@BlockLegacy@@UEBA_NXZ:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 448]
+	jmp [rax + 456]
 
 global ?getRequiredMedium@BlockLegacy@@UEBA?AV?$optional@VHashedString@@@std@@XZ
 ?getRequiredMedium@BlockLegacy@@UEBA?AV?$optional@VHashedString@@@std@@XZ:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 456]
-
-global ?shouldConnectToRedstone@BlockLegacy@@UEBA_NAEAVBlockSource@@AEBVBlockPos@@W4Type@Direction@@@Z
-?shouldConnectToRedstone@BlockLegacy@@UEBA_NAEAVBlockSource@@AEBVBlockPos@@W4Type@Direction@@@Z:
-	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 464]
+
+; BlockLegacy_vtable[59] is unknown
+global ?_unknown_59@BlockLegacy@@UEAAXXZ
+?_unknown_59@BlockLegacy@@UEAAXXZ:
+	mov rax, [rel BlockLegacy_vtable]
+	jmp [rax + 472]
 
 global ?handlePrecipitation@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@MM@Z
 ?handlePrecipitation@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@MM@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 472]
+	jmp [rax + 480]
 
 global ?canBeUsedInCommands@BlockLegacy@@UEBA_NAEBVBaseGameVersion@@@Z
 ?canBeUsedInCommands@BlockLegacy@@UEBA_NAEBVBaseGameVersion@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 480]
+	jmp [rax + 488]
 
 global ?checkIsPathable@BlockLegacy@@UEBA_NAEAVActor@@AEBVBlockPos@@1@Z
 ?checkIsPathable@BlockLegacy@@UEBA_NAEAVActor@@AEBVBlockPos@@1@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 488]
+	jmp [rax + 496]
 
 global ?shouldDispense@BlockLegacy@@UEBA_NAEAVBlockSource@@AEAVContainer@@@Z
 ?shouldDispense@BlockLegacy@@UEBA_NAEAVBlockSource@@AEAVContainer@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 496]
+	jmp [rax + 504]
 
 global ?dispense@BlockLegacy@@UEBA_NAEAVBlockSource@@AEAVContainer@@HAEBVVec3@@E@Z
 ?dispense@BlockLegacy@@UEBA_NAEAVBlockSource@@AEAVContainer@@HAEBVVec3@@E@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 504]
+	jmp [rax + 512]
 
 global ?transformOnFall@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@PEAVActor@@M@Z
 ?transformOnFall@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@PEAVActor@@M@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 512]
-
-; BlockLegacy_vtable[65] is unknown
-global ?_unknown_65@BlockLegacy@@UEAAXXZ
-?_unknown_65@BlockLegacy@@UEAAXXZ:
-	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 520]
+
+global ?onRedstoneUpdate@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@H_N@Z
+?onRedstoneUpdate@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@H_N@Z:
+	mov rax, [rel BlockLegacy_vtable]
+	jmp [rax + 528]
 
 global ?onMove@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@1@Z
 ?onMove@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@1@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 528]
-
-; BlockLegacy_vtable[67] is unknown
-global ?_unknown_67@BlockLegacy@@UEAAXXZ
-?_unknown_67@BlockLegacy@@UEAAXXZ:
-	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 536]
+
+; BlockLegacy_vtable[68] is unknown
+global ?_unknown_68@BlockLegacy@@UEAAXXZ
+?_unknown_68@BlockLegacy@@UEAAXXZ:
+	mov rax, [rel BlockLegacy_vtable]
+	jmp [rax + 544]
 
 global ?movedByPiston@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@@Z
 ?movedByPiston@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 544]
+	jmp [rax + 552]
 
 global ?onStructureBlockPlace@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@@Z
 ?onStructureBlockPlace@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 552]
+	jmp [rax + 560]
 
 global ?onStructureNeighborBlockPlace@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@@Z
 ?onStructureNeighborBlockPlace@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 560]
+	jmp [rax + 568]
 
 global ?setupRedstoneComponent@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@@Z
 ?setupRedstoneComponent@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 568]
+	jmp [rax + 576]
 
 global ?getRedstoneProperty@BlockLegacy@@UEBA?AW4BlockProperty@@AEAVBlockSource@@AEBVBlockPos@@@Z
 ?getRedstoneProperty@BlockLegacy@@UEBA?AW4BlockProperty@@AEAVBlockSource@@AEBVBlockPos@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 576]
+	jmp [rax + 584]
 
 global ?updateEntityAfterFallOn@BlockLegacy@@UEBAXAEBVBlockPos@@AEAUUpdateEntityAfterFallOnInterface@@@Z
 ?updateEntityAfterFallOn@BlockLegacy@@UEBAXAEBVBlockPos@@AEAUUpdateEntityAfterFallOnInterface@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 584]
-
-; BlockLegacy_vtable[74] is unknown
-global ?_unknown_74@BlockLegacy@@UEAAXXZ
-?_unknown_74@BlockLegacy@@UEAAXXZ:
-	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 592]
+
+; BlockLegacy_vtable[75] is unknown
+global ?_unknown_75@BlockLegacy@@UEAAXXZ
+?_unknown_75@BlockLegacy@@UEAAXXZ:
+	mov rax, [rel BlockLegacy_vtable]
+	jmp [rax + 600]
 
 global ?isPreservingMediumWhenPlaced@BlockLegacy@@UEBA_NPEBV1@@Z
 ?isPreservingMediumWhenPlaced@BlockLegacy@@UEBA_NPEBV1@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 600]
+	jmp [rax + 608]
 
 global ?isFilteredOut@BlockLegacy@@UEBA_NW4BlockRenderLayer@@@Z
 ?isFilteredOut@BlockLegacy@@UEBA_NW4BlockRenderLayer@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 608]
+	jmp [rax + 616]
 
 global ?canRenderSelectionOverlay@BlockLegacy@@UEBA_NW4BlockRenderLayer@@@Z
 ?canRenderSelectionOverlay@BlockLegacy@@UEBA_NW4BlockRenderLayer@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 616]
+	jmp [rax + 624]
 
 global ?ignoreEntitiesOnPistonMove@BlockLegacy@@UEBA_NAEBVBlock@@@Z
 ?ignoreEntitiesOnPistonMove@BlockLegacy@@UEBA_NAEBVBlock@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 624]
+	jmp [rax + 632]
 
 global ?onFertilized@BlockLegacy@@UEBA_NAEAVBlockSource@@AEBVBlockPos@@PEAVActor@@W4FertilizerType@@@Z
 ?onFertilized@BlockLegacy@@UEBA_NAEAVBlockSource@@AEBVBlockPos@@PEAVActor@@W4FertilizerType@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 632]
+	jmp [rax + 640]
 
 global ?mayConsumeFertilizer@BlockLegacy@@UEBA_NAEAVBlockSource@@@Z
 ?mayConsumeFertilizer@BlockLegacy@@UEBA_NAEAVBlockSource@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 640]
+	jmp [rax + 648]
 
 global ?canBeFertilized@BlockLegacy@@UEBA_NAEAVBlockSource@@AEBVBlockPos@@AEBVBlock@@@Z
 ?canBeFertilized@BlockLegacy@@UEBA_NAEAVBlockSource@@AEBVBlockPos@@AEBVBlock@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 648]
+	jmp [rax + 656]
 
 global ?mayPick@BlockLegacy@@UEBA_NAEBVBlockSource@@AEBVBlock@@_N@Z
 ?mayPick@BlockLegacy@@UEBA_NAEBVBlockSource@@AEBVBlock@@_N@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 656]
+	jmp [rax + 664]
 
 global ?mayPick@BlockLegacy@@UEBA_NXZ
 ?mayPick@BlockLegacy@@UEBA_NXZ:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 664]
+	jmp [rax + 672]
 
 global ?mayPlace@BlockLegacy@@UEBA_NAEAVBlockSource@@AEBVBlockPos@@@Z
 ?mayPlace@BlockLegacy@@UEBA_NAEAVBlockSource@@AEBVBlockPos@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 672]
+	jmp [rax + 680]
 
 global ?mayPlace@BlockLegacy@@UEBA_NAEAVBlockSource@@AEBVBlockPos@@E@Z
 ?mayPlace@BlockLegacy@@UEBA_NAEAVBlockSource@@AEBVBlockPos@@E@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 680]
+	jmp [rax + 688]
 
 global ?mayPlaceOn@BlockLegacy@@UEBA_NAEAVBlockSource@@AEBVBlockPos@@@Z
 ?mayPlaceOn@BlockLegacy@@UEBA_NAEAVBlockSource@@AEBVBlockPos@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 688]
+	jmp [rax + 696]
 
 global ?tryToPlace@BlockLegacy@@UEBA_NAEAVBlockSource@@AEBVBlockPos@@AEBVBlock@@PEBUActorBlockSyncMessage@@@Z
 ?tryToPlace@BlockLegacy@@UEBA_NAEAVBlockSource@@AEBVBlockPos@@AEBVBlock@@PEBUActorBlockSyncMessage@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 696]
+	jmp [rax + 704]
 
 global ?tryToTill@BlockLegacy@@UEBA_NAEAVBlockSource@@AEBVBlockPos@@AEAVActor@@AEAVItemStack@@@Z
 ?tryToTill@BlockLegacy@@UEBA_NAEAVBlockSource@@AEBVBlockPos@@AEAVActor@@AEAVItemStack@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 704]
+	jmp [rax + 712]
 
 global ?breaksFallingBlocks@BlockLegacy@@UEBA_NAEBVBlock@@VBaseGameVersion@@@Z
 ?breaksFallingBlocks@BlockLegacy@@UEBA_NAEBVBlock@@VBaseGameVersion@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 712]
+	jmp [rax + 720]
 
 global ?destroy@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@AEBVBlock@@PEAVActor@@@Z
 ?destroy@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@AEBVBlock@@PEAVActor@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 720]
+	jmp [rax + 728]
 
 global ?getIgnoresDestroyPermissions@BlockLegacy@@UEBA_NAEAVActor@@AEBVBlockPos@@@Z
 ?getIgnoresDestroyPermissions@BlockLegacy@@UEBA_NAEAVActor@@AEBVBlockPos@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 728]
+	jmp [rax + 736]
 
 global ?neighborChanged@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@1@Z
 ?neighborChanged@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@1@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 736]
+	jmp [rax + 744]
 
 global ?getSecondPart@BlockLegacy@@UEBA_NAEBVIConstBlockSource@@AEBVBlockPos@@AEAV3@@Z
 ?getSecondPart@BlockLegacy@@UEBA_NAEBVIConstBlockSource@@AEBVBlockPos@@AEAV3@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 744]
+	jmp [rax + 752]
 
 global ?playerWillDestroy@BlockLegacy@@UEBAPEBVBlock@@AEAVPlayer@@AEBVBlockPos@@AEBV2@@Z
 ?playerWillDestroy@BlockLegacy@@UEBAPEBVBlock@@AEAVPlayer@@AEBVBlockPos@@AEBV2@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 752]
+	jmp [rax + 760]
 
 global ?asItemInstance@BlockLegacy@@UEBA?AVItemInstance@@AEBVBlock@@PEBVBlockActor@@@Z
 ?asItemInstance@BlockLegacy@@UEBA?AVItemInstance@@AEBVBlock@@PEBVBlockActor@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 760]
-
-global ?trySpawnResourcesOnExplosion@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@AEBVBlock@@AEAVRandomize@@M@Z
-?trySpawnResourcesOnExplosion@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@AEBVBlock@@AEAVRandomize@@M@Z:
-	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 768]
+
+global ?spawnAfterBreak@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlock@@AEBVBlockPos@@AEBUResourceDropsContext@@@Z
+?spawnAfterBreak@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlock@@AEBVBlockPos@@AEBUResourceDropsContext@@@Z:
+	mov rax, [rel BlockLegacy_vtable]
+	jmp [rax + 776]
 
 global ?getPlacementBlock@BlockLegacy@@UEBAAEBVBlock@@AEBVActor@@AEBVBlockPos@@EAEBVVec3@@H@Z
 ?getPlacementBlock@BlockLegacy@@UEBAAEBVBlock@@AEBVActor@@AEBVBlockPos@@EAEBVVec3@@H@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 776]
+	jmp [rax + 784]
 
 global ?calcVariant@BlockLegacy@@UEBAHAEAVBlockSource@@AEBVBlockPos@@AEBVColor@mce@@@Z
 ?calcVariant@BlockLegacy@@UEBAHAEAVBlockSource@@AEBVBlockPos@@AEBVColor@mce@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 784]
+	jmp [rax + 792]
 
 global ?isAttachedTo@BlockLegacy@@UEBA_NAEAVBlockSource@@AEBVBlockPos@@AEAV3@@Z
 ?isAttachedTo@BlockLegacy@@UEBA_NAEAVBlockSource@@AEBVBlockPos@@AEAV3@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 792]
+	jmp [rax + 800]
 
 global ?attack@BlockLegacy@@UEBA_NPEAVPlayer@@AEBVBlockPos@@@Z
 ?attack@BlockLegacy@@UEBA_NPEAVPlayer@@AEBVBlockPos@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 800]
+	jmp [rax + 808]
 
 global ?shouldTriggerEntityInside@BlockLegacy@@UEBA_NAEAVBlockSource@@AEBVBlockPos@@AEAVActor@@@Z
 ?shouldTriggerEntityInside@BlockLegacy@@UEBA_NAEAVBlockSource@@AEBVBlockPos@@AEAVActor@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 808]
+	jmp [rax + 816]
 
 global ?canBeBuiltOver@BlockLegacy@@UEBA_NAEAVBlockSource@@AEBVBlockPos@@@Z
 ?canBeBuiltOver@BlockLegacy@@UEBA_NAEAVBlockSource@@AEBVBlockPos@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 816]
+	jmp [rax + 824]
 
 global ?canBeBuiltOver@BlockLegacy@@UEBA_NAEAVBlockSource@@AEBVBlockPos@@AEBVBlockItem@@@Z
 ?canBeBuiltOver@BlockLegacy@@UEBA_NAEAVBlockSource@@AEBVBlockPos@@AEBVBlockItem@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 824]
+	jmp [rax + 832]
 
 global ?triggerEvent@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@HH@Z
 ?triggerEvent@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@HH@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 832]
+	jmp [rax + 840]
 
 global ?executeEvent@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@AEBVBlock@@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEAVActor@@@Z
 ?executeEvent@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@AEBVBlock@@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEAVActor@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 840]
+	jmp [rax + 848]
 
 global ?getMobToSpawn@BlockLegacy@@UEBAPEBVMobSpawnerData@@AEBVSpawnConditions@@AEAVBlockSource@@@Z
 ?getMobToSpawn@BlockLegacy@@UEBAPEBVMobSpawnerData@@AEBVSpawnConditions@@AEAVBlockSource@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 848]
+	jmp [rax + 856]
 
 global ?shouldStopFalling@BlockLegacy@@UEBA_NAEAVActor@@@Z
 ?shouldStopFalling@BlockLegacy@@UEBA_NAEAVActor@@@Z:
-	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 856]
-
-; BlockLegacy_vtable[108] is unknown
-global ?_unknown_108@BlockLegacy@@UEAAXXZ
-?_unknown_108@BlockLegacy@@UEAAXXZ:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 864]
 
@@ -592,263 +592,264 @@ global ?_unknown_110@BlockLegacy@@UEAAXXZ
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 880]
 
+; BlockLegacy_vtable[111] is unknown
+global ?_unknown_111@BlockLegacy@@UEAAXXZ
+?_unknown_111@BlockLegacy@@UEAAXXZ:
+	mov rax, [rel BlockLegacy_vtable]
+	jmp [rax + 888]
+
 global ?getComparatorSignal@BlockLegacy@@UEBAHAEAVBlockSource@@AEBVBlockPos@@AEBVBlock@@E@Z
 ?getComparatorSignal@BlockLegacy@@UEBAHAEAVBlockSource@@AEBVBlockPos@@AEBVBlock@@E@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 888]
+	jmp [rax + 896]
 
 global ?canSlide@BlockLegacy@@UEBA_NAEAVBlockSource@@AEBVBlockPos@@@Z
 ?canSlide@BlockLegacy@@UEBA_NAEAVBlockSource@@AEBVBlockPos@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 896]
-
-; BlockLegacy_vtable[113] is unknown
-global ?_unknown_113@BlockLegacy@@UEAAXXZ
-?_unknown_113@BlockLegacy@@UEAAXXZ:
-	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 904]
+
+; BlockLegacy_vtable[114] is unknown
+global ?_unknown_114@BlockLegacy@@UEAAXXZ
+?_unknown_114@BlockLegacy@@UEAAXXZ:
+	mov rax, [rel BlockLegacy_vtable]
+	jmp [rax + 912]
 
 global ?canSpawnAt@BlockLegacy@@UEBA_NAEBVBlockSource@@AEBVBlockPos@@@Z
 ?canSpawnAt@BlockLegacy@@UEBA_NAEBVBlockSource@@AEBVBlockPos@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 912]
+	jmp [rax + 920]
 
 global ?notifySpawnedAt@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@@Z
 ?notifySpawnedAt@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 920]
-
-; BlockLegacy_vtable[116] is unknown
-global ?_unknown_116@BlockLegacy@@UEAAXXZ
-?_unknown_116@BlockLegacy@@UEAAXXZ:
-	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 928]
+
+; BlockLegacy_vtable[117] is unknown
+global ?_unknown_117@BlockLegacy@@UEAAXXZ
+?_unknown_117@BlockLegacy@@UEAAXXZ:
+	mov rax, [rel BlockLegacy_vtable]
+	jmp [rax + 936]
 
 global ?getIconYOffset@BlockLegacy@@UEBAHXZ
 ?getIconYOffset@BlockLegacy@@UEBAHXZ:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 936]
+	jmp [rax + 944]
 
 global ?buildDescriptionId@BlockLegacy@@UEBA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBVBlock@@@Z
 ?buildDescriptionId@BlockLegacy@@UEBA?AV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@AEBVBlock@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 944]
+	jmp [rax + 952]
 
 global ?isAuxValueRelevantForPicking@BlockLegacy@@UEBA_NXZ
 ?isAuxValueRelevantForPicking@BlockLegacy@@UEBA_NXZ:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 952]
+	jmp [rax + 960]
 
 global ?getColor@BlockLegacy@@UEBAHAEAVBlockSource@@AEBVBlockPos@@AEBVBlock@@@Z
 ?getColor@BlockLegacy@@UEBAHAEAVBlockSource@@AEBVBlockPos@@AEBVBlock@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 960]
+	jmp [rax + 968]
 
 global ?getColor@BlockLegacy@@UEBAHAEBVBlock@@@Z
 ?getColor@BlockLegacy@@UEBAHAEBVBlock@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 968]
+	jmp [rax + 976]
 
 global ?getColorAtPos@BlockLegacy@@UEBAHAEAVBlockSource@@AEBVBlockPos@@@Z
 ?getColorAtPos@BlockLegacy@@UEBAHAEAVBlockSource@@AEBVBlockPos@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 976]
+	jmp [rax + 984]
 
 global ?getColorForParticle@BlockLegacy@@UEBAHAEAVBlockSource@@AEBVBlockPos@@AEBVBlock@@@Z
 ?getColorForParticle@BlockLegacy@@UEBAHAEAVBlockSource@@AEBVBlockPos@@AEBVBlock@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 984]
+	jmp [rax + 992]
 
 global ?isSeasonTinted@BlockLegacy@@UEBA_NAEBVBlock@@AEAVBlockSource@@AEBVBlockPos@@@Z
 ?isSeasonTinted@BlockLegacy@@UEBA_NAEBVBlock@@AEAVBlockSource@@AEBVBlockPos@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 992]
+	jmp [rax + 1000]
 
 global ?onGraphicsModeChanged@BlockLegacy@@UEAAXAEBUBlockGraphicsModeChangeContext@@@Z
 ?onGraphicsModeChanged@BlockLegacy@@UEAAXAEBUBlockGraphicsModeChangeContext@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 1000]
+	jmp [rax + 1008]
 
 global ?getShadeBrightness@BlockLegacy@@UEBAMAEBVBlock@@@Z
 ?getShadeBrightness@BlockLegacy@@UEBAMAEBVBlock@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 1008]
+	jmp [rax + 1016]
 
 global ?telemetryVariant@BlockLegacy@@UEBAHAEAVBlockSource@@AEBVBlockPos@@@Z
 ?telemetryVariant@BlockLegacy@@UEBAHAEAVBlockSource@@AEBVBlockPos@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 1016]
+	jmp [rax + 1024]
 
 global ?getVariant@BlockLegacy@@UEBAHAEBVBlock@@@Z
 ?getVariant@BlockLegacy@@UEBAHAEBVBlock@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 1024]
+	jmp [rax + 1032]
 
 global ?canSpawnOn@BlockLegacy@@UEBA_NPEAVActor@@@Z
 ?canSpawnOn@BlockLegacy@@UEBA_NPEAVActor@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 1032]
+	jmp [rax + 1040]
 
 global ?getRenderBlock@BlockLegacy@@UEBAAEBVBlock@@XZ
 ?getRenderBlock@BlockLegacy@@UEBAAEBVBlock@@XZ:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 1040]
+	jmp [rax + 1048]
 
 global ?getMappedFace@BlockLegacy@@UEBAEEAEBVBlock@@@Z
 ?getMappedFace@BlockLegacy@@UEBAEEAEBVBlock@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 1048]
+	jmp [rax + 1056]
 
 global ?getFaceFlip@BlockLegacy@@UEBA?AW4Flip@@EAEBVBlock@@@Z
 ?getFaceFlip@BlockLegacy@@UEBA?AW4Flip@@EAEBVBlock@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 1056]
+	jmp [rax + 1064]
 
 global ?animateTickBedrockLegacy@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@AEAVRandom@@@Z
 ?animateTickBedrockLegacy@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@AEAVRandom@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 1064]
+	jmp [rax + 1072]
 
 global ?animateTick@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@AEAVRandom@@@Z
 ?animateTick@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@AEAVRandom@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 1072]
+	jmp [rax + 1080]
 
 global ?init@BlockLegacy@@UEAAAEAV1@XZ
 ?init@BlockLegacy@@UEAAAEAV1@XZ:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 1080]
+	jmp [rax + 1088]
 
 global ?getLightEmission@BlockLegacy@@MEBA?AUBrightness@@AEBVBlock@@@Z
 ?getLightEmission@BlockLegacy@@MEBA?AUBrightness@@AEBVBlock@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 1088]
+	jmp [rax + 1096]
 
 global ?tryLegacyUpgrade@BlockLegacy@@UEBAPEBVBlock@@G@Z
 ?tryLegacyUpgrade@BlockLegacy@@UEBAPEBVBlock@@G@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 1096]
+	jmp [rax + 1104]
 
 global ?dealsContactDamage@BlockLegacy@@UEBA_NAEBVActor@@AEBVBlock@@_N@Z
 ?dealsContactDamage@BlockLegacy@@UEBA_NAEBVActor@@AEBVBlock@@_N@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 1104]
+	jmp [rax + 1112]
 
 global ?tryGetInfested@BlockLegacy@@UEBAPEBVBlock@@AEBV2@@Z
 ?tryGetInfested@BlockLegacy@@UEBAPEBVBlock@@AEBV2@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 1112]
+	jmp [rax + 1120]
 
 global ?tryGetUninfested@BlockLegacy@@UEBAPEBVBlock@@AEBV2@@Z
 ?tryGetUninfested@BlockLegacy@@UEBAPEBVBlock@@AEBV2@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 1120]
+	jmp [rax + 1128]
 
 global ?_addHardCodedBlockComponents@BlockLegacy@@UEAAXAEBVExperiments@@@Z
 ?_addHardCodedBlockComponents@BlockLegacy@@UEAAXAEBVExperiments@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 1128]
+	jmp [rax + 1136]
 
 global ?onRemove@BlockLegacy@@MEBAXAEAVBlockSource@@AEBVBlockPos@@@Z
 ?onRemove@BlockLegacy@@MEBAXAEAVBlockSource@@AEBVBlockPos@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 1136]
+	jmp [rax + 1144]
 
 global ?onExploded@BlockLegacy@@MEBAXAEAVBlockSource@@AEBVBlockPos@@PEAVActor@@@Z
 ?onExploded@BlockLegacy@@MEBAXAEAVBlockSource@@AEBVBlockPos@@PEAVActor@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 1144]
+	jmp [rax + 1152]
 
 global ?onStandOn@BlockLegacy@@MEBAXAEAVEntityContext@@AEBVBlockPos@@@Z
 ?onStandOn@BlockLegacy@@MEBAXAEAVEntityContext@@AEBVBlockPos@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 1152]
+	jmp [rax + 1160]
 
 global ?onPlace@BlockLegacy@@MEBAXAEAVBlockSource@@AEBVBlockPos@@@Z
 ?onPlace@BlockLegacy@@MEBAXAEAVBlockSource@@AEBVBlockPos@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 1160]
-
-; BlockLegacy_vtable[146] is unknown
-global ?_unknown_146@BlockLegacy@@MEAAXXZ
-?_unknown_146@BlockLegacy@@MEAAXXZ:
-	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 1168]
+
+; BlockLegacy_vtable[147] is unknown
+global ?_unknown_147@BlockLegacy@@UEAAXXZ
+?_unknown_147@BlockLegacy@@UEAAXXZ:
+	mov rax, [rel BlockLegacy_vtable]
+	jmp [rax + 1176]
 
 global ?tick@BlockLegacy@@MEBAXAEAVBlockSource@@AEBVBlockPos@@AEAVRandom@@@Z
 ?tick@BlockLegacy@@MEBAXAEAVBlockSource@@AEBVBlockPos@@AEAVRandom@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 1176]
+	jmp [rax + 1184]
 
 global ?randomTick@BlockLegacy@@MEBAXAEAVBlockSource@@AEBVBlockPos@@AEAVRandom@@@Z
 ?randomTick@BlockLegacy@@MEBAXAEAVBlockSource@@AEBVBlockPos@@AEAVRandom@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 1184]
-
-; BlockLegacy_vtable[149] is unknown
-global ?_unknown_149@BlockLegacy@@MEAAXXZ
-?_unknown_149@BlockLegacy@@MEAAXXZ:
-	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 1192]
+
+; BlockLegacy_vtable[150] is unknown
+global ?_unknown_150@BlockLegacy@@UEAAXXZ
+?_unknown_150@BlockLegacy@@UEAAXXZ:
+	mov rax, [rel BlockLegacy_vtable]
+	jmp [rax + 1200]
 
 global ?use@BlockLegacy@@MEBA_NAEAVPlayer@@AEBVBlockPos@@E@Z
 ?use@BlockLegacy@@MEBA_NAEAVPlayer@@AEBVBlockPos@@E@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 1200]
+	jmp [rax + 1208]
 
 global ?use@BlockLegacy@@MEBA_NAEAVPlayer@@AEBVBlockPos@@EV?$optional@VVec3@@@std@@@Z
 ?use@BlockLegacy@@MEBA_NAEAVPlayer@@AEBVBlockPos@@EV?$optional@VVec3@@@std@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 1208]
-
-; BlockLegacy_vtable[152] is unknown
-global ?_unknown_152@BlockLegacy@@MEAAXXZ
-?_unknown_152@BlockLegacy@@MEAAXXZ:
-	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 1216]
+
+; BlockLegacy_vtable[153] is unknown
+global ?_unknown_153@BlockLegacy@@UEAAXXZ
+?_unknown_153@BlockLegacy@@UEAAXXZ:
+	mov rax, [rel BlockLegacy_vtable]
+	jmp [rax + 1224]
 
 global ?canSurvive@BlockLegacy@@MEBA_NAEAVBlockSource@@AEBVBlockPos@@@Z
 ?canSurvive@BlockLegacy@@MEBA_NAEAVBlockSource@@AEBVBlockPos@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 1224]
+	jmp [rax + 1232]
 
 global ?getRenderLayer@BlockLegacy@@MEBA?AW4BlockRenderLayer@@AEBVBlock@@AEAVBlockSource@@AEBVBlockPos@@@Z
 ?getRenderLayer@BlockLegacy@@MEBA?AW4BlockRenderLayer@@AEBVBlock@@AEAVBlockSource@@AEBVBlockPos@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 1232]
+	jmp [rax + 1240]
 
 global ?getRenderLayer@BlockLegacy@@MEBA?AW4BlockRenderLayer@@XZ
 ?getRenderLayer@BlockLegacy@@MEBA?AW4BlockRenderLayer@@XZ:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 1240]
+	jmp [rax + 1248]
 
 global ?getExtraRenderLayers@BlockLegacy@@MEBAHXZ
 ?getExtraRenderLayers@BlockLegacy@@MEBAHXZ:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 1248]
+	jmp [rax + 1256]
 
 global ?getLight@BlockLegacy@@MEBA?AUBrightness@@AEBVBlock@@@Z
 ?getLight@BlockLegacy@@MEBA?AUBrightness@@AEBVBlock@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 1256]
+	jmp [rax + 1264]
 
 global ?getEmissiveBrightness@BlockLegacy@@MEBA?AUBrightness@@AEBVBlock@@@Z
 ?getEmissiveBrightness@BlockLegacy@@MEBA?AUBrightness@@AEBVBlock@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 1264]
+	jmp [rax + 1272]
 
 global ?getMapColor@BlockLegacy@@MEBA?AVColor@mce@@AEAVBlockSource@@AEBVBlockPos@@AEBVBlock@@@Z
 ?getMapColor@BlockLegacy@@MEBA?AVColor@mce@@AEAVBlockSource@@AEBVBlockPos@@AEBVBlock@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 1272]
+	jmp [rax + 1280]
 
 global ?_onHitByActivatingAttack@BlockLegacy@@EEBAXAEAVBlockSource@@AEBVBlockPos@@PEAVActor@@@Z
 ?_onHitByActivatingAttack@BlockLegacy@@EEBAXAEAVBlockSource@@AEBVBlockPos@@PEAVActor@@@Z:
-	mov rax, [rel BlockLegacy_vtable]
-	jmp [rax + 1280]
-
-global ?_spawnAfterBreak@BlockLegacy@@EEBAXAEAVBlockSource@@AEBVBlock@@AEBVBlockPos@@AEBUResourceDropsContext@@@Z
-?_spawnAfterBreak@BlockLegacy@@EEBAXAEAVBlockSource@@AEBVBlock@@AEBVBlockPos@@AEBUResourceDropsContext@@@Z:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 1288]
 

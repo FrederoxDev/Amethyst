@@ -131,7 +131,7 @@ public:
     /* this + 696 */ std::unordered_map<HashedString, uint64_t> mStateNameMap;
     /* this + 760 */ uint64_t mCreativeEnumState;
     /* this + 768 */ std::vector<std::unique_ptr<Block>> mBlockPermutations;
-    /* this + 792 */ std::byte padding792[162];
+    /* this + 792 */ std::byte padding792[160];
     /* this + 952 */ std::vector<std::shared_ptr<BlockLegacy::AlteredStateCollection>> mAlteredStateCollections;
     /* this + 976 */ std::byte padding976[8];
 
@@ -142,7 +142,7 @@ public:
     virtual ~BlockLegacy();
     virtual std::shared_ptr<BlockActor> newBlockEntity(const BlockPos& pos, const Block& block) const;
     virtual const Block* getNextBlockPermutation(const Block& currentBlock) const;
-    virtual bool waterSpreadCausesSpawn() const;
+    virtual bool shouldConnectToRedstone(BlockSource&, const BlockPos&, Direction::Type) const;
     virtual HitResult clip(const Block&, const BlockSource&, const BlockPos&, const Vec3&, const Vec3&, ShapeType, optional_ref<const GetCollisionShapeInterface>) const;
     virtual AABB getCollisionShape(const Block&, const IConstBlockSource&, const BlockPos&, optional_ref<const GetCollisionShapeInterface>) const;
     virtual bool getCollisionShapeForCamera(AABB&, const Block&, const IConstBlockSource&, const BlockPos&) const;
@@ -156,7 +156,7 @@ public:
     virtual bool isObstructingChests(BlockSource& region, const BlockPos& pos, const Block& thisBlock) const;
     virtual Vec3 randomlyModifyPosition(const BlockPos& pos, int& seed) const;
     virtual Vec3 randomlyModifyPosition(const BlockPos& pos) const;
-    virtual void onRedstoneUpdate(BlockSource& region, const BlockPos& pos, int strength, bool isFirstTime) const;
+    virtual void onProjectileHit(BlockSource& region, const BlockPos& pos, const Actor& projectile) const;
     virtual void onLightningHit(BlockSource& region, const BlockPos& pos) const;
     virtual bool liquidCanFlowIntoFromDirection(unsigned char, std::function<const Block&>(const BlockPos&));
     virtual void _unknown_20();
@@ -165,55 +165,56 @@ public:
     virtual bool canProvideSupport(const Block& block, unsigned char face, BlockSupportType type) const;
     virtual bool canProvideMultifaceSupport(const Block& block, unsigned char face) const;
     virtual bool canConnect(const Block& otherBlock, unsigned char toOther, const Block& thisBlock) const;
+    virtual void _unknown_26();
     virtual const CopperBehavior* tryGetCopperBehavior() const;
-    virtual void _unknown_27();
     virtual void _unknown_28();
     virtual void _unknown_29();
     virtual void _unknown_30();
     virtual void _unknown_31();
+    virtual void _unknown_32();
     virtual bool isWaterBlocking() const;
-    virtual void _unknown_33();
     virtual void _unknown_34();
     virtual void _unknown_35();
     virtual void _unknown_36();
+    virtual void _unknown_37();
     virtual bool isStairBlock() const;
     virtual bool isSlabBlock() const;
     virtual bool isDoubleSlabBlock() const;
-    virtual void _unknown_40();
     virtual void _unknown_41();
     virtual void _unknown_42();
     virtual void _unknown_43();
     virtual void _unknown_44();
     virtual void _unknown_45();
     virtual void _unknown_46();
+    virtual void _unknown_47();
     virtual bool canBeOriginalSurface() const;
-    virtual void _unknown_48();
+    virtual void _unknown_49();
     virtual bool isValidAuxValue(int value) const;
     virtual bool canFillAtPos(BlockSource& region, const BlockPos& pos, const Block& block) const;
     virtual const Block& sanitizeFillBlock(const Block&) const;
     virtual void onFillBlock(BlockSource& region, const BlockPos& pos, const Block& block) const;
     virtual int getDirectSignal(BlockSource& region, const BlockPos& pos, int dir) const;
-    virtual void _unknown_54();
     virtual void _unknown_55();
+    virtual void _unknown_56();
     virtual bool canContainLiquid() const;
     virtual std::optional<HashedString> getRequiredMedium() const;
-    virtual bool shouldConnectToRedstone(BlockSource&, const BlockPos&, Direction::Type) const;
+    virtual void _unknown_59();
     virtual void handlePrecipitation(BlockSource& region, const BlockPos& pos, float downfallAmount, float temperature) const;
     virtual bool canBeUsedInCommands(const BaseGameVersion& baseGameVersion) const;
     virtual bool checkIsPathable(Actor& entity, const BlockPos& lastPathPos, const BlockPos& pathPos) const;
     virtual bool shouldDispense(BlockSource& region, Container& container) const;
     virtual bool dispense(BlockSource& region, Container& container, int slot, const Vec3& pos, unsigned char face) const;
     virtual void transformOnFall(BlockSource& region, const BlockPos& pos, Actor* entity, float fallDistance) const;
-    virtual void _unknown_65();
+    virtual void onRedstoneUpdate(BlockSource& region, const BlockPos& pos, int strength, bool isFirstTime) const;
     virtual void onMove(BlockSource& region, const BlockPos& from, const BlockPos& to) const;
-    virtual void _unknown_67();
+    virtual void _unknown_68();
     virtual void movedByPiston(BlockSource& region, const BlockPos& pos) const;
     virtual void onStructureBlockPlace(BlockSource& region, const BlockPos& pos) const;
     virtual void onStructureNeighborBlockPlace(BlockSource& region, const BlockPos& pos) const;
     virtual void setupRedstoneComponent(BlockSource& region, const BlockPos& pos) const;
     virtual BlockProperty getRedstoneProperty(BlockSource& region, const BlockPos& pos) const;
     virtual void updateEntityAfterFallOn(const BlockPos& pos, UpdateEntityAfterFallOnInterface& entity) const;
-    virtual void _unknown_74();
+    virtual void _unknown_75();
     virtual bool isPreservingMediumWhenPlaced(const BlockLegacy* medium) const;
     virtual bool isFilteredOut(BlockRenderLayer heldItemRenderLayer) const;
     virtual bool canRenderSelectionOverlay(BlockRenderLayer) const;
@@ -235,7 +236,7 @@ public:
     virtual bool getSecondPart(const IConstBlockSource&, const BlockPos&, BlockPos&) const;
     virtual const Block* playerWillDestroy(Player& player, const BlockPos& pos, const Block& block) const;
     virtual ItemInstance asItemInstance(const Block& block, const BlockActor* a4) const;
-    virtual void trySpawnResourcesOnExplosion(BlockSource&, const BlockPos&, const Block&, Randomize&, float) const;
+    virtual void spawnAfterBreak(BlockSource&, const Block&, const BlockPos&, const ResourceDropsContext&) const;
     virtual const Block& getPlacementBlock(const Actor&, const BlockPos&, unsigned char, const Vec3&, int) const;
     virtual int calcVariant(BlockSource& region, const BlockPos& pos, const mce::Color& baseColor) const;
     virtual bool isAttachedTo(BlockSource& region, const BlockPos& pos, BlockPos& outAttachedTo) const;
@@ -247,15 +248,15 @@ public:
     virtual void executeEvent(BlockSource& region, const BlockPos& pos, const Block& block, const std::string& eventName, Actor& sourceEntity) const;
     virtual const MobSpawnerData* getMobToSpawn(const SpawnConditions& conditions, BlockSource& region) const;
     virtual bool shouldStopFalling(Actor& entity) const;
-    virtual void _unknown_108();
     virtual void _unknown_109();
     virtual void _unknown_110();
+    virtual void _unknown_111();
     virtual int getComparatorSignal(BlockSource& region, const BlockPos& pos, const Block& block, unsigned char dir) const;
     virtual bool canSlide(BlockSource& region, const BlockPos& pos) const;
-    virtual void _unknown_113();
+    virtual void _unknown_114();
     virtual bool canSpawnAt(const BlockSource& region, const BlockPos& pos) const;
     virtual void notifySpawnedAt(BlockSource& region, const BlockPos& pos) const;
-    virtual void _unknown_116();
+    virtual void _unknown_117();
     virtual int getIconYOffset() const;
     virtual std::string buildDescriptionId(const Block&) const;
     virtual bool isAuxValueRelevantForPicking() const;
@@ -291,13 +292,13 @@ protected:
     virtual void onExploded(BlockSource& region, const BlockPos& pos, Actor* entitySource) const;
     virtual void onStandOn(EntityContext& entity, const BlockPos& pos) const;
     virtual void onPlace(BlockSource& region, const BlockPos& pos) const;
-    virtual void _unknown_146();
+    virtual void _unknown_147();
     virtual void tick(BlockSource& region, const BlockPos& pos, Random& random) const;
     virtual void randomTick(BlockSource& region, const BlockPos& pos, Random& random) const;
-    virtual void _unknown_149();
+    virtual void _unknown_150();
     virtual bool use(Player&, const BlockPos&, unsigned char, std::optional<Vec3>) const;
     virtual bool use(Player& player, const BlockPos& pos, unsigned char face) const;
-    virtual void _unknown_152();
+    virtual void _unknown_153();
     virtual bool canSurvive(BlockSource& region, const BlockPos& pos) const;
     virtual BlockRenderLayer getRenderLayer() const;
     virtual BlockRenderLayer getRenderLayer(const Block& block, BlockSource& a3, const BlockPos& pos) const;
@@ -308,7 +309,6 @@ protected:
 
 private:
     virtual void _onHitByActivatingAttack(BlockSource&, const BlockPos&, Actor*) const;
-    virtual void _spawnAfterBreak(BlockSource&, const Block&, const BlockPos&, const ResourceDropsContext&) const;
     virtual void entityInside(BlockSource& a2, const BlockPos& a3, Actor& a4) const;
 
 public:
@@ -322,4 +322,5 @@ private:
 };
 #pragma pack(pop)
 
-//static_assert(sizeof(BlockLegacy) == 984);
+// 1.21.0.3
+static_assert(sizeof(BlockLegacy) == 984);
