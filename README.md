@@ -29,6 +29,15 @@ Better Inventory is an inventory improvement mod for Minecraft Bedrock edition, 
 
 A small mod which adds in an "Optifine" like zoom into the game.
 
+<br />
+
+### - [Sky's the limit](https://github.com/Adrian8115/Skys-the-Limit)
+
+| ![image](https://github.com/Adrian8115/Skys-the-Limit/blob/8c60833de0e20860e36b4e2212be04bc5bb813cf/assets/img1.png) | ![image](https://github.com/Adrian8115/Skys-the-Limit/blob/8c60833de0e20860e36b4e2212be04bc5bb813cf/assets/img2.png) |
+|----------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------|
+
+A simple Minecraft Bedrock mod that increases the maximum build limit in all dimensions to 2048 blocks.
+
 ### Using the API for other projects
 
 To link AmethystAPI with another mod, we use an environment variable `%amethyst_src%` to point to the cloned repository. Here is a quick list of commands to clone Amethyst into the Documents folder and setup the environment variable automatically.
