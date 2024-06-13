@@ -29,12 +29,12 @@ void AmethystRuntime::Start()
     // Prompt a debugger if they are in developer mode
     if (mLauncherConfig.promptDebugger) PromptDebugger();
 
-    LoadModDlls();
+    LoadModDlls(); 
 
     // Create our hooks then run the mods
     CreateOwnHooks();
     RunMods();
-}
+} 
 
 void AmethystRuntime::ReadLauncherConfig()
 {

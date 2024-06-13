@@ -7,5 +7,6 @@ namespace Bedrock {
     class Result : public nonstd::expected<T, ErrorInfo<Err>> {
         using Base = nonstd::expected<T, ErrorInfo<Err>>;
         using Base::Base;
+        std::byte padding24[100];
     };
 };

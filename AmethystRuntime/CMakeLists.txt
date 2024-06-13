@@ -3,8 +3,8 @@ set(MOD_VERSION "1.2.2")
 set(MOD_AUTHOR "FrederoxDev")
 
 set(MOD_TARGET_VERSION_MAJOR 1)
-set(MOD_TARGET_VERSION_MINOR 20)
-set(MOD_TARGET_VERSION_PATCH 7101)
+set(MOD_TARGET_VERSION_MINOR 21)
+set(MOD_TARGET_VERSION_PATCH 3)
 
 # Amethyst Minecraft Folder
 set(AmethystFolder "$ENV{localappdata}/Packages/Microsoft.MinecraftUWP_8wekyb3d8bbwe/AC/Amethyst/")
