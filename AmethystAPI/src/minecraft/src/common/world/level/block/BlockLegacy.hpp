@@ -21,11 +21,11 @@
 #include <minecraft/src/common/world/level/block/Block.hpp>
 #include "actor/BlockActorRendererId.hpp"
 #include <minecraft/src/common/world/level/block/actor/BlockActor.hpp>
+#include <minecraft/src/common/world/phys/HitResult.hpp>
+#include <minecraft/src/common/world/level/block/GetCollisionShapeInterface.hpp>
+#include <minecraft/src/common/world/phys/ShapeType.hpp>
 
 // Auto-generated: Unknown complete types
-class HitResult {};
-enum ShapeType {};
-class GetCollisionShapeInterface {};
 enum BlockSupportType {};
 namespace Direction {
 enum Type {};

@@ -3,8 +3,8 @@ section .text
 extern BlockItem_vtable
 extern BlockItem_ctor
 
-global ??0BlockItem@@QEAA@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@F@Z
-??0BlockItem@@QEAA@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@F@Z:
+global ??0BlockItem@@QEAA@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@FAEBVHashedString@@@Z
+??0BlockItem@@QEAA@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@FAEBVHashedString@@@Z:
     mov rax, [rel BlockItem_ctor]
     jmp rax
 

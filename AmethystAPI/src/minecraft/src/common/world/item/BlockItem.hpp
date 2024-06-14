@@ -13,5 +13,5 @@ protected:
     virtual bool _calculatePlacePos(ItemStackBase&, Actor&, unsigned char&, BlockPos&) const override;
     virtual InteractionResult _useOn(ItemStack&, Actor&, BlockPos, unsigned char, const Vec3&) const override;
 public:
-    BlockItem(const std::string& nameId, short mId);
+    BlockItem(const std::string& nameId, short mId, const HashedString& unknown);
 };

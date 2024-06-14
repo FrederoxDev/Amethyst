@@ -104,8 +104,8 @@ global ?onLightningHit@BlockLegacy@@UEBAXAEAVBlockSource@@AEBVBlockPos@@@Z
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 144]
 
-global ?liquidCanFlowIntoFromDirection@BlockLegacy@@UEBA_NEAEBV?$function@$$A6AAEBVBlock@@AEBVBlockPos@@@Z@std@@AEBVBlockPos@@@Z
-?liquidCanFlowIntoFromDirection@BlockLegacy@@UEBA_NEAEBV?$function@$$A6AAEBVBlock@@AEBVBlockPos@@@Z@std@@AEBVBlockPos@@@Z:
+global ?liquidCanFlowIntoFromDirection@BlockLegacy@@UEAA_NEP6A?AV?$function@AEBVBlock@@@std@@AEBVBlockPos@@@Z@Z
+?liquidCanFlowIntoFromDirection@BlockLegacy@@UEAA_NEP6A?AV?$function@AEBVBlock@@@std@@AEBVBlockPos@@@Z@Z:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 152]
 
@@ -776,8 +776,8 @@ global ?onPlace@BlockLegacy@@MEBAXAEAVBlockSource@@AEBVBlockPos@@@Z
 	jmp [rax + 1168]
 
 ; BlockLegacy_vtable[147] is unknown
-global ?_unknown_147@BlockLegacy@@UEAAXXZ
-?_unknown_147@BlockLegacy@@UEAAXXZ:
+global ?_unknown_147@BlockLegacy@@MEAAXXZ
+?_unknown_147@BlockLegacy@@MEAAXXZ:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 1176]
 
@@ -792,8 +792,8 @@ global ?randomTick@BlockLegacy@@MEBAXAEAVBlockSource@@AEBVBlockPos@@AEAVRandom@@
 	jmp [rax + 1192]
 
 ; BlockLegacy_vtable[150] is unknown
-global ?_unknown_150@BlockLegacy@@UEAAXXZ
-?_unknown_150@BlockLegacy@@UEAAXXZ:
+global ?_unknown_150@BlockLegacy@@MEAAXXZ
+?_unknown_150@BlockLegacy@@MEAAXXZ:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 1200]
 
@@ -808,8 +808,8 @@ global ?use@BlockLegacy@@MEBA_NAEAVPlayer@@AEBVBlockPos@@EV?$optional@VVec3@@@st
 	jmp [rax + 1216]
 
 ; BlockLegacy_vtable[153] is unknown
-global ?_unknown_153@BlockLegacy@@UEAAXXZ
-?_unknown_153@BlockLegacy@@UEAAXXZ:
+global ?_unknown_153@BlockLegacy@@MEAAXXZ
+?_unknown_153@BlockLegacy@@MEAAXXZ:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 1224]
 

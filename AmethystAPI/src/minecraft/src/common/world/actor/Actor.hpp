@@ -12,9 +12,9 @@ class Actor {
 public:
     /* this + 0   */ uintptr_t** vtable;
     /* this + 8   */ EntityContext mEntityContext;
-    /* this + 32  */ std::byte padding32[552];
-    /* this + 584 */ std::weak_ptr<Dimension> mDimension;
-    /* this + 600 */ std::byte padding600[624];
+    /* this + 32  */ std::byte padding32[544];
+    /* this + 584 */ std::weak_ptr<Dimension> mDimension; // moved -8 in 1.21
+    /* this + 592 */ std::byte padding592[632];
 
 public:
     Vec3* getPosition();

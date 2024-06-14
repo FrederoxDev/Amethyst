@@ -30,23 +30,23 @@ public:
     };
 
     // Found in BlockTypeRegistry::registerBlock
-    // 1.20.71.1 - 0x5874B30
+    // 1.21.0.3 - 0x59DF328
     static std::set<std::string>* mKnownNamespaces() {
-        static auto* knownNamespaces = reinterpret_cast<std::set<std::string>*>(SlideAddress(0x5874B30));
+        static auto* knownNamespaces = reinterpret_cast<std::set<std::string>*>(SlideAddress(0x59DF328));
         return knownNamespaces;
     }
 
     // Found in BlockTypeRegistry::forEachBlock
-    // 1.20.71.1 - 0x5874B00
+    // 1.21.0.3 - 0x59DF300
     static BlockLookupMap* mBlockLookupMap() {
-        static auto* lookupMap = reinterpret_cast<BlockLookupMap*>(SlideAddress(0x5874B00));
+        static auto* lookupMap = reinterpret_cast<BlockLookupMap*>(SlideAddress(0x59DF300));
         return lookupMap;
     }
 
     // Found in BlockTypeRegistry::getBlockNameFromNameHash
-    // 1.20.71.1 - 0x566FD40
+    // 1.21.0.3 - 0x57D14E0
     static BlockNameHashToHashedStringMap* mBlockNameHashToStringMap() {
-        static auto* map = reinterpret_cast<BlockNameHashToHashedStringMap*>(SlideAddress(0x566FD40));
+        static auto* map = reinterpret_cast<BlockNameHashToHashedStringMap*>(SlideAddress(0x57D14E0));
         return map;
     }
 
