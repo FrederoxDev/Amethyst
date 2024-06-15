@@ -1,8 +1,10 @@
 #pragma once
-#include <cstdint>
-#include <cstddef>
-#include "minecraft/src-deps/minecraftrenderer/renderer/MeshContext.hpp"
 #include "minecraft/src-deps/minecraftrenderer/renderer/MaterialPtr.hpp"
+#include "minecraft/src-deps/minecraftrenderer/renderer/MeshContext.hpp"
+#include "minecraft/src-client/common/client/renderer/TexturePtr.hpp"
+#include <cstddef>
+#include <cstdint>
+#include <variant>
 
 namespace mce {
     class Mesh {
@@ -11,6 +13,7 @@ namespace mce {
 
     public:
         void renderMesh(mce::MeshContext* meshContext, const mce::MaterialPtr* materialPtr);
+        void renderMesh(mce::MeshContext* meshContext, const mce::MaterialPtr* materialPtr, const std::variant<std::monostate, mce::TexturePtr>* texture);
     };
 
     static_assert(sizeof(Mesh) == 536);

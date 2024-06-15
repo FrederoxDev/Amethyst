@@ -21,6 +21,20 @@ void Tessellator::vertex(const Vec3& vec) {
     this->vertex(vec.x, vec.y, vec.z);
 }
 
+void Tessellator::vertexUV(float x, float y, float z, float uvX, float uvY)
+{
+    using function = void(Tessellator::*)(float, float, float, float, float);
+    // 1.20.72 - found: xref of Tessellator::vertex(float, float, float)
+    static auto func = std::bit_cast<function>(SigScan("48 83 EC ? 80 B9 ? ? ? ? ? 0F 57 E4"));
+    (this->*func)(x, y, z, uvX, uvY);
+}
+
+
+void Tessellator::vertexUV(const Vec3& vec, float uvX, float uvY)
+{
+    this -> vertexUV(vec.x, vec.y, vec.z, uvX, uvY);
+}
+
 mce::Mesh Tessellator::end(uint64_t a3, std::string_view debugName, int a5) {
     using function = decltype(&Tessellator::end);
     static auto func = std::bit_cast<function>(SigScan("48 8B C4 48 89 58 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D A8 ? ? ? ? 48 81 EC ? ? ? ? 0F 29 70 ? 0F 29 78 ? 44 0F 29 40 ? 44 0F 29 48 ? 44 0F 29 90 ? ? ? ? 44 0F 29 98 ? ? ? ? 44 0F 29 A0 ? ? ? ? 44 0F 29 A8 ? ? ? ? 44 0F 29 B0 ? ? ? ? 44 0F 29 B8 ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4D 8B F9"));
