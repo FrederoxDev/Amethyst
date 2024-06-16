@@ -7,7 +7,7 @@
   </h1>
 </div>
 
-Project Amethyst is an open source-project for building client-side mods for Minecraft Bedrock `1.20.71.1`, client-side mods are able to stretch past the limitations of addons and have full control over the game such as using Minecraft's input system, creating your own user interfaces, changing vanilla functionality, and more. Please consider starring ⭐ the repository, doing this takes a significant amount of work.
+Project Amethyst is an open source-project for building client-side mods for Minecraft Bedrock `1.21.0.3`, client-side mods are able to stretch past the limitations of addons and have full control over the game such as using Minecraft's input system, creating your own user interfaces, changing vanilla functionality, and more. Please consider starring ⭐ the repository, doing this takes a significant amount of work.
 
 <br />
 <h2 align="center">Mods built with Amethyst</h2>
@@ -17,7 +17,7 @@ Project Amethyst is an open source-project for building client-side mods for Min
 | ![image](https://github.com/FrederoxDev/Better-Inventory/assets/69014593/a6f26fd7-f934-4a9a-95ba-5f03eb950509) | ![image](https://github.com/FrederoxDev/Better-Inventory/assets/69014593/97290890-1a12-4c61-a9ac-407bf78289d6) |
 |----------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------|
 
-Better Inventory is an inventory improvement mod for Minecraft Bedrock edition, version `1.20.71.1`. It adds in a shulker box preview, as well as the ability to see extra information about other items, like its identifier, namespace, durability and aux id.
+Better Inventory is an inventory improvement mod for Minecraft Bedrock edition, version `1.21.0.3`. It adds in a shulker box preview, as well as the ability to see extra information about other items, like its identifier, namespace, durability and aux id.
 
 <br />
 
