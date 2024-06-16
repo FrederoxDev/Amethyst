@@ -95,8 +95,8 @@ public:
     virtual bool setBlock(const BlockPos& pos, const Block& block, int updateFlags, const ActorBlockSyncMessage* syncMsg, Actor* blockChangeSource);
     virtual short getMinHeight() const;
     virtual short getMaxHeight() const;
-    virtual void _unknown_36();
-    virtual void _unknown_37();
+    virtual Dimension& getDimension() const;
+    virtual const Dimension& getDimensionConst() const;
     virtual void _unknown_38();
     virtual LevelChunk* getChunk(int x, int z) const;
     virtual LevelChunk* getChunk(const ChunkPos& pos) const;
