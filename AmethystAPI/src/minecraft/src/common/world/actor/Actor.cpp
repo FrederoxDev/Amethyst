@@ -1,8 +1,13 @@
 #include "minecraft/src/common/world/actor/Actor.hpp"
 
-Vec3* Actor::getPosition()
+Vec3* Actor::getPosition() const
 {
-    return &tryGetComponent<StateVectorComponent>()->mPos;
+    return &mBuiltInComponents.mStateVectorComponent->mPos;
+}
+
+Vec2* Actor::getHeadRot() const
+{
+    return &mBuiltInComponents.mActorRotationComponent->mHeadRot;
 }
 
 const Dimension& Actor::getDimensionConst() const
