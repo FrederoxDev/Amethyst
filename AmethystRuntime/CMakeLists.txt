@@ -49,4 +49,4 @@ target_compile_options(AmethystRuntime PRIVATE
 target_compile_definitions(AmethystRuntime PUBLIC ENTT_PACKED_PAGE=128)
 
 # Make the folder structure with Visual Studio's virtual folders
-source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/src" FILES ${AmethystRuntime_All})
+source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}/src" FILES ${AmethystRuntime_All}) 
