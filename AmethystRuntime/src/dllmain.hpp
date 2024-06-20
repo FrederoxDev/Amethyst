@@ -11,4 +11,4 @@ void ShutdownWait();
 
 extern "C" __declspec(dllexport) void __cdecl Init(DWORD dMcThreadID, HANDLE hMcThreadHandle);
 
-LONG WINAPI ExceptionHandler(EXCEPTION_POINTERS* ExceptionInfo);
+LONG WINAPI AmethystUnhandledExceptionsHandler(EXCEPTION_POINTERS* ExceptionInfo);

@@ -1,23 +1,37 @@
 #pragma once
+#include <gsl/gsl>
 #include "amethyst/Memory.hpp"
 #include "minecraft/src/common/world/entity/EntityContext.hpp"
 #include "minecraft/src/common/world/entity/components/ActorHeadRotationComponent.hpp"
 #include "minecraft/src/common/world/entity/components/ActorRotationComponent.hpp"
 #include "minecraft/src/common/world/entity/components/StateVectorComponent.hpp"
 #include "minecraft/src/common/world/phys/Vec3.hpp"
+#include "minecraft/src/common/world/phys/Vec2.hpp"
 
 class Dimension;
+class AABBShapeComponent;
+class ActorWalkAnimationComponent;
+
+struct BuiltInActorComponents {
+    gsl::not_null<StateVectorComponent*> mStateVectorComponent;
+    gsl::not_null<AABBShapeComponent*> mAABBShapeComponent;
+    gsl::not_null<ActorRotationComponent*> mActorRotationComponent;
+    gsl::not_null<ActorWalkAnimationComponent*> mWalkAnimationComponent;
+};
 
 class Actor {
 public:
     /* this + 0   */ uintptr_t** vtable;
     /* this + 8   */ EntityContext mEntityContext;
     /* this + 32  */ std::byte padding32[552];
-    /* this + 584 */ std::weak_ptr<Dimension> mDimension;
-    /* this + 600 */ std::byte padding600[624];
+    /* this + 584 */ std::weak_ptr<Dimension> mDimension; // moved -8 in 1.21
+    /* this + 600 */ std::byte padding600[56];
+    /* this + 656 */ BuiltInActorComponents mBuiltInComponents; // 1.21
+    /* this + 688 */ std::byte padding688[536];
 
 public:
-    Vec3* getPosition();
+    Vec3* getPosition() const;
+    Vec2* getHeadRot() const;
     const Dimension& getDimensionConst() const;
 
     template <typename T>

@@ -3,3 +3,14 @@
 
 struct Brightness : public NewType<unsigned char> {
 };
+
+using Height = short;
+
+enum class SubClientId : unsigned char {
+	PrimaryClient, 
+	Client2, 
+	Client3, 
+	Client4, 
+	ExtraIdSlotStart = 100, 
+	EditorUI
+};

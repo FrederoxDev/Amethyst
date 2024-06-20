@@ -6,6 +6,7 @@ class BedrockTextureData;
 
 namespace mce {
     class TexturePtr {
-        std::byte padding0[72];
+    public:
+        std::byte padding0[4000];
     };
 } // namespace mce

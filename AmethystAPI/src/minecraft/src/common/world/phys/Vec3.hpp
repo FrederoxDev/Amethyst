@@ -1,4 +1,6 @@
 #pragma once
+#include <fmt/core.h>
+#include <fmt/format.h>
 
 class Vec3 {
 public:
@@ -24,4 +26,15 @@ public:
     void rotateAroundYDegrees(float angleDegrees);
     void rotateAroundZDegrees(float angleDegrees);
     void rotateAroundPointDegrees(const Vec3& pivot, const Vec3& angle);
+};
+
+template <>
+struct fmt::formatter<Vec3> {
+    constexpr auto parse(fmt::format_parse_context& ctx) { return ctx.begin(); }
+
+    template <typename FormatContext>
+    auto format(const Vec3& pos, FormatContext& ctx)
+    {
+        return fmt::format_to(ctx.out(), "Vec3(x: {}, y: {}, z: {})", pos.x, pos.y, pos.z);
+    }
 };

@@ -5,8 +5,14 @@
 #include "minecraft/src-client/common/client/renderer/RenderMaterialGroup.hpp"
 
 namespace mce {
+    class RenderMaterialInfo : public std::enable_shared_from_this<RenderMaterialInfo> {
+    public:
+        HashedString mHashedName;
+    };
+
     class MaterialPtr {
-        std::byte padding0[16];
+    public:
+        std::shared_ptr<RenderMaterialInfo> mRenderMaterialInfoPtr;
 
     public:
         MaterialPtr(mce::RenderMaterialGroupBase &, const HashedString &);

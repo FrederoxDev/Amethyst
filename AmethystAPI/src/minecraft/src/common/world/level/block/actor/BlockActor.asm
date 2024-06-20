@@ -69,9 +69,8 @@ global ?onPlace@BlockActor@@UEAAXAEAVBlockSource@@@Z
 	mov rax, [rel BlockActor_vtable]
 	jmp [rax + 88]
 
-; BlockActor_vtable[12] is unknown
-global ?_unknown_12@BlockActor@@UEAAXXZ
-?_unknown_12@BlockActor@@UEAAXXZ:
+global ?onMove@BlockActor@@UEAAXXZ
+?onMove@BlockActor@@UEAAXXZ:
 	mov rax, [rel BlockActor_vtable]
 	jmp [rax + 96]
 

@@ -1,13 +1,12 @@
 #pragma once
-
 #include <map>
 #include <set>
 #include "minecraft/src-deps/core/string/StringHash.hpp"
 #include "minecraft/src/common/world/level/block/BlockLegacy.hpp"
 #include "minecraft/src/common/SharedPtr.hpp"
 #include "entt/container/dense_map.hpp"
-#include "minecraft/src-deps/core/utility/StringUtils.hpp"
 #include "minecraft/src/common/world/level/block/Block.hpp"
+#include "minecraft/src-deps/core/utility/StringUtils.hpp"
 
 typedef std::map<HashedString, SharedPtr<BlockLegacy>> BlockLookupMap;
 typedef entt::dense_map<HashType64, HashedString> BlockNameHashToHashedStringMap;
@@ -31,30 +30,30 @@ public:
     };
 
     // Found in BlockTypeRegistry::registerBlock
-    // 1.20.71.1 - 0x5874B30
+    // 1.21.0.3 - 0x59DF328
     static std::set<std::string>* mKnownNamespaces() {
-        static auto* knownNamespaces = reinterpret_cast<std::set<std::string>*>(SlideAddress(0x5874B30));
+        static auto* knownNamespaces = reinterpret_cast<std::set<std::string>*>(SlideAddress(0x59DF328));
         return knownNamespaces;
     }
 
     // Found in BlockTypeRegistry::forEachBlock
-    // 1.20.71.1 - 0x5874B00
+    // 1.21.0.3 - 0x59DF300
     static BlockLookupMap* mBlockLookupMap() {
-        static auto* lookupMap = reinterpret_cast<BlockLookupMap*>(SlideAddress(0x5874B00));
+        static auto* lookupMap = reinterpret_cast<BlockLookupMap*>(SlideAddress(0x59DF300));
         return lookupMap;
     }
 
     // Found in BlockTypeRegistry::getBlockNameFromNameHash
-    // 1.20.71.1 - 0x566FD40
+    // 1.21.0.3 - 0x57D14E0
     static BlockNameHashToHashedStringMap* mBlockNameHashToStringMap() {
-        static auto* map = reinterpret_cast<BlockNameHashToHashedStringMap*>(SlideAddress(0x566FD40));
+        static auto* map = reinterpret_cast<BlockNameHashToHashedStringMap*>(SlideAddress(0x57D14E0));
         return map;
     }
 
-    // 1.20.51.1 - 48 89 5C 24 ? 57 48 83 EC ? 33 FF 45 33 C9
+    // 1.20.51.1 - 48 89 5C 24 ? 57 48 83 EC ? 33 FF 45 31 C9
     static const Block* getDefaultBlockState(const HashedString& name) {
         using function = Block*(*)(const HashedString&);
-        static auto func = reinterpret_cast<function>(SigScan("48 89 5C 24 ? 57 48 83 EC ? 33 FF 45 33 C9"));
+        static auto func = reinterpret_cast<function>(SigScan("48 89 5C 24 ? 57 48 83 EC ? 33 FF 45 31 C9"));
         return func(name);
     }
 
@@ -99,10 +98,10 @@ public:
         return block;
     }
 
-    // 1.20.71.1 - 40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 45 8B F0 
+    // 1.21.0.3 - 40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 45 8B E0 44 89 44 24
     static LookupByNameImplReturnType _lookupByNameImpl(const HashedString& name, int data, LookupByNameImplResolve resolve) {
         using function = decltype(&BlockTypeRegistry::_lookupByNameImpl);
-        static auto func = std::bit_cast<function>(SigScan("40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 45 8B F0"));
+        static auto func = std::bit_cast<function>(SigScan("40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 45 8B E0 44 89 44 24"));
         return func(name, data, resolve);
     }
 };

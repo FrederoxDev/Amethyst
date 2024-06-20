@@ -5,6 +5,7 @@
 #include "amethyst/runtime/minecraft/MinecraftPackageInfo.hpp"
 #include "amethyst/runtime/mod/Mod.hpp"
 #include "amethyst/runtime/patchManager/PatchManager.hpp"
+#include "amethyst/MinecraftVtables.hpp"
 #include "minecraft/src-client/common/client/game/ClientInstance.hpp"
 #include "minecraft/src-client/common/client/input/MinecraftInputHandler.hpp"
 #include "minecraft/src-client/common/client/options/Options.hpp"

@@ -27,6 +27,9 @@ public:
     uintptr_t** vtable1; // PlayerInventory::`vftable'{for `ContainerContentChangeListener'}
     int32_t mSelected;
     ItemStack mInfiniteItem;
-    ContainerID mSelectedContainerId;
+    std::byte padding184[8]; /* seems to be removed sometime after .71 */
     std::unique_ptr<Inventory> mInventory;
+    std::vector<ItemStack> mComplexItems;
 };
+
+static_assert(offsetof(PlayerInventory, mInventory) == 192);

@@ -45,8 +45,7 @@ uintptr_t SigScan(std::string_view signature) {
     auto result = SigScanSafe(signature);
 
     if (!result.has_value()) {
-        std::string errorMessage = fmt::format("Failed to find signature \"{:s}\"", signature);
-        throw std::exception(errorMessage.c_str());
+        Assert("Failed to find signature \"{:s}\"", signature);
     }
 
     return result.value();
