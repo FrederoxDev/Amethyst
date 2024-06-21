@@ -5,9 +5,9 @@ class GameRule {
 public:
     /* this + 0 */ std::byte padding0[8];
     /* this + 8 */ std::string name;
-    /* this + 40 */ std::byte padding1[3];
+    /* this + 40 */ std::byte padding40[3];
     /* this + 43 */ bool requiresCheats;
-    /* this + 44 */ std::byte padding2[132];
+    /* this + 44 */ std::byte padding44[132];
 };
 
 class GameRules {
