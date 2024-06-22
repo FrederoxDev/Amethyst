@@ -1,25 +1,15 @@
 #include "amethyst/Utility.hpp"
-#include <winrt/base.h>
 
-std::string GetAmethystFolder()
+fs::path GetComMojangPath()
 {
-    static std::string amethystFolder;
+    StorageFolder localFolder = ApplicationData::Current().LocalFolder();
+    fs::path localPath = localFolder.Path().c_str();
+    return localPath / L"games" / L"com.mojang";
+}
 
-    if (amethystFolder.empty()) {
-        char* path;
-        size_t path_length;
-        errno_t err = _dupenv_s(&path, &path_length, "LocalAppData");
-
-        if (err) throw std::exception("Failed to get environment variable %LocalAppData%");
-        if (path == nullptr) throw std::exception("%LocalAppData% was null");
-
-        std::string localAppDataFolder(path);
-        free(path);
-
-        amethystFolder = localAppDataFolder + "/Amethyst/";
-    }
-
-    return amethystFolder;
+fs::path GetAmethystFolder()
+{
+    return GetComMojangPath() / L"amethyst";
 }
 
 std::string StringFromWstring(std::wstring wstring)
