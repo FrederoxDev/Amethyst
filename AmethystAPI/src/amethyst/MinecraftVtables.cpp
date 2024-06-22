@@ -71,7 +71,7 @@ void InitializeVtablePtrs() {
 
     InitializeVtbl(BlockActorRenderer_vtable, "48 8D 05 ? ? ? ? 48 89 06 48 8D 05 ? ? ? ? 48 89 46 ? 40 88 BE");
 
-    Packet_vtable = (void*)SlideAddress(0x5389A20);
+    Packet_vtable = (void*)SlideAddress(0x4CB18D0); // 1.21.0.3
 
     ChestBlock_vtable = (void*)SlideAddress(0x4E37018);
     InitializeCtor(ChestBlock_ctor, "48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 48 8B 05 ? ? ? ? 48 8B D9 4C 8B 15");

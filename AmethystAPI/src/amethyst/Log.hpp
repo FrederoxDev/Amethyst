@@ -10,6 +10,7 @@
 namespace Log {
     void InitializeConsole();
     void DestroyConsole();
+    void HideConsole();
 
     template <typename... T>
     void Info(fmt::format_string<T...> fmt, T&&... args) {
