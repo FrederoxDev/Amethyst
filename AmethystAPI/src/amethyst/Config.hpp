@@ -13,5 +13,6 @@ public:
     bool promptDebugger;
 
 public:
+    Config() = default;
     Config(std::string& text);
 };
