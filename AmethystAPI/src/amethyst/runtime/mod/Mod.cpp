@@ -38,7 +38,7 @@ void Mod::Shutdown()
 Mod::Metadata Mod::GetMetadata(std::string modName)
 {
     // Ensure the mod exists
-    std::string modConfigPath = GetAmethystFolder() + "mods/" + modName + "/" + "mod.json";
+    fs::path modConfigPath = GetAmethystFolder() / L"mods" / modName / L"mod.json";
 
     if (!fs::exists(modConfigPath)) {
         Assert("[AmethystRuntime] mod.json could not be found, for {}!", modName);
@@ -121,10 +121,10 @@ fs::path Mod::GetTempDll()
     }
 
     // Ensure temp directory exists
-    fs::path tempDir = GetAmethystFolder() + "temp/" + modName + "/";
+    fs::path tempDir = GetAmethystFolder() / L"Temp" / modName;
     if (!fs::exists(tempDir)) fs::create_directories(tempDir);
 
-    fs::path originalDll = GetAmethystFolder() + "mods/" + modName + "/" + modShortened + ".dll";
+    fs::path originalDll = GetAmethystFolder() / L"Mods" / modName / std::string(modShortened + ".dll");
     if (!fs::exists(originalDll)) {
         Assert("[AmethystRuntime] Could not find '{}.dll'", modShortened);
     }

@@ -69,7 +69,7 @@ void InitializeVtablePtrs() {
 
     InitializeVtbl(BlockActorRenderer_vtable, "48 8D 05 ? ? ? ? 48 89 06 48 8D 05 ? ? ? ? 48 89 46 ? 40 88 BE");
 
-    Packet_vtable = (void*)SlideAddress(0x5389A20);
+    Packet_vtable = (void*)SlideAddress(0x4CB18D0); // 1.21.0.3
 
     /*InitializeVtbl(Packet_vtable, "48 89 01 F6 C2 ? 74 ? BA ? ? ? ? E8 ? ? ? ? 48 8B C3 48 83 C4 ? 5B C3 CC CC CC CC CC 48 89 5C 24 ? 57 48 83 EC ? 48 8B D9 49 8B F8");
     Log::Info("vtbl 0x{:x}", (uintptr_t)Packet_vtable - GetMinecraftBaseAddress());*/
