@@ -9,11 +9,15 @@ public:
     void serverInitItemStackIds(int, int, std::function<void(int, const ItemStack&)>) override {}
     const ItemStack& getItem(int slot) const override
     {
+        if (slot < 0 || slot >= mItems.size())
+            return ItemStack::EMPTY_ITEM;
         return mItems[slot];
     }
     
     void setItem(int slot, const ItemStack& item) override
     {
+        if (slot < 0 || slot >= mItems.size())
+            return;
         mItems[slot] = item;
     }
     

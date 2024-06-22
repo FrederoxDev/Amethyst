@@ -81,6 +81,26 @@ ItemStackBase::ItemStackBase() {
     this->setNull(std::nullopt);
 }
 
+ItemStackBase::ItemStackBase(const ItemStackBase& other) :
+    mCount(other.mCount),
+    mAuxValue(other.mAuxValue),
+    mItem(other.mItem),
+    mBlock(other.mBlock),
+    mValid(other.mValid),
+    mPickupTime(other.mPickupTime)
+{
+    
+
+    /*std::unique_ptr<CompoundTag> clonedData = nullptr;
+
+    if (rhs.mUserData) {
+        clonedData = rhs.mUserData->clone();
+    }*/
+
+    // setUserData(clonedData);
+    // _cloneComponents(rhs)
+}
+
 ItemStackBase::~ItemStackBase() = default;
 
 // 1.20.51.1 Reimplementation - Incomplete
