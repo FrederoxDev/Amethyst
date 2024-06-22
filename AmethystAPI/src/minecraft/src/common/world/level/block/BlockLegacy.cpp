@@ -5,6 +5,36 @@ BlockLegacy::~BlockLegacy() {
 
 }
 
+// 1.21.0.3 - Re-Implemented
+bool BlockLegacy::isContainerBlock() const
+{
+    return false;
+}
+
+// 1.21.0.3 - Re-Implemented
+bool BlockLegacy::isSignalSource() const
+{
+    return false;
+}
+
+// 1.21.0.3 - Re-Implemented
+bool BlockLegacy::detachesOnPistonMove(BlockSource&, BlockPos const&) const
+{
+    return false;
+}
+
+// 1.21.0.3 - Re-Implemented
+bool BlockLegacy::hasComparatorSignal() const
+{
+    return false;
+}
+
+// 1.21.0.3 - Re-Implemented
+bool BlockLegacy::isInteractive() const
+{
+    return false;
+}
+
 // 1.20.71.1 - Re-Implemented
 short BlockLegacy::getBlockItemId()
 {
