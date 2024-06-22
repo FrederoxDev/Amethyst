@@ -45,6 +45,7 @@ extern "C" void* BaseActorRenderer_vtable = nullptr;
 extern "C" void* BlockActorRenderer_vtable = nullptr;
 extern "C" void* Packet_vtable = nullptr;
 extern "C" void* ChestBlock_vtable = nullptr;
+extern "C" void* Container_vtable = nullptr;
 
 // Constructors
 extern "C" void* BlockItem_ctor = nullptr;
@@ -53,6 +54,10 @@ extern "C" void* MaterialPtr_ctor = nullptr;
 extern "C" void* BlockActor_ctor = nullptr;
 extern "C" void* BaseActorRenderer_ctor = nullptr;
 extern "C" void* ChestBlock_ctor = nullptr;
+extern "C" void* Container_ctor1 = nullptr;
+extern "C" void* Container_ctor2 = nullptr;
+
+//48 89 5C 24 ? 48 89 
 
 void InitializeVtablePtrs() {
     InitializeVtbl(Item_vtable, "48 8D 05 ? ? ? ? 48 89 01 48 83 C1 ? 0F 57 C0 0F 11 01 4C 89 61 ? 4C 89 61 ? 45 8D 44 24");
@@ -71,11 +76,14 @@ void InitializeVtablePtrs() {
 
     InitializeVtbl(BlockActorRenderer_vtable, "48 8D 05 ? ? ? ? 48 89 06 48 8D 05 ? ? ? ? 48 89 46 ? 40 88 BE");
 
-    Packet_vtable = (void*)SlideAddress(0x4CB18D0); // 1.21.0.3
+    Packet_vtable = reinterpret_cast<void*>(SlideAddress(0x4CB18D0)); // 1.21.0.3
 
-    ChestBlock_vtable = (void*)SlideAddress(0x4E37018);
+    ChestBlock_vtable = reinterpret_cast<void*>(SlideAddress(0x4E37018));
     InitializeCtor(ChestBlock_ctor, "48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 48 8B 05 ? ? ? ? 48 8B D9 4C 8B 15");
-    
+
+    InitializeCtor(Container_ctor1, "48 89 5C 24 ? 48 89 4C 24 ? 57 48 83 EC ? 48 8B D9 48 8D 05 ? ? ? ? 48 89 01 88 51");
+    InitializeCtor(Container_ctor2, "48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 48 89 4C 24 ? 57 48 83 EC ? 41 0F B6 F1 49 8B F8 48 8B D9 48 8D 05");
+    Container_vtable = reinterpret_cast<void*>(SlideAddress(0x4DC0F70));
     /*InitializeVtbl(Packet_vtable, "48 89 01 F6 C2 ? 74 ? BA ? ? ? ? E8 ? ? ? ? 48 8B C3 48 83 C4 ? 5B C3 CC CC CC CC CC 48 89 5C 24 ? 57 48 83 EC ? 48 8B D9 49 8B F8");
     Log::Info("vtbl 0x{:x}", (uintptr_t)Packet_vtable - GetMinecraftBaseAddress());*/
 }

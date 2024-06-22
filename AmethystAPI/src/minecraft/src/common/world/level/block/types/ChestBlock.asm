@@ -4,7 +4,7 @@ section .text
 extern ChestBlock_vtable
 extern ChestBlock_ctor
 
-global ??0ChestBlock@@QEAA@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@FW4ChestType@0@W4MaterialType@@@Z:
+global ??0ChestBlock@@QEAA@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@FW4ChestType@0@W4MaterialType@@@Z
 ??0ChestBlock@@QEAA@AEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@FW4ChestType@0@W4MaterialType@@@Z:
     mov rax, [rel ChestBlock_ctor]
     jmp rax
