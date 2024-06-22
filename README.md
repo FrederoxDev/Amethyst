@@ -38,6 +38,17 @@ A small mod which adds in an "Optifine" like zoom into the game.
 
 A simple Minecraft Bedrock mod that increases the maximum build limit in all dimensions to 2048 blocks.
 
+<br />
+
+### - [CheatlessTweaks](https://github.com/Tallis-Larsen/CheatlessTweaks)
+
+| ![image](https://github.com/FrederoxDev/Amethyst/assets/150056941/97400198-5860-48d3-acb7-642987ed992b) | ![image](https://github.com/FrederoxDev/Amethyst/assets/150056941/c5a01fb3-81f3-450a-bf8e-94ba294ce1dd) |
+|----------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------|
+
+A simple Minecraft Bedrock mod that lets you change a few limited gamerules without enabling cheats/disabling achievements.
+
+<br />
+
 ### Using the API for other projects
 
 To link AmethystAPI with another mod, we use an environment variable `%amethyst_src%` to point to the cloned repository. Here is a quick list of commands to clone Amethyst into the Documents folder and setup the environment variable automatically.
