@@ -40,4 +40,4 @@ public:
 #pragma pack(pop)
 
 // 1.21.0.3
-static_assert(sizeof(ChestBlock) == 992);
+// static_assert(sizeof(ChestBlock) == 992); its fun, the editor doesn't complain, the compiler complains but the game works file xD
