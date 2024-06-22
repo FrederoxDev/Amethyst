@@ -99,9 +99,8 @@ global ?clearCache@BlockActor@@UEAAXXZ
 	mov rax, [rel BlockActor_vtable]
 	jmp [rax + 136]
 
-; BlockActor_vtable[18] is unknown
-global ?_unknown_18@BlockActor@@UEAAXXZ
-?_unknown_18@BlockActor@@UEAAXXZ:
+global ?onNeighborChanged@BlockActor@@UEBAXAEAVBlockSource@@AEBVBlockPos@@@Z
+?onNeighborChanged@BlockActor@@UEBAXAEAVBlockSource@@AEBVBlockPos@@@Z:
 	mov rax, [rel BlockActor_vtable]
 	jmp [rax + 144]
 

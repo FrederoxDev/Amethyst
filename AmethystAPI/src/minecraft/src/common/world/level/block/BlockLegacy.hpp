@@ -170,7 +170,7 @@ public:
     virtual void _unknown_28();
     virtual void _unknown_29();
     virtual void _unknown_30();
-    virtual void _unknown_31();
+    virtual bool isContainerBlock() const;
     virtual void _unknown_32();
     virtual bool isWaterBlocking() const;
     virtual void _unknown_34();
@@ -186,7 +186,7 @@ public:
     virtual void _unknown_44();
     virtual void _unknown_45();
     virtual void _unknown_46();
-    virtual void _unknown_47();
+    virtual bool isSignalSource() const;
     virtual bool canBeOriginalSurface() const;
     virtual void _unknown_49();
     virtual bool isValidAuxValue(int value) const;
@@ -207,7 +207,7 @@ public:
     virtual void transformOnFall(BlockSource& region, const BlockPos& pos, Actor* entity, float fallDistance) const;
     virtual void onRedstoneUpdate(BlockSource& region, const BlockPos& pos, int strength, bool isFirstTime) const;
     virtual void onMove(BlockSource& region, const BlockPos& from, const BlockPos& to) const;
-    virtual void _unknown_68();
+    virtual bool detachesOnPistonMove(BlockSource&, BlockPos const&) const;
     virtual void movedByPiston(BlockSource& region, const BlockPos& pos) const;
     virtual void onStructureBlockPlace(BlockSource& region, const BlockPos& pos) const;
     virtual void onStructureNeighborBlockPlace(BlockSource& region, const BlockPos& pos) const;
@@ -250,7 +250,7 @@ public:
     virtual bool shouldStopFalling(Actor& entity) const;
     virtual void _unknown_109();
     virtual void _unknown_110();
-    virtual void _unknown_111();
+    virtual bool hasComparatorSignal() const;
     virtual int getComparatorSignal(BlockSource& region, const BlockPos& pos, const Block& block, unsigned char dir) const;
     virtual bool canSlide(BlockSource& region, const BlockPos& pos) const;
     virtual void _unknown_114();
@@ -295,7 +295,7 @@ protected:
     virtual void _unknown_147();
     virtual void tick(BlockSource& region, const BlockPos& pos, Random& random) const;
     virtual void randomTick(BlockSource& region, const BlockPos& pos, Random& random) const;
-    virtual void _unknown_150();
+    virtual bool isInteractive() const;
     virtual bool use(Player&, const BlockPos&, unsigned char, std::optional<Vec3>) const;
     virtual bool use(Player& player, const BlockPos& pos, unsigned char face) const;
     virtual void _unknown_153();
