@@ -15,3 +15,6 @@ public:
     bool save(CompoundTag& tag) const override;
     void eraseLootTable() override;
 };
+
+// 1.21.0.3
+static_assert(sizeof(RandomizableBlockActorContainerBase) - sizeof(BlockActor) == 40);
