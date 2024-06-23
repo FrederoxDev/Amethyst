@@ -2,13 +2,9 @@
 
 #include "minecraft/src/common/world/item/ItemStack.hpp"
 
-extern "C" void* FillingContainer_vtable;
-
 FillingContainer::FillingContainer(Player* player, int size, ContainerType type) : Container(type),
     mPlayer(player)
 {
-    //workaround to place the original game vtable on the class instance even in a implemented constructor
-    *reinterpret_cast<void**>(this) = FillingContainer_vtable;
     mItems.resize(size);
 }
 
