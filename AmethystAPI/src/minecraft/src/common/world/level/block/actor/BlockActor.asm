@@ -89,8 +89,8 @@ global ?shouldPreserve@BlockActor@@UEAA_NAEAVBlockSource@@@Z
 	mov rax, [rel BlockActor_vtable]
 	jmp [rax + 120]
 
-global ?triggerEvent@BlockActor@@UEAAXHH@Z
-?triggerEvent@BlockActor@@UEAAXHH@Z:
+global ?triggerEvent@BlockActor@@UEBAXHH@Z
+?triggerEvent@BlockActor@@UEBAXHH@Z:
 	mov rax, [rel BlockActor_vtable]
 	jmp [rax + 128]
 
