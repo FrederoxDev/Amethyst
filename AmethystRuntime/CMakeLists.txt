@@ -20,7 +20,7 @@ file(GLOB_RECURSE AmethystRuntime_All
     "src/*.asm"
     "src/*.hpp" 
     "src/*.h"  
-) 
+)   
 
 add_library(AmethystRuntime SHARED ${AmethystRuntime_All})
 

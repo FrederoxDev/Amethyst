@@ -55,6 +55,7 @@ namespace Log {
     {
         std::string formatted_string = fmt::format(fmt, std::forward<T>(args)...);
         formatted_string += fmt::format("\n\tin: {}, line: {}", function, line);
+        Log::Error("{}", formatted_string);
         throw std::exception(formatted_string.c_str());
     }
 }; // namespace Log

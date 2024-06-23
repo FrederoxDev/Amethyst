@@ -5,6 +5,7 @@
 #include <minecraft/src/common/CommonTypes.hpp>
 #include <minecraft/src/common/network/NetworkPeer.hpp>
 #include <minecraft/src-deps/core/utility/Result.hpp>
+#include <minecraft/src-deps/core/utility/ErrorInfo.hpp>
 #include <amethyst/Log.hpp>
 
 class IPacketHandlerDispatcher;
