@@ -1,8 +1,11 @@
 #pragma once
+#include <cstdint>
 
-#include "BlockSource.hpp"
-
+class BlockSource;
 class BlockActor;
+class Actor;
+class Block;
+struct ActorBlockSyncMessage;
 
 enum class BlockChangedEventTarget : unsigned char {
     SelfBlock,

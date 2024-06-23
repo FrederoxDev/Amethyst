@@ -3,13 +3,16 @@
 #include "minecraft/src/common/SharedPtr.hpp"
 #include <memory>
 #include <minecraft/src/common/world/item/registry/ItemRegistryRef.hpp>
+#include <minecraft/src/common/world/level/ILevel.hpp>
+#include <minecraft/src/common/world/level/BlockSourceListener.hpp>
+#include <minecraft/src/common/world/level/IWorldRegistriesProvider.hpp>
 
 class BlockTypeRegistry;
 class PacketSender;
 
-class Level {
+class Level : public ILevel, public BlockSourceListener, public IWorldRegistriesProvider {
 public:
-    /* this + 0    */ std::byte padding0[840];
+    /* this + 40   */ std::byte padding40[800];
     /* this + 840  */ const ItemRegistryRef mItemRegistry;
     /* this + 856  */ std::byte padding856[2008];
     /* this + 2864 */ PacketSender* mPacketSender;
