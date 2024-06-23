@@ -23,7 +23,7 @@ public:
     
     int getContainerSize() const override
     {
-        return mItems.size();
+        return static_cast<int>(mItems.size());
     }
     
     int getMaxStackSize() const override

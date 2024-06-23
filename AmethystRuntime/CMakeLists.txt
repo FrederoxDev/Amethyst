@@ -32,7 +32,7 @@ target_link_libraries(AmethystRuntime PRIVATE
     AmethystAPI 
     libhat
     ${CMAKE_CURRENT_SOURCE_DIR}/../AmethystAPI/lib/fmt.lib
-)
+) 
 
 target_compile_definitions(AmethystRuntime PRIVATE 
     MOD_VERSION="${MOD_VERSION}"  
@@ -42,7 +42,7 @@ target_compile_definitions(AmethystRuntime PRIVATE
 )
 
 target_compile_options(AmethystRuntime PRIVATE
-    $<$<COMPILE_LANGUAGE:CXX>:/MP>
+    $<$<COMPILE_LANGUAGE:CXX>:/MP> 
 )
 
 # EnTT Config Options

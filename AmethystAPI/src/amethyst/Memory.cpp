@@ -95,3 +95,7 @@ uintptr_t AddressFromLeaInstruction(uintptr_t leaInstructionAddress)
     return relativeOffset + nextInstruction;
 }
 
+uintptr_t GetVtable(void* obj)
+{
+    return (uintptr_t) * reinterpret_cast<uintptr_t**>(obj);
+}
