@@ -48,6 +48,7 @@ extern "C" void* Packet_vtable = nullptr;
 extern "C" void* ChestBlock_vtable = nullptr;
 extern "C" void* Container_vtable = nullptr;
 extern "C" void* FillingContainer_vtable = nullptr;
+extern "C" void* RandomizableBlockActorContainerBase_vtable = nullptr;
 
 // Constructors
 extern "C" void* BlockItem_ctor = nullptr;
@@ -92,6 +93,8 @@ void InitializeVtablePtrs() {
     Container_vtable = reinterpret_cast<void*>(SlideAddress(0x4DC0F70));
 
     FillingContainer_vtable = reinterpret_cast<void*>(SlideAddress(0x4DE56F8));
+
+    RandomizableBlockActorContainerBase_vtable = reinterpret_cast<void*>(SlideAddress(0x4E71F18));
     /*InitializeVtbl(Packet_vtable, "48 89 01 F6 C2 ? 74 ? BA ? ? ? ? E8 ? ? ? ? 48 8B C3 48 83 C4 ? 5B C3 CC CC CC CC CC 48 89 5C 24 ? 57 48 83 EC ? 48 8B D9 49 8B F8");
     Log::Info("vtbl 0x{:x}", (uintptr_t)Packet_vtable - GetMinecraftBaseAddress());*/
 }
