@@ -5,7 +5,7 @@
 #include <amethyst/Log.hpp>
 #include <amethyst/Memory.hpp>
 
-static void LogAssemblyOfExceptionCause(uintptr_t address)
+static void LogAssemblyOfExceptionCause(uintptr_t address) 
 {
     ZydisDecoder decoder;
     ZydisDecoderInit(&decoder, ZYDIS_MACHINE_MODE_LONG_64, ZYDIS_STACK_WIDTH_64);

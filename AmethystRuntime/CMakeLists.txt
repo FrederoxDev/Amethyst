@@ -1,5 +1,5 @@
 # Amethyst Options
-set(MOD_VERSION "1.3.0")
+set(MOD_VERSION "1.3.1")
 set(MOD_AUTHOR "FrederoxDev")
 
 set(MOD_TARGET_VERSION_MAJOR 1)
@@ -7,13 +7,13 @@ set(MOD_TARGET_VERSION_MINOR 21)
 set(MOD_TARGET_VERSION_PATCH 3)
 
 # Amethyst Minecraft Folder
-set(AmethystFolder "$ENV{localappdata}/Packages/Microsoft.MinecraftUWP_8wekyb3d8bbwe/AC/Amethyst/")
+set(AmethystFolder "$ENV{localappdata}/Packages/Microsoft.MinecraftUWP_8wekyb3d8bbwe/LocalState/games/com.mojang/amethyst/") 
 
 # Configure to build within the Amethyst Folder
 configure_file(mod.json.in "${AmethystFolder}/mods/AmethystRuntime@${MOD_VERSION}/mod.json" @ONLY)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO "${AmethystFolder}/mods/AmethystRuntime@${MOD_VERSION}")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO "${AmethystFolder}/mods/AmethystRuntime@${MOD_VERSION}")  
 
-# Create AmethystRuntime
+# Create AmethystRuntime 
 file(GLOB_RECURSE AmethystRuntime_All
     "src/*.cpp" 
     "src/*.c" 

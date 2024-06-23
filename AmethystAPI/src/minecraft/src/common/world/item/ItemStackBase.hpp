@@ -64,6 +64,7 @@ public:
 
 public:
     ItemStackBase();
+    ItemStackBase(const ItemStackBase&);
     ItemStackBase& operator=(const ItemStackBase&);
 
     // 1.20.51.1 - 48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 48 89 54 24 ? 57 48 83 EC ? 48 8B FA 48 8B E9 33 F6
