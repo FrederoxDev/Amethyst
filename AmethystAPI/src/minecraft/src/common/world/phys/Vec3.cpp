@@ -134,3 +134,19 @@ void Vec3::rotateAroundPointDegrees(const Vec3& pivot, const Vec3& angle) {
     this->y = result.y;
     this->z = result.z;
 }
+
+template <>
+Bedrock::Result<Vec3> ReadOnlyBinaryStream::get<Vec3>() {
+    auto x = get<float>().value();
+    auto y = get<float>().value();
+    auto z = get<float>().value();
+
+    return Vec3(x, y, z);
+}
+
+template <>
+void BinaryStream::write(Vec3 vec3) {
+    write(vec3.x);
+    write(vec3.y);
+    write(vec3.z);
+}

@@ -28,6 +28,15 @@ public:
     void rotateAroundPointDegrees(const Vec3& pivot, const Vec3& angle);
 };
 
+// BinaryStream specialization
+#include "minecraft/src-deps/core/utility/BinaryStream.hpp"
+
+template <>
+Bedrock::Result<Vec3> ReadOnlyBinaryStream::get<Vec3>();
+
+template <>
+void BinaryStream::write(Vec3);
+
 template <>
 struct fmt::formatter<Vec3> {
     constexpr auto parse(fmt::format_parse_context& ctx) { return ctx.begin(); }

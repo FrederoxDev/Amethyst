@@ -2,6 +2,7 @@
 #include <functional>
 #include <fmt/core.h>
 #include <minecraft/src-deps/core/math/Math.hpp>
+#include <minecraft/src-deps/core/utility/BinaryStream.hpp>
 
 class BlockPos {
 public:
@@ -42,6 +43,15 @@ public:
         return x == other.x && y == other.y && z == other.z;
     }
 };
+
+// BinaryStream specialization
+#include "minecraft/src-deps/core/utility/BinaryStream.hpp"
+
+template <>
+Bedrock::Result<BlockPos> ReadOnlyBinaryStream::get<BlockPos>();
+
+template <>
+void BinaryStream::write(BlockPos);
 
 namespace std {
 template <>
