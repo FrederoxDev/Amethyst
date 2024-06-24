@@ -7,10 +7,10 @@
 #include <minecraft/src-deps/core/utility/Result.hpp>
 #include <minecraft/src-deps/core/utility/ErrorInfo.hpp>
 #include <amethyst/Log.hpp>
+#include <minecraft/src-deps/core/utility/BinaryStream.hpp>
 
 class IPacketHandlerDispatcher;
 class BinaryStream;
-class ReadOnlyBinaryStream;
 
 enum class MinecraftPacketIds {
     KeepAlive = 0,
