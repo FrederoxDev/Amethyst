@@ -8,7 +8,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(libhat)                   
  
-file(GLOB_RECURSE AmethystAPI_All  
+file(GLOB_RECURSE AmethystAPI_All   
     "src/*.cpp" 
     "src/*.c" 
     "src/*.asm"

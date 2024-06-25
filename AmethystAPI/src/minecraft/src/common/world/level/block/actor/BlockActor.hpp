@@ -60,8 +60,14 @@ public:
 	virtual void onChanged(BlockSource& a2);
 	virtual bool isMovable(BlockSource& a2);
 	virtual bool isCustomNameSaved();
+
+	/*
+	Called whenever the BlockActor is spawned in the world
+	- Called on both client and server side
+	*/
 	virtual void onPlace(BlockSource& a2);
-        virtual void onMove();
+
+    virtual void onMove();
 	virtual void onRemoved(BlockSource& a2);
 	virtual bool isPreserved(BlockSource& a2) const;
 	virtual bool shouldPreserve(BlockSource& a2);

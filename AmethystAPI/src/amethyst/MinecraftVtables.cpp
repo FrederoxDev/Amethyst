@@ -66,24 +66,25 @@ ItemStack& ItemStack::EMPTY_ITEM = *reinterpret_cast<ItemStack*>(SlideAddress(0x
 
 //48 89 5C 24 ? 48 89 
 
-void InitializeVtablePtrs() {
+void InitializeVtablePtrs()
+{
     InitializeVtbl(Item_vtable, "48 8D 05 ? ? ? ? 48 89 01 48 83 C1 ? 0F 57 C0 0F 11 01 4C 89 61 ? 4C 89 61 ? 45 8D 44 24");
-    
+
     InitializeVtbl(BlockLegacy_vtable, "48 8D 05 ? ? ? ? 49 89 04 24 0F 57 C0 41 0F 11 44 24 ? 49 89 4C 24");
     InitializeCtor(BlockLegacy_ctor, "48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 81 EC ? ? ? ? 49 8B F9 48 8B F2");
 
     InitializeVtbl(BlockItem_vtable, "48 8D 05 ? ? ? ? 49 89 06 41 0F B7 8E");
     InitializeCtor(BlockItem_ctor, "40 53 55 56 57 41 56 48 81 EC ? ? ? ? 49 8B F9 48 8B EA");
-    
+
     InitializeVtbl(BlockActor_vtable, "48 8D 05 ? ? ? ? 4C 89 49 ? 48 89 01 44 89 49");
     InitializeCtor(BlockActor_ctor, "48 83 EC ? 45 33 C9 0F 29 34 24");
 
     InitializeVtbl(BaseActorRenderer_vtable, "48 8D 05 ? ? ? ? 48 89 01 48 8D 79 ? 48 89 7C 24 ? 0F 57 C0 0F 11 45");
-    InitializeCtor(BaseActorRenderer_ctor, "48 89 5C 24 ? 48 89 74 24 ? 55 57 41 54 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 4C 8B F1 48 89 4D");
+    InitializeCtor(BaseActorRenderer_ctor, "48 89 5C 24 ? 48 89 74 24 ? 55 57 41 54 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 4C 8B F1 48 89 4D ? 45 33 E4 4C 89 61");
 
     InitializeVtbl(BlockActorRenderer_vtable, "48 8D 05 ? ? ? ? 48 89 06 48 8D 05 ? ? ? ? 48 89 46 ? 40 88 BE");
 
-    Packet_vtable = reinterpret_cast<void*>(SlideAddress(0x4CB18D0)); // 1.21.0.3
+    Packet_vtable = reinterpret_cast<void*>(SlideAddress(0x4CB18D0));
 
     ChestBlock_vtable = reinterpret_cast<void*>(SlideAddress(0x4E37018));
     InitializeCtor(ChestBlock_ctor, "48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 48 8B 05 ? ? ? ? 48 8B D9 4C 8B 15");
@@ -95,6 +96,4 @@ void InitializeVtablePtrs() {
     FillingContainer_vtable = reinterpret_cast<void*>(SlideAddress(0x4DE56F8));
 
     RandomizableBlockActorContainerBase_vtable = reinterpret_cast<void*>(SlideAddress(0x4E71F18));
-    /*InitializeVtbl(Packet_vtable, "48 89 01 F6 C2 ? 74 ? BA ? ? ? ? E8 ? ? ? ? 48 8B C3 48 83 C4 ? 5B C3 CC CC CC CC CC 48 89 5C 24 ? 57 48 83 EC ? 48 8B D9 49 8B F8");
-    Log::Info("vtbl 0x{:x}", (uintptr_t)Packet_vtable - GetMinecraftBaseAddress());*/
 }

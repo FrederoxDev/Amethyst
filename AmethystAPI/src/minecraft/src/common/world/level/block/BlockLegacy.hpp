@@ -291,7 +291,13 @@ protected:
     virtual void onRemove(BlockSource& region, const BlockPos& pos) const;
     virtual void onExploded(BlockSource& region, const BlockPos& pos, Actor* entitySource) const;
     virtual void onStandOn(EntityContext& entity, const BlockPos& pos) const;
+
+    /*
+    Called whenever the block is placed in the world.
+    - Only called on the server-side
+    */
     virtual void onPlace(BlockSource& region, const BlockPos& pos) const;
+
     virtual void _unknown_147();
     virtual void tick(BlockSource& region, const BlockPos& pos, Random& random) const;
     virtual void randomTick(BlockSource& region, const BlockPos& pos, Random& random) const;

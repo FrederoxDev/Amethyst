@@ -13,6 +13,7 @@ class ResourceLoadManager;
 class BaseGameVersion;
 class Experiments;
 class MinecraftGameplayGraphicsResources;
+class BlockActorRenderer;
 
 class BlockActorRenderDispatcher {
 public:
