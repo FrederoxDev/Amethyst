@@ -84,16 +84,16 @@ void InitializeVtablePtrs()
 
     InitializeVtbl(BlockActorRenderer_vtable, "48 8D 05 ? ? ? ? 48 89 06 48 8D 05 ? ? ? ? 48 89 46 ? 40 88 BE");
 
-    Packet_vtable = reinterpret_cast<void*>(SlideAddress(0x4CB18D0));
+    InitializeVtbl(Packet_vtable, "48 8D 05 ? ? ? ? 4C 8B CA");
 
-    ChestBlock_vtable = reinterpret_cast<void*>(SlideAddress(0x4E37018));
+    InitializeVtbl(ChestBlock_vtable, "48 8D 05 ?? ?? ?? ?? 48 89 03 89 BB ?? ?? ?? ?? 48 C7 83");
     InitializeCtor(ChestBlock_ctor, "48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 48 8B 05 ? ? ? ? 48 8B D9 4C 8B 15");
 
     InitializeCtor(Container_ctor1, "48 89 5C 24 ? 48 89 4C 24 ? 57 48 83 EC ? 48 8B D9 48 8D 05 ? ? ? ? 48 89 01 88 51");
     InitializeCtor(Container_ctor2, "48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 48 89 4C 24 ? 57 48 83 EC ? 41 0F B6 F1 49 8B F8 48 8B D9 48 8D 05");
-    Container_vtable = reinterpret_cast<void*>(SlideAddress(0x4DC0F70));
+    InitializeVtbl(Container_vtable, "48 8D 05 ? ? ? ? 48 89 03 66 C7 43 ? ? ? 48 8D 4B");
 
-    FillingContainer_vtable = reinterpret_cast<void*>(SlideAddress(0x4DE56F8));
+    InitializeVtbl(FillingContainer_vtable, "48 8D 05 ? ? ? ? 49 89 06 49 8D BE ? ? ? ? 33 C0");
 
-    RandomizableBlockActorContainerBase_vtable = reinterpret_cast<void*>(SlideAddress(0x4E71F18));
+    InitializeVtbl(RandomizableBlockActorContainerBase_vtable, "48 8D 05 ? ? ? ? 48 8D 8F ? ? ? ? 48 89 07");
 }
