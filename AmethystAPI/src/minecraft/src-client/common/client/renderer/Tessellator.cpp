@@ -92,7 +92,7 @@ void Tessellator::color(float r, float g, float b, float a) {
 }
 
 void Tessellator::beginOverride() {
-    begin(mce::QuadList, 0);
+    begin(mce::PrimitiveMode::QuadList, 0);
     mVoidBeginEnd = true;
 }
 

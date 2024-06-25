@@ -1,5 +1,6 @@
 #include "minecraft/src/common/world/phys/Vec3.hpp"
 #include <cmath>
+#include <minecraft/src/common/world/level/BlockPos.hpp>
 
 const float PI = 3.14159265358979f;
 
@@ -10,7 +11,15 @@ Vec3::Vec3(float x, float y, float z)
     this->z = z;
 }
 
-Vec3 Vec3::operator+(const Vec3 rhs)
+
+Vec3::Vec3(BlockPos& pos)
+{
+    this->x = (float)pos.x;
+    this->y = (float)pos.y;
+    this->z = (float)pos.z;
+}
+
+Vec3 Vec3::operator+(const Vec3 rhs) const
 {
     return Vec3(
         this->x + rhs.x,
@@ -18,7 +27,7 @@ Vec3 Vec3::operator+(const Vec3 rhs)
         this->z + rhs.z);
 }
 
-Vec3 Vec3::operator-(const Vec3 rhs)
+Vec3 Vec3::operator-(const Vec3 rhs) const
 {
     return Vec3(
         this->x - rhs.x,
@@ -26,7 +35,7 @@ Vec3 Vec3::operator-(const Vec3 rhs)
         this->z - rhs.z);
 }
 
-Vec3 Vec3::operator*(const Vec3 rhs)
+Vec3 Vec3::operator*(const Vec3 rhs) const
 {
     return Vec3(
         this->x * rhs.x,
@@ -34,7 +43,15 @@ Vec3 Vec3::operator*(const Vec3 rhs)
         this->z * rhs.z);
 }
 
-Vec3 Vec3::operator/(const Vec3 rhs)
+Vec3 Vec3::operator*(float rhs) const
+{
+    return Vec3(
+        this->x * rhs,
+        this->y * rhs,
+        this->z * rhs);
+}
+
+Vec3 Vec3::operator/(const Vec3 rhs) const
 {
     return Vec3(
         this->x / rhs.x,
@@ -42,7 +59,7 @@ Vec3 Vec3::operator/(const Vec3 rhs)
         this->z / rhs.z);
 }
 
-bool Vec3::operator==(const Vec3 rhs)
+bool Vec3::operator==(const Vec3 rhs) const
 {
     return this->x - rhs.x && this->y - rhs.y && this->z - rhs.z;
 }
@@ -133,6 +150,11 @@ void Vec3::rotateAroundPointDegrees(const Vec3& pivot, const Vec3& angle) {
     this->x = result.x;
     this->y = result.y;
     this->z = result.z;
+}
+
+Vec3 Vec3::lerp(const Vec3& start, const Vec3& end, float t)
+{
+    return start + (end - start) * t;
 }
 
 template <>

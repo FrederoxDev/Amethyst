@@ -10,6 +10,7 @@ void BlockGraphics::setTextureItem(std::string up, std::string down, std::string
 
 void BlockGraphics::setDefaultCarriedTextures()
 {
+    // 1.21.0.3
     using function = decltype(&BlockGraphics::setDefaultCarriedTextures);
     static auto func = std::bit_cast<function>(SigScan("40 55 57 48 83 EC ? 48 8B 79"));
     (this->*func)();
@@ -17,8 +18,9 @@ void BlockGraphics::setDefaultCarriedTextures()
 
 BlockGraphics* BlockGraphics::createBlockGraphics(const HashedString& identifier, BlockShape shape)
 {
+    // 1.21.0.3
     using function = decltype(&BlockGraphics::createBlockGraphics);
-    static auto func = std::bit_cast<function>(SigScan("48 89 5C 24 ? 48 89 6C 24 ? 56 57 41 56 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 84 24 ? ? ? ? 44 8B F2"));
+    static auto func = std::bit_cast<function>(SigScan("48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 57 41 56 41 57 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 84 24 ? ? ? ? 44 8B FA"));
     return func(identifier, shape);
 }
  

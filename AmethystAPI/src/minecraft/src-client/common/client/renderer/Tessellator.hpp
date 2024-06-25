@@ -17,7 +17,7 @@ public:
 static_assert(sizeof(TessellatorQuadInfo) == 0x10);
 
 namespace mce {
-    enum PrimitiveMode : int {
+    enum class PrimitiveMode : int {
         None = 0,
         QuadList = 1,
         TriangleList = 2,

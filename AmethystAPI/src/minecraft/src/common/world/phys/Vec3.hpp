@@ -2,6 +2,8 @@
 #include <fmt/core.h>
 #include <fmt/format.h>
 
+class BlockPos;
+
 class Vec3 {
 public:
     float x;
@@ -10,12 +12,14 @@ public:
 
 public:
     Vec3(float x, float y, float z);
+    Vec3(BlockPos&);
 
-    Vec3 operator+(const Vec3 rhs);
-    Vec3 operator-(const Vec3 rhs);
-    Vec3 operator*(const Vec3 rhs);
-    Vec3 operator/(const Vec3 rhs);
-    bool operator==(const Vec3 rhs);
+    Vec3 operator+(const Vec3 rhs) const;
+    Vec3 operator-(const Vec3 rhs) const;
+    Vec3 operator*(const Vec3 rhs) const;
+    Vec3 operator*(float rhs) const;
+    Vec3 operator/(const Vec3 rhs) const;
+    bool operator==(const Vec3 rhs) const;
 
     void rotateAroundXRadians(float angleRadians);
     void rotateAroundYRadians(float angleRadians);
@@ -26,6 +30,8 @@ public:
     void rotateAroundYDegrees(float angleDegrees);
     void rotateAroundZDegrees(float angleDegrees);
     void rotateAroundPointDegrees(const Vec3& pivot, const Vec3& angle);
+
+    static Vec3 lerp(const Vec3& start, const Vec3& end, float t);
 };
 
 // BinaryStream specialization

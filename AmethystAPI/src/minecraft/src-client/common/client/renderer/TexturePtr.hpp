@@ -7,6 +7,7 @@ class BedrockTextureData;
 namespace mce {
     class TexturePtr {
     public:
-        std::byte padding0[4000];
+        std::shared_ptr<const BedrockTextureData> mClientTexture;
+        std::shared_ptr<ResourceLocation> mResourceLocation;
     };
 } // namespace mce
