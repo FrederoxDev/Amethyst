@@ -20,6 +20,7 @@ public:
     Amethyst::EventManager mEventManager;
     Amethyst::InputManager mInputManager;
     Amethyst::PatchManager mPatchManager;
+    Amethyst::EnumAllocator mEnumAllocator;
     std::vector<Mod> mMods;
     Amethyst::MinecraftPackageInfo mMinecraftPackageInfo;
 

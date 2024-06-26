@@ -67,6 +67,11 @@ public:
         return &AmethystRuntime::getInstance()->mAmethystContext.mPatchManager;
     }
 
+    static Amethyst::EnumAllocator* getEnumAllocator()
+    {
+        return &AmethystRuntime::getInstance()->mAmethystContext.mEnumAllocator;
+    }
+
     static std::vector<Mod>* getMods()
     {
         return &AmethystRuntime::getInstance()->mAmethystContext.mMods;

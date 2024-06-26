@@ -141,6 +141,9 @@ void AmethystRuntime::Shutdown()
     // Remove any patches that were applied to the game.
     getPatchManager()->RemoveAllPatches();
 
+    // Reset any allocated enums
+    getEnumAllocator()->Shutdown();
+
     // Unload all mod dll's.
     for (auto& mod : mAmethystContext.mMods) {
         mod.Shutdown();

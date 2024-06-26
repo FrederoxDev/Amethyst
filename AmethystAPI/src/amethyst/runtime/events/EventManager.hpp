@@ -28,7 +28,6 @@ namespace Amethyst {
 
         Event<> beforeModShutdown;
 
-
         /*
         Clear any events that have been registered
         */
