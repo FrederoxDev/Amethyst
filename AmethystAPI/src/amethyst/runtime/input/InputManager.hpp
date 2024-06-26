@@ -13,9 +13,9 @@ namespace Amethyst {
         void RegisterNewInput(std::string actionName, std::vector<int> keys, bool allowRemapping = true);
         void AddButtonDownHandler(const std::string& actionName, std::function<void(FocusImpact, IClientInstance&)> handler, bool suspendable);
         void AddButtonUpHandler(const std::string& actionName, std::function<void(FocusImpact, IClientInstance&)> handler, bool suspendable);
-        void Shutdown();
 
     private:
+        void Shutdown();
         void RemoveButtonHandlers();
 
     public:
@@ -23,5 +23,7 @@ namespace Amethyst {
 
     private:
         AmethystContext* mAmethyst;
+
+        friend class AmethystRuntime;
     };
 }

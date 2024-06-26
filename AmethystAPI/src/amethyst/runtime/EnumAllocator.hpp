@@ -5,7 +5,7 @@
 
 namespace Amethyst {
     /*
-    A class which allows mods to safely use customly made enumerators without having to worry about other mods using the same values.
+    A class which allows mods to safely use customly made enumerators, without having to worry about other mods using the same values.
     */
     class EnumAllocator {
     public:
@@ -54,10 +54,11 @@ namespace Amethyst {
             return static_cast<E>(++it->second);
         }
 
-        void Shutdown();
-
     private:
+        void Shutdown();
         std::map<HashType64, uint64_t> mEnumsToCurrent;
+
+        friend class AmethystRuntime;
     };
 } // namespace Amethyst
 

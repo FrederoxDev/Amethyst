@@ -139,7 +139,7 @@ void AmethystRuntime::Shutdown()
     getHookManager()->Shutdown();
 
     // Remove any patches that were applied to the game.
-    getPatchManager()->RemoveAllPatches();
+    getPatchManager()->Shutdown();
 
     // Reset any allocated enums
     getEnumAllocator()->Shutdown();

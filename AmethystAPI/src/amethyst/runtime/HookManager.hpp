@@ -81,9 +81,10 @@ public:
         }
     }
 
-    void Shutdown();
-
 private:
     std::vector<SafetyHookInline*> mHooks;
     std::unordered_map<size_t, uintptr_t> mFuncHashToOriginalAddress;
+
+    void Shutdown();
+    friend class AmethystRuntime;
 };

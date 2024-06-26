@@ -40,7 +40,7 @@ namespace Amethyst {
     void PatchManager::RemovePatch(uintptr_t address) {
     }
 
-    void PatchManager::RemoveAllPatches()
+    void PatchManager::Shutdown()
     {
 		for (auto it = this->mPatches.rbegin(); it != this->mPatches.rend(); it++) {
             uintptr_t address = it->address;
