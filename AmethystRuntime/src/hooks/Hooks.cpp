@@ -8,6 +8,7 @@ SafetyHookInline _VanillaItems_registerItems;
 SafetyHookInline _BlockDefinitionGroup_registerBlocks;
 SafetyHookInline _LevelRenderer_renderLevel;
 SafetyHookInline _ClientInstance_ClientInstance;
+SafetyHookInline _BlockGraphics_initBlocks;
 
 void* ScreenView_setupAndRender(ScreenView* self, UIRenderContext* ctx)
 {
@@ -86,6 +87,11 @@ void* ClientInstance_ClientInstance(ClientInstance* self, uint64_t a2, uint64_t 
     return ret;
 }
 
+void BlockGraphics_initBlocks(ResourcePackManager& resources, const Experiments& experiments) {
+    _BlockGraphics_initBlocks.call<void, ResourcePackManager&, const Experiments&>(resources, experiments);
+    AmethystRuntime::getEventManager()->initBlockGraphics.Invoke(resources, experiments);
+}
+
 void CreateModFunctionHooks() {
     HookManager* hookManager = AmethystRuntime::getHookManager();
 
@@ -110,6 +116,9 @@ void CreateModFunctionHooks() {
     hookManager->RegisterFunction<&BlockDefinitionGroup::registerBlocks>("48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 57 41 54 41 55 41 56 41 57 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 84 24 ? ? ? ? 45 33 E4");
     hookManager->CreateHook<&BlockDefinitionGroup::registerBlocks>(_BlockDefinitionGroup_registerBlocks, &BlockDefinitionGroup_registerBlocks);
     
+    hookManager->RegisterFunction<&BlockGraphics::initBlocks>("48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4C 8B E2 48 89 95 ? ? ? ? 4C 8B F9 48 89 4D");
+    hookManager->CreateHook<&BlockGraphics::initBlocks>(_BlockGraphics_initBlocks, &BlockGraphics_initBlocks);
+
     //hookManager->RegisterFunction<&LevelRenderer::renderLevel>("48 89 5C 24 ? 48 89 74 24 ? 55 57 41 56 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 49 8B F0 48 8B DA 4C 8B F1");
     //hookManager->CreateHook<&LevelRenderer::renderLevel>(_LevelRenderer_renderLevel, &LevelRenderer_renderLevel);
 }

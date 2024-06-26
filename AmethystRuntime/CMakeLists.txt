@@ -14,7 +14,7 @@ configure_file(mod.json.in "${AmethystFolder}/mods/AmethystRuntime@${MOD_VERSION
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELWITHDEBINFO "${AmethystFolder}/mods/AmethystRuntime@${MOD_VERSION}")  
 
 # Create AmethystRuntime 
-file(GLOB_RECURSE AmethystRuntime_All
+file(GLOB_RECURSE AmethystRuntime_All 
     "src/*.cpp" 
     "src/*.c" 
     "src/*.asm"
