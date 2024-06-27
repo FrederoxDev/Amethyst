@@ -8,7 +8,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(libhat)                   
  
-file(GLOB_RECURSE AmethystAPI_All   
+file(GLOB_RECURSE AmethystAPI_All     
     "src/*.cpp" 
     "src/*.c" 
     "src/*.asm"
@@ -21,7 +21,7 @@ file(GLOB_RECURSE AmethystAPI_All
     minecraft/src/common/world/level/block/actor/BlockActor.asm
     minecraft/src-client/common/client/renderer/ActorShaderManager.asm
     minecraft/src-client/common/client/renderer/blockActor/BlockActorRenderer.asm
-)           
+)                
  
 add_library(AmethystAPI STATIC ${AmethystAPI_All})
 
