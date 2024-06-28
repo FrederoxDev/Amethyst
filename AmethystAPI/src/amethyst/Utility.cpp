@@ -1,4 +1,11 @@
 #include "amethyst/Utility.hpp"
+#include <winrt/Windows.Storage.h>
+#include <winrt/base.h>
+#include <shlobj_core.h>
+#include "windows.h"
+
+using namespace winrt;
+using namespace Windows::Storage;
 
 fs::path GetComMojangPath()
 {

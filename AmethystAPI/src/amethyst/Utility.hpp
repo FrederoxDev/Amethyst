@@ -1,14 +1,8 @@
 #pragma once
 #include <string>
 #include <filesystem>
-#include <winrt/Windows.Storage.h>
-#include <winrt/base.h>
-#include <shlobj_core.h>
-#include "windows.h"
 
 namespace fs = std::filesystem;
-using namespace winrt;
-using namespace Windows::Storage;
 
 /*
 Returns a path to Microsoft.MinecraftUWP_8wekyb3d8bbwe/LocalState/games/com.mojang
