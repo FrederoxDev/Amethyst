@@ -16,6 +16,10 @@ ResourceLocation::ResourceLocation(const std::string& path) {
     _computeHashes();
 }
 
+ResourceLocation::ResourceLocation(const char* path) : ResourceLocation(std::string(path))
+{
+}
+
 // Reimplemented in 1.20.71.1
 void ResourceLocation::_computeHashes()
 {

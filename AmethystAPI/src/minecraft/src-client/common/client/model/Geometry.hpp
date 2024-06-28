@@ -44,7 +44,7 @@ class Geometry {
 public:
     struct NodeTextureMesh {};
 
-    __declspec(align(4)) class Box {
+    class Box {
     public:
         bool mMirror;
         Vec3 mFrom;

@@ -45,6 +45,7 @@ public:
     ~ResourceLocation();
     ResourceLocation();
     ResourceLocation(const std::string& path);
+    ResourceLocation(const char* path);
 
 private:
     void _computeHashes();

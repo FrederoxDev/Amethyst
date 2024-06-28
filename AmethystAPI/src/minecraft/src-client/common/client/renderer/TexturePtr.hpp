@@ -2,7 +2,7 @@
 #include "minecraft/src-deps/core/resource/ResourceHelper.hpp"
 #include <memory>
 
-class BedrockTextureData;
+struct BedrockTextureData;
 
 namespace mce {
     class TexturePtr {

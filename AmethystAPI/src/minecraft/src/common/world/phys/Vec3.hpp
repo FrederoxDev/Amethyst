@@ -11,6 +11,7 @@ public:
     float z;
 
 public:
+    Vec3();
     Vec3(float x, float y, float z);
     Vec3(BlockPos&);
 
