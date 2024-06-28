@@ -8,7 +8,7 @@ void mce::Mesh::renderMesh(mce::MeshContext* meshContext, const mce::MaterialPtr
     (this->*func)(meshContext, materialPtr);
 }
 
-void mce::Mesh::renderMesh(mce::MeshContext* meshContext, const mce::MaterialPtr& materialPtr, const std::variant<std::monostate, mce::TexturePtr, mce::ClientTexture, mce::ServerTexture>& texture)
+void mce::Mesh::renderMesh(mce::MeshContext* meshContext, const mce::MaterialPtr* materialPtr, const std::variant<std::monostate, mce::TexturePtr, mce::ClientTexture, mce::ServerTexture>& texture)
 {
     // 1.20.72.1 - found by xref mce::Mesh::_renderMesh()
     using function = void(mce::Mesh::*)(mce::MeshContext*, const mce::MaterialPtr&, const std::variant<std::monostate, mce::TexturePtr, mce::ClientTexture, mce::ServerTexture>&);
