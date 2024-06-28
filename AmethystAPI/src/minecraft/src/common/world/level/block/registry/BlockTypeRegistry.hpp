@@ -50,10 +50,10 @@ public:
         return map;
     }
 
-    // 1.20.51.1 - 48 89 5C 24 ? 57 48 83 EC ? 33 FF 45 31 C9
+    // 1.21.0.3 - 48 89 5C 24 ? 48 89 74 24 ? 48 89 7C 24 ? 55 48 8B EC 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 48 8B D9 0F 57 C0
     static const Block* getDefaultBlockState(const HashedString& name) {
         using function = Block*(*)(const HashedString&);
-        static auto func = reinterpret_cast<function>(SigScan("48 89 5C 24 ? 57 48 83 EC ? 33 FF 45 31 C9"));
+        static auto func = reinterpret_cast<function>(SigScan("48 89 5C 24 ? 48 89 74 24 ? 48 89 7C 24 ? 55 48 8B EC 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 48 8B D9 0F 57 C0"));
         return func(name);
     }
 
