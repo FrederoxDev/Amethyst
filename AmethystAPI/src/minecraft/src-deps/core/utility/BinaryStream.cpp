@@ -1,4 +1,5 @@
 #include "BinaryStream.hpp"
+#include <minecraft/src/common/world/Facing.hpp>
 
 template <typename T>
 Bedrock::Result<T> ReadOnlyBinaryStream::get()
@@ -14,6 +15,7 @@ Bedrock::Result<T> ReadOnlyBinaryStream::get()
 template Bedrock::Result<unsigned char> ReadOnlyBinaryStream::get<unsigned char>();
 template Bedrock::Result<uint64_t> ReadOnlyBinaryStream::get<uint64_t>();
 template Bedrock::Result<float> ReadOnlyBinaryStream::get<float>();
+template Bedrock::Result<FacingID> ReadOnlyBinaryStream::get<FacingID>();
 
 Bedrock::Result<uint32_t> ReadOnlyBinaryStream::getUnsignedVarInt32()
 {
@@ -56,6 +58,7 @@ void BinaryStream::write(T in)
 template void BinaryStream::write(unsigned char);
 template void BinaryStream::write(float);
 template void BinaryStream::write(uint64_t);
+template void BinaryStream::write(FacingID);
 
 void BinaryStream::writeUnsignedVarInt32(uint32_t value)
 {

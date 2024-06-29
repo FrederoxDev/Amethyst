@@ -3,6 +3,7 @@
 #include <fmt/core.h>
 #include <minecraft/src-deps/core/math/Math.hpp>
 #include <minecraft/src-deps/core/utility/BinaryStream.hpp>
+#include <minecraft/src/common/world/Facing.hpp>
 
 class BlockPos {
 public:
@@ -25,6 +26,52 @@ public:
     BlockPos above() const
     {
         return {this->x, this->y + 1, this->z};
+    }
+
+    BlockPos north() const
+    {
+        return {this->x, this->y, this->z - 1};
+    }
+
+    BlockPos east() const
+    {
+        return {this->x + 1, this->y, this->z};
+    }
+
+    BlockPos south() const
+    {
+        return {this->x, this->y, this->z + 1};
+    }
+
+    BlockPos west() const
+    {
+        return {this->x - 1, this->y, this->z};
+    }
+
+    BlockPos neighbor(FacingID dir) const
+    {
+        switch (dir) {
+            case FacingID::NORTH:
+                return north();
+
+            case FacingID::SOUTH:
+                return south();
+
+            case FacingID::WEST:
+                return west();
+
+            case FacingID::EAST:
+                return east();
+
+            case FacingID::UP:
+                return above();
+
+            case FacingID::DOWN:
+                return below();
+
+            default:
+                std::unreachable();
+        }
     }
 
     constexpr size_t hashCode() const
