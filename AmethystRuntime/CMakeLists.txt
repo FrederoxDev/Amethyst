@@ -1,5 +1,5 @@
 # Amethyst Options
-set(MOD_VERSION "1.3.1")
+set(MOD_VERSION "1.4.0")
 set(MOD_AUTHOR "FrederoxDev")
 
 set(MOD_TARGET_VERSION_MAJOR 1)
