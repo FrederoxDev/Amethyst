@@ -1,17 +1,22 @@
 #pragma once
+#include "minecraft/src-deps/core/utility/NonOwnerPointer.hpp"
 #include "minecraft/src/common/world/level/dimension/HeightRange.hpp"
+#include "minecraft/src/common/world/level/dimension/IDimension.hpp"
+#include "minecraft/src/common/world/level/LevelListener.hpp"
+#include "minecraft/src/common/world/level/saveddata/SavedData.hpp"
+#include "minecraft/src/common/world/level/dimension/DimensionHeightRange.hpp"
 #include "minecraft/src/common/gamerefs/OwnerPtr.hpp"
 #include <cstddef>
 #include <cstdint>
 #include <string>
 
 class BlockSource;
+class ILevel;
+class Scheduler;
 
-class Dimension {
-
+class Dimension : public IDimension, LevelListener, SavedData, Bedrock::EnableNonOwnerReferences, std::enable_shared_from_this<Dimension> {
 public:
-    /* this + 0   */ uintptr_t** vtable;
-    /* this + 8   */ std::byte filler8[192];
+    /* this + 96  */ std::byte filler96[104];
     /* this + 200 */ HeightRange mHeightRange;
     /* this + 204 */ int16_t mSeaLevel;
     /* this + 206 */ std::byte padding206[2];
@@ -25,5 +30,10 @@ public:
     /* this + 364 */ bool mHasSkylight;
 
 public:
+    virtual ~Dimension();
     BlockSource& getBlockSourceFromMainChunkSource() const;
+
+    Dimension(ILevel& level, DimensionType dimId, DimensionHeightRange heightRange, Scheduler& callbackContext, std::string dimensionName);
 };
+
+static_assert(offsetof(Dimension, mHeightRange) == 200);

@@ -6,9 +6,12 @@
 #include <minecraft/src/common/world/level/ILevel.hpp>
 #include <minecraft/src/common/world/level/BlockSourceListener.hpp>
 #include <minecraft/src/common/world/level/IWorldRegistriesProvider.hpp>
+#include <minecraft/src/common/gamerefs/OwnerPtr.hpp>
 
 class BlockTypeRegistry;
 class PacketSender;
+class DimensionFactory;
+class DimensionManager;
 
 class Level : public ILevel, public BlockSourceListener, public IWorldRegistriesProvider {
 public:
@@ -18,6 +21,9 @@ public:
     /* this + 2864 */ PacketSender* mPacketSender;
     /* this + 2872 */ std::byte padding2872[2648];
     /* this + 5520 */ bool isClientSide;
+    /* this + 5521 */ std::byte padding5521[1];
+    /* this + 6408 */ gsl::not_null<OwnerPtr<DimensionFactory>> mDimensionFactory;
+    /* this + 6424 */ gsl::not_null<OwnerPtr<DimensionManager>> mDimensionManager;
 };
 
 // 1.21.0.3
