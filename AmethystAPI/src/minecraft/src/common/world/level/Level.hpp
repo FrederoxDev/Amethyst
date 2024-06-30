@@ -7,11 +7,12 @@
 #include <minecraft/src/common/world/level/BlockSourceListener.hpp>
 #include <minecraft/src/common/world/level/IWorldRegistriesProvider.hpp>
 #include <minecraft/src/common/gamerefs/OwnerPtr.hpp>
+#include <minecraft/src/common/world/level/dimension/DimensionFactory.hpp>
 
 class BlockTypeRegistry;
 class PacketSender;
-class DimensionFactory;
 class DimensionManager;
+class Scheduler;
 
 class Level : public ILevel, public BlockSourceListener, public IWorldRegistriesProvider {
 public:
@@ -21,9 +22,10 @@ public:
     /* this + 2864 */ PacketSender* mPacketSender;
     /* this + 2872 */ std::byte padding2872[2648];
     /* this + 5520 */ bool isClientSide;
-    /* this + 5521 */ std::byte padding5521[1];
-    /* this + 6408 */ gsl::not_null<OwnerPtr<DimensionFactory>> mDimensionFactory;
-    /* this + 6424 */ gsl::not_null<OwnerPtr<DimensionManager>> mDimensionManager;
+    /* this + 5521 */ std::byte padding5521[887];
+
+    // its actually a gsl::not_null but compiler hates that despite the fact we don't construct level
+    /* this + 6408 */ std::shared_ptr<OwnerPtr<DimensionFactory>> mDimensionFactory;
 };
 
 // 1.21.0.3
