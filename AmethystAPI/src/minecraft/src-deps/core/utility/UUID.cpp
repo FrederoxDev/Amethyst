@@ -64,3 +64,17 @@ namespace mce {
 		return *this == EMPTY;
     }
 }
+
+template <>
+Bedrock::Result<mce::UUID> ReadOnlyBinaryStream::get<mce::UUID>() {
+    auto high = get<uint64_t>();
+    auto low = get<uint64_t>();
+
+	return Bedrock::Result<mce::UUID>(mce::UUID(high.value(), low.value()));
+};
+
+template <>
+void BinaryStream::write(mce::UUID in) {
+    write(in.getMostSignificantBits());
+    write(in.getLeastSignificantBits());
+}
