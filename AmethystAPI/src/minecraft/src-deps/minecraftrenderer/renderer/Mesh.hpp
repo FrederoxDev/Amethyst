@@ -13,7 +13,7 @@ namespace mce {
         std::byte padding0[536];
 
     public:
-        void renderMesh(mce::MeshContext* meshContext, const mce::MaterialPtr* materialPtr);
+        void renderMesh(mce::MeshContext& meshContext, const mce::MaterialPtr& materialPtr);
         void renderMesh(mce::MeshContext& meshContext, const mce::MaterialPtr& materialPtr, const std::variant<std::monostate, mce::TexturePtr, mce::ClientTexture, mce::ServerTexture>& texture);
     };
 
