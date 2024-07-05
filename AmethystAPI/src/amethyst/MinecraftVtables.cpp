@@ -51,6 +51,8 @@ extern "C" void* FillingContainer_vtable = nullptr;
 extern "C" void* RandomizableBlockActorContainerBase_vtable = nullptr;
 extern "C" void* Dimension_vtable = nullptr;
 extern "C" void* OverworldDimension_vtable = nullptr;
+extern "C" void* Dimension_for_SavedData_vtable = nullptr;
+extern "C" void* Dimension_for_LevelListener_vtable = nullptr;
 
 // Constructors
 extern "C" void* BlockItem_ctor = nullptr;
@@ -103,6 +105,8 @@ void InitializeVtablePtrs()
 
     InitializeVtbl(Dimension_vtable, "48 8D 05 ? ? ? ? 49 89 06 48 8D 05 ? ? ? ? 49 89 46 ? 48 8D 05 ? ? ? ? 49 89 46 ? 48 8D 05 ? ? ? ? 48 89 06");
     InitializeCtor(Dimension_ctor, "48 89 5C 24 ? 48 89 74 24 ? 48 89 7C 24 ? 55 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 41 8B F9 41 8B D8"); 
+    InitializeVtbl(Dimension_for_SavedData_vtable, "48 8D 05 ? ? ? ? 49 89 46 ? 48 8D 05 ? ? ? ? 48 89 06");
+    InitializeVtbl(Dimension_for_LevelListener_vtable, "48 8D 05 ? ? ? ? 49 89 46 ? 48 8D 05 ? ? ? ? 49 89 46 ? 48 8D 05 ? ? ? ? 48 89 06");
 
     InitializeVtbl(OverworldDimension_vtable, "48 8D 05 ? ? ? ? 48 89 06 48 8D 05 ? ? ? ? 48 89 46 ? 48 8D 05 ? ? ? ? 48 89 46 ? 48 8D 05 ? ? ? ? 48 89 46 ? C6 86");
     InitializeCtor(OverworldDimension_ctor, "4C 8B DC 49 89 5B ? 55 56 57 48 83 EC ? 49 8B D8");

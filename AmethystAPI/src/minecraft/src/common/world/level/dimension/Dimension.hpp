@@ -37,7 +37,7 @@ class StructureSetRegistry;
 /**@vtable */
 class Dimension : public IDimension, LevelListener, SavedData, Bedrock::EnableNonOwnerReferences, std::enable_shared_from_this<Dimension> {
 public:
-    /* this + 96  */ std::byte filler96[104];
+    /* this + 104 */ std::byte filler104[96];
     /* this + 200 */ HeightRange mHeightRange;
     /* this + 204 */ int16_t mSeaLevel;
     /* this + 206 */ std::byte padding206[2];
@@ -174,6 +174,27 @@ public:
     
     /**@vIndex {40} */
 	virtual std::unique_ptr<class ChunkSource> _wrapStorageForVersionCompatibility(std::unique_ptr<class ChunkSource> storageSource, StorageVersion levelVersion) = 0;
+
+    /** @vIndex {1} @for {SavedData} */
+    virtual void deserialize(const CompoundTag&) override;
+
+    /** @vIndex {2} @for {SavedData} */
+    virtual void serialize(CompoundTag&) const override;
+
+    /** @vIndex {4} @for {LevelListener} */
+    virtual void onBlockChanged(BlockSource& source, const BlockPos& pos, uint32_t layer, const Block& block, const Block& oldBlock, int updateFlags, const ActorBlockSyncMessage* syncMsg, BlockChangedEventTarget eventTarget, Actor* blockChangeSource) override;
+
+    /** @vIndex {5} @for {LevelListener} */
+    virtual void onBrightnessChanged(BlockSource& source, const BlockPos& pos) override;
+
+    /** @vIndex {8} @for {LevelListener} */
+    virtual void onBlockEvent(BlockSource& source, int x, int y, int z, int b0, int b1) override;
+
+    /** @vIndex {19} @for {LevelListener} */
+    virtual void onChunkLoaded(class ChunkSource& source, class LevelChunk& lc) override;
+
+    /** @vIndex {23} @for {LevelListener} */
+    virtual void onLevelDestruction(const std::string& levelId) override;
 
     /**@asmName {Dimension_ctor}*/
     Dimension(ILevel& level, DimensionType dimId, DimensionHeightRange heightRange, Scheduler& callbackContext, std::string dimensionName);

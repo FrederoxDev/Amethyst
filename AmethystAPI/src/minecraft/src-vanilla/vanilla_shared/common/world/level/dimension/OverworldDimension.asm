@@ -4,8 +4,8 @@ section .text
 extern OverworldDimension_vtable
 extern OverworldDimension_ctor
 
-global ??_DOverworldDimension@@QEAAXXZ
-??_DOverworldDimension@@QEAAXXZ:
+global ??1OverworldDimension@@UEAA@XZ
+??1OverworldDimension@@UEAA@XZ:
 	mov rax, [rel OverworldDimension_vtable]
 	jmp [rax + 0]
 
@@ -34,6 +34,11 @@ global ?getBrightnessDependentFogColor@OverworldDimension@@UEBA?AVColor@mce@@AEB
 	mov rax, [rel OverworldDimension_vtable]
 	jmp [rax + 152]
 
+global ?hasPrecipitationFog@OverworldDimension@@UEBA_NXZ
+?hasPrecipitationFog@OverworldDimension@@UEBA_NXZ:
+	mov rax, [rel OverworldDimension_vtable]
+	jmp [rax + 160]
+
 global ?getCloudHeight@OverworldDimension@@UEBAFXZ
 ?getCloudHeight@OverworldDimension@@UEBAFXZ:
 	mov rax, [rel OverworldDimension_vtable]
@@ -49,7 +54,7 @@ global ?_wrapStorageForVersionCompatibility@OverworldDimension@@UEAA?AV?$unique_
 	mov rax, [rel OverworldDimension_vtable]
 	jmp [rax + 320]
 
-global ??0OverworldDimension@@QEAA@AEAVILevel@@V?$AutomaticID@VDimension@@H@@VDimensionHeightRange@@AEAVScheduler@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z
-??0OverworldDimension@@QEAA@AEAVILevel@@V?$AutomaticID@VDimension@@H@@VDimensionHeightRange@@AEAVScheduler@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z:
+global ??0OverworldDimension@@QEAA@AEAVILevel@@AEAVScheduler@@@Z
+??0OverworldDimension@@QEAA@AEAVILevel@@AEAVScheduler@@@Z:
 	mov rax, [rel OverworldDimension_ctor]
 	jmp rax

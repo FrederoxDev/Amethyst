@@ -4,7 +4,10 @@
 /**@vtable */
 class OverworldDimension : public Dimension {
 public:
-    /**@vIndex {0} */
+    /**
+	* @vIndex {0} 
+	* @symbol {??1OverworldDimension@@UEAA@XZ}
+	*/
 	virtual ~OverworldDimension();
 
     /**@vIndex {14} */
@@ -35,5 +38,5 @@ public:
 	virtual std::unique_ptr<class ChunkSource> _wrapStorageForVersionCompatibility(std::unique_ptr<class ChunkSource> storageSource, StorageVersion levelVersion) override;
 
 	/**@asmName {OverworldDimension_ctor}*/
-    OverworldDimension(ILevel& level, DimensionType dimId, DimensionHeightRange heightRange, Scheduler& callbackContext, std::string dimensionName);
+    OverworldDimension(ILevel& level, Scheduler& callbackContext);
 };

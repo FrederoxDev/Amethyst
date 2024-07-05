@@ -2,6 +2,8 @@
 section .text
 
 extern Dimension_vtable
+extern Dimension_for_SavedData_vtable
+extern Dimension_for_LevelListener_vtable
 extern Dimension_ctor
 
 global ??_DDimension@@QEAAXXZ
@@ -208,6 +210,41 @@ global ?_wrapStorageForVersionCompatibility@Dimension@@UEAA?AV?$unique_ptr@VChun
 ?_wrapStorageForVersionCompatibility@Dimension@@UEAA?AV?$unique_ptr@VChunkSource@@U?$default_delete@VChunkSource@@@std@@@std@@V23@W4StorageVersion@@@Z:
 	mov rax, [rel Dimension_vtable]
 	jmp [rax + 320]
+
+global ?deserialize@Dimension@@UEAAXAEBVCompoundTag@@@Z
+?deserialize@Dimension@@UEAAXAEBVCompoundTag@@@Z:
+	mov rax, [rel Dimension_for_SavedData_vtable]
+	jmp [rax + 8]
+
+global ?serialize@Dimension@@UEBAXAEAVCompoundTag@@@Z
+?serialize@Dimension@@UEBAXAEAVCompoundTag@@@Z:
+	mov rax, [rel Dimension_for_SavedData_vtable]
+	jmp [rax + 16]
+
+global ?onBlockChanged@Dimension@@UEAAXAEAVBlockSource@@AEBVBlockPos@@IAEBVBlock@@2HPEBUActorBlockSyncMessage@@W4BlockChangedEventTarget@@PEAVActor@@@Z
+?onBlockChanged@Dimension@@UEAAXAEAVBlockSource@@AEBVBlockPos@@IAEBVBlock@@2HPEBUActorBlockSyncMessage@@W4BlockChangedEventTarget@@PEAVActor@@@Z:
+	mov rax, [rel Dimension_for_LevelListener_vtable]
+	jmp [rax + 32]
+
+global ?onBrightnessChanged@Dimension@@UEAAXAEAVBlockSource@@AEBVBlockPos@@@Z
+?onBrightnessChanged@Dimension@@UEAAXAEAVBlockSource@@AEBVBlockPos@@@Z:
+	mov rax, [rel Dimension_for_LevelListener_vtable]
+	jmp [rax + 40]
+
+global ?onBlockEvent@Dimension@@UEAAXAEAVBlockSource@@HHHHH@Z
+?onBlockEvent@Dimension@@UEAAXAEAVBlockSource@@HHHHH@Z:
+	mov rax, [rel Dimension_for_LevelListener_vtable]
+	jmp [rax + 64]
+
+global ?onChunkLoaded@Dimension@@UEAAXAEAVChunkSource@@AEAVLevelChunk@@@Z
+?onChunkLoaded@Dimension@@UEAAXAEAVChunkSource@@AEAVLevelChunk@@@Z:
+	mov rax, [rel Dimension_for_LevelListener_vtable]
+	jmp [rax + 152]
+
+global ?onLevelDestruction@Dimension@@UEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z
+?onLevelDestruction@Dimension@@UEAAXAEBV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z:
+	mov rax, [rel Dimension_for_LevelListener_vtable]
+	jmp [rax + 184]
 
 global ??0Dimension@@QEAA@AEAVILevel@@V?$AutomaticID@VDimension@@H@@VDimensionHeightRange@@AEAVScheduler@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z
 ??0Dimension@@QEAA@AEAVILevel@@V?$AutomaticID@VDimension@@H@@VDimensionHeightRange@@AEAVScheduler@@V?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z:
