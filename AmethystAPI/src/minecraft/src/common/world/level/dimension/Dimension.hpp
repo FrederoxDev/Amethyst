@@ -1,5 +1,6 @@
 #pragma once
 #include "minecraft/src/common/world/level/dimension/HeightRange.hpp"
+#include "minecraft/src/common/world/level/Level.hpp"
 #include "minecraft/src/common/gamerefs/OwnerPtr.hpp"
 #include <cstddef>
 #include <cstdint>
@@ -7,11 +8,14 @@
 
 class BlockSource;
 
+
 class Dimension {
 
 public:
     /* this + 0   */ uintptr_t** vtable;
-    /* this + 8   */ std::byte filler8[192];
+    /* this + 8   */ std::byte filler8[16];
+    /* this + 24  */ Level* mLevel;
+    /* this + 32  */ std::byte filler32[168];
     /* this + 200 */ HeightRange mHeightRange;
     /* this + 204 */ int16_t mSeaLevel;
     /* this + 206 */ std::byte padding206[2];
