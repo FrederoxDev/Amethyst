@@ -3,8 +3,17 @@
 
 template <typename Traits>
 class OwnerPtrT : public Traits::OwnerStorage {
-public:
+private:
     using OwnerStackRef = typename Traits::OwnerStackRef;
+
+public:
+    OwnerPtrT(std::nullptr_t) {
+        this->_getShared() = std::make_shared<Traits::StackRef>();
+    }
+
+    /*OwnerPtrT(const std::shared_ptr<Traits::StackRef>& shared) {
+        this->_getShared() = shared;
+    }*/
 
     OwnerStackRef& operator*() const {
         return *(this->_getShared());

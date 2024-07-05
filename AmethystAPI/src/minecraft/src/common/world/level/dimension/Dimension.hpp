@@ -1,11 +1,14 @@
 #pragma once
 #include "minecraft/src-deps/core/utility/NonOwnerPointer.hpp"
+#include "minecraft/src-deps/core/math/Color.hpp"
 #include "minecraft/src/common/world/level/dimension/HeightRange.hpp"
 #include "minecraft/src/common/world/level/dimension/IDimension.hpp"
 #include "minecraft/src/common/world/level/LevelListener.hpp"
 #include "minecraft/src/common/world/level/saveddata/SavedData.hpp"
 #include "minecraft/src/common/world/level/dimension/DimensionHeightRange.hpp"
+#include "minecraft/src/common/world/level/dimension/DimensionBrightnessRamp.hpp"
 #include "minecraft/src/common/gamerefs/OwnerPtr.hpp"
+#include "minecraft/src/common/world/level/storage/StorageVersion.hpp"
 #include <cstddef>
 #include <cstdint>
 #include <string>
@@ -14,6 +17,21 @@ class BlockSource;
 class ILevel;
 class Scheduler;
 
+enum class LimboEntitiesVersion : char {
+    v0,
+    v1_8_0,
+    v1_10_0,
+    v1_12_0,
+    v1_16_210
+};
+
+namespace br {
+namespace worldgen {
+class StructureSetRegistry;
+}
+}
+
+/**@vtable */
 class Dimension : public IDimension, LevelListener, SavedData, Bedrock::EnableNonOwnerReferences, std::enable_shared_from_this<Dimension> {
 public:
     /* this + 96  */ std::byte filler96[104];
@@ -30,10 +48,101 @@ public:
     /* this + 364 */ bool mHasSkylight;
 
 public:
-    virtual ~Dimension();
-    BlockSource& getBlockSourceFromMainChunkSource() const;
+    /**@vIndex {0} */
+	virtual ~Dimension();
+
+    /**@vIndex {11} */
+	virtual void init(const br::worldgen::StructureSetRegistry&);
+
+    /**@vIndex {12} */
+	virtual void tick();
+    
+    /**@vIndex {13} */
+	virtual void tickRedstone();
+    
+    /**@vIndex {14} */
+	virtual std::unique_ptr<class WorldGenerator> createGenerator(const br::worldgen::StructureSetRegistry&) = 0;
+    
+    /**@vIndex {15} */
+	virtual void upgradeLevelChunk(class ChunkSource& source, class LevelChunk& lc, class LevelChunk& generatedChunk) = 0;
+    
+    /**@vIndex {16} */
+	virtual void fixWallChunk(class ChunkSource&, class LevelChunk&) = 0;
+    
+    /**@vIndex {17} */
+	virtual bool levelChunkNeedsUpgrade(const LevelChunk&) const = 0;
+    
+    /**@vIndex {18} */
+	virtual bool isValidSpawn(int x, int z) const;
+    
+    /**@vIndex {19} */
+	virtual class mce::Color getBrightnessDependentFogColor(const mce::Color& baseColor, float brightness) const;
+    
+    /**@vIndex {20} */
+	virtual bool hasPrecipitationFog() const;
+    
+    /**@vIndex {21} */
+	virtual short getCloudHeight() const;
+    
+    /**@vIndex {22} */
+	virtual class HashedString getDefaultBiome() const;
+    
+    /**@vIndex {23} */
+	virtual bool hasGround() const;
+    
+    /**@vIndex {24} */
+	virtual bool showSky() const;
+    
+    /**@vIndex {25} */
+	virtual class BlockPos getSpawnPos() const;
+    
+    /**@vIndex {26} */
+	virtual int getSpawnYPosition() const;
+    
+    /**@vIndex {27} */
+	virtual bool mayRespawnViaBed(void) const;
+    
+    /**@vIndex {28} */
+	virtual bool isDay() const;
+    
+    /**@vIndex {29} */
+	virtual float getTimeOfDay(int time, float a) const;
+    
+    /**@vIndex {30} */
+	virtual float getSunIntensity(float a, const Vec3& viewVector, float minInfluenceAngle) const;
+    
+    /**@vIndex {31} */
+	virtual bool forceCheckAllNeighChunkSavedStat() const;
+    
+    /**@vIndex {32} */
+	virtual void sendBroadcast(const Packet& packet, class Player* except);
+    
+    /**@vIndex {33} */
+	virtual bool is2DPositionRelevantForPlayer(const BlockPos& position, class Player& player) const;
+    
+    /**@vIndex {34} */
+	virtual bool isActorRelevantForPlayer(class Player& player, const Actor& actor) const;
+    
+    /**@vIndex {35} */
+	virtual class BaseLightTextureImageBuilder* getLightTextureImageBuilder() const;
+    
+    /**@vIndex {36} */
+	virtual const DimensionBrightnessRamp& getBrightnessRamp() const;
+    
+    /**@vIndex {37} */
+	virtual void startLeaveGame();
+    
+    /**@vIndex {38} */
+	virtual std::unique_ptr<class ChunkBuildOrderPolicyBase> _createChunkBuildOrderPolicy();
+    
+    /**@vIndex {39} */
+	virtual void _upgradeOldLimboEntity(class CompoundTag& tag, LimboEntitiesVersion vers) = 0;
+    
+    /**@vIndex {40} */
+	virtual std::unique_ptr<class ChunkSource> _wrapStorageForVersionCompatibility(std::unique_ptr<class ChunkSource> storageSource, StorageVersion levelVersion) = 0;
 
     Dimension(ILevel& level, DimensionType dimId, DimensionHeightRange heightRange, Scheduler& callbackContext, std::string dimensionName);
+    BlockSource& getBlockSourceFromMainChunkSource() const;
 };
 
 static_assert(offsetof(Dimension, mHeightRange) == 200);

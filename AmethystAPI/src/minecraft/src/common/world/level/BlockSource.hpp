@@ -17,9 +17,8 @@
 #include <minecraft/src/common/world/entity/EntityContext.hpp>
 #include <minecraft/src/common/world/level/Level.hpp>
 #include <minecraft/src/common/world/phys/ShapeType.hpp>
-
-template <typename T, typename Y>
-class AutomaticID {};
+#include <minecraft/src-deps/core/utility/AutomaticID.hpp>
+#include <minecraft/src/common/world/level/chunk/ChunkSource.hpp>
 
 template <typename T>
 class WeakRef {};
