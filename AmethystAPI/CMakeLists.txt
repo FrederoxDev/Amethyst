@@ -7,9 +7,9 @@ FetchContent_Declare(
     GIT_TAG         9ef05d6961ce37a4c801f11159de895aa21878a9  
 )
 FetchContent_MakeAvailable(libhat)                   
- 
+  
 file(GLOB_RECURSE AmethystAPI_All      
-    "src/*.cpp" 
+    "src/*.cpp"   
     "src/*.c" 
     "src/*.asm"
     "src/*.hpp" 
@@ -19,10 +19,11 @@ file(GLOB_RECURSE AmethystAPI_All
     minecraft/src/common/world/item/Item.asm 
     minecraft/src/common/network/packet/Packet.asm
     minecraft/src/common/world/level/block/actor/BlockActor.asm
-    minecraft/src/common/world/level/dimension/Dimension.asm
+    minecraft/src/common/world/level/dimension/Dimension.asm 
     minecraft/src-client/common/client/renderer/ActorShaderManager.asm
     minecraft/src-client/common/client/renderer/blockActor/BlockActorRenderer.asm
-)                
+    minecraft/src-vanilla/vanilla_shared/common/world/level/dimension/OverworldDimension.hpp
+)                  
  
 add_library(AmethystAPI STATIC ${AmethystAPI_All})
 

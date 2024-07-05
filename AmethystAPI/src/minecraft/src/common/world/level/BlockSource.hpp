@@ -39,7 +39,6 @@ class GameEvent;
 class BlockSourceListener;
 struct ActorBlockSyncMessage;
 class ChunkPos;
-class ChunkSource;
 class ItemStackBase; 
 class Dimension;
 

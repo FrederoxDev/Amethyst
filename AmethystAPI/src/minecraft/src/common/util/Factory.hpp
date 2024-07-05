@@ -6,7 +6,7 @@
 template <typename Type, typename... Params>
 class OwnerPtrFactory {
 public:
-    typedef std::function<OwnerPtrT<SharePtrRefTraits<Type>>(Params&&...)> TypeCreator;
+    typedef std::function<OwnerPtr<Type>(Params&&...)> TypeCreator;
     typedef std::unordered_map<std::string, TypeCreator> FactoryMap;
 
 public:

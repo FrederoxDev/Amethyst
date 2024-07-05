@@ -1,4 +1,5 @@
 #pragma once
+#include <minecraft/src/common/world/level/chunk/ChunkSource.hpp>
 #include "minecraft/src-deps/core/utility/NonOwnerPointer.hpp"
 #include "minecraft/src/common/world/level/dimension/HeightRange.hpp"
 #include "minecraft/src/common/world/level/dimension/IDimension.hpp"
@@ -48,10 +49,41 @@ public:
     /* this + 362 */ bool mHasCeiling;
     /* this + 363 */ bool mHasWeather;
     /* this + 364 */ bool mHasSkylight;
+    /* this + 365 */ std::byte padding365[1592 - 365];
 
 public:
     /**@vIndex {0} */
 	virtual ~Dimension();
+
+    /**@vIndex {1} */
+	virtual bool isNaturalDimension() const override;
+
+    /**@vIndex {2} */
+	virtual DimensionType getDimensionId() const override;
+
+    /**@vIndex {3} */
+	virtual void sendPacketForPosition(const BlockPos&, const Packet&, const Player*) override;
+
+    /**@vIndex {4} */
+	virtual void flushLevelChunkGarbageCollector() override;
+
+    /**@vIndex {5} */
+	virtual void initializeWithLevelStorageManager(class LevelStorageManager&) override;
+
+    /**@vIndex {6} */
+	virtual BiomeRegistry& getBiomeRegistry() override;
+
+    /**@vIndex {7} */
+	virtual const BiomeRegistry& getBiomeRegistry() const override;
+
+    /**@vIndex {8} */
+	virtual Vec3 translatePosAcrossDimension(const Vec3&, DimensionType) const override;
+
+    /**@vIndex {9} */
+	virtual void forEachPlayer(std::function<bool(class Player&)> callback) const override;
+
+    /**@vIndex {10} */
+	virtual Actor* fetchEntity(ActorUniqueID actorID, bool getRemoved) const override;
 
     /**@vIndex {11} */
 	virtual void init(const br::worldgen::StructureSetRegistry&);
@@ -143,8 +175,11 @@ public:
     /**@vIndex {40} */
 	virtual std::unique_ptr<class ChunkSource> _wrapStorageForVersionCompatibility(std::unique_ptr<class ChunkSource> storageSource, StorageVersion levelVersion) = 0;
 
+    /**@asmName {Dimension_ctor}*/
     Dimension(ILevel& level, DimensionType dimId, DimensionHeightRange heightRange, Scheduler& callbackContext, std::string dimensionName);
+
     BlockSource& getBlockSourceFromMainChunkSource() const;
 };
 
+static_assert(sizeof(Dimension) == 1592);
 static_assert(offsetof(Dimension, mHeightRange) == 200);
