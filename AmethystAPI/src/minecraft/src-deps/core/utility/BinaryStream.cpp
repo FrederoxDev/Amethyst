@@ -1,4 +1,5 @@
 #include "BinaryStream.hpp"
+#include <minecraft/src/common/world/Facing.hpp>
 
 template <typename T>
 Bedrock::Result<T> ReadOnlyBinaryStream::get()
@@ -14,6 +15,8 @@ Bedrock::Result<T> ReadOnlyBinaryStream::get()
 template Bedrock::Result<unsigned char> ReadOnlyBinaryStream::get<unsigned char>();
 template Bedrock::Result<uint64_t> ReadOnlyBinaryStream::get<uint64_t>();
 template Bedrock::Result<float> ReadOnlyBinaryStream::get<float>();
+template Bedrock::Result<bool> ReadOnlyBinaryStream::get<bool>();
+template Bedrock::Result<FacingID> ReadOnlyBinaryStream::get<FacingID>();
 
 Bedrock::Result<uint32_t> ReadOnlyBinaryStream::getUnsignedVarInt32()
 {
@@ -43,6 +46,20 @@ Bedrock::Result<int32_t> ReadOnlyBinaryStream::getSignedVarInt32()
     return Bedrock::Result<int32_t>((value >> 1) ^ -static_cast<int32_t>(value & 1));
 }
 
+Bedrock::Result<std::string> ReadOnlyBinaryStream::getString()
+{
+    auto length = getUnsignedVarInt32();
+    if (!length) Assert("Issue with reading string length");
+
+    std::string value;
+    value.resize(length.value());
+
+    auto result = read(&value[0], length.value());
+    if (!result) Assert("Issue with reading string");
+
+    return Bedrock::Result<std::string>(value);
+}
+
 template <typename T>
 void BinaryStream::write(T in)
 {
@@ -55,7 +72,9 @@ void BinaryStream::write(T in)
 
 template void BinaryStream::write(unsigned char);
 template void BinaryStream::write(float);
+template void BinaryStream::write(bool);
 template void BinaryStream::write(uint64_t);
+template void BinaryStream::write(FacingID);
 
 void BinaryStream::writeUnsignedVarInt32(uint32_t value)
 {
@@ -69,4 +88,9 @@ void BinaryStream::writeUnsignedVarInt32(uint32_t value)
 void BinaryStream::writeSignedVarInt32(int32_t value)
 {
     writeUnsignedVarInt32((value << 1) ^ (value >> 31));
+}
+
+void BinaryStream::writeString(std::string value) {
+    writeUnsignedVarInt32((uint32_t)value.size());
+    mBuffer += value;
 }

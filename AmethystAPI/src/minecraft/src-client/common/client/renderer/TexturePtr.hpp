@@ -1,8 +1,8 @@
 #pragma once
-#include "minecraft/src-deps/core/resource/ResourceHelper.hpp"
 #include <memory>
 
-class BedrockTextureData;
+struct BedrockTextureData;
+class ResourceLocation;
 
 namespace mce {
     class TexturePtr {

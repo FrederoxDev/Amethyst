@@ -1,4 +1,5 @@
 #include "minecraft/src-client/common/client/renderer/block/BlockTessellator.hpp"
+#include <amethyst/Memory.hpp>
 
 //mce::Mesh* BlockTessellator::getMeshForBlock(Tessellator* tessellator, const Block* block) {
 //    using function = mce::Mesh*(BlockTessellator::*)(Tessellator*, const Block*);

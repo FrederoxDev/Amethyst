@@ -8,6 +8,10 @@
 #undef max
 #endif
 
+AABB::AABB()
+{
+}
+
 AABB::AABB(Vec3 min, Vec3 max) 
 	: min(min), max(max) {}
 

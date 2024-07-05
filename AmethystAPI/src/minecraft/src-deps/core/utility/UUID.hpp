@@ -52,3 +52,12 @@ namespace mce {
         bool isEmpty() const;
     };
 }
+
+// BinaryStream
+#include "minecraft/src-deps/core/utility/BinaryStream.hpp"
+
+template <>
+Bedrock::Result<mce::UUID> ReadOnlyBinaryStream::get<mce::UUID>();
+
+template <>
+void BinaryStream::write(mce::UUID);

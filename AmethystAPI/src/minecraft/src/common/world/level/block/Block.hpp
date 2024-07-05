@@ -1,8 +1,4 @@
 #pragma once
-#include "amethyst/Memory.hpp"
-#include "minecraft/src-deps/core/math/Color.hpp"
-#include "minecraft/src/common/world/level/BlockPos.hpp"
-#include "minecraft/src/common/world/level/BlockSource.hpp"
 #include "minecraft/src-deps/core/headerIncludes/gsl_includes.hpp"
 #include "minecraft/src/common/world/level/block/components/BlockComponentStorage.hpp"
 #include <minecraft/src/common/world/level/block/BlockState.hpp>
@@ -16,6 +12,11 @@
 //("gsl::not_null<BlockLegacy*>", "mLegacyBlock", 8, 0x30),
 //]
 
+namespace mce {
+class Color;
+}
+class BlockSource;
+class BlockPos;
 using DataID = unsigned short;
 
 class Block : public BlockComponentStorage {

@@ -1,6 +1,4 @@
 #pragma once
-#include "amethyst/Memory.hpp"
-#include <cstdint>
 
 class BaseOptions {
 public:

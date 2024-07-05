@@ -3,7 +3,7 @@
 #include <minecraft/src-client/common/client/renderer/BaseActorRenderContext.hpp>
 #include <minecraft/src/common/world/phys/Vec3.hpp>
 
-class BlockActorRenderData;
+struct BlockActorRenderData;
 class NameTagRenderObject;
 class Tessellator;
 class BlockActor;

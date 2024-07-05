@@ -3,10 +3,8 @@
 #include <chrono>
 #include <cstdint>
 #include <psapi.h>
-#include <cstdint>
 #include <string>
 #include <vector>
-#include <Windows.h>
 #include <string_view>
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>

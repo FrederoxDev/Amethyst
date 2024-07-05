@@ -3,6 +3,10 @@
 #include <cstdint>
 #include <map>
 
+#ifdef max
+#undef max
+#endif
+
 namespace Amethyst {
     /*
     A class which allows mods to safely use customly made enumerators, without having to worry about other mods using the same values.

@@ -7,6 +7,8 @@
 #include <minecraft/src/common/CommonTypes.hpp>
 #include <minecraft/src-deps/core/math/Math.hpp>
 
+class BlockPos;
+
 class ChunkBlockPos {
 public:
     uint8_t x;

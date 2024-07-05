@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <set>
+#include <map>
 #include <minecraft/src/common/world/phys/Vec2.hpp>
 #include <minecraft/src/common/world/phys/Vec3.hpp>
 #include <minecraft/src-deps/core/semVer/SemVersion.hpp>
@@ -43,7 +44,7 @@ class Geometry {
 public:
     struct NodeTextureMesh {};
 
-    __declspec(align(4)) class Box {
+    class Box {
     public:
         bool mMirror;
         Vec3 mFrom;
@@ -55,7 +56,7 @@ public:
         float mInflate;
         bool mUsesFaceUVs;
 
-        void Tessellate(Tessellator& tess) const;
+        void Tessellate(Tessellator& tess, float textureWidth, float textureHeight) const;
     };
 
     struct NodeVertex {

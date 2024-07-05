@@ -4,7 +4,8 @@
 #include <memory>
 #include "minecraft/src-deps/input/InputMappingFactory.hpp"
 #include "minecraft/src-deps/input/InputMapping.hpp"
-#include "minecraft/src-client/common/client/input/RemappingLayout.hpp"
+
+class RemappingLayout;
 
 class InputMapping {
 public:

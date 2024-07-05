@@ -1,4 +1,7 @@
 #include "minecraft/src/common/world/actor/Actor.hpp"
+#include "minecraft/src/common/world/entity/components/ActorHeadRotationComponent.hpp"
+#include "minecraft/src/common/world/entity/components/ActorRotationComponent.hpp"
+#include "minecraft/src/common/world/entity/components/StateVectorComponent.hpp"
 
 Vec3* Actor::getPosition() const
 {

@@ -1,8 +1,8 @@
 #pragma once
-#include "minecraft/src/common/world/item/registry/ItemRegistryRef.hpp"
 
 class BaseGameVersion;
 class Experiments;
+class ItemRegistryRef;
 
 class VanillaItems {
 public:

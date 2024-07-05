@@ -3,7 +3,11 @@
 
 namespace mce {
     class ClientTexture {
-        std::byte padding0[16];
+        std::byte padding0[32];
+    };
+
+    class ServerTexture {
+        std::byte padding0[32];
     };
 }
 

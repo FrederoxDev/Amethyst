@@ -46,7 +46,6 @@ class BlockLegacy;
 struct ActorBlockSyncMessage;
 class ItemStack;
 class Player;
-class Randomize;
 class BlockItem;
 class MobSpawnerData;
 class SpawnConditions;
@@ -319,7 +318,10 @@ private:
 
 public:
     BlockLegacy(const std::string& nameId, short id, const Material& material);
+
+    /** @signature {AA BB CC DD} */
     short getBlockItemId();
+
     void setDestroyTime(float destroyTime, float explosionResistance);
     void addState(const BlockState& blockState);
     
