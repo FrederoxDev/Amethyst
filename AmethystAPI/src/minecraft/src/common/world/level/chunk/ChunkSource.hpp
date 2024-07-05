@@ -16,8 +16,8 @@ public:
 
     int mChunkSide;                             
     class Level* mLevel;                        
-    Dimension* mDimension;               
-    ChunkSource* mParent;                           
+    class Dimension* mDimension;               
+    class ChunkSource* mParent;                           
     std::unique_ptr<ChunkSource> mOwnedParent;     
     class LevelChunkBuilderData* mLevelChunkBuilderData; 
     std::atomic_bool mShuttingDown;               
