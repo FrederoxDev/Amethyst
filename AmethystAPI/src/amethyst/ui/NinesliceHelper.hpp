@@ -1,7 +1,13 @@
 #pragma once
-#include "minecraft/src/common/world/phys/Vec2.hpp"
-#include "minecraft/src-client/common/client/renderer/screen/MinecraftUIRenderContext.hpp"
 #include "glm/glm.hpp"
+
+class MinecraftUIRenderContext;
+struct RectangleArea;
+class TextureUV;
+struct ImageInfo;
+namespace mce {
+class TexturePtr;
+}
 
 namespace Amethyst {
     struct TextureUV {

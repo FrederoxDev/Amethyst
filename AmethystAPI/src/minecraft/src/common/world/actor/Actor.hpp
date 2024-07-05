@@ -1,16 +1,14 @@
 #pragma once
 #include <gsl/gsl>
-#include "amethyst/Memory.hpp"
 #include "minecraft/src/common/world/entity/EntityContext.hpp"
-#include "minecraft/src/common/world/entity/components/ActorHeadRotationComponent.hpp"
-#include "minecraft/src/common/world/entity/components/ActorRotationComponent.hpp"
-#include "minecraft/src/common/world/entity/components/StateVectorComponent.hpp"
-#include "minecraft/src/common/world/phys/Vec3.hpp"
-#include "minecraft/src/common/world/phys/Vec2.hpp"
 
+class Vec2;
+class Vec3;
 class Dimension;
 class AABBShapeComponent;
 class ActorWalkAnimationComponent;
+struct StateVectorComponent;
+struct ActorRotationComponent;
 
 struct BuiltInActorComponents {
     gsl::not_null<StateVectorComponent*> mStateVectorComponent;

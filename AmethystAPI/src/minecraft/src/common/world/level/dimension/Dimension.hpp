@@ -1,21 +1,23 @@
 #pragma once
 #include "minecraft/src-deps/core/utility/NonOwnerPointer.hpp"
-#include "minecraft/src-deps/core/math/Color.hpp"
 #include "minecraft/src/common/world/level/dimension/HeightRange.hpp"
 #include "minecraft/src/common/world/level/dimension/IDimension.hpp"
 #include "minecraft/src/common/world/level/LevelListener.hpp"
 #include "minecraft/src/common/world/level/saveddata/SavedData.hpp"
-#include "minecraft/src/common/world/level/dimension/DimensionHeightRange.hpp"
-#include "minecraft/src/common/world/level/dimension/DimensionBrightnessRamp.hpp"
 #include "minecraft/src/common/gamerefs/OwnerPtr.hpp"
 #include "minecraft/src/common/world/level/storage/StorageVersion.hpp"
 #include <cstddef>
 #include <cstdint>
 #include <string>
 
+namespace mce {
+class Color;
+}
 class BlockSource;
 class ILevel;
 class Scheduler;
+class DimensionHeightRange;
+class DimensionBrightnessRamp;
 
 enum class LimboEntitiesVersion : char {
     v0,

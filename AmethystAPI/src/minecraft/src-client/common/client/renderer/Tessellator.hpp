@@ -5,7 +5,6 @@
 #include <cstdint>
 #include "glm/glm.hpp"
 #include "minecraft/src-deps/minecraftrenderer/renderer/MeshData.hpp"
-#include "minecraft/src-deps/minecraftrenderer/renderer/Mesh.hpp"
 
 struct TessellatorQuadInfo {
 public:
@@ -17,6 +16,8 @@ public:
 static_assert(sizeof(TessellatorQuadInfo) == 0x10);
 
 namespace mce {
+    class Mesh; 
+
     enum class PrimitiveMode : int {
         None = 0,
         QuadList = 1,

@@ -46,7 +46,6 @@ class BlockLegacy;
 struct ActorBlockSyncMessage;
 class ItemStack;
 class Player;
-class Randomize;
 class BlockItem;
 class MobSpawnerData;
 class SpawnConditions;

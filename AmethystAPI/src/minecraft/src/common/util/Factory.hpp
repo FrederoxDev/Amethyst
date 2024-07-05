@@ -3,10 +3,6 @@
 #include <functional>
 #include <minecraft/src/common/gamerefs/OwnerPtr.hpp>
 
-class Dimension;
-class Level;
-class Scheduler;
-
 template <typename Type, typename... Params>
 class OwnerPtrFactory {
 public:

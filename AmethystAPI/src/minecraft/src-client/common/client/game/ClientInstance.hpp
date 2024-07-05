@@ -1,8 +1,4 @@
 #pragma once
-#include "minecraft/src-client/common/client/game/MinecraftGame.hpp"
-#include "minecraft/src-client/common/client/gui/gui/GuiData.hpp"
-#include "minecraft/src-client/common/client/player/LocalPlayer.hpp"
-#include "minecraft/src/common/world/level/BlockSource.hpp"
 #include <cstdint>
 #include "minecraft/src-deps/renderer/Camera.hpp"
 
@@ -10,6 +6,10 @@ class Minecraft;
 class ClientInputHandler;
 class ItemRenderer;
 class BlockTessellator;
+class MinecraftGame;
+class GuiData;
+class LocalPlayer;
+class BlockSource;
 
 //is_virtual = True
 //    hide_vtable = False

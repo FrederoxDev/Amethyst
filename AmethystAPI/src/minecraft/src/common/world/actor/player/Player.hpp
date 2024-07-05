@@ -1,7 +1,8 @@
 #include "minecraft/src/common/world/actor/Mob.hpp"
-#include "minecraft/src/common/world/actor/player/PlayerInventory.hpp"
 #include <minecraft/src/common/world/PlayerUIContainer.hpp>
 #include <minecraft/src/common/world/item/ItemGroup.hpp>
+
+class PlayerInventory;
 
 class Player : public Mob {
 public:

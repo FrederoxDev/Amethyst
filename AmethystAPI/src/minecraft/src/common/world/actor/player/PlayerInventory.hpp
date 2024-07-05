@@ -1,6 +1,7 @@
 #pragma once
 #include "minecraft/src/common/world/item/ItemStack.hpp"
-#include "minecraft/src/common/world/actor/player/Inventory.hpp"
+
+class Inventory;
 
 // This is probably wrong in some way or outdated, from china
 enum ContainerID : unsigned char {

@@ -1,12 +1,12 @@
 #pragma once
 #include <string>
-#include "glm/glm.hpp"
-#include "minecraft/src/common/world/phys/Vec2.hpp"
 #include <memory>
 #include <vector>
-#include "minecraft/src-client/common/client/gui/controls/UIComponent.hpp"
+#include "glm/glm.hpp"
+#include "minecraft/src/common/world/phys/Vec2.hpp"
 
 class UIPropertyBag;
+class UIComponent;
 
 class UIControl {
 public:

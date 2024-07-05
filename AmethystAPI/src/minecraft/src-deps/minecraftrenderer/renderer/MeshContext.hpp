@@ -1,8 +1,9 @@
 #pragma once
 
-#include "minecraft/src-deps/minecraftrenderer/hal/interface/RenderContext.hpp"
-#include "minecraft/src-deps/renderer/Camera.hpp"
-
+namespace mce {
+class Camera;
+class RenderContext;
+};
 
 #pragma pack(push, 1)
 namespace mce {

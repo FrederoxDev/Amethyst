@@ -1,4 +1,5 @@
 #include "minecraft/src-client/common/client/renderer/Tessellator.hpp"
+#include <minecraft/src-deps/minecraftrenderer/renderer/Mesh.hpp>
 
 void Tessellator::begin(mce::PrimitiveMode mode, int maxVertices) {
     using function = decltype(&Tessellator::begin);

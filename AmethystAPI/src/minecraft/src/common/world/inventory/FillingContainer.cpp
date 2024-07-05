@@ -25,7 +25,7 @@ void FillingContainer::setItem(int slot, const ItemStack& item)
 // 1.21.0.3 - Re-Implemented
 int FillingContainer::getContainerSize() const
 {
-    return mItems.size();
+    return (int)mItems.size();
 }
 
 // 1.21.0.3 - Re-Implemented

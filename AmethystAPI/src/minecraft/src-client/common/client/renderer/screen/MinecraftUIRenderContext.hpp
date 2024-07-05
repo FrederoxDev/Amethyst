@@ -1,17 +1,20 @@
 #pragma once
 #include "glm/glm.hpp"
-#include "minecraft/src-client/common/client/game/ClientInstance.hpp"
+#include <gsl/gsl>
 #include "minecraft/src-client/common/client/renderer/screen/ScreenContext.hpp"
-#include "minecraft/src-deps/core/math/Color.hpp"
-#include "minecraft/src-deps/core/string/StringHash.hpp"
-#include "minecraft/src/common/world/phys/Vec2.hpp"
 #include <cstdint>
 #include <string>
-#include "minecraft/src-client/common/client/renderer/NinesliceInfo.hpp"
 
+
+namespace mce {
+class Color;
+}
+
+class ClientInstance;
 using IClientInstance = ClientInstance;
 class UIScene;
 class Font;
+struct NinesliceInfo;
 
 #pragma pack(push, 4)
 struct RectangleArea {
@@ -59,6 +62,7 @@ class ResourceLocation;
 class UIScene;
 class ComponentRenderBatch;
 class CustomRenderComponent;
+class HashedString;
 
 class MinecraftUIRenderContext {
 public:

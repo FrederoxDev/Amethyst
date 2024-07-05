@@ -1,6 +1,4 @@
 #pragma once
-#include "amethyst/Memory.hpp"
-#include "minecraft/src-deps/core/file/Path.hpp"
 #include "minecraft/src-deps/core/resource/ResourceUtil.hpp"
 #include <string>
 #include "minecraft/src-deps/core/semVer/SemVersion.hpp"

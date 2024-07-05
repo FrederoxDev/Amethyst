@@ -1,4 +1,5 @@
 #include "minecraft/src-client/common/client/renderer/BaseActorRenderContext.hpp"
+#include <amethyst/Memory.hpp>
 
 BaseActorRenderContext::BaseActorRenderContext(ScreenContext* screenContext, IClientInstance* clientInstance, IMinecraftGame* minecraftGame) {
     using function = void(__thiscall*)(BaseActorRenderContext*, ScreenContext*, IClientInstance*, IMinecraftGame*);
