@@ -4,25 +4,16 @@
 #include <minecraft/src-deps/core/threading/SpinLock.hpp>
 #include <minecraft/src-deps/core/utility/buffer_span.hpp>
 #include <minecraft/src/common/world/level/levelgen/structure/StructureFeatureType.hpp>
+#include <minecraft/src/common/world/level/levelgen/structure/StructureFeatureRegistry.hpp>
+ #include <minecraft/src/common/world/level/levelgen/v1/HardcodedSpawnAreaRegistry.hpp>
 
-class WorldGenerator : public ChunkSource, public IPreliminarySurfaceProvider 
-{
+class WorldGenerator : public ChunkSource, public IPreliminarySurfaceProvider {
 public:
     struct BlockVolumeDimensions {
         uint32_t mWidth;  // this+0x0
         uint32_t mDepth; // this+0x4
         uint32_t mHeight; // this+0x8
     };
-    class HardcodedSpawnAreaRegistry
-    {
-    public:
-        std::byte pad1[0x40]; // Make error go away
-    };
-    class StructureFeatureRegistry
-    {
-    public:
-        std::byte pad1[0xD0];
-    }; // Make error go away
 
 public:
     std::unique_ptr<HardcodedSpawnAreaRegistry> mHardcodedSpawnAreaRegistry; // 0x78
