@@ -91,6 +91,6 @@ void BinaryStream::writeSignedVarInt32(int32_t value)
 }
 
 void BinaryStream::writeString(std::string value) {
-    writeUnsignedVarInt32(value.size());
+    writeUnsignedVarInt32((uint32_t)value.size());
     mBuffer += value;
 }

@@ -2,7 +2,7 @@
 
 template <typename T, typename ID_TYPE>
 class AutomaticID {
-private:
+public:
     ID_TYPE runtimeID;
 };
 

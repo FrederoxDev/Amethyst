@@ -59,7 +59,6 @@ class Mob;
 class IDataInput;
 class ReadOnlyBinaryStream;
 class IDataOutput;
-class ItemInstance;
 
 class Item {
 public:

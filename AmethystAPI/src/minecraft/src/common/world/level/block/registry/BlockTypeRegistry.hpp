@@ -6,7 +6,6 @@
 #include "minecraft/src/common/SharedPtr.hpp"
 #include "entt/container/dense_map.hpp"
 #include "minecraft/src/common/world/level/block/Block.hpp"
-#include "minecraft/src-deps/core/utility/StringUtils.hpp"
 
 typedef std::map<HashedString, SharedPtr<BlockLegacy>> BlockLookupMap;
 typedef entt::dense_map<HashType64, HashedString> BlockNameHashToHashedStringMap;

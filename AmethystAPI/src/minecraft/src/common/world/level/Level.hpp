@@ -1,6 +1,5 @@
 #pragma once
 
-#include "minecraft/src/common/SharedPtr.hpp"
 #include <memory>
 #include <minecraft/src/common/world/item/registry/ItemRegistryRef.hpp>
 #include <minecraft/src/common/world/level/ILevel.hpp>
@@ -9,10 +8,7 @@
 #include <minecraft/src/common/gamerefs/OwnerPtr.hpp>
 #include <minecraft/src/common/world/level/dimension/DimensionFactory.hpp>
 
-class BlockTypeRegistry;
 class PacketSender;
-class DimensionManager;
-class Scheduler;
 
 class Level : public ILevel, public BlockSourceListener, public IWorldRegistriesProvider {
 public:

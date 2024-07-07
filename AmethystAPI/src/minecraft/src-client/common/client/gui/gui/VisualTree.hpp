@@ -1,5 +1,5 @@
 #pragma once
-#include "minecraft/src-client/common/client/gui/gui/UIControl.hpp"
+class UIControl;
 
 class VisualTree {
 public:

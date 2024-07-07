@@ -1,5 +1,4 @@
 #pragma once
-#include "amethyst/Memory.hpp"
 #include <minecraft/src/common/world/phys/Vec3.hpp>
 #include <minecraft/src/common/world/phys/AABB.hpp>
 

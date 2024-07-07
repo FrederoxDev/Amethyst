@@ -1,10 +1,8 @@
 #pragma once
 #include <unordered_map>
-#include "amethyst/Memory.hpp"
 #include <minecraft/src/common/world/level/ChunkBlockPos.hpp>
 
 class Block;
-class ChunkBlockPos;
 class BlockPos;
 class BlockActor;
 class BlockSource;

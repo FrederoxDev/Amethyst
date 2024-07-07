@@ -3,7 +3,7 @@
 
 template <typename T>
 class OwnerStorageSharePtr {
-private:
+public:
     std::shared_ptr<T> mValue;
 
 protected:

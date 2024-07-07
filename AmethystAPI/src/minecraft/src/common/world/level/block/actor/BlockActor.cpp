@@ -1,4 +1,5 @@
 #include "minecraft/src/common/world/level/block/actor/BlockActor.hpp"
+#include <amethyst/Memory.hpp>
 
 std::shared_ptr<BlockActor> BlockActorFactory::createBlockEntity(BlockActorType type, const BlockPos& pos, const BlockLegacy& block)
 {

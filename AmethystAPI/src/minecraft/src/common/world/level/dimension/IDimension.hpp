@@ -12,7 +12,7 @@ class Actor;
 
 class IDimension {
 public:
-    virtual ~IDimension();
+    virtual ~IDimension() = default;
     virtual bool isNaturalDimension() const = 0;
     virtual DimensionType getDimensionId() const = 0;
     virtual void sendPacketForPosition(const BlockPos&, const Packet&, const Player*) = 0;

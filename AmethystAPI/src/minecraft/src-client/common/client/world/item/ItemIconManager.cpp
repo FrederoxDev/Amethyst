@@ -1,4 +1,5 @@
 #include <minecraft/src-client/common/client/world/item/ItemIconManager.hpp>
+#include <amethyst/Memory.hpp>
 
 TextureAtlasItem* ItemIconManager::getIcon(const ResolvedItemIconInfo& iconInfo)
 {

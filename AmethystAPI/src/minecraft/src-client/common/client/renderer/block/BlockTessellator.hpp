@@ -1,7 +1,13 @@
 #pragma once
+#include <cstdint>
 
-#include "minecraft/src-client/common/client/renderer/Tessellator.hpp"
-#include "minecraft/src/common/world/level/block/Block.hpp"
+namespace mce {
+class Mesh;
+}
+    
+class Block;
+class BlockPos;
+class Tessellator;
 
 class BlockTessellator {
 public:

@@ -1,13 +1,14 @@
 #pragma once
-#include "minecraft/src/common/nbt/Tag.hpp"
-#include "minecraft/src/common/nbt/ByteTag.hpp"
-#include "minecraft/src/common/nbt/ListTag.hpp"
-#include "minecraft/src/common/nbt/StringTag.hpp"
-#include "minecraft/src/common/nbt/IntTag.hpp"
 #include <map>
 #include <string_view>
+#include "minecraft/src/common/nbt/Tag.hpp"
 
 class CompoundTagVariant;
+class IntTag;
+class StringTag;
+class ListTag;
+class ByteTag;
+
 typedef std::map<std::string, CompoundTagVariant, std::less<>> TagMap;
 
 class CompoundTag : public Tag {

@@ -1,4 +1,5 @@
 #include "minecraft/src-client/common/client/renderer/game/LevelRendererPlayer.hpp"
+#include <amethyst/Memory.hpp>
 
 float LevelRendererPlayer::getFov(float originalFov, bool applyEffects) {
     using function = decltype(&LevelRendererPlayer::getFov);

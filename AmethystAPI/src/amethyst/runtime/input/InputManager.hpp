@@ -1,7 +1,6 @@
 #pragma once
 #include <vector>
 #include "minecraft/src-client/common/client/options/Options.hpp"
-#include "amethyst/Log.hpp"
 #include <minecraft/src-client/common/client/input/ClientInputHandler.hpp>
 
 class AmethystContext;
