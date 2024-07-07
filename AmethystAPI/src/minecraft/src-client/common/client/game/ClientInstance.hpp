@@ -4,12 +4,22 @@
 #include "minecraft/src-client/common/client/player/LocalPlayer.hpp"
 #include "minecraft/src/common/world/level/BlockSource.hpp"
 #include <cstdint>
+#include <functional>
 #include "minecraft/src-deps/renderer/Camera.hpp"
 
 class Minecraft;
 class ClientInputHandler;
 class ItemRenderer;
 class BlockTessellator;
+class FileDataRequest;
+
+namespace Bedrock::Http {
+class Status {
+private:
+    uint32_t mValue;
+    std::error_code mError;
+};
+}
 
 //is_virtual = True
 //    hide_vtable = False
@@ -57,6 +67,9 @@ public:
 
     BlockSource* getRegion();
     LocalPlayer* getLocalPlayer();
+
+    // 1.21.0.3 - ? - 4C 8B DC 49 89 5B ? 4D 89 4B ? 49 89 53 ? 55 56 57 48 83 EC
+    std::shared_ptr<FileDataRequest> getImageFromUrl(const std::string& imageUrl, std::function<void(Bedrock::Http::Status, const Core::Path&, uint64_t)> callback);
 };
 #pragma pack(pop)
 
