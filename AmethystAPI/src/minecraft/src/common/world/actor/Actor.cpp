@@ -17,3 +17,8 @@ const Dimension& Actor::getDimensionConst() const
 {
     return *mDimension.lock();
 }
+
+bool Actor::hasDimension() const
+{
+    return mDimension.lock() != nullptr;
+}

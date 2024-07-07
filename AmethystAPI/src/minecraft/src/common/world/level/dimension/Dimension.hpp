@@ -35,7 +35,7 @@ class StructureSetRegistry;
 }
 
 /**@vtable */
-class Dimension : public IDimension, LevelListener, SavedData, Bedrock::EnableNonOwnerReferences, std::enable_shared_from_this<Dimension> {
+class Dimension : public IDimension, public LevelListener, public SavedData, public Bedrock::EnableNonOwnerReferences, public std::enable_shared_from_this<Dimension> {
 public:
     /* this + 104 */ std::byte filler104[96];
     /* this + 200 */ HeightRange mHeightRange;

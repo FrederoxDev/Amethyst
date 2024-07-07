@@ -55,6 +55,7 @@ public:
     Dimension* mDimension;
     const Height mMaxHeight;
     const Height mMinHeight;
+    std::byte padding60[272 - 60];
 
 public:
     virtual ~BlockSource();
@@ -117,3 +118,5 @@ public:
     // BlockActor* getBlockEntity(const BlockPos& pos);
 };
 #pragma pack(pop)
+
+static_assert(sizeof(BlockSource) == 272);
