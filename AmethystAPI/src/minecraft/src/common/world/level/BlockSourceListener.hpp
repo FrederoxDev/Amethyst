@@ -5,6 +5,7 @@ class BlockSource;
 class BlockActor;
 class Actor;
 class Block;
+class BlockPos;
 struct ActorBlockSyncMessage;
 class BlockPos;
 

@@ -6,6 +6,7 @@
 #include "minecraft/src/common/world/level/LevelListener.hpp"
 #include "minecraft/src/common/world/level/saveddata/SavedData.hpp"
 #include "minecraft/src/common/gamerefs/OwnerPtr.hpp"
+#include "minecraft/src/common/world/level/Level.hpp"
 #include "minecraft/src/common/world/level/storage/StorageVersion.hpp"
 #include <cstddef>
 #include <cstdint>
@@ -37,7 +38,9 @@ class StructureSetRegistry;
 /**@vtable */
 class Dimension : public IDimension, public LevelListener, public SavedData, public Bedrock::EnableNonOwnerReferences, public std::enable_shared_from_this<Dimension> {
 public:
-    /* this + 104 */ std::byte filler104[96];
+    /* this + 104 */ std::byte filler104[16];
+    /* this + 120 */ Level* mLevel;
+    /* this + 128 */ std::byte filler128[72];
     /* this + 200 */ HeightRange mHeightRange;
     /* this + 204 */ int16_t mSeaLevel;
     /* this + 206 */ std::byte padding206[2];
