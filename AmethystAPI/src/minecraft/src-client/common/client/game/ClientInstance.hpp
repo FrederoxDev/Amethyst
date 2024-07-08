@@ -1,11 +1,16 @@
 #pragma once
 #include <cstdint>
+#include <functional>
+#include <memory>
 #include "minecraft/src-deps/renderer/Camera.hpp"
 
 class Minecraft;
 class ClientInputHandler;
 class ItemRenderer;
 class BlockTessellator;
+class FileDataRequest;
+namespace Core { class Path; }
+namespace Bedrock::Http { class Status; }
 class MinecraftGame;
 class GuiData;
 class LocalPlayer;
@@ -57,6 +62,9 @@ public:
 
     BlockSource* getRegion();
     LocalPlayer* getLocalPlayer();
+
+    // 1.21.0.3 - ? - 4C 8B DC 49 89 5B ? 4D 89 4B ? 49 89 53 ? 55 56 57 48 83 EC
+    std::shared_ptr<FileDataRequest> getImageFromUrl(const std::string& imageUrl, std::function<void(Bedrock::Http::Status, const Core::Path&, uint64_t)> callback);
 };
 #pragma pack(pop)
 
