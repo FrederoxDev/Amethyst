@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <functional>
+#include <memory>
 #include "minecraft/src-deps/renderer/Camera.hpp"
 
 class Minecraft;
@@ -8,14 +9,8 @@ class ClientInputHandler;
 class ItemRenderer;
 class BlockTessellator;
 class FileDataRequest;
-
-namespace Bedrock::Http {
-class Status {
-private:
-    uint32_t mValue;
-    std::error_code mError;
-};
-}
+namespace Core { class Path; }
+namespace Bedrock::Http { class Status; }
 class MinecraftGame;
 class GuiData;
 class LocalPlayer;
