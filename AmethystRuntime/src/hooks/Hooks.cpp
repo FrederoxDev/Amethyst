@@ -36,10 +36,11 @@ void ClientInstance_requestLeaveGame(ClientInstance* self, char switchScreen, ch
     _ClientInstance_requestLeaveGame.thiscall(self, switchScreen, sync);
 }
 
-bool Minecraft_update(Minecraft* self) {
+BOOL Minecraft_update(Minecraft* self)
+{
     Amethyst::EventManager* events = AmethystRuntime::getEventManager();
 
-    bool value = _Minecraft_update.call<bool, Minecraft*>(self);
+    BOOL value = _Minecraft_update.call<BOOL, Minecraft*>(self);
     events->update.Invoke();
 
     return value;

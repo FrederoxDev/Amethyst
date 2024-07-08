@@ -10,6 +10,9 @@ public:
 	*/
 	virtual ~OverworldDimension();
 
+	/**@vIndex {8} */
+    virtual Vec3 translatePosAcrossDimension(const Vec3&, DimensionType) const override;
+
     /**@vIndex {14} */
 	virtual std::unique_ptr<class WorldGenerator> createGenerator(const br::worldgen::StructureSetRegistry&) override;
 

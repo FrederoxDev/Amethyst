@@ -6,9 +6,9 @@ FetchContent_Declare(
     GIT_REPOSITORY  https://github.com/BasedInc/libhat.git
     GIT_TAG         9ef05d6961ce37a4c801f11159de895aa21878a9  
 )
-FetchContent_MakeAvailable(libhat)                   
+FetchContent_MakeAvailable(libhat)                     
    
-file(GLOB_RECURSE AmethystAPI_All       
+file(GLOB_RECURSE AmethystAPI_All           
     "src/*.cpp"   
     "src/*.c"  
     "src/*.asm" 

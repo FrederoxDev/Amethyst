@@ -2,8 +2,8 @@
 section .text
 
 extern Dimension_vtable
-extern Dimension_for_SavedData_vtable
 extern Dimension_for_LevelListener_vtable
+extern Dimension_for_SavedData_vtable
 extern Dimension_ctor
 
 global ??_DDimension@@QEAAXXZ
@@ -61,8 +61,8 @@ global ?fetchEntity@Dimension@@UEBAPEAVActor@@UActorUniqueID@@_N@Z
 	mov rax, [rel Dimension_vtable]
 	jmp [rax + 80]
 
-global ?init@Dimension@@UEAAXAEBVStructureSetRegistry@worldgen@br@@@Z
-?init@Dimension@@UEAAXAEBVStructureSetRegistry@worldgen@br@@@Z:
+global ?init@Dimension@@UEAAXAEBUStructureSetRegistry@worldgen@br@@@Z
+?init@Dimension@@UEAAXAEBUStructureSetRegistry@worldgen@br@@@Z:
 	mov rax, [rel Dimension_vtable]
 	jmp [rax + 88]
 
@@ -76,8 +76,8 @@ global ?tickRedstone@Dimension@@UEAAXXZ
 	mov rax, [rel Dimension_vtable]
 	jmp [rax + 104]
 
-global ?createGenerator@Dimension@@UEAA?AV?$unique_ptr@VWorldGenerator@@U?$default_delete@VWorldGenerator@@@std@@@std@@AEBVStructureSetRegistry@worldgen@br@@@Z
-?createGenerator@Dimension@@UEAA?AV?$unique_ptr@VWorldGenerator@@U?$default_delete@VWorldGenerator@@@std@@@std@@AEBVStructureSetRegistry@worldgen@br@@@Z:
+global ?createGenerator@Dimension@@UEAA?AV?$unique_ptr@VWorldGenerator@@U?$default_delete@VWorldGenerator@@@std@@@std@@AEBUStructureSetRegistry@worldgen@br@@@Z
+?createGenerator@Dimension@@UEAA?AV?$unique_ptr@VWorldGenerator@@U?$default_delete@VWorldGenerator@@@std@@@std@@AEBUStructureSetRegistry@worldgen@br@@@Z:
 	mov rax, [rel Dimension_vtable]
 	jmp [rax + 112]
 
