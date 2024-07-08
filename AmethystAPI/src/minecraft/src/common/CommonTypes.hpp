@@ -1,7 +1,11 @@
 #pragma once
 #include <minecraft/src/common/util/NewType.hpp>
 
-struct Brightness : public NewType<unsigned char> {
+struct Brightness : public NewType<unsigned char> {};
+
+struct BrightnessPair {
+    Brightness sky;
+    Brightness block;
 };
 
 using Height = short;

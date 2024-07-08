@@ -1,25 +1,22 @@
 #pragma once
-#include <minecraft/src/common/world/level/chunk/ChunkSource.hpp>
+#include <cstddef>
+#include <cstdint>
+#include <string>
+#include "minecraft/src-deps/core/threading/Mutex.hpp"
 #include "minecraft/src-deps/core/utility/NonOwnerPointer.hpp"
-#include "minecraft/src/common/world/level/dimension/HeightRange.hpp"
+#include <minecraft/src/common/world/level/chunk/ChunkSource.hpp>
+#include "minecraft/src/common/world/level/dimension/DimensionHeightRange.hpp"
 #include "minecraft/src/common/world/level/dimension/IDimension.hpp"
 #include "minecraft/src/common/world/level/LevelListener.hpp"
 #include "minecraft/src/common/world/level/saveddata/SavedData.hpp"
 #include "minecraft/src/common/gamerefs/OwnerPtr.hpp"
 #include "minecraft/src/common/world/level/Level.hpp"
 #include "minecraft/src/common/world/level/storage/StorageVersion.hpp"
-#include <cstddef>
-#include <cstdint>
-#include <string>
-
-namespace mce {
-class Color;
-}
-class BlockSource;
-class ILevel;
-class Scheduler;
-class DimensionHeightRange;
-class DimensionBrightnessRamp;
+#include "minecraft/src/common/world/level/ChunkPos.hpp"
+#include "minecraft/src/common/world/level/chunk/LevelChunkGarbageCollector.hpp"
+#include "minecraft/src/common/world/level/levelgen/v1/FeatureTerrainAdjustments.hpp"
+#include "minecraft/src/common/world/level/levelgen/structure/StructureSetRegistry.hpp"
+#include <set>
 
 enum class LimboEntitiesVersion : char {
     v0,
@@ -29,30 +26,102 @@ enum class LimboEntitiesVersion : char {
     v1_16_210
 };
 
-namespace br {
-namespace worldgen {
-class StructureSetRegistry;
-}
-}
+struct ActorChunkTransferEntry {
+    ChunkPos mOldChunkPos;
+    ChunkPos mNewChunkPos;
+};
+
+namespace br::worldgen { class StructureSetRegistry; }
+namespace mce { class Color; }
+class BlockSource;
+class ILevel;
+class Scheduler;
+class DimensionHeightRange;
+class DimensionBrightnessRamp;
+class LevelChunkMetaData;
+class RuntimeLightingManager;
+class BaseLightTextureImageBuilder;
+class BlockEventDispatcher;
+class TaskGroup;
+class PostprocessingManager;
+class SubChunkInterlocker;
+class Weather;
+class Seasons;
+class CircuitSystem;
+class GameEventDispatcher;
+class WeakEntityRef;
+class WireframeQueue;
+class ChunkSource;
+class WorldGenerator;
+class TickingAreaList;
+class VillageManager;
+class NetworkIdentifierWithSubId;
+class ChunkLoadActionList;
+class DelayActionList;
+class SubChunkPos;
+class UpdateSubChunkBlocksChangedInfo;
+class ChunkBuildOrderPolicyBase;
 
 /**@vtable */
 class Dimension : public IDimension, public LevelListener, public SavedData, public Bedrock::EnableNonOwnerReferences, public std::enable_shared_from_this<Dimension> {
 public:
-    /* this + 104 */ std::byte filler104[16];
-    /* this + 120 */ Level* mLevel;
-    /* this + 128 */ std::byte filler128[72];
-    /* this + 200 */ HeightRange mHeightRange;
-    /* this + 204 */ int16_t mSeaLevel;
-    /* this + 206 */ std::byte padding206[2];
-    /* this + 208 */ OwnerPtr<BlockSource> mBlockSource;
-    /* this + 224 */ std::byte filler224[104];
-    /* this + 328 */ std::string mName;
-    /* this + 360 */ uint8_t mId;
-    /* this + 361 */ bool mUltraWarm;
-    /* this + 362 */ bool mHasCeiling;
-    /* this + 363 */ bool mHasWeather;
-    /* this + 364 */ bool mHasSkylight;
-    /* this + 365 */ std::byte padding365[1592 - 365];
+    struct PlayerReplicationStructures;
+
+    // Thanks Levilamina for free Dimension struct xx
+    /* this + 104  */ std::vector<ActorChunkTransferEntry> mActorChunkTransferQueue;
+    /* this + 128  */ std::unordered_map<ChunkKey, std::vector<ActorUnloadedChunkTransferEntry>> mActorUnloadedChunkTransferQueue;
+    /* this + 192  */ ILevel* mLevel;
+    /* this + 200  */ DimensionHeightRange mHeightRange;
+    /* this + 204  */ int16_t mSeaLevel;
+    /* this + 208  */ OwnerPtr<BlockSource> mBlockSource;
+    /* this + 224  */ float mMobsPerChunkSurface[7];
+    /* this + 252  */ float mMobsPerChunkUnderground[7];
+    /* this + 280  */ BrightnessPair mDefaultBrightness;
+    /* this + 288  */ std::unique_ptr<BaseLightTextureImageBuilder> mLightTextureImageBuilder;
+    /* this + 296  */ std::unique_ptr<DimensionBrightnessRamp> mDimensionBrightnessRamp;
+    /* this + 304  */ std::shared_ptr<LevelChunkMetaData> mTargetMetaData;
+    /* this + 320  */ std::unique_ptr<RuntimeLightingManager> mRuntimeLightingManager;
+    /* this + 328  */ std::string mName;
+    /* this + 360  */ DimensionType mId;
+    /* this + 364  */ bool mUltraWarm;
+    /* this + 365  */ bool mHasCeiling;
+    /* this + 366  */ bool mHasWeather;
+    /* this + 367  */ bool mHasSkylight;
+    /* this + 367  */ Brightness mSkyDarken;
+    /* this + 376  */ std::unique_ptr<BlockEventDispatcher> mDispatcher;
+    /* this + 384  */ std::unique_ptr<TaskGroup> mTaskGroup;
+    /* this + 392  */ std::unique_ptr<TaskGroup> mChunkGenTaskGroup;
+    /* this + 400  */ std::unique_ptr<PostprocessingManager> mPostProcessingManager;
+    /* this + 408  */ std::unique_ptr<SubChunkInterlocker> mSubChunkInterlocker;
+    /* this + 416  */ std::unique_ptr<ChunkSource> mChunkSource;
+    /* this + 424  */ WorldGenerator* mWorldGenerator;
+    /* this + 432  */ std::unique_ptr<Weather> mWeather;
+    /* this + 440  */ std::unique_ptr<Seasons> mSeasons;
+    /* this + 448  */ std::unique_ptr<GameEventDispatcher> mGameEventDispatcher;
+    /* this + 456  */ std::unique_ptr<CircuitSystem> mCircuitSystem;
+    /* this + 464  */ const int CIRCUIT_TICK_RATE;
+    /* this + 468  */ int mCircuitSystemTickRate;
+    /* this + 472  */ std::unordered_map<ActorUniqueID, WeakEntityRef> mActorIDEntityIDMap;
+    /* this + 536  */ std::vector<WeakEntityRef> mDisplayEntities;
+    /* this + 560  */ std::shared_ptr<WireframeQueue> mWireframeQueue;
+    /* this + 576  */ FeatureTerrainAdjustments mFeatureTerrainAdjustments;
+    /* this + 684  */ std::unordered_map<ChunkPos, std::vector<std::unique_ptr<CompoundTag>>> mLimboEntities;
+    /* this + 712  */ std::set<ActorUniqueID> mEntitiesToMoveChunks;
+    /* this + 728  */ std::shared_ptr<TickingAreaList> mTickingAreaList;
+    /* this + 744  */ LevelChunkGarbageCollector mLevelChunkGarbageCollector;
+    /* this + 1376 */ std::set<ActorUniqueID> mWitherIDs;
+    /* this + 1392 */ std::unique_ptr<LevelChunkBuilderData> mLevelChunkBuilderData;
+    /* this + 1400 */ std::chrono::steady_clock::time_point mLastPruneTime;
+    /* this + 1408 */ std::chrono::steady_clock::time_point mNextPruneTime;
+    /* this + 1416 */ std::unique_ptr<ChunkBuildOrderPolicyBase> mChunkBuildOrderPolicy;
+    /* this + 1424 */ std::unique_ptr<VillageManager> mVillageManager;
+    /* this + 1432 */ std::vector<NetworkIdentifierWithSubId> mTemporaryPlayerIds; 
+    /* this + 1456 */ std::unique_ptr<ChunkLoadActionList> mChunkLoadActionList; 
+    /* this + 1464 */ std::unique_ptr<DelayActionList> mDelayActionList;
+    /* this + 1472 */ std::unordered_map<SubChunkPos, UpdateSubChunkBlocksChangedInfo> mBlocksChangedBySubChunkMap;
+    /* this + 1536 */ std::unique_ptr<Dimension::PlayerReplicationStructures> mReplicationStructures;
+    /* this + 1544 */ std::vector<WeakEntityRef> mPlayersToReplicate;
+    /* this + 1568 */ bool mRunChunkGenWatchDog;
 
 public:
     /**@vIndex {0} */
@@ -205,5 +274,8 @@ public:
     BlockSource& getBlockSourceFromMainChunkSource() const;
 };
 
-static_assert(sizeof(Dimension) == 1592);
+//static_assert(sizeof(Dimension) == 1592);
 static_assert(offsetof(Dimension, mHeightRange) == 200);
+static_assert(offsetof(Dimension, mBlockSource) == 208);
+static_assert(offsetof(Dimension, mName) == 328);
+static_assert(offsetof(Dimension, mWitherIDs) == 1376);

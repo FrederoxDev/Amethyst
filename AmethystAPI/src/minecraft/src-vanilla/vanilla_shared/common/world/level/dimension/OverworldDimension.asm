@@ -14,8 +14,8 @@ global ?translatePosAcrossDimension@OverworldDimension@@UEBA?AVVec3@@AEBV2@V?$Au
 	mov rax, [rel OverworldDimension_vtable]
 	jmp [rax + 64]
 
-global ?createGenerator@OverworldDimension@@UEAA?AV?$unique_ptr@VWorldGenerator@@U?$default_delete@VWorldGenerator@@@std@@@std@@AEBVStructureSetRegistry@worldgen@br@@@Z
-?createGenerator@OverworldDimension@@UEAA?AV?$unique_ptr@VWorldGenerator@@U?$default_delete@VWorldGenerator@@@std@@@std@@AEBVStructureSetRegistry@worldgen@br@@@Z:
+global ?createGenerator@OverworldDimension@@UEAA?AV?$unique_ptr@VWorldGenerator@@U?$default_delete@VWorldGenerator@@@std@@@std@@AEBUStructureSetRegistry@worldgen@br@@@Z
+?createGenerator@OverworldDimension@@UEAA?AV?$unique_ptr@VWorldGenerator@@U?$default_delete@VWorldGenerator@@@std@@@std@@AEBUStructureSetRegistry@worldgen@br@@@Z:
 	mov rax, [rel OverworldDimension_vtable]
 	jmp [rax + 112]
 
