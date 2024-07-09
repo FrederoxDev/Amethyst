@@ -3,6 +3,7 @@
 #include <minecraft/src/common/world/item/ItemGroup.hpp>
 
 class PlayerInventory;
+class ChunkSource;
 
 class Player : public Mob {
 public:
@@ -11,6 +12,9 @@ public:
     /* this + 1976 */ std::byte padding1976[1312];
     /* this + 3288 */ ItemGroup mCursorSelectedItemGroup;
     /* this + 3432 */ PlayerUIContainer mPlayerUIContainer;
+
+    /* virtuals */
+    void prepareRegion(ChunkSource& cs);
 };
 
 static_assert(offsetof(Player, mPlayerUIContainer) == 3432); 

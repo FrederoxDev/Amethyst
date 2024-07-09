@@ -19,7 +19,7 @@ Vec3::Vec3(float x, float y, float z)
 }
 
 
-Vec3::Vec3(BlockPos& pos)
+Vec3::Vec3(const BlockPos& pos)
 {
     this->x = (float)pos.x;
     this->y = (float)pos.y;

@@ -1,6 +1,7 @@
 #pragma once
 #include <gsl/gsl>
 #include "minecraft/src/common/world/entity/EntityContext.hpp"
+#include <minecraft/src/common/gamerefs/WeakRef.hpp>
 
 class Vec2;
 class Vec3;
@@ -9,6 +10,8 @@ class AABBShapeComponent;
 class ActorWalkAnimationComponent;
 struct StateVectorComponent;
 struct ActorRotationComponent;
+class DefaultDataLoadHelper;
+class CompoundTag;
 
 struct BuiltInActorComponents {
     gsl::not_null<StateVectorComponent*> mStateVectorComponent;
@@ -42,9 +45,13 @@ public:
 public:
     Vec3* getPosition() const;
     Vec2* getHeadRot() const;
+    void moveTo(const Vec3&, const Vec2&);
+
     const Dimension& getDimensionConst() const;
     bool hasDimension() const;
+    void setDimension(WeakRef<Dimension> dimension);
 
+    // Generics
     template <typename T>
     const T* tryGetComponent() const
     {
@@ -58,6 +65,9 @@ public:
         auto& registry = mEntityContext.getRegistry();
         return registry.try_get<T>(mEntityContext.mEntity);
     }
+
+    int load(const CompoundTag&, DefaultDataLoadHelper&);
+    void reload();
 };
 
 static_assert(sizeof(Actor) == 1224);

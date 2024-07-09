@@ -3,7 +3,7 @@
 #include <minecraft/src/common/world/level/BlockSourceListener.hpp>
 #include <minecraft/src/common/world/level/block/LevelEvent.hpp>
 
-enum ParticleType;
+enum class ParticleType;
 struct ResolvedItemIconInfo;
 class HashedString;
 class BlockPos;

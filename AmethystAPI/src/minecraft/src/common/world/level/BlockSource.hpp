@@ -20,9 +20,6 @@
 #include <minecraft/src-deps/core/utility/AutomaticID.hpp>
 #include <minecraft/src/common/world/level/chunk/ChunkSource.hpp>
 
-template <typename T>
-class WeakRef {};
-
 namespace BlockSourceVisitor { struct CollisionShape {}; }
 
 enum ActorType {};

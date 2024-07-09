@@ -15,7 +15,7 @@ class ILevel;
 class Scheduler;
 
 class DimensionFactory : public IDimensionFactory {
-private:
+public:
     gsl::not_null<Bedrock::NonOwnerPointer<ILevel>> mLevel;
     gsl::not_null<Bedrock::NonOwnerPointer<Scheduler>> mScheduler;
     OwnerPtrFactory<Dimension, ILevel&, Scheduler&> mDimensionFactory;

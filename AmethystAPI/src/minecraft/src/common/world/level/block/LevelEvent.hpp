@@ -1,3 +1,5 @@
+#pragma once
+
 enum class LevelEvent : short {
     Undefined,
     SoundClick = 1000,
