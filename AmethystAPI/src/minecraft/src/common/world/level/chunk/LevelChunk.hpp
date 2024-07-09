@@ -1,18 +1,40 @@
 #pragma once
 #include <unordered_map>
+#include <minecraft/src-deps/core/threading/Mutex.hpp>
 #include <minecraft/src/common/world/level/ChunkBlockPos.hpp>
+#include <minecraft/src/common/world/level/ChunkPos.hpp>
+#include <minecraft/src/common/world/level/chunk/LevelChunkFormat.hpp>
+#include <minecraft/src/common/world/level/chunk/ChunkState.hpp>
 
 class Block;
 class BlockPos;
 class BlockActor;
 class BlockSource;
+class Level;
+class Dimension;
+class ChunkSource;
+class ActorLink;
 
 class LevelChunk {
 public:
-    /* this + 0    */ std::byte padding0[4184];
+    /* this + 8    */ Bedrock::Threading::Mutex mBlockEntityAccessLock;
+    /* this + 88   */ Level* mLevel;
+    /* this + 96   */ Dimension* mDimension;
+    /* this + 104  */ BlockPos mMin;
+    /* this + 116  */ BlockPos mMax;
+    /* this + 128  */ ChunkPos mPosition; 
+    /* this + 136  */ ChunkSource* mGenerator;
+    /* this + 144  */ std::optional<LevelChunkFormat> mLoadedFormat;
+    /* this + 152  */ std::string mSerializedEntitiesBuffer;
+    /* this + 184  */ bool mHadSerializedEntities;
+    /* this + 192  */ std::vector<ActorLink> mUnresolvedActorLinks;
+    /* this + 216  */ std::atomic<ChunkState> mLoadState;
+    /* this + 217  */ std::byte padding225[4184 - 217];
     /* this + 4184 */ std::unordered_map<ChunkBlockPos, std::shared_ptr<BlockActor>> mBlockEntities;
 
 public:
+    virtual ~LevelChunk();
+
     BlockActor* getBlockEntity(const ChunkBlockPos& chunkPos);
     
     // 1.20.71.1 - 40 55 53 56 57 41 54 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 49 8B F1 4D 8B F8 48 8B DA

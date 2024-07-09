@@ -1,4 +1,6 @@
-enum ChunkState : unsigned char {
+#pragma once
+
+enum ChunkState : char {
     Unloaded = 0x0000,
     Generating = 0x0001,
     Generated = 0x0002,
@@ -9,4 +11,5 @@ enum ChunkState : unsigned char {
     Lighting = 0x0007,
     LightingFinished = 0x0008,
     Loaded = 0x0009,
+    Invalid = -1
 };
