@@ -1,4 +1,6 @@
+#pragma once
 #include <memory>
+#include <cstddef>
 
 template <typename T>
 class WeakRef {

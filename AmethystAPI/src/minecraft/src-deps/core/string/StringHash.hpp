@@ -1,6 +1,7 @@
 #pragma once
 #include "minecraft/src-deps/core/headerIncludes/gsl_includes.hpp"
 #include <string>
+#include <cstddef>
 
 typedef uint64_t HashType64;
 

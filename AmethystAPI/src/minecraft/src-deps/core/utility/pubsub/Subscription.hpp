@@ -6,7 +6,13 @@ namespace Bedrock::PubSub {
     class SubscriptionBase {
     protected:
         std::weak_ptr<Bedrock::PubSub::Detail::SubscriptionBodyBase> mBody;
+
+    public:
+        SubscriptionBase() {}
     };
 
-    class Subscription : public Bedrock::PubSub::SubscriptionBase {};
+    class Subscription : public Bedrock::PubSub::SubscriptionBase {
+    public:
+        Subscription() : SubscriptionBase(){}; 
+    };
 };

@@ -1,6 +1,8 @@
 #pragma once
 #include <cstdint>
 #include <variant>
+#include <minecraft/src-client/common/client/renderer/TexturePtr.hpp>
+#include <minecraft/src-deps/minecraftrenderer/renderer/BedrockTexture.hpp>
 
 namespace mce {
     class ClientTexture;

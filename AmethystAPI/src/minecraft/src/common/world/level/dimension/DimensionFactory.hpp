@@ -7,7 +7,7 @@
 
 namespace br {
 namespace worldgen {
-class StructureSetRegistry;
+struct StructureSetRegistry;
 }
 } 
 

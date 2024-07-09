@@ -1,12 +1,17 @@
 #pragma once
+#include <unordered_set>
+#include <condition_variable>
+#include <minecraft/src-deps/core/utility/buffer_span.hpp>
+#include <minecraft/src-deps/core/threading/SpinLock.hpp>
+#include <minecraft/src-deps/core/threading/Mutex.hpp>
+#include <minecraft/src/common/world/level/ChunkPos.hpp>
 #include <minecraft/src/common/world/level/chunk/ChunkSource.hpp>
 #include <minecraft/src/common/world/level/levelgen/v1/IPreliminarySurfaceProvider.hpp>
-#include <minecraft/src-deps/core/threading/SpinLock.hpp>
-#include <minecraft/src-deps/core/utility/buffer_span.hpp>
+#include <minecraft/src/common/world/level/levelgen/v1/HardcodedSpawnAreaRegistry.hpp>
 #include <minecraft/src/common/world/level/levelgen/structure/StructureFeatureType.hpp>
 #include <minecraft/src/common/world/level/levelgen/structure/StructureFeatureRegistry.hpp>
- #include <minecraft/src/common/world/level/levelgen/v1/HardcodedSpawnAreaRegistry.hpp>
 
+/**@vtable*/
 class WorldGenerator : public ChunkSource, public IPreliminarySurfaceProvider {
 public:
     struct BlockVolumeDimensions {
@@ -16,16 +21,23 @@ public:
     };
 
 public:
-    std::unique_ptr<HardcodedSpawnAreaRegistry> mHardcodedSpawnAreaRegistry; // 0x78
-    std::unique_ptr<StructureFeatureRegistry> mStructureFeatureRegistry; // 0x80
-    std::byte pad[224]; // 0x88
-    SpinLock mSpinLock; // 0x168
-    // There is an unordered_map that takes u64 as key and has a shared_ptr of vectors of ItemInstances as value. Above the spinlock
+    /* this + 120 */ std::unique_ptr<HardcodedSpawnAreaRegistry> mHardcodedSpawnAreaRegistry;
+    /* this + 128 */ std::unique_ptr<StructureFeatureRegistry> mStructureFeatureRegistry;     
+    /* this + 136 */ Bedrock::Threading::Mutex mCreateStructureInstancesMutex;
+    /* this + 216 */ std::condition_variable mStructureInstanceWaitVar;
+    /* this + 288 */ std::atomic<int> mActiveStructureInstanceCreateCount;
+    /* this + 292 */ std::byte visitedPositions[64]; // std::unordered_set<ChunkPos> visitedPositions;
+    /* this + 360 */ SpinLock visitedPositionsMutex;
 
 public:
-    WorldGenerator(class Dimension& dimension, std::unique_ptr<StructureFeatureRegistry> structureFeatureRegistry);
-
+    /**
+    * @symbol {??1WorldGenerator@@UEAA@XZ}
+    * @vIndex {0} 
+    */
     virtual ~WorldGenerator();
+
+    /**@vIndex {12} */
+    virtual void postProcessMobsAt(class BlockSource& region, int chunkWestBlock, int chunkNorthBlock, Random& random) override;
 
     /**@vIndex {33} */
     virtual void init();
@@ -81,13 +93,13 @@ public:
         class BlockSource& source,
         class Random& random) const = 0;
 
-    // IPreliminarySurfaceProvider vtable overloaded functions
-    // symbol: ?getPreliminarySurfaceLevel@WorldGenerator@@UEBA?AV?$optional@F@std@@V?$DividedPos2d@$03@@@Z
-    virtual std::optional<short> getPreliminarySurfaceLevel(class DividedPos2d<4> worldPos) const;
+    // const WorldGenerator::`vftable'{for`IPreliminarySurfaceProvider'}
+    // easier to just define this one in c++
+    virtual std::optional<short> getPreliminarySurfaceLevel(QuartPos2d worldQuartPos) const override;
 
-    // ChunkSource vtable overloaded function
-    // symbol: ?postProcessMobsAt@WorldGenerator@@UEAAXAEAVBlockSource@@HHAEAVRandom@@@Z
-    virtual void postProcessMobsAt(class BlockSource& blockSource, int chunkWestBlock, int chunkNorthBlock, class Random& random);
+    /**@asmName {WorldGenerator_ctor}*/
+    WorldGenerator(class Dimension& dimension, std::unique_ptr<StructureFeatureRegistry> structureFeatureRegistry);
 };
 
 static_assert(sizeof(WorldGenerator) == 0x188, "WorldGenerator size is incorrect!");
+static_assert(offsetof(WorldGenerator, visitedPositionsMutex) == 360);

@@ -3,6 +3,7 @@
 #include <atomic>
 #include <type_traits>
 #include <utility>
+#include <cstddef>
 
 template <typename T>
 class SharedPtr;

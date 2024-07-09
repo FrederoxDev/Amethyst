@@ -1,5 +1,6 @@
 #pragma once
 #include <minecraft/src/common/gamerefs/gamerefs_shareptr/GameRefsSharePtr.hpp>
+#include <cstddef>
 
 // I dont know how to implement this, stupid generic stuff, yoinking levilaminas more innacuate but functionally the same implementation.
 //template <typename Traits>
@@ -44,7 +45,7 @@ public:
 
     constexpr ~OwnerPtr() = default;
 
-    constexpr OwnerPtr(std::nullptr_t) noexcept {}
+    //constexpr OwnerPtr(std::nullptr_t) noexcept {}
 
     template <class Y>
     constexpr OwnerPtr(std::shared_ptr<Y> const& ptr)

@@ -31,7 +31,7 @@ struct ActorChunkTransferEntry {
     ChunkPos mNewChunkPos;
 };
 
-namespace br::worldgen { class StructureSetRegistry; }
+namespace br::worldgen { struct StructureSetRegistry; }
 namespace mce { class Color; }
 class BlockSource;
 class ILevel;
@@ -272,6 +272,9 @@ public:
     Dimension(ILevel& level, DimensionType dimId, DimensionHeightRange heightRange, Scheduler& callbackContext, std::string dimensionName);
 
     BlockSource& getBlockSourceFromMainChunkSource() const;
+
+    const Level& getLevelConst() const;
+    Level& getLevel() const;
 };
 
 //static_assert(sizeof(Dimension) == 1592);

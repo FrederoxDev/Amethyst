@@ -1,0 +1,1 @@
+#include <minecraft/src/common/world/level/levelgen/structure/StructureFeatureRegistry.hpp>
