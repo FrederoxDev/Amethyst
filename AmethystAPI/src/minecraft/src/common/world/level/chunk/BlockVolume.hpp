@@ -1,7 +1,7 @@
 #pragma once
-#include "../block/Block.hpp"
-#include <buffer_span_mut.hpp>
 #include <memory>
+#include <minecraft/src-deps/core/utility/buffer_span_mut.hpp>
+#include <minecraft/src/common/world/level/block/Block.hpp>
 #include <vector>
 
 // Hols a span of blocks as well as information about their size. Used in worldgen.

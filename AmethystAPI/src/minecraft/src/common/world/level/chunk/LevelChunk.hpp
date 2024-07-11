@@ -19,10 +19,10 @@ class ActorLink;
 class LevelChunk {
 public:
     /* this + 8    */ Bedrock::Threading::Mutex mBlockEntityAccessLock;
-    /* this + 88   */ Level* mLevel;
-    /* this + 96   */ Dimension* mDimension;
-    /* this + 104  */ BlockPos mMin;
-    /* this + 116  */ BlockPos mMax;
+    /* this + 80   */ Level* mLevel;
+    /* this + 88   */ Dimension* mDimension;
+    /* this + 96   */ BlockPos mMin;
+    /* this + 108  */ BlockPos mMax;
     /* this + 128  */ ChunkPos mPosition;
     /* this + 136  */ ChunkSource* mGenerator;
     /* this + 144  */ std::optional<LevelChunkFormat> mLoadedFormat;
