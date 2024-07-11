@@ -1,10 +1,11 @@
 #pragma once
-#include <unordered_map>
 #include <minecraft/src-deps/core/threading/Mutex.hpp>
 #include <minecraft/src/common/world/level/ChunkBlockPos.hpp>
 #include <minecraft/src/common/world/level/ChunkPos.hpp>
-#include <minecraft/src/common/world/level/chunk/LevelChunkFormat.hpp>
+#include <minecraft/src/common/world/level/chunk/BlockVolume.hpp>
 #include <minecraft/src/common/world/level/chunk/ChunkState.hpp>
+#include <minecraft/src/common/world/level/chunk/LevelChunkFormat.hpp>
+#include <unordered_map>
 
 class Block;
 class BlockPos;
@@ -22,7 +23,7 @@ public:
     /* this + 96   */ Dimension* mDimension;
     /* this + 104  */ BlockPos mMin;
     /* this + 116  */ BlockPos mMax;
-    /* this + 128  */ ChunkPos mPosition; 
+    /* this + 128  */ ChunkPos mPosition;
     /* this + 136  */ ChunkSource* mGenerator;
     /* this + 144  */ std::optional<LevelChunkFormat> mLoadedFormat;
     /* this + 152  */ std::string mSerializedEntitiesBuffer;
@@ -36,11 +37,14 @@ public:
     virtual ~LevelChunk();
 
     BlockActor* getBlockEntity(const ChunkBlockPos& chunkPos);
-    
+
+    // 1.21.0.3 - 40 ? 57 41 ? 48 83 ? ? 4C 8B ? 41 8B ? 48 8B ? 48 8B
+    void setBlockVolume(BlockVolume* blockVolume, unsigned int param2);
+
     // 1.20.71.1 - 40 55 53 56 57 41 54 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 49 8B F1 4D 8B F8 48 8B DA
     // Found by caller of BlockLegacy::newBlockEntity
     std::shared_ptr<BlockActor> _createBlockEntity(const BlockPos& pos, BlockSource* currentSource, const Block& current, const Block& old);
-    
+
     // Custom helper functions
     std::shared_ptr<BlockActor> getAndRemoveBlockActor(const ChunkBlockPos& pos);
     void setBlockActor(const ChunkBlockPos& pos, std::shared_ptr<BlockActor> actorShared);
