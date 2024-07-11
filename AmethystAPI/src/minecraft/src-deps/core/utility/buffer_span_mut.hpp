@@ -1,6 +1,6 @@
 #pragma once
 
-// Allocates a contiguous span of memory
+// Allocates a contiguous span of memory non owned memory
 template <typename T>
 class buffer_span_mut {
 public:
@@ -9,9 +9,5 @@ public:
 
     buffer_span_mut() : mBegin(nullptr), mEnd(nullptr) {}
 
-    buffer_span_mut(size_t numElements)
-    {
-        mBegin = new T[numElements];
-        mEnd = mBegin + numElements;
-    }
+    buffer_span_mut(T* begin, T* end) : mBegin(begin), mEnd(end) {}
 };

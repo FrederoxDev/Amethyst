@@ -16,7 +16,7 @@ public:
     const Block* mInitBlock;
 
     // Reimplemented
-    BlockVolume(std::uint32_t width, std::uint32_t height, std::uint32_t depth, Block const* initBlock);
+    BlockVolume(buffer_span_mut<const Block*> blockSpan, std::uint32_t width, std::uint32_t height, std::uint32_t depth, Block const* initBlock);
 
     // Reimplemented
     size_t index(uint32_t x, uint32_t y, uint32_t z);
