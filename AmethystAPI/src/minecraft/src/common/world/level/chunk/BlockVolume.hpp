@@ -5,7 +5,7 @@
 #include <minecraft/src/common/world/level/block/Block.hpp>
 #include <vector>
 
-// Hols a span of blocks as well as information about their size. Used in worldgen.
+// Holds a span of blocks as well as information about their size. Used in worldgen.
 class BlockVolume {
 public:
     buffer_span_mut<const Block*> mBlocks;
