@@ -18,12 +18,13 @@ class ActorLink;
 
 class LevelChunk {
 public:
-    /* this + 8    */ Bedrock::Threading::Mutex mBlockEntityAccessLock;
+    /* this + 0    */ Bedrock::Threading::Mutex mBlockEntityAccessLock;
     /* this + 80   */ Level* mLevel;
     /* this + 88   */ Dimension* mDimension;
-    /* this + 96   */ BlockPos mMin;
+    /* this + 96  */ BlockPos mMin;
     /* this + 108  */ BlockPos mMax;
-    /* this + 128  */ ChunkPos mPosition;
+    /* this + 120  */ ChunkPos mPosition;
+    std::byte padding8[8];
     /* this + 136  */ ChunkSource* mGenerator;
     /* this + 144  */ std::optional<LevelChunkFormat> mLoadedFormat;
     /* this + 152  */ std::string mSerializedEntitiesBuffer;
@@ -34,8 +35,6 @@ public:
     /* this + 4184 */ std::unordered_map<ChunkBlockPos, std::shared_ptr<BlockActor>> mBlockEntities;
 
 public:
-    virtual ~LevelChunk();
-
     BlockActor* getBlockEntity(const ChunkBlockPos& chunkPos);
 
     // 1.21.0.3 - 40 ? 57 41 ? 48 83 ? ? 4C 8B ? 41 8B ? 48 8B ? 48 8B
