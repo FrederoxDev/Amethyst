@@ -41,4 +41,19 @@ public:
 
         mBlocks = buffer_span_mut(_blocksHolder);
     }
+
+    size_t index(uint32_t x, uint32_t y, uint32_t z)
+    {
+        return (this->mDepth * x + z) * this->mHeight + y;
+    }
+
+    void set(const Block* block, uint32_t x, uint32_t y, uint32_t z)
+    {
+        this->mBlocks.mBegin[index(x, y, z)] = block;
+    }
+
+    const Block* get(uint32_t x, uint32_t y, uint32_t z)
+    {
+        return this->mBlocks.mBegin[index(x, y, z)];
+    }
 };
