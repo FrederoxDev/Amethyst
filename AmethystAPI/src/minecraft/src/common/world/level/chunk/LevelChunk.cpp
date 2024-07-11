@@ -9,11 +9,11 @@ BlockActor* LevelChunk::getBlockEntity(const ChunkBlockPos& chunkPos)
 }
 
 // 1.21.0.3 - 40 ? 57 41 ? 48 83 ? ? 4C 8B ? 41 8B ? 48 8B ? 48 8B
-void LevelChunk::setBlockVolume(BlockVolume* blockVolume, unsigned int param2)
+void LevelChunk::setBlockVolume(BlockVolume* blockVolume, uint32_t yOffset)
 {
-    using function = void(__thiscall*)(const LevelChunk*, BlockVolume* blockVolume, unsigned int param2);
-    static auto func = reinterpret_cast<function>(SigScan("40 ? 57 41 ? 48 83 ? ? 4C 8B ? 41 8B ? 48 8B ? 48 8B"));
-    func(this, blockVolume, param2);
+    using function = decltype(&LevelChunk::setBlockVolume);
+    static auto func = std::bit_cast<function>(SigScan("40 ? 57 41 ? 48 83 ? ? 4C 8B ? 41 8B ? 48 8B ? 48 8B"));
+    (this->*func)(blockVolume, yOffset);
 }
 
 std::shared_ptr<BlockActor> LevelChunk::getAndRemoveBlockActor(const ChunkBlockPos& pos)
