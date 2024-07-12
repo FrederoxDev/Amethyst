@@ -38,7 +38,7 @@ public:
     BlockActor* getBlockEntity(const ChunkBlockPos& chunkPos);
 
     // 1.21.0.3 - 40 ? 57 41 ? 48 83 ? ? 4C 8B ? 41 8B ? 48 8B ? 48 8B
-    void setBlockVolume(const BlockVolume* blockVolume, uint32_t yOffset);
+    void setBlockVolume(const BlockVolume& blockVolume, uint32_t yOffset);
 
     // 1.20.71.1 - 40 55 53 56 57 41 54 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 49 8B F1 4D 8B F8 48 8B DA
     // Found by caller of BlockLegacy::newBlockEntity
