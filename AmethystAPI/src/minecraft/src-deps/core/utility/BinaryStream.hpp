@@ -47,3 +47,4 @@ public:
 extern template void BinaryStream::write(unsigned char);
 extern template void BinaryStream::write(float);
 extern template void BinaryStream::write(bool);
+extern template void BinaryStream::write(short);

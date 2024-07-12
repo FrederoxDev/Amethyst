@@ -136,7 +136,10 @@ public:
     /**@vIndex {5}*/
     virtual WeakRef<Dimension> getDimension(DimensionType) const;
 
-    /**@vIndex {6}*/
+    /**
+    * @vIndex {6}
+    * @brief Validates that the DimensionType != Undefined, in that case resets it to the Overworld
+    */
     virtual DimensionType getLastOrDefaultSpawnDimensionId(DimensionType) const;
 
     /**@vIndex {7}*/

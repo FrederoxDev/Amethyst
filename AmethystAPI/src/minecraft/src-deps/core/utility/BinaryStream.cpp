@@ -75,6 +75,7 @@ template void BinaryStream::write(float);
 template void BinaryStream::write(bool);
 template void BinaryStream::write(uint64_t);
 template void BinaryStream::write(FacingID);
+template void BinaryStream::write(short);
 
 void BinaryStream::writeUnsignedVarInt32(uint32_t value)
 {
