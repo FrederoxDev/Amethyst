@@ -7,6 +7,7 @@ extern OverworldDimension_ctor
 global ??1OverworldDimension@@UEAA@XZ
 ??1OverworldDimension@@UEAA@XZ:
 	mov rax, [rel OverworldDimension_vtable]
+	xor edx, edx
 	jmp [rax + 0]
 
 global ?translatePosAcrossDimension@OverworldDimension@@UEBA?AVVec3@@AEBV2@V?$AutomaticID@VDimension@@H@@@Z

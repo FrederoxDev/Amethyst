@@ -1,3 +1,4 @@
+#pragma once
 #include "minecraft/src/common/world/actor/Mob.hpp"
 #include <minecraft/src/common/world/PlayerUIContainer.hpp>
 #include <minecraft/src/common/world/item/ItemGroup.hpp>

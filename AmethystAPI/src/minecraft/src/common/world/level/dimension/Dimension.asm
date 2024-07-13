@@ -9,6 +9,7 @@ extern Dimension_ctor
 global ??_DDimension@@QEAAXXZ
 ??_DDimension@@QEAAXXZ:
 	mov rax, [rel Dimension_vtable]
+	xor edx, edx
 	jmp [rax + 0]
 
 global ?isNaturalDimension@Dimension@@UEBA_NXZ

@@ -2,6 +2,7 @@
 #include <string>
 #include <minecraft/src-deps/core/utility/AutomaticID.hpp>
 #include <minecraft/src-deps/core/utility/Result.hpp>
+#include <minecraft/src/common/util/BiMap.hpp>
 
 class VanillaDimensions {
 public:
@@ -9,6 +10,7 @@ public:
     static const DimensionType Nether;
     static const DimensionType TheEnd;
     static const DimensionType Undefined;
+    static BidirectionalUnorderedMap<std::string, DimensionType>* DimensionMap;
 
     // 1.21.0.3 - 40 53 48 83 EC ? 4C 63 02
     static const std::string toString(const DimensionType& dimId);

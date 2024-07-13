@@ -7,6 +7,7 @@ extern WorldGenerator_ctor
 global ??1WorldGenerator@@UEAA@XZ
 ??1WorldGenerator@@UEAA@XZ:
 	mov rax, [rel WorldGenerator_vtable]
+	xor edx, edx
 	jmp [rax + 0]
 
 global ?postProcessMobsAt@WorldGenerator@@UEAAXAEAVBlockSource@@HHAEAVRandom@@@Z

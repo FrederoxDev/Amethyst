@@ -563,10 +563,10 @@ public:
     virtual void _unknown_146();
 
     /**@vIndex {147}*/
-    virtual void _unknown_147();
+    virtual LevelData& getLevelData();
 
     /**@vIndex {148}*/
-    virtual void _unknown_148();
+    virtual const LevelData& getLevelData() const;
 
     /**@vIndex {149}*/
     virtual PhotoStorage& getPhotoStorage();
