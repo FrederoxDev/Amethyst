@@ -6,8 +6,7 @@
 Amethyst::InputManager::InputManager(AmethystContext *amethyst) {
     mAmethyst = amethyst;
 
-    mAmethyst->mEventManager.onRequestLeaveGame.AddListener([this]() {
-        Log::Info("Removing button handlers");
+    mAmethyst->mEventManager->onRequestLeaveGame.AddListener([this]() {
         this->RemoveButtonHandlers();
     });
 }
@@ -35,7 +34,7 @@ void Amethyst::InputManager::RegisterNewInput(
     mRegisteredInputs.emplace_back(actionName);
 }
 
-void Amethyst::InputManager::Shutdown() {
+Amethyst::InputManager::~InputManager() {
     Options* opt = mAmethyst->mOptions;
 
     // Remove registered keys.

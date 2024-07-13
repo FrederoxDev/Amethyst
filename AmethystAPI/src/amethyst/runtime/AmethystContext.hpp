@@ -10,28 +10,32 @@
 #include "minecraft/src-client/common/client/game/ClientInstance.hpp"
 #include "minecraft/src-client/common/client/input/MinecraftInputHandler.hpp"
 #include "minecraft/src-client/common/client/options/Options.hpp"
+#include "amethyst/runtime/RuntimeFeatures.hpp"
 
 class AmethystContext {
 public:
-    /**
-     * Amethyst Specific stuff
-     */
-    HookManager mHookManager;
-    Amethyst::EventManager mEventManager;
-    Amethyst::InputManager mInputManager;
-    Amethyst::PatchManager mPatchManager;
-    Amethyst::EnumAllocator mEnumAllocator;
+    // Volatile between mod loads
+    std::unique_ptr<HookManager> mHookManager;
+    std::unique_ptr<Amethyst::EventManager> mEventManager;
+    std::unique_ptr<Amethyst::InputManager> mInputManager;
+    std::unique_ptr<Amethyst::PatchManager> mPatchManager;
+    std::unique_ptr<Amethyst::EnumAllocator> mEnumAllocator;
+    std::unique_ptr<Amethyst::RuntimeFeatures> mFeatures;
     std::vector<Mod> mMods;
-    Amethyst::MinecraftPackageInfo mMinecraftPackageInfo;
 
-    /**
-     * Minecraft Specific stuff
-     */
+    // Non-volatile
+    Amethyst::MinecraftPackageInfo mPackageInfo;
     ClientInstance* mClientInstance = nullptr;
     MinecraftInputHandler* mMcInputHandler = nullptr;
     Options* mOptions = nullptr;
 
-    AmethystContext()
-        : mInputManager(this)
-    {}
+    // prevent copying
+    AmethystContext(const AmethystContext&) = delete;
+    AmethystContext& operator=(const AmethystContext&) = delete;
+    friend class AmethystRuntime;
+
+protected:
+    virtual void Start() = 0;
+    virtual void Shutdown() = 0;
+    AmethystContext() = default;
 };

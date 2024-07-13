@@ -11,6 +11,7 @@
 #include <iostream>
 #include <minecraft/src/common/world/item/Item.hpp>
 #include <vector>
+#include <RuntimeContext.hpp>
 
 namespace fs = std::filesystem;
 
@@ -49,27 +50,27 @@ public:
 
     static HookManager* getHookManager()
     {
-        return &AmethystRuntime::getInstance()->mAmethystContext.mHookManager;
+        return AmethystRuntime::getInstance()->mAmethystContext.mHookManager.get();
     }
 
     static Amethyst::EventManager* getEventManager() 
     {
-        return &AmethystRuntime::getInstance()->mAmethystContext.mEventManager;
+        return AmethystRuntime::getInstance()->mAmethystContext.mEventManager.get();
     }
 
     static Amethyst::InputManager* getInputManager() 
     {
-        return &AmethystRuntime::getInstance()->mAmethystContext.mInputManager;
+        return AmethystRuntime::getInstance()->mAmethystContext.mInputManager.get();
     }
 
     static Amethyst::PatchManager* getPatchManager() 
     {
-        return &AmethystRuntime::getInstance()->mAmethystContext.mPatchManager;
+        return AmethystRuntime::getInstance()->mAmethystContext.mPatchManager.get();
     }
 
     static Amethyst::EnumAllocator* getEnumAllocator()
     {
-        return &AmethystRuntime::getInstance()->mAmethystContext.mEnumAllocator;
+        return AmethystRuntime::getInstance()->mAmethystContext.mEnumAllocator.get();
     }
 
     static std::vector<Mod>* getMods()
@@ -79,7 +80,7 @@ public:
 
     static Amethyst::MinecraftPackageInfo* getMinecraftPackageInfo()
     {
-        return &AmethystRuntime::getInstance()->mAmethystContext.mMinecraftPackageInfo;
+        return &AmethystRuntime::getInstance()->mAmethystContext.mPackageInfo;
     }
 
     void Start();
@@ -99,7 +100,7 @@ private:
 
 private:
     Config mLauncherConfig;
-    AmethystContext mAmethystContext;
+    RuntimeContext mAmethystContext;
 
 public:
     std::vector<ModInitialize> mModInitialize;

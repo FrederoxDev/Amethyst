@@ -1,5 +1,5 @@
 #include "dllmain.hpp"
-#include <AmethystDebugging.hpp>
+#include <debug/AmethystDebugging.hpp>
 
 HANDLE gMcThreadHandle;
 DWORD gMcThreadId;
@@ -24,7 +24,6 @@ LONG WINAPI AmethystUnhandledExceptionsHandler(EXCEPTION_POINTERS* ExceptionInfo
     EXCEPTION_RECORD* exceptionRecord = ExceptionInfo->ExceptionRecord;
     uint64_t exceptionAddr = (uint64_t)exceptionRecord->ExceptionAddress;
     uint64_t exceptionCode = (uint64_t)exceptionRecord->ExceptionCode;
-
 
     Log::Error("[AmethystRuntime] Exception thrown at 0x{:x}\n", exceptionAddr - GetMinecraftBaseAddress(), szModuleName);
     LogAssemblyOfExceptionCause(exceptionAddr);

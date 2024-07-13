@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
-#include <amethyst-deps/Zydis.h>
 #include <WinBase.h>
+#include <amethyst-deps/Zydis.h>
 #include <amethyst/Log.hpp>
 #include <amethyst/Memory.hpp>
 
@@ -36,8 +36,9 @@ static void LogAssemblyOfExceptionCause(uintptr_t address)
     while (ZYAN_SUCCESS(ZydisDecoderDecodeFull(&decoder, data + offset, dataSize - offset, &instruction, operands))) {
         // Format & print the binary instruction structure to human-readable format
         char buffer[256];
-        ZydisFormatterFormatInstruction(&formatter, &instruction, operands,
-                                        instruction.operand_count_visible, buffer, sizeof(buffer), ZYDIS_RUNTIME_ADDRESS_NONE, ZYAN_NULL);
+        ZydisFormatterFormatInstruction(
+            &formatter, &instruction, operands, instruction.operand_count_visible, buffer, sizeof(buffer), ZYDIS_RUNTIME_ADDRESS_NONE, ZYAN_NULL
+        );
 
         Log::Error("{:16X} {:s}", idaOffset + offset, buffer, strlen(buffer));
 

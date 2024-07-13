@@ -9,12 +9,12 @@ namespace Amethyst {
     class InputManager {
     public:
         InputManager(AmethystContext* amethyst);
+        ~InputManager();
         void RegisterNewInput(std::string actionName, std::vector<int> keys, bool allowRemapping = true);
         void AddButtonDownHandler(const std::string& actionName, std::function<void(FocusImpact, IClientInstance&)> handler, bool suspendable);
         void AddButtonUpHandler(const std::string& actionName, std::function<void(FocusImpact, IClientInstance&)> handler, bool suspendable);
 
     private:
-        void Shutdown();
         void RemoveButtonHandlers();
 
     public:

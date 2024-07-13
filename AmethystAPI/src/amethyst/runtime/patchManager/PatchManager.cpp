@@ -3,7 +3,6 @@
 #include "amethyst/Memory.hpp"
 
 namespace Amethyst {
-    // Returns false if the patch failed to apply
     void PatchManager::ApplyPatch(uintptr_t address, uint8_t* patch, size_t size){
         DWORD oldProtection;
         UnprotectMemory(address, size, &oldProtection);
@@ -14,8 +13,10 @@ namespace Amethyst {
 			if (establishedPatch.address == address) {
                 Log::Warning("Patch already exists at address: 0x{0:x}", address);
 			}
+
             uint64_t establishedBoundsLow = establishedPatch.address;
             uint64_t establishedBoundsHigh = establishedPatch.address + establishedPatch.original.size;
+
             if (boundsLow >= establishedBoundsLow && boundsLow <= establishedBoundsHigh
                 || boundsHigh >= establishedBoundsLow && boundsHigh <= establishedBoundsHigh) {
                 Log::Warning("Patch at address: 0x{0:x} overlaps with existing patch at address: 0x{1:x}", address, establishedPatch.address);
@@ -37,10 +38,7 @@ namespace Amethyst {
         
     }
 
-    void PatchManager::RemovePatch(uintptr_t address) {
-    }
-
-    void PatchManager::Shutdown()
+    PatchManager::~PatchManager()
     {
 		for (auto it = this->mPatches.rbegin(); it != this->mPatches.rend(); it++) {
             uintptr_t address = it->address;
@@ -50,7 +48,6 @@ namespace Amethyst {
             ProtectMemory(address, it->original.size, oldProtection);
 			free(it->original.original);
 		}
-		this->mPatches.clear();
     }
 
 } // namespace Amethyst

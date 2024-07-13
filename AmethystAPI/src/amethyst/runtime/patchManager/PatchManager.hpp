@@ -12,10 +12,9 @@ namespace Amethyst {
 		}
 
         void ApplyPatch(uintptr_t address, uint8_t* patch, size_t size);
-        void RemovePatch(uintptr_t address);
+        ~PatchManager();
 
     private:
-        void Shutdown();
 
 		struct OriginalMemory {
 			uint8_t* original = nullptr;

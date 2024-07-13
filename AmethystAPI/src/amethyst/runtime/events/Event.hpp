@@ -26,13 +26,6 @@ public:
         }
     }
 
-    /*
-    Removes all callbacks to the event
-    */
-    void Shutdown() {
-        mCallbacks.clear();
-    }
-
 private:
     std::vector<TCallback> mCallbacks;
 };

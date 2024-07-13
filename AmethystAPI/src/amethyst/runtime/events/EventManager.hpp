@@ -27,26 +27,5 @@ namespace Amethyst {
         Event<ResourcePackManager&, const Experiments&> initBlockGraphics;
 
         Event<> beforeModShutdown;
-
-        /*
-        Clear any events that have been registered
-        */
-        void Shutdown()
-        {
-            onStartJoinGame.Shutdown();
-            onRequestLeaveGame.Shutdown();
-
-            beforeRenderUI.Shutdown();
-            afterRenderUI.Shutdown();
-            onRenderLevel.Shutdown();
-            update.Shutdown();
-
-            registerInputs.Shutdown();
-            registerItems.Shutdown();
-            registerBlocks.Shutdown();
-            initBlockGraphics.Shutdown();
-
-            beforeModShutdown.Shutdown();
-        }
     };
 } // namespace Amethyst

@@ -59,7 +59,6 @@ namespace Amethyst {
         }
 
     private:
-        void Shutdown();
         std::map<HashType64, uint64_t> mEnumsToCurrent;
 
         friend class AmethystRuntime;
