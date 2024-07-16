@@ -12,7 +12,7 @@ file(GLOB_RECURSE AmethystAPI_All
     "src/*.cpp"      
     "src/*.c"     
     "src/*.asm"  
-    "src/*.hpp"    
+    "src/*.hpp"     
     "src/*.h"
     amethyst/MinecraftVtables.asm
     minecraft/src/common/world/level/block/BlockLegacy.asm 

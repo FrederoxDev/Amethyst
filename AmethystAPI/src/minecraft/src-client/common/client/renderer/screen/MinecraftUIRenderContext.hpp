@@ -2,6 +2,7 @@
 #include "glm/glm.hpp"
 #include <gsl/gsl>
 #include "minecraft/src-client/common/client/renderer/screen/ScreenContext.hpp"
+#include "minecraft/src-deps/core/utility/NonOwnerPointer.hpp"
 #include <cstdint>
 #include <string>
 
@@ -52,6 +53,7 @@ struct CaretMeasureData {
 
 namespace mce {
 class TexturePtr;
+class TextureGroup;
 };
 
 namespace Core {
@@ -68,7 +70,9 @@ class MinecraftUIRenderContext {
 public:
     /* this + 8   */ IClientInstance* mClient;
     /* this + 16  */ ScreenContext* mScreenContext;
-    /* this + 24  */ std::byte padding24[224];
+    /* this + 24  */ std::byte padding24[64];
+    /* this + 88  */ Bedrock::NonOwnerPointer<mce::TextureGroup> mTextures;
+    /* this + 104  */ std::byte padding80[248 - 104];
     /* this + 248 */ const UIScene* mCurrentScene;
 
 public:

@@ -8,8 +8,30 @@ namespace mce {
     public:
         typedef std::size_t size_type;
         typedef uint8_t value_type;
-        typedef std::unique_ptr<unsigned char[]> pointer_type;
         typedef mce::Blob::value_type* iterator;
+        typedef void (*delete_function)(value_type*);
+
+        struct Deleter {
+            mce::Blob::delete_function m_func;
+
+            Deleter() : m_func(nullptr) {}
+            Deleter(delete_function func) : m_func(func) {}
+
+            void operator()(value_type* ptr) const {
+                if (m_func) {
+                    m_func(ptr);
+                }
+                else {
+                    delete[] ptr;
+                }
+            }
+
+            delete_function getDeleteFunc() const {
+                return m_func;
+            }
+        };
+
+        typedef std::unique_ptr<unsigned char[], Deleter> pointer_type;
 
     private:
         pointer_type mBlob;
@@ -18,5 +40,6 @@ namespace mce {
     public:
         Blob();
         Blob(const iterator data, const size_type size);
+        static void defaultDeleter(iterator data);
     };
 }

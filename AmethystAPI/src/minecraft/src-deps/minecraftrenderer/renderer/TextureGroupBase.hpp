@@ -11,10 +11,6 @@
 namespace mce {
     class TextureGroupBase : public std::enable_shared_from_this<TextureGroupBase> {
     public:
-        /* this + 16  */ std::byte padding16[328];
-        /* this + 346 */ std::map<ResourceLocation, BedrockTexture> mLoadedTextures;
-
-    public:
         virtual ~TextureGroupBase();
         virtual mce::TexturePtr getTexture(const ResourceLocation& path, bool forceReload, std::optional<uint32_t> unk1, cg::TextureSetLayerType type);
     };

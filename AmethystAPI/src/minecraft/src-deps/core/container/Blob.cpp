@@ -1,12 +1,11 @@
 #include "Blob.hpp"
 
-mce::Blob::Blob() 
-    : mSize(0), mBlob(std::make_unique<unsigned char[]>(0)) {}
+mce::Blob::Blob() : mBlob(nullptr, Deleter()), mSize(0) {}
 
 mce::Blob::Blob(const iterator data, const size_type size)
-    : mSize(size), mBlob(std::make_unique<unsigned char[]>(size))
+    : mBlob(data, defaultDeleter), mSize(size) {}
+
+void mce::Blob::defaultDeleter(iterator data)
 {
-    if (data && size > 0) {
-        std::memcpy(mBlob.get(), data, size);
-    }
+    delete[] data;
 }
