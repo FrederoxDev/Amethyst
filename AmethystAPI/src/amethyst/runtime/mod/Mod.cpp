@@ -12,12 +12,12 @@ Mod::Mod(std::string modName)
         DWORD error = GetLastError();
 
         switch (error) {
-        case 0x5:
-            Assert("[AmethystRuntime] '{}' does not have the required privileges!", dllPath.string());
-        case 0x7e:
-            Assert("[AmethystRuntime] Failed to find '{}'", dllPath.string());
-        default:
-            Assert("[AmethystRuntime] Failed to load '{}.dll', error code: 0x{:x}", modName, error);
+            case ERROR_ACCESS_DENIED:
+                Assert("[AmethystRuntime] '{}' does not have the required privileges!", dllPath.string());
+            case ERROR_MOD_NOT_FOUND:
+                Assert("[AmethystRuntime] Failed to find '{}'", dllPath.string());
+            default:
+                Assert("[AmethystRuntime] Failed to load '{}.dll', error code: 0x{:x}", modName, error);
         }
     }
 
