@@ -1,3 +1,4 @@
+#pragma once
 #include <minecraft/src/common/network/packet/Packet.hpp>
 #include <minecraft/src-deps/core/utility/UUID.hpp>
 
