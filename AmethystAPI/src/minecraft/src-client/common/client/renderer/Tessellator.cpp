@@ -22,6 +22,16 @@ void Tessellator::vertex(const Vec3& vec) {
     this->vertex(vec.x, vec.y, vec.z);
 }
 
+void Tessellator::vertex(float x, float y)
+{
+    this->vertex(x, y, 0);
+}
+
+void Tessellator::vertex(const Vec2& vec)
+{
+    this->vertex(vec.x, vec.y, 0);
+}
+
 void Tessellator::vertexUV(float x, float y, float z, float uvX, float uvY)
 {
     using function = void(Tessellator::*)(float, float, float, float, float);
@@ -90,6 +100,11 @@ void Tessellator::color(float r, float g, float b, float a) {
     result.a = static_cast<char>(a * 255.0f);
 
     mNextColor = result.intValue;
+}
+
+void Tessellator::color(uint32_t packed)
+{
+    mNextColor = packed;
 }
 
 void Tessellator::beginOverride() {

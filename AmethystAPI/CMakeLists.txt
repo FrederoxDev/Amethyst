@@ -9,11 +9,12 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(libhat)                      
     
 file(GLOB_RECURSE AmethystAPI_All           
-    "src/*.cpp"     
-    "src/*.c"    
+    "src/*.cpp"      
+    "src/*.c"     
     "src/*.asm"  
-    "src/*.hpp"  
+    "src/*.hpp"    
     "src/*.h"
+    amethyst/MinecraftVtables.asm
     minecraft/src/common/world/level/block/BlockLegacy.asm 
     minecraft/src/common/world/item/BlockItem.asm 
     minecraft/src/common/world/item/Item.asm 

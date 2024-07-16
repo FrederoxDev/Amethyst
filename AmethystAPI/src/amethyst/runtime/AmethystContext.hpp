@@ -10,6 +10,7 @@
 #include "minecraft/src-client/common/client/game/ClientInstance.hpp"
 #include "minecraft/src-client/common/client/input/MinecraftInputHandler.hpp"
 #include "minecraft/src-client/common/client/options/Options.hpp"
+#include "minecraft/src-client/common/client/renderer/screen/MinecraftUIRenderContext.hpp"
 #include "amethyst/runtime/RuntimeFeatures.hpp"
 
 class AmethystContext {
@@ -31,7 +32,6 @@ public:
 
     // prevent copying
     AmethystContext(const AmethystContext&) = delete;
-    AmethystContext& operator=(const AmethystContext&) = delete;
     friend class AmethystRuntime;
 
 protected:

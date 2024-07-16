@@ -5,6 +5,7 @@
 #include <cstdint>
 #include "glm/glm.hpp"
 #include "minecraft/src-deps/minecraftrenderer/renderer/MeshData.hpp"
+#include <minecraft/src/common/world/phys/Vec2.hpp>
 
 struct TessellatorQuadInfo {
 public:
@@ -79,10 +80,13 @@ public:
 
     void vertex(float x, float y, float z);
     void vertex(const Vec3&);
+    void vertex(float x, float y);
+    void vertex(const Vec2&);
     void vertexUV(float x, float y, float z, float uvX, float uvY);
     void vertexUV(const Vec3&, float uvX, float uvY);
 
     void color(float r, float g, float b, float a);
+    void color(uint32_t packed);
 
     void setPostTransformOffset(float xo, float yo, float zo);
     void setPosTransformOffset(Vec3 v);
