@@ -79,6 +79,10 @@ void AmethystRuntime::LoadModDlls()
     // Invoke mods to initialize and setup hooks, etc..
     for (auto& modInitialize : mModInitialize)
         modInitialize(&mAmethystContext);
+
+    // Allow mods to add listeners to eachothers events
+    AddModEventListenersEvent event;
+    AmethystRuntime::getEventBus()->Invoke<AddModEventListenersEvent>(event);
 }
 
 template <typename T>

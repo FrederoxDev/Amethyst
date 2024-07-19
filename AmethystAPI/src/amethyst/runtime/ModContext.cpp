@@ -12,6 +12,11 @@ void Amethyst::InitializeAmethystMod(AmethystContext& context)
     _AmethystContextInstance = &context;
 }
 
+AmethystContext& Amethyst::GetContext()
+{
+    return *_AmethystContextInstance;
+}
+
 Amethyst::EventBus& Amethyst::GetEventBus()
 {
     return *_AmethystContextInstance->mEventBus.get();
@@ -20,4 +25,9 @@ Amethyst::EventBus& Amethyst::GetEventBus()
 Amethyst::HookManager& Amethyst::GetHookManager()
 {
     return *_AmethystContextInstance->mHookManager.get();
+}
+
+Amethyst::PatchManager& Amethyst::GetPatchManager()
+{
+    return *_AmethystContextInstance->mPatchManager.get();
 }

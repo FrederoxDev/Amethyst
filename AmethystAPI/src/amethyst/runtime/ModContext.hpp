@@ -9,12 +9,22 @@ namespace Amethyst {
 	void InitializeAmethystMod(AmethystContext& context);
 
 	/**
-	* Returns the current instance of the Amethyst EventBus
+	* Returns the current instance of the AmethystContext
+	*/
+	AmethystContext& GetContext();
+
+	/**
+	* Returns the current instance of the Amethyst::EventBus
 	*/
 	Amethyst::EventBus& GetEventBus();
 
 	/**
-	* Returns the current instance of the Amethyst HookManager
+	* Returns the current instance of the Amethyst::HookManager
 	*/
 	Amethyst::HookManager& GetHookManager();
+
+	/**
+	* Returns the current instance of the Amethyst::PatchManager
+	*/
+	Amethyst::PatchManager& GetPatchManager();
 }
