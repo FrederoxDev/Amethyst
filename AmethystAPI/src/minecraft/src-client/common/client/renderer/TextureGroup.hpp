@@ -8,6 +8,8 @@
 #include <minecraft/src-deps/coregraphics/TextureSetLayerTypes.hpp>
 #include <minecraft/src-client/common/client/renderer/TexturePtr.hpp>
 
+namespace cg { class ImageBuffer; }
+
 namespace mce {
 	class TextureContainer;
 
@@ -15,7 +17,9 @@ namespace mce {
 	public:
         /* this + 48  */ std::byte padding48[352];
         /* this + 400 */ std::map<ResourceLocation, BedrockTexture> mLoadedTextures;
+
 		BedrockTexture& uploadTexture(const ResourceLocation& resource, const mce::TextureContainer& texture, std::optional<std::string_view> debugName);
+        BedrockTexture& uploadTexture(const ResourceLocation& resource, cg::ImageBuffer imageBuffer);
 	};
 }
 

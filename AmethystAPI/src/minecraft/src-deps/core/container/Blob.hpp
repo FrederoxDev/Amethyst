@@ -40,6 +40,10 @@ namespace mce {
     public:
         Blob();
         Blob(const iterator data, const size_type size);
+        Blob(const Blob& other);
+
+        size_type size() const;
+
         static void defaultDeleter(iterator data);
     };
 }

@@ -10,5 +10,6 @@ namespace mce {
         float mOptimisedClearDepth;
         short e;
         short j;
+        std::byte test[100];
     };
 }
