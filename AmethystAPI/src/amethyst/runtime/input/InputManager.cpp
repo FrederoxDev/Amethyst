@@ -6,9 +6,9 @@
 Amethyst::InputManager::InputManager(AmethystContext *amethyst) {
     mAmethyst = amethyst;
 
-    mAmethyst->mEventManager->onRequestLeaveGame.AddListener([this]() {
+    /*mAmethyst->mEventManager->onRequestLeaveGame.AddListener([this]() {
         this->RemoveButtonHandlers();
-    });
+    });*/
 }
 
 // make this listen to the on start join event, until then cache values.. and make them then

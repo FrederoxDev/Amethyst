@@ -1,5 +1,7 @@
 #include "AmethystRuntime.hpp"
 #include "debug/AmethystDebugging.hpp"
+#include <amethyst/runtime/events/ModEvents.hpp>
+#include <amethyst/runtime/events/InputEvents.hpp>
 
 AmethystRuntime* AmethystRuntime::instance = nullptr;
 extern HANDLE gMcThreadHandle;
@@ -106,9 +108,8 @@ void AmethystRuntime::RunMods()
 {
     // If we have hot-reloaded this will be true, so prompt mods to create their inputs.
     if (AmethystRuntime::getContext()->mOptions != nullptr) {
-        AmethystRuntime::getEventManager()->registerInputs.Invoke(
-            AmethystRuntime::getInputManager()
-        );
+        RegisterInputsEvent event(*AmethystRuntime::getInputManager());
+        AmethystRuntime::getEventBus()->Invoke(event);
     }
 
     ResumeGameThread();
@@ -129,8 +130,8 @@ void AmethystRuntime::RunMods()
 
 void AmethystRuntime::Shutdown()
 {
-    // Allow mods to do any shutdown logic.
-    getEventManager()->beforeModShutdown.Invoke();
+    BeforeModShutdownEvent shutdownEvent;
+    getEventBus()->Invoke(shutdownEvent);
 
     getContext()->Shutdown();
 
