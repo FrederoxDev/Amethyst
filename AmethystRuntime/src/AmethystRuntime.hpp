@@ -5,7 +5,6 @@
 #include <amethyst/Log.hpp>
 #include <amethyst/MinecraftVtables.hpp>
 #include <amethyst/runtime/AmethystContext.hpp>
-#include <amethyst/runtime/events/Event.hpp>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -53,9 +52,9 @@ public:
         return AmethystRuntime::getInstance()->mAmethystContext.mHookManager.get();
     }
 
-    static Amethyst::EventManager* getEventManager() 
+    static Amethyst::EventBus* getEventBus() 
     {
-        return AmethystRuntime::getInstance()->mAmethystContext.mEventManager.get();
+        return AmethystRuntime::getInstance()->mAmethystContext.mEventBus.get();
     }
 
     static Amethyst::InputManager* getInputManager() 

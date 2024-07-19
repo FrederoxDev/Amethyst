@@ -1,6 +1,6 @@
 #pragma once
 #include "amethyst/runtime/HookManager.hpp"
-#include "amethyst/runtime/events/EventManager.hpp"
+#include "amethyst/runtime/events/EventBus.hpp"
 #include "amethyst/runtime/input/InputManager.hpp"
 #include "amethyst/runtime/minecraft/MinecraftPackageInfo.hpp"
 #include "amethyst/runtime/mod/Mod.hpp"
@@ -17,7 +17,7 @@ class AmethystContext {
 public:
     // Volatile between mod loads
     std::unique_ptr<HookManager> mHookManager;
-    std::unique_ptr<Amethyst::EventManager> mEventManager;
+    std::unique_ptr<Amethyst::EventBus> mEventBus;
     std::unique_ptr<Amethyst::InputManager> mInputManager;
     std::unique_ptr<Amethyst::PatchManager> mPatchManager;
     std::unique_ptr<Amethyst::EnumAllocator> mEnumAllocator;
