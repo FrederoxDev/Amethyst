@@ -47,7 +47,7 @@ public:
         return &AmethystRuntime::getInstance()->mAmethystContext;
     }
 
-    static HookManager* getHookManager()
+    static Amethyst::HookManager* getHookManager()
     {
         return AmethystRuntime::getInstance()->mAmethystContext.mHookManager.get();
     }

@@ -5,7 +5,7 @@
 /*
 Disables any hooks and un-caches any stored addresses
 */
-HookManager::~HookManager()
+Amethyst::HookManager::~HookManager()
 {
     for (auto hook : std::ranges::reverse_view(mHooks)) {
         *hook = {};

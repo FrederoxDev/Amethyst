@@ -16,7 +16,7 @@
 class AmethystContext {
 public:
     // Volatile between mod loads
-    std::unique_ptr<HookManager> mHookManager;
+    std::unique_ptr<Amethyst::HookManager> mHookManager;
     std::unique_ptr<Amethyst::EventBus> mEventBus;
     std::unique_ptr<Amethyst::InputManager> mInputManager;
     std::unique_ptr<Amethyst::PatchManager> mPatchManager;

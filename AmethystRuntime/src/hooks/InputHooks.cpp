@@ -29,7 +29,7 @@ void createInputMappingTemplates(VanillaClientInputMappingFactory* self, Options
 
 void CreateInputHooks()
 {
-    HookManager* hookManager = AmethystRuntime::getHookManager();
+    Amethyst::HookManager* hookManager = AmethystRuntime::getHookManager();
 
     hookManager->RegisterFunction<&VanillaClientInputMappingFactory::createInputMappingTemplates>("48 89 5C 24 ? 48 89 74 24 ? 55 57 41 56 48 8D AC 24 ? ? ? ? B8 ? ? ? ? E8 ? ? ? ? 48 2B E0 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 48 8B FA");
     hookManager->CreateHook<&VanillaClientInputMappingFactory::createInputMappingTemplates>(_createInputMappingTemplates, &createInputMappingTemplates);
