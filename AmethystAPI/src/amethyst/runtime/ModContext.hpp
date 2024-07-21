@@ -27,4 +27,9 @@ namespace Amethyst {
 	* Returns the current instance of the Amethyst::PatchManager
 	*/
 	Amethyst::PatchManager& GetPatchManager();
+
+	/**
+	* Returns the current instance of the Amethyst::EnumAllocator
+	*/
+	Amethyst::EnumAllocator& GetEnumAllocator();
 }

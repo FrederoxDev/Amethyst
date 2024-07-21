@@ -3,6 +3,10 @@
 
 class ClientInstance;
 
+/*
+Called when loading into a world
+ - Called on ApplicationView thread
+*/
 class OnStartJoinGameEvent : public BaseEvent {
 public:
     ClientInstance& client;

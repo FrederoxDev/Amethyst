@@ -87,7 +87,7 @@ void* ClientInstance_ClientInstance(ClientInstance* self, uint64_t a2, uint64_t 
 void BlockGraphics_initBlocks(ResourcePackManager& resources, const Experiments& experiments) {
     _BlockGraphics_initBlocks.call<void, ResourcePackManager&, const Experiments&>(resources, experiments);
 
-    InitBlockGraphics event(resources, experiments);
+    InitBlockGraphicsEvent event(resources, experiments);
     AmethystRuntime::getEventBus()->Invoke(event);
 }
 

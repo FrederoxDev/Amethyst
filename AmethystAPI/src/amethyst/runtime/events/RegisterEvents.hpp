@@ -22,11 +22,11 @@ public:
         : blockDefinitions(blockDefs) {}
 };
 
-class InitBlockGraphics : public BaseEvent {
+class InitBlockGraphicsEvent : public BaseEvent {
 public:
     ResourcePackManager& resources;
     const Experiments& experiments;
 
-    InitBlockGraphics(ResourcePackManager& resources, const Experiments& experiments)
+    InitBlockGraphicsEvent(ResourcePackManager& resources, const Experiments& experiments)
         : resources(resources), experiments(experiments) {}
 };

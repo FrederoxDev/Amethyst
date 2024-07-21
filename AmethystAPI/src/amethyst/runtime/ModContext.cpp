@@ -31,3 +31,8 @@ Amethyst::PatchManager& Amethyst::GetPatchManager()
 {
     return *_AmethystContextInstance->mPatchManager.get();
 }
+
+Amethyst::EnumAllocator& Amethyst::GetEnumAllocator()
+{
+    return *_AmethystContextInstance->mEnumAllocator.get();
+}

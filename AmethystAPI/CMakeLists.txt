@@ -15,19 +15,19 @@ file(GLOB_RECURSE AmethystAPI_All
     "src/*.hpp"       
     "src/*.h" 
     amethyst/MinecraftVtables.asm
-    minecraft/src/common/world/level/block/BlockLegacy.asm 
+    minecraft/src/common/world/level/block/BlockLegacy.asm  
     minecraft/src/common/world/item/BlockItem.asm 
     minecraft/src/common/world/item/Item.asm 
     minecraft/src/common/network/packet/Packet.asm
     minecraft/src/common/world/level/block/actor/BlockActor.asm
     minecraft/src/common/world/level/dimension/Dimension.asm 
-    minecraft/src-client/common/client/renderer/ActorShaderManager.asm
+    minecraft/src-client/common/client/renderer/ActorShaderManager.asm 
     minecraft/src-client/common/client/renderer/blockActor/BlockActorRenderer.asm
     minecraft/src-vanilla/vanilla_shared/common/world/level/dimension/OverworldDimension.hpp
     minecraft/src/common/world/level/chunk/ChunkSource.asm
     minecraft/src/common/world/level/levelgen/WorldGenerator.asm
     minecraft/src/common/world/level/levelgen/structure/StructureFeatureRegistry.asm
-)                  
+)                   
  
 add_library(AmethystAPI STATIC ${AmethystAPI_All})
 

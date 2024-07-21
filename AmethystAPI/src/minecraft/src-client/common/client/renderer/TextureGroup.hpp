@@ -20,6 +20,9 @@ namespace mce {
 
 		BedrockTexture& uploadTexture(const ResourceLocation& resource, const mce::TextureContainer& texture, std::optional<std::string_view> debugName);
         BedrockTexture& uploadTexture(const ResourceLocation& resource, cg::ImageBuffer imageBuffer);
+
+		// 1.21.0.3 - 48 89 5C 24 ? 57 48 83 EC ? 48 8B 99 ? ? ? ? 48 8B F9 48 8B 1B 80 7B ? ? 75 ? 0F 1F 00 48 8D 53
+        void unloadAllTextures();
 	};
 }
 

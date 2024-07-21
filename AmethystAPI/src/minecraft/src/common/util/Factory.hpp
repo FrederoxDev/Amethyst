@@ -26,3 +26,24 @@ public:
 
     std::vector<std::string> getRegisteredTypeNames() const;
 };
+
+template <typename Type, typename... Params>
+class Factory {
+public:
+    typedef std::function<std::unique_ptr<Type>(Params&&...)> TypeCreator;
+    typedef std::unordered_map<std::string, TypeCreator> FactoryMap;
+
+public:
+    /* this + 0 */ FactoryMap mFactoryMap;
+
+public:
+    bool hasType(const std::string& name) const
+    {
+        return mFactoryMap.find(name) != mFactoryMap.end();
+    }
+
+    void registerFactory(const std::string& name, TypeCreator creator)
+    {
+        mFactoryMap[name] = creator;
+    }
+};
