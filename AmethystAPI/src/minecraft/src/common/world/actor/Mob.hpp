@@ -1,3 +1,4 @@
+#pragma once
 #include "minecraft/src/common/world/actor/Actor.hpp"
 
 class Mob : public Actor {
