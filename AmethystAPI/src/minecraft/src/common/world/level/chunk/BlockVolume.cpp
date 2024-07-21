@@ -3,7 +3,7 @@
 BlockVolume::BlockVolume(buffer_span_mut<const Block*> blockSpan, std::uint32_t width, std::uint32_t height, std::uint32_t depth, Block const* initBlock)
     : mWidth(width), mHeight(height), mDepth(depth), mDimensionBottom(0), mBlocks(blockSpan), mInitBlock(initBlock)
 {
-    for (int i = 0; i < width * depth * height; i++) {
+    for (int i = 0; (uint32_t)i < width * depth * height; i++) {
         this->mBlocks.mBegin[i] = initBlock;
     }
 }
