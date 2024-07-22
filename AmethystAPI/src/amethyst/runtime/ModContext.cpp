@@ -36,3 +36,13 @@ Amethyst::EnumAllocator& Amethyst::GetEnumAllocator()
 {
     return *_AmethystContextInstance->mEnumAllocator.get();
 }
+
+Amethyst::RuntimeFeatures& Amethyst::GetFeatures()
+{
+    return *_AmethystContextInstance->mFeatures.get();
+}
+
+Amethyst::InputManager& Amethyst::GetInputManager()
+{
+    return *_AmethystContextInstance->mInputManager.get();
+}

@@ -8,21 +8,15 @@ class AmethystContext;
 namespace Amethyst {
     class InputManager {
     public:
-        InputManager(AmethystContext* amethyst);
+        InputManager(AmethystContext& ctx);
         ~InputManager();
-        void RegisterNewInput(std::string actionName, std::vector<int> keys, bool allowRemapping = true);
-        void AddButtonDownHandler(const std::string& actionName, std::function<void(FocusImpact, IClientInstance&)> handler, bool suspendable);
-        void AddButtonUpHandler(const std::string& actionName, std::function<void(FocusImpact, IClientInstance&)> handler, bool suspendable);
+
+        void _copyVanillaInputs();
 
     private:
-        void RemoveButtonHandlers();
-
-    public:
-        std::vector<std::string> mRegisteredInputs;
-
-    private:
-        AmethystContext* mAmethyst;
-
-        friend class AmethystRuntime;
+        AmethystContext& mAmethyst;
+        bool mHasCopiedVanillaInputs;
+        std::multimap<unsigned int, std::pair<bool, std::function<void(enum FocusImpact, IClientInstance&)>>> mVanillaButtonDownHandlerMap;
+        std::multimap<unsigned int, std::pair<bool, std::function<void(enum FocusImpact, IClientInstance&)>>> mVanillaButtonUpHandlerMap;
     };
 }

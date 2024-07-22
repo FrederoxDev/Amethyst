@@ -16,7 +16,7 @@ int StringToNameId(const std::string& str);
 
 class InputHandler {
 public:
-    /* this + 0   */ std::byte padding0[24];
+    /* this + 0   */ std::vector<std::function<void(enum InputMode, IClientInstance&)>> mInputModeHandlers;
     /* this + 24  */ std::multimap<unsigned int, std::pair<bool, std::function<void(enum FocusImpact, IClientInstance &)>>> mButtonDownHandlerMap;
     /* this + 40  */ std::multimap<unsigned int, std::pair<bool, std::function<void(enum FocusImpact, IClientInstance&)>>> mButtonUpHandlerMap;
 

@@ -18,7 +18,7 @@ public:
     * @brief Adds a callback that will be invoked anytime the event is triggered
     */
     template <typename EventType>
-    void AddListener(EventHandler<EventType> handler)
+    void AddListener(std::function<void(EventType&)> handler)
     {
         static_assert(std::is_base_of<BaseEvent, EventType>::value, "EventType must inherit BaseEvent");
         auto typeId = std::type_index(typeid(EventType));

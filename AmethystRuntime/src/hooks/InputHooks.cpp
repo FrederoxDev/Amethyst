@@ -5,26 +5,18 @@ SafetyHookInline _addFullKeyboardGamePlayControls;
 SafetyHookInline _createInputMappingTemplates;
 
 void addFullKeyboardGamePlayControls(VanillaClientInputMappingFactory* self, KeyboardInputMapping* keyboard, MouseInputMapping* mouse)
-{
-    Amethyst::InputManager* inputManager = AmethystRuntime::getInputManager();
-   _addFullKeyboardGamePlayControls.call(self, keyboard, mouse);
+{   
+    _addFullKeyboardGamePlayControls.call(self, keyboard, mouse);
 
-   for (auto& actionName : inputManager->mRegisteredInputs) {
-       std::string keyName = "key." + actionName;
-       std::string buttonName = "button." + actionName;
-       self->createKeyboardAndMouseBinding(keyboard, mouse, &buttonName, &keyName);
-   }
+    auto& inputManager = *AmethystRuntime::getInputManager();
+    inputManager._copyVanillaInputs();
 }
 
 void createInputMappingTemplates(VanillaClientInputMappingFactory* self, Options* opt) {
     _createInputMappingTemplates.call(self, opt);
 
     // This function is called once at the very start of the game
-    // Later, the registerInputs event is called AmethystRuntime::RunMods() for hot reloading.
     AmethystRuntime::getContext()->mOptions = opt;
-    RegisterInputsEvent event(*AmethystRuntime::getInputManager());
-
-    AmethystRuntime::getEventBus()->Invoke(event);
 }
 
 void CreateInputHooks()

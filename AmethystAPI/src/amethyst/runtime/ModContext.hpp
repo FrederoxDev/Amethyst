@@ -32,4 +32,14 @@ namespace Amethyst {
 	* Returns the current instance of the Amethyst::EnumAllocator
 	*/
 	Amethyst::EnumAllocator& GetEnumAllocator();
+
+	/**
+	* Returns the current instance of the Amethyst::RuntimeFeatures
+	*/
+	Amethyst::RuntimeFeatures& GetFeatures();
+
+	/**
+	* Returns the current instance of the Amethyst::InputManager
+	*/
+	Amethyst::InputManager& GetInputManager();
 }
