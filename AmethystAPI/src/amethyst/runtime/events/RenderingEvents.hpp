@@ -1,6 +1,9 @@
 #pragma once
 #include <amethyst/runtime/events/EventBus.hpp>
 
+class ScreenView;
+class MinecraftUIRenderContext;
+
 class BeforeRenderUIEvent : public BaseEvent {
 public:
     ScreenView& screen;

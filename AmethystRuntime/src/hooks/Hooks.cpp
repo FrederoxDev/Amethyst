@@ -18,6 +18,7 @@ SafetyHookInline _BlockGraphics_initBlocks;
 void* ScreenView_setupAndRender(ScreenView* self, UIRenderContext* ctx)
 {
     Amethyst::EventBus* eventBus = AmethystRuntime::getEventBus();
+
     BeforeRenderUIEvent ev(*self, *ctx);
     eventBus->Invoke(ev);
 
