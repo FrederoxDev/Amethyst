@@ -9,9 +9,9 @@ public:
     int32_t keyNum;
     FocusImpact focusImpact;
 
-    KeyboardKeyBinding(const std::string* buttonName, int32_t key, FocusImpact focus)
+    KeyboardKeyBinding(const std::string& buttonName, int32_t key, FocusImpact focus)
     {
-        this->buttonName = *buttonName;
+        this->buttonName = buttonName;
         this->keyNum = key;
         this->focusImpact = focus;
     }
@@ -27,9 +27,9 @@ class MouseButtonBinding {
     int buttonNum;
 
 public:
-    MouseButtonBinding(const std::string* name, int key)
+    MouseButtonBinding(const std::string& name, int key)
     {
-        buttonName = *name;
+        buttonName = name;
         buttonNum = key;
     }
 };

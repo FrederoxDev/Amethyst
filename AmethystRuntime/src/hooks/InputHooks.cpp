@@ -6,7 +6,19 @@ SafetyHookInline _createInputMappingTemplates;
 
 void addFullKeyboardGamePlayControls(VanillaClientInputMappingFactory* self, KeyboardInputMapping* keyboard, MouseInputMapping* mouse)
 {   
+
+    for (auto& remapping : AmethystRuntime::getContext()->mOptions->mKeyboardRemappings) {
+        //Log::Info("{}", remapping->)
+    }
+
+
     _addFullKeyboardGamePlayControls.call(self, keyboard, mouse);
+
+    Log::Info("0x{:x} 0x{:x} 0x{:x}", (uintptr_t)self, (uintptr_t)keyboard, (uintptr_t)mouse);
+
+    self->mLayout->mKeymappings.emplace_back(Keymapping ("key.test", {'F'}, true));
+
+    self->createKeyboardAndMouseBinding(*keyboard, *mouse, "test", FocusImpact::Neutral);
 
     auto& inputManager = *AmethystRuntime::getInputManager();
     inputManager._copyVanillaInputs();
@@ -15,8 +27,12 @@ void addFullKeyboardGamePlayControls(VanillaClientInputMappingFactory* self, Key
 void createInputMappingTemplates(VanillaClientInputMappingFactory* self, Options* opt) {
     _createInputMappingTemplates.call(self, opt);
 
-    // This function is called once at the very start of the game
-    AmethystRuntime::getContext()->mOptions = opt;
+    //// This function is called once at the very start of the game
+    //AmethystRuntime::getContext()->mOptions = opt;
+
+
+    //uintptr_t offset = FindOffsetOfPointer(AmethystRuntime::getContext()->mClientInstance->minecraftGame, opt, 0x60000);
+    //Log::Info("offset: {}", offset);
 }
 
 void CreateInputHooks()

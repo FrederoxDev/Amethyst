@@ -12,6 +12,7 @@ SafetyHookInline _VanillaItems_registerItems;
 SafetyHookInline _BlockDefinitionGroup_registerBlocks;
 SafetyHookInline _LevelRenderer_renderLevel;
 SafetyHookInline _ClientInstance_ClientInstance;
+SafetyHookInline _Options_Options;
 SafetyHookInline _BlockGraphics_initBlocks;
 
 void* ScreenView_setupAndRender(ScreenView* self, UIRenderContext* ctx)
@@ -84,6 +85,12 @@ void* ClientInstance_ClientInstance(ClientInstance* self, uint64_t a2, uint64_t 
     return ret;
 }
 
+void* Options_Options(void* a1, void* a2, void* a3, void* a4, char a5, void* a6, void* a7) {
+    Log::Info("Options::Options");
+    AmethystRuntime::getContext()->mOptions = (Options*)a1;
+    _Options_Options.call<void*>(a1, a2, a3, a4, a5, a6, a7);
+}
+
 void BlockGraphics_initBlocks(ResourcePackManager& resources, const Experiments& experiments) {
     _BlockGraphics_initBlocks.call<void, ResourcePackManager&, const Experiments&>(resources, experiments);
 
@@ -108,6 +115,9 @@ void CreateModFunctionHooks() {
     
     hookManager->RegisterFunction<&ClientInstance::_ClientInstance>("48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 49 8B F9 49 8B D8 4C 8B E2");
     hookManager->CreateHook<&ClientInstance::_ClientInstance>(_ClientInstance_ClientInstance, &ClientInstance_ClientInstance);
+
+    hookManager->RegisterFunction<&Options::_Options>("48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 49 8B F8 4C 89 44 24 ? 48 8B F1");
+    hookManager->CreateHook<&Options::_Options>(_Options_Options, &Options_Options);
     
     hookManager->RegisterFunction<&VanillaItems::registerItems>("40 55 53 56 57 41 54 41 56 41 57 48 8D AC 24 ? ? ? ? B8 ? ? ? ? E8 ? ? ? ? 48 2B E0 0F 29 B4 24");
     hookManager->CreateHook<&VanillaItems::registerItems>(_VanillaItems_registerItems, &VanillaItems_registerItems);

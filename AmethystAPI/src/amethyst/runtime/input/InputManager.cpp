@@ -21,7 +21,7 @@ Amethyst::InputManager::~InputManager()
 void Amethyst::InputManager::_copyVanillaInputs()
 {
     ClientInputHandler* clientInputHandler = mAmethyst.mClientInstance->inputHandler;
-    if (clientInputHandler == nullptr) return;
+    if (mHasCopiedVanillaInputs || clientInputHandler == nullptr) return;
 
     InputHandler* vanillaInputHandler = clientInputHandler->mInputHandler;
 

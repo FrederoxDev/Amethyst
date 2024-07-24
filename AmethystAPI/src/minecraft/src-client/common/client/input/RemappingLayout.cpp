@@ -1,8 +1,8 @@
 #include "minecraft/src-client/common/client/input/RemappingLayout.hpp"
 
-Keymapping RemappingLayout::getKeymappingByAction(const std::string* actionName) const {
+Keymapping RemappingLayout::getKeymappingByAction(const std::string& actionName) const {
     for (auto& keymapping : mKeymappings) {
-        if (keymapping.mAction == *actionName) return keymapping;
+        if (keymapping.mAction == actionName) return keymapping;
     }
 
     return Keymapping("", 0);

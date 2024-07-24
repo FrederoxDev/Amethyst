@@ -11,7 +11,7 @@ public:
     std::vector<Keymapping> mKeymappings;
     std::vector<Keymapping> mDefaultMappings;
 
-    Keymapping getKeymappingByAction(const std::string* actionName) const;
+    Keymapping getKeymappingByAction(const std::string& actionName) const;
 
 //vfuncs:
     int getAdjustedKey(int); 

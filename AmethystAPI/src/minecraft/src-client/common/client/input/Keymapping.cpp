@@ -13,11 +13,11 @@ Keymapping::Keymapping(const std::string& actionName, std::vector<int>& keys, bo
 }
 
 bool Keymapping::isAltKey() {
-    for (auto& key : mKeys) {
-        if (key < 0) return true;   
-    }
+    if (mKeys.size() == 0) return false;
 
-    return false;
+    // Checks if any of the keys have negative keycodes
+    auto it = std::find_if(mKeys.begin(), mKeys.end(), [](int v) { return v < 0; });
+    return it != mKeys.end();
 }
 
 bool Keymapping::isAssigned() {
