@@ -3,6 +3,7 @@
 #include <variant>
 #include <minecraft/src-client/common/client/renderer/TexturePtr.hpp>
 #include <minecraft/src-deps/minecraftrenderer/renderer/BedrockTexture.hpp>
+#include <minecraft/src-deps/minecraftrenderer/renderer/MeshData.hpp>
 
 namespace mce {
     class ClientTexture;
@@ -13,7 +14,9 @@ namespace mce {
 
     class Mesh {
     public:
-        std::byte padding0[536];
+        /* this + 0   */ std::byte padding0[536];
+        ///* this + 120 */ mce::MeshData mMeshData;
+        ///* this + 392 */ std::byte padding392[536 - 392];
 
     public:
         void renderMesh(mce::MeshContext& meshContext, const mce::MaterialPtr& materialPtr);
