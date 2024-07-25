@@ -29,23 +29,7 @@ public:
     ChunkPos(int64_t packed) {
         this->packed = packed;
     }
-
-    bool operator==(const ChunkPos& r) const {
-        return this->packed == r.packed;
-    }
 };
-
-namespace std {
-template <>
-struct hash<ChunkPos> {
-    size_t operator()(const ChunkPos& pos) const;
-};
-
-inline size_t hash<ChunkPos>::operator()(const ChunkPos& pos) const
-{
-    return pos.packed;
-}
-} // namespace std
 
 template <>
 struct fmt::formatter<ChunkPos> {

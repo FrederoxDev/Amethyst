@@ -109,7 +109,7 @@ public:
     virtual void renderCustom(gsl::not_null<CustomRenderComponent*> customRenderer, int pass, RectangleArea& renderAABB);
     virtual void cleanup();
     virtual void removePersistentMeshes();
-    virtual mce::TexturePtr getTexture(const ResourceLocation& resourceLocation, bool forceReload);
+    virtual mce::TexturePtr getTexture(const ResourceLocation* resourceLocation, bool forceReload);
     virtual mce::TexturePtr getZippedTexture(const Core::Path& zippedFolderPath, const ResourceLocation& resourceLocation, bool forceReload);
     virtual void unloadTexture(ResourceLocation const &);
     // getUITextureInfo(ResourceLocation const &, bool);
