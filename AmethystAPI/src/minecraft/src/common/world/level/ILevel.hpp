@@ -9,6 +9,7 @@
 #include <minecraft/src/common/world/level/storage/StorageVersion.hpp>
 #include <minecraft/src/common/world/level/block/LevelEvent.hpp>
 #include <minecraft/src/common/gamerefs/OwnerPtr.hpp>
+#include <minecraft/src/common/world/phys/Vec3.hpp>
 
 // Auto-generated: Forward declarations
 namespace PlayerCapabilities { struct ISharedController; }

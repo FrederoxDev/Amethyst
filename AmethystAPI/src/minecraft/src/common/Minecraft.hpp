@@ -18,7 +18,6 @@ class PrivateKeyManager;
 namespace Core { class FilePathManager; };
 class ServerMetrics;
 class MinecraftCommands;
-class GameSession;
 class GameTestLevelListener;
 class MinecraftGameTest;
 class Timer;

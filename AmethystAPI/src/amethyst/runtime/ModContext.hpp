@@ -1,6 +1,9 @@
 #pragma once
 #include <amethyst/runtime/AmethystContext.hpp>
 
+class Minecraft;
+class Level;
+
 namespace Amethyst {
 	/**
 	Initializes internal variables required for an Amethyst mod to function.
@@ -8,28 +11,12 @@ namespace Amethyst {
 	*/
 	void InitializeAmethystMod(AmethystContext& context);
 
-	/**
-	* Returns the current instance of the AmethystContext
-	*/
 	AmethystContext& GetContext();
-
-	/**
-	* Returns the current instance of the Amethyst::EventBus
-	*/
 	Amethyst::EventBus& GetEventBus();
-
-	/**
-	* Returns the current instance of the Amethyst::HookManager
-	*/
 	Amethyst::HookManager& GetHookManager();
-
-	/**
-	* Returns the current instance of the Amethyst::PatchManager
-	*/
 	Amethyst::PatchManager& GetPatchManager();
-
-	/**
-	* Returns the current instance of the Amethyst::EnumAllocator
-	*/
 	Amethyst::EnumAllocator& GetEnumAllocator();
+
+	Minecraft* GetMinecraft();
+	Level* GetLevel();
 }

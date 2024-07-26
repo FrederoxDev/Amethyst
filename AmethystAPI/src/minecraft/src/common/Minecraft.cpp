@@ -2,5 +2,6 @@
 
 Level* Minecraft::getLevel() const
 {
+    if (!mGameSession) return nullptr;
     return mGameSession->mLevel.get();
 }

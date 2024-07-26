@@ -1,5 +1,6 @@
 #include <amethyst/runtime/ModContext.hpp>
 #include <amethyst/MinecraftVtables.hpp>
+#include <minecraft/src/common/Minecraft.hpp>
 
 static AmethystContext* _AmethystContextInstance;
 
@@ -35,4 +36,16 @@ Amethyst::PatchManager& Amethyst::GetPatchManager()
 Amethyst::EnumAllocator& Amethyst::GetEnumAllocator()
 {
     return *_AmethystContextInstance->mEnumAllocator.get();
+}
+
+Minecraft* Amethyst::GetMinecraft()
+{
+    return _AmethystContextInstance->mClientInstance->minecraft;
+}
+
+Level* Amethyst::GetLevel()
+{
+    ClientInstance* ci = _AmethystContextInstance->mClientInstance;
+    if (!ci) return nullptr;
+    return ci->minecraft->getLevel();
 }
