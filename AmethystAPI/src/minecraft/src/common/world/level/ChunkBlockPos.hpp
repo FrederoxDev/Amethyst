@@ -9,6 +9,11 @@
 
 class BlockPos;
 
+class ChunkLocalHeight {
+public:
+    int16_t mVal;
+};
+
 class ChunkBlockPos {
 public:
     uint8_t x;

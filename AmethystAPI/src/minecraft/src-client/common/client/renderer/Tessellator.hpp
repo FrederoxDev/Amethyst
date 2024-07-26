@@ -55,7 +55,7 @@ public:
     /* this + 0   */ bool mIsFormatFixed;
     /* this + 1   */ std::byte padding1[7];
     /* this + 8   */ mce::MeshData mMeshData;
-    /* this + 248 */ std::byte padding248[80];
+    /* this + 280 */ std::byte padding280[328 - 280];
     /* this + 328 */ std::optional<unsigned int> mNextColor;
     /* this + 336 */ std::byte padding336[12];
     /* this + 348 */ Vec3 mPostTransformOffset;
@@ -100,3 +100,5 @@ public:
     void clear();
     mce::Mesh endOverride(uint64_t a3, std::string_view debugName, int a5);
 };
+
+static_assert(offsetof(Tessellator, mBuildFaceData) == 561);

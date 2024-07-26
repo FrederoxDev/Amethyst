@@ -1,4 +1,5 @@
 #pragma once
+#include <cstdint>
 
 namespace mce {
 class Color {
@@ -30,6 +31,28 @@ public:
         this->g = 0.0f;
         this->b = 0.0f;
         this->a = 0.0f;
+    }
+
+    uint32_t As32() const {
+        struct PackedColors {
+            union {
+                struct {
+                    char r;
+                    char g;
+                    char b;
+                    char a;
+                };
+                unsigned int intValue;
+            };
+        };
+
+        PackedColors result{};
+        result.r = static_cast<char>(this->r * 255.0f);
+        result.g = static_cast<char>(this->g * 255.0f);
+        result.b = static_cast<char>(this->b * 255.0f);
+        result.a = static_cast<char>(this->a * 255.0f);
+
+        return result.intValue;
     }
 
     /// Vanilla color code: §0 (Foreground)
@@ -112,7 +135,6 @@ public:
 
     /// Vanilla color code: §u (Foreground)
     static const Color MATERIAL_AMETHYST;
-
 
     /// Vanilla color code: §0 (Background)
     static const Color BLACK_BG;

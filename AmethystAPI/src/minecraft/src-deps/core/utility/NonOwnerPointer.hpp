@@ -52,6 +52,11 @@ public:
         return static_cast<T*>(this->controlBlock.get()->ptr);
     }
 
+    T* get() const
+    {
+        return static_cast<T*>(this->controlBlock.get()->ptr);
+    }
+
     T& operator*() const
     {
         return *this->operator->();
