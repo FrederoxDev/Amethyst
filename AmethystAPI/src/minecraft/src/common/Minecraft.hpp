@@ -32,7 +32,7 @@ public:
     /* this + 40  */ std::unique_ptr<ResourcePackManager> mResourceLoader;
     /* this + 48  */ std::unique_ptr<StructureManager> mStructureManager;
     /* this + 56  */ std::shared_ptr<GameModuleServer> mGameModuleServer;
-    /* this + 72  */ AllowList* mAllowList;
+    /* this + 72  */ AllowList& mAllowList;
     /* this + 80  */ PermissionsFile* mPermissionsFile;
     /* this + 88  */ std::unique_ptr<PrivateKeyManager> mServerKeys;
     /* this + 96  */ const std::string mSaveGamePath;
@@ -47,11 +47,11 @@ public:
     /* this + 192 */ std::unique_ptr<GameSession> mGameSession;
     /* this + 200 */ std::unique_ptr<GameTestLevelListener> mGameTestLevelListener;
     /* this + 208 */ std::unique_ptr<MinecraftGameTest> mGameTest;
-    /* this + 216 */ Timer* mSimTimer;
-    /* this + 224 */ Timer* mRealTimer;
+    /* this + 216 */ Timer& mSimTimer;
+    /* this + 224 */ Timer& mRealTimer;
     /* this + 232 */ ClientOrServerNetworkSystemRef mNetwork;
-    /* this + 248 */ PacketSender* mPacketSender;
-    /* this + 256 */ IMinecraftApp* mApp;
+    /* this + 248 */ PacketSender& mPacketSender;
+    /* this + 256 */ IMinecraftApp& mApp;
     /* this + 264 */ SubClientId mClientSubId;
     /* this + 272 */ OwnerPtr<EntityRegistry> mEntityRegistry;
     /* this + 288 */ std::unique_ptr<Bedrock::PubSub::Publisher<void(Level*), Bedrock::PubSub::ThreadModel::SingleThreaded>> mLevelSubscribers;
