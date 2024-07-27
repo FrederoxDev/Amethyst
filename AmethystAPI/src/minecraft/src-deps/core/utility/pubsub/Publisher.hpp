@@ -10,10 +10,15 @@ namespace Bedrock::PubSub {
         public Bedrock::PubSub::Connector<Signature> 
     {
     public:
-        typedef Bedrock::PubSub::Connector<Signature>::FunctionType FunctionType;
+        typedef std::function<Signature> FunctionType;
         virtual ~Publisher();
 
-    private:
-        virtual Bedrock::PubSub::Subscription _connectInternal(FunctionType&&, Bedrock::PubSub::ContextType&&, std::optional<int>);
+    /* private: */
+        virtual Bedrock::PubSub::Subscription _connectInternal(
+            FunctionType&&, 
+            Bedrock::PubSub::ConnectPosition, 
+            std::unique_ptr<Bedrock::PubSub::SubscriptionContext>&&, 
+            std::optional<int>
+        );
     };
 }

@@ -30,6 +30,9 @@ public:
     MinecraftInputHandler* mMcInputHandler = nullptr;
     Options* mOptions = nullptr;
 
+    Minecraft* mClientMinecraft;
+    Minecraft* mServerMinecraft;
+
     // prevent copying
     AmethystContext(const AmethystContext&) = delete;
     friend class AmethystRuntime;

@@ -65,7 +65,9 @@ public:
     virtual bool getSimPaused() const;
     virtual bool isOnlineClient() const;
 
-    Level* getLevel() const;
+    // 1.21.0.03 - 48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 4D 8B E1 49 8B D8 4C 8B EA
+    Minecraft* _Minecraft(Minecraft* a1, void* a2, void* a3, void* a4, void* a5, void* a6, void* a7, void* a8, void* a9, void* a10, char a11, void* a12, void* a13, void* a14, void* a15);
 
-    bool update(Minecraft*);
+    Level* getLevel() const;
+    bool update();
 };

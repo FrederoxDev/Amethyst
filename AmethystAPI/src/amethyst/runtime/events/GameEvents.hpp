@@ -2,6 +2,7 @@
 #include <amethyst/runtime/events/EventBus.hpp>
 
 class ClientInstance;
+class Level;
 
 /*
 Called when loading into a world
@@ -26,4 +27,17 @@ public:
 class UpdateEvent : public BaseEvent {
 public:
     UpdateEvent() {}
+};
+
+class OnLevelConstructed : public BaseEvent {
+public:
+    Level& mLevel;
+
+    OnLevelConstructed(Level& level) 
+        : mLevel(level) {}
+};
+
+class OnLevelDestroyed : public BaseEvent {
+public:
+    OnLevelDestroyed() {};
 };

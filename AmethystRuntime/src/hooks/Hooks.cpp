@@ -76,12 +76,45 @@ void BlockDefinitionGroup_registerBlocks(BlockDefinitionGroup* self) {
     _BlockDefinitionGroup_registerBlocks.thiscall<void>(self);
 }
 
+void LevelEvent(Level* level) {
+    if (level == nullptr) {
+        OnLevelDestroyed event;
+        AmethystRuntime::getEventBus()->Invoke(event);
+        return;
+    }
+
+    OnLevelConstructed event(*level);
+    AmethystRuntime::getEventBus()->Invoke(event);
+}
+
 void* ClientInstance_ClientInstance(ClientInstance* self, uint64_t a2, uint64_t a3, uint64_t a4, char a5, void* a6, void* a7, uint64_t a8, void* a9) {
     void* ret = _ClientInstance_ClientInstance.call<void*>(self, a2, a3, a4, a5, a6, a7, a8, a9);
 
     AmethystRuntime::getContext()->mClientInstance = self;
+    
+    //auto context = Bedrock::PubSub::SubscriptionContext::makeDefaultContext("Amethyst LevelEvent Subscriber");
+    //self->minecraft->mLevelSubscribers->_connectInternal(LevelEvent, Bedrock::PubSub::ConnectPosition::AtFront, std::move(context), std::nullopt);
 
     return ret;
+}
+
+SafetyHookInline _Minecraft_Minecraft;
+
+Minecraft* Minecraft_Minecraft(Minecraft* a1, void* a2, void* a3, void* a4, void* a5, void* a6, void* a7, void* a8, void* a9, void* a10, char a11, void* a12, void* a13, void* a14, void* a15) {
+    _Minecraft_Minecraft.call<Minecraft*>(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15);
+    AmethystContext* ctx = AmethystRuntime::getContext();
+    
+    if (ctx->mClientMinecraft == nullptr) {
+        ctx->mClientMinecraft = a1;
+    }
+    else {
+        ctx->mServerMinecraft = a1;
+    }
+
+    auto context = Bedrock::PubSub::SubscriptionContext::makeDefaultContext("Amethyst LevelEvent Subscriber");
+    a1->mLevelSubscribers->_connectInternal(LevelEvent, Bedrock::PubSub::ConnectPosition::AtFront, std::move(context), std::nullopt);
+
+    return a1;
 }
 
 void BlockGraphics_initBlocks(ResourcePackManager& resources, const Experiments& experiments) {
@@ -117,4 +150,7 @@ void CreateModFunctionHooks() {
     
     hookManager->RegisterFunction<&BlockGraphics::initBlocks>("48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4C 8B E2 48 89 95 ? ? ? ? 4C 8B F9 48 89 4D");
     hookManager->CreateHook<&BlockGraphics::initBlocks>(_BlockGraphics_initBlocks, &BlockGraphics_initBlocks);
+
+    hookManager->RegisterFunction<&Minecraft::_Minecraft>("48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 4D 8B E1 49 8B D8 4C 8B EA");
+    hookManager->CreateHook<&Minecraft::_Minecraft>(_Minecraft_Minecraft, &Minecraft_Minecraft);
 }

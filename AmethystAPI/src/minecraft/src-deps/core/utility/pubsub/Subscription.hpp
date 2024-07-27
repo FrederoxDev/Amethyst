@@ -8,7 +8,9 @@ namespace Bedrock::PubSub {
         std::weak_ptr<Bedrock::PubSub::Detail::SubscriptionBodyBase> mBody;
 
     public:
-        SubscriptionBase() {}
+        void disconnect();
+        void disconnect_async();
+        bool connected() const;
     };
 
     class Subscription : public Bedrock::PubSub::SubscriptionBase {
