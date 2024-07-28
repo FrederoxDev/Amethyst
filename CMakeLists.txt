@@ -4,6 +4,7 @@ include(FetchContent)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /await")
 
 # Compiler Options
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
