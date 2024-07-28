@@ -1,0 +1,53 @@
+name: Publish Version
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Extract and increment version number
+        id: increment_version
+        run: |
+          $filePath = "AmethystRuntime/CMakeLists.txt"
+          $version_line = Select-String -Path $filePath -Pattern 'set\(MOD_VERSION "(.*)"\)'
+          if ($version_line -match 'set\(MOD_VERSION "(\d+)\.(\d+)\.(\d+)"\)') {
+            $major = [int]$matches[1]
+            $minor = [int]$matches[2]
+            $patch = [int]$matches[3]
+
+            # Increment the minor version
+            $new_patch = $patch + 1
+            $new_version = "$major.$minor.$new_patch"
+
+            # Update the CMakeLists.txt file
+            (Get-Content $filePath) -replace 'set\(MOD_VERSION ".*"\)', "set(MOD_VERSION `"$new_version`")" | Set-Content $filePath
+
+            Write-Output "##[set-output name=NEW_VERSION;$new_version]"
+          } else {
+            Write-Error "Version line not found or does not match the expected format."
+            exit 1
+          }
+        shell: pwsh      
+
+      - name: Push bumped version
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          $new_version = "${{ steps.increment_version.outputs.NEW_VERSION }}"
+          git add $filePath
+          git commit -m "Bump version to $new_version"
+          git push
+
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+        shell: pwsh
+
+
