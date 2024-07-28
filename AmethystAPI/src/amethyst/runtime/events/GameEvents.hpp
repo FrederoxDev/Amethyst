@@ -29,15 +29,15 @@ public:
     UpdateEvent() {}
 };
 
-class OnLevelConstructed : public BaseEvent {
+class OnLevelConstructedEvent : public BaseEvent {
 public:
     Level& mLevel;
 
-    OnLevelConstructed(Level& level) 
+    OnLevelConstructedEvent(Level& level) 
         : mLevel(level) {}
 };
 
-class OnLevelDestroyed : public BaseEvent {
+class OnLevelDestroyedEvent : public BaseEvent {
 public:
-    OnLevelDestroyed() {};
+    OnLevelDestroyedEvent() {};
 };

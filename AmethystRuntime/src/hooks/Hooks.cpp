@@ -14,18 +14,16 @@ SafetyHookInline _LevelRenderer_renderLevel;
 SafetyHookInline _ClientInstance_ClientInstance;
 SafetyHookInline _BlockGraphics_initBlocks;
 
-void* ScreenView_setupAndRender(ScreenView* self, UIRenderContext* ctx)
+void ScreenView_setupAndRender(ScreenView* self, UIRenderContext* ctx)
 {
     Amethyst::EventBus* eventBus = AmethystRuntime::getEventBus();
     BeforeRenderUIEvent ev(*self, *ctx);
     eventBus->Invoke(ev);
 
-    void* res = _ScreenView_setupAndRender.call<void*, ScreenView*, UIRenderContext*>(self, ctx);
+    _ScreenView_setupAndRender.call(self, ctx);
 
     AfterRenderUIEvent afterEv(*self, *ctx);
     eventBus->Invoke(afterEv);
-
-    return res;
 }
 
 
@@ -53,21 +51,18 @@ BOOL Minecraft_update(Minecraft* self)
     return value;
 }
 
-void* VanillaItems_registerItems(
+void VanillaItems_registerItems(
     void* a1,
-    const ItemRegistryRef itemRegistry,
+    const ItemRegistryRef* itemRegistry,
     const BaseGameVersion* baseGameVersion,
     const Experiments* experiments) 
 {
     // Allow Vanilla to register its own items first
-    void* result = _VanillaItems_registerItems.fastcall<void*>(a1, &itemRegistry, baseGameVersion, experiments);
+    _VanillaItems_registerItems.fastcall(a1, itemRegistry, baseGameVersion, experiments);
 
-    std::shared_ptr<ItemRegistry> registry = itemRegistry.mItemRegistry.lock();
-    RegisterItemsEvent event(*registry.get());
-
-    AmethystRuntime::getEventBus()->Invoke(event);
-
-    return result;
+    //std::shared_ptr<ItemRegistry> registry = itemRegistry.mItemRegistry.lock();
+    //RegisterItemsEvent event(*registry.get());
+    //AmethystRuntime::getEventBus()->Invoke(event);
 }
 
 void BlockDefinitionGroup_registerBlocks(BlockDefinitionGroup* self) {
@@ -78,12 +73,12 @@ void BlockDefinitionGroup_registerBlocks(BlockDefinitionGroup* self) {
 
 void LevelEvent(Level* level) {
     if (level == nullptr) {
-        OnLevelDestroyed event;
+        OnLevelDestroyedEvent event;
         AmethystRuntime::getEventBus()->Invoke(event);
         return;
     }
 
-    OnLevelConstructed event(*level);
+    OnLevelConstructedEvent event(*level);
     AmethystRuntime::getEventBus()->Invoke(event);
 }
 
@@ -91,9 +86,6 @@ void* ClientInstance_ClientInstance(ClientInstance* self, uint64_t a2, uint64_t 
     void* ret = _ClientInstance_ClientInstance.call<void*>(self, a2, a3, a4, a5, a6, a7, a8, a9);
 
     AmethystRuntime::getContext()->mClientInstance = self;
-    
-    //auto context = Bedrock::PubSub::SubscriptionContext::makeDefaultContext("Amethyst LevelEvent Subscriber");
-    //self->minecraft->mLevelSubscribers->_connectInternal(LevelEvent, Bedrock::PubSub::ConnectPosition::AtFront, std::move(context), std::nullopt);
 
     return ret;
 }
@@ -141,10 +133,10 @@ void CreateModFunctionHooks() {
     
     hookManager->RegisterFunction<&ClientInstance::_ClientInstance>("48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 49 8B F9 49 8B D8 4C 8B E2");
     hookManager->CreateHook<&ClientInstance::_ClientInstance>(_ClientInstance_ClientInstance, &ClientInstance_ClientInstance);
-    
+
     hookManager->RegisterFunction<&VanillaItems::registerItems>("40 55 53 56 57 41 54 41 56 41 57 48 8D AC 24 ? ? ? ? B8 ? ? ? ? E8 ? ? ? ? 48 2B E0 0F 29 B4 24");
     hookManager->CreateHook<&VanillaItems::registerItems>(_VanillaItems_registerItems, &VanillaItems_registerItems);
-    
+
     hookManager->RegisterFunction<&BlockDefinitionGroup::registerBlocks>("48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 57 41 54 41 55 41 56 41 57 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 84 24 ? ? ? ? 45 33 E4");
     hookManager->CreateHook<&BlockDefinitionGroup::registerBlocks>(_BlockDefinitionGroup_registerBlocks, &BlockDefinitionGroup_registerBlocks);
     
