@@ -11,6 +11,20 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Install Chocolatey
+        run: |
+          Set-ExecutionPolicy Bypass -Scope Process -Force; `
+          [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; `
+          iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+        shell: pwsh
+
+      - name: Install NASM
+        run: choco install nasm -y
+        shell: cmd
+
+      - name: Setup Visual studio
+        uses: microsoft/setup-msbuild@v2
+
       - name: Extract and increment version number
         id: increment_version
         run: |
@@ -46,9 +60,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         shell: pwsh
-
-      - name: Setup Visual studio
-        uses: microsoft/setup-msbuild@v2
 
       - name: Build AmethystRuntime
         run: |
