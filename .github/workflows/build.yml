@@ -11,15 +11,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install Chocolatey
+      - name: Install deps with choco
         run: |
-          Set-ExecutionPolicy Bypass -Scope Process -Force; `
-          [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; `
-          iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-        shell: pwsh
-
-      - name: Install NASM
-        run: choco install nasm -y
+          choco install nasm -y
+          choco install gh -y
         shell: cmd
 
       - name: Setup Visual studio
@@ -85,21 +80,20 @@ jobs:
 
       - name: Create GitHub Release
         id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: v$env:NEW_VERSION
-          release_name: Release $env:NEW_VERSION
-          draft: false
-          prerelease: false
+        run: |
+          $tag_name = "v$env:NEW_VERSION"
+          $release_name = "Release $env:NEW_VERSION"
+          $token = "${{ secrets.GITHUB_TOKEN }}"
+
+          gh release create $tag_name --title "$release_name" --notes "Automated release" --target main --repo ${{ github.repository }} --draft=false --prerelease=false --token $token
+        shell: pwsh
 
       - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/AmethystRuntime@$env:NEW_VERSION.zip
-          asset_name: AmethystRuntime@$env:NEW_VERSION.zip
-          asset_content_type: application/zip
+        run: |
+          $upload_url = "$(gh release view v$env:NEW_VERSION --json upload_url --jq .upload_url)"
+          $asset_path = "dist/AmethystRuntime@$env:NEW_VERSION.zip"
+          $asset_name = "AmethystRuntime@$env:NEW_VERSION.zip"
+          $token = "${{ secrets.GITHUB_TOKEN }}"
+
+          gh release upload v$env:NEW_VERSION $asset_path --name "$asset_name" --repo ${{ github.repository }} --token $token
+        shell: pwsh
