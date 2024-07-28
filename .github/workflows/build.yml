@@ -40,14 +40,34 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-
           git add $env:FILE_PATH
           git commit -m "Bump version to $env:NEW_VERSION"
           git push
-
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
         shell: pwsh
 
+      - name: Setup Visual studio
+        uses: microsoft/setup-msbuild@v2
 
+      - name: Build AmethystRuntime
+        run: |
+          mkdir build
+          cd build
+          cmake -DCI_CD_BUILD=ON ..
+          msbuild Amethyst.sln
+
+      - name: Package Build
+        run: |
+          $version = $env:NEW_VERSION
+          $sourcePath = "dist/AmethystRuntime@$version"
+          $zipPath = "dist/AmethystRuntime@$version.zip"
+
+          if (-Not (Test-Path -Path $sourcePath)) {
+            Write-Error "Source path does not exist: $sourcePath"
+            exit 1
+          }
+
+          Add-Type -AssemblyName System.IO.Compression.FileSystem
+          [System.IO.Compression.ZipFile]::CreateFromDirectory($sourcePath, $zipPath)
+        shell: pwsh
