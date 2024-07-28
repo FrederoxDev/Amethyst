@@ -41,7 +41,7 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
           $new_version = "${{ steps.increment_version.outputs.NEW_VERSION }}"
-          git add $filePath
+          git add .
           git commit -m "Bump version to $new_version"
           git push
 
