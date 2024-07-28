@@ -11,8 +11,9 @@ public:
     float z;
 
 public:
+    Vec3();
     Vec3(float x, float y, float z);
-    Vec3(BlockPos&);
+    Vec3(const BlockPos&);
 
     Vec3 operator+(const Vec3 rhs) const;
     Vec3 operator-(const Vec3 rhs) const;

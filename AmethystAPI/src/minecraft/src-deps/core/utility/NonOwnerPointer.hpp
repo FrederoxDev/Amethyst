@@ -66,6 +66,13 @@ public:
     {
         return this->controlBlock != nullptr;
     }
+
+    T* get() const
+    {
+        // Ensure T is derived from EnableNonOwnerReferences
+        static_assert(std::is_base_of<EnableNonOwnerReferences, T>::value, "T must derive from EnableNonOwnerReferences");
+        return static_cast<T*>(this->controlBlock ? this->controlBlock->ptr : nullptr);
+    }
 };
 
 } // namespace Bedrock

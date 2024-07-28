@@ -7,6 +7,13 @@
 #include <minecraft/src/common/CommonTypes.hpp>
 #include <minecraft/src-deps/core/math/Math.hpp>
 
+class BlockPos;
+
+class ChunkLocalHeight {
+public:
+    int16_t mVal;
+};
+
 class ChunkBlockPos {
 public:
     uint8_t x;

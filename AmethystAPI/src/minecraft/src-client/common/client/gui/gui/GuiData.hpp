@@ -22,7 +22,13 @@ public:
     /* this + 48   */ Vec2 totalScreenSize;
     /* this + 56   */ Vec2 clientScreenSize;
     /* this + 64   */ Vec2 clientUIScreenSize;
-    /* this + 72   */ std::byte padding72[64];
+    /* this + 72   */ bool mScreenSizeDataValid;
+    /* this + 73   */ std::byte padding73[3];
+    /* this + 76   */ float mGuiScale;
+    /* this + 80   */ std::byte padding77[106 - 80];
+    /* this + 106  */ short mPointerX;
+    /* this + 108  */ short mPointerY;
+    /* this + 110  */ std::byte padding108[136 - 110];
     /* this + 136  */ IClientInstance& mClient;
     /* this + 144  */ std::byte padding144[2384];
 };

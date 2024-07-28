@@ -1,4 +1,5 @@
 #include "minecraft/src/common/world/item/registry/ItemRegistryManager.hpp"
+#include <amethyst/Memory.hpp>
 
 ItemRegistryRef ItemRegistryManager::getItemRegistry() {
     using function = ItemRegistryRef(*)();

@@ -17,12 +17,8 @@
 #include <minecraft/src/common/world/entity/EntityContext.hpp>
 #include <minecraft/src/common/world/level/Level.hpp>
 #include <minecraft/src/common/world/phys/ShapeType.hpp>
-
-template <typename T, typename Y>
-class AutomaticID {};
-
-template <typename T>
-class WeakRef {};
+#include <minecraft/src-deps/core/utility/AutomaticID.hpp>
+#include <minecraft/src/common/world/level/chunk/ChunkSource.hpp>
 
 namespace BlockSourceVisitor { struct CollisionShape {}; }
 
@@ -40,7 +36,6 @@ class GameEvent;
 class BlockSourceListener;
 struct ActorBlockSyncMessage;
 class ChunkPos;
-class ChunkSource;
 class ItemStackBase; 
 class Dimension;
 
@@ -57,6 +52,7 @@ public:
     Dimension* mDimension;
     const Height mMaxHeight;
     const Height mMinHeight;
+    std::byte padding60[272 - 60];
 
 public:
     virtual ~BlockSource();
@@ -119,3 +115,5 @@ public:
     // BlockActor* getBlockEntity(const BlockPos& pos);
 };
 #pragma pack(pop)
+
+static_assert(sizeof(BlockSource) == 272);

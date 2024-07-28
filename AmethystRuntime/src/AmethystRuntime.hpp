@@ -5,12 +5,12 @@
 #include <amethyst/Log.hpp>
 #include <amethyst/MinecraftVtables.hpp>
 #include <amethyst/runtime/AmethystContext.hpp>
-#include <amethyst/runtime/events/Event.hpp>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <minecraft/src/common/world/item/Item.hpp>
 #include <vector>
+#include <RuntimeContext.hpp>
 
 namespace fs = std::filesystem;
 
@@ -47,24 +47,29 @@ public:
         return &AmethystRuntime::getInstance()->mAmethystContext;
     }
 
-    static HookManager* getHookManager()
+    static Amethyst::HookManager* getHookManager()
     {
-        return &AmethystRuntime::getInstance()->mAmethystContext.mHookManager;
+        return AmethystRuntime::getInstance()->mAmethystContext.mHookManager.get();
     }
 
-    static Amethyst::EventManager* getEventManager() 
+    static Amethyst::EventBus* getEventBus() 
     {
-        return &AmethystRuntime::getInstance()->mAmethystContext.mEventManager;
+        return AmethystRuntime::getInstance()->mAmethystContext.mEventBus.get();
     }
 
     static Amethyst::InputManager* getInputManager() 
     {
-        return &AmethystRuntime::getInstance()->mAmethystContext.mInputManager;
+        return AmethystRuntime::getInstance()->mAmethystContext.mInputManager.get();
     }
 
     static Amethyst::PatchManager* getPatchManager() 
     {
-        return &AmethystRuntime::getInstance()->mAmethystContext.mPatchManager;
+        return AmethystRuntime::getInstance()->mAmethystContext.mPatchManager.get();
+    }
+
+    static Amethyst::EnumAllocator* getEnumAllocator()
+    {
+        return AmethystRuntime::getInstance()->mAmethystContext.mEnumAllocator.get();
     }
 
     static std::vector<Mod>* getMods()
@@ -74,7 +79,7 @@ public:
 
     static Amethyst::MinecraftPackageInfo* getMinecraftPackageInfo()
     {
-        return &AmethystRuntime::getInstance()->mAmethystContext.mMinecraftPackageInfo;
+        return &AmethystRuntime::getInstance()->mAmethystContext.mPackageInfo;
     }
 
     void Start();
@@ -94,7 +99,7 @@ private:
 
 private:
     Config mLauncherConfig;
-    AmethystContext mAmethystContext;
+    RuntimeContext mAmethystContext;
 
 public:
     std::vector<ModInitialize> mModInitialize;

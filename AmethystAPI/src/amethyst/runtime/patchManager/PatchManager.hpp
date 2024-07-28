@@ -5,30 +5,29 @@
 #include <vector>
 namespace Amethyst {
 	class PatchManager {
-	public:
-		PatchManager() {}
-        ~PatchManager() { RemoveAllPatches(); }
-		
+	public:		
 		template<typename T>
         void ApplyPatch(uintptr_t address, T patch){
 			return ApplyPatch(address, (uint8_t*)&patch, sizeof(T));
 		}
 
         void ApplyPatch(uintptr_t address, uint8_t* patch, size_t size);
+        ~PatchManager();
 
-        void RemovePatch(uintptr_t address);
+    private:
 
-        void RemoveAllPatches();
-    private:
-    private:
 		struct OriginalMemory {
 			uint8_t* original = nullptr;
 			size_t size = 0;
 		};
+
 		struct Patch {
             uintptr_t address = 0x0;
             OriginalMemory original = {};
 		};
+
 		std::vector<Patch> mPatches;
+
+		friend class AmethystRuntime;
 	};
 }

@@ -5,7 +5,9 @@ class BlockSource;
 class BlockActor;
 class Actor;
 class Block;
+class BlockPos;
 struct ActorBlockSyncMessage;
+class BlockPos;
 
 enum class BlockChangedEventTarget : unsigned char {
     SelfBlock,

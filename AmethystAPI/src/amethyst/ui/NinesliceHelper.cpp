@@ -1,4 +1,7 @@
 #include "amethyst/ui/NinesliceHelper.hpp"
+#include <minecraft/src-client/common/client/renderer/screen/MinecraftUIRenderContext.hpp>
+#include <minecraft/src-client/common/client/renderer/ImageInfo.hpp>
+#include <minecraft/src-client/common/client/renderer/NinesliceInfo.hpp>
 
 Amethyst::NinesliceHelper::NinesliceHelper(int textureWidth, int textureHeight, int ninesliceWidth, int ninesliceHeight)
 {

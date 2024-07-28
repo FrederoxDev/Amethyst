@@ -1,13 +1,19 @@
 #pragma once
-#include <amethyst/Memory.hpp>
-
-#include "minecraft/src-deps/renderer/RenderMaterialGroupBase.hpp"
+#include <minecraft/src-deps/core/string/StringHash.hpp>
+#include <minecraft/src/common/AppPlatformListener.hpp>
 
 namespace mce {
-    class RenderMaterialGroup {
+    class RenderMaterialInfo;
+
+    class RenderMaterialGroupBase {
     public:
-        // 1.20.51.1 - 0x572BBB0
-        // Found in ItemInHandRenderer::initMaterials
-        static RenderMaterialGroupBase* switchable;
+        virtual ~RenderMaterialGroupBase();
+        virtual mce::RenderMaterialInfo& getMaterialInfo(const HashedString& material);
+        virtual void clearMaterial(const HashedString& material);
+    };
+
+    class RenderMaterialGroup : public AppPlatformListener, public mce::RenderMaterialGroupBase {
+    public:
+        static RenderMaterialGroup* common;
     };
 };

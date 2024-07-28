@@ -1,5 +1,7 @@
 #include "AmethystRuntime.hpp"
-#include <AmethystDebugging.hpp>
+#include "debug/AmethystDebugging.hpp"
+#include <amethyst/runtime/events/ModEvents.hpp>
+#include <amethyst/runtime/events/InputEvents.hpp>
 
 AmethystRuntime* AmethystRuntime::instance = nullptr;
 extern HANDLE gMcThreadHandle;
@@ -7,6 +9,7 @@ extern DWORD gMcThreadId;
 
 void AmethystRuntime::Start()
 {
+    getContext()->Start();
     Log::Info("[AmethystRuntime] Using 'AmethystRuntime@{}'", MOD_VERSION);
 
     SemVersion version = getMinecraftPackageInfo()->mVersion;
@@ -72,6 +75,14 @@ void AmethystRuntime::LoadModDlls()
         Log::Info("[AmethystRuntime] Loading '{}'", mod.modName);
         _LoadModFunc(&mModInitialize, mod, "Initialize");
     }
+
+    // Invoke mods to initialize and setup hooks, etc..
+    for (auto& modInitialize : mModInitialize)
+        modInitialize(&mAmethystContext);
+
+    // Allow mods to add listeners to eachothers events
+    AddModEventListenersEvent event;
+    AmethystRuntime::getEventBus()->Invoke<AddModEventListenersEvent>(event);
 }
 
 template <typename T>
@@ -91,21 +102,18 @@ void AmethystRuntime::PromptDebugger()
 
 void AmethystRuntime::CreateOwnHooks()
 {
-    CreateInputHooks();
+    auto& featureFlags = AmethystRuntime::getContext()->mFeatures;
+
+    if (featureFlags->enableInputSystem) CreateInputHooks();
     CreateModFunctionHooks();
 }
 
 void AmethystRuntime::RunMods()
 {
-    // Invoke mods to initialize and setup hooks, etc..
-    for (auto& modInitialize : mModInitialize)
-        modInitialize(&mAmethystContext);
-
     // If we have hot-reloaded this will be true, so prompt mods to create their inputs.
     if (AmethystRuntime::getContext()->mOptions != nullptr) {
-        AmethystRuntime::getEventManager()->registerInputs.Invoke(
-            AmethystRuntime::getInputManager()
-        );
+        RegisterInputsEvent event(*AmethystRuntime::getInputManager());
+        AmethystRuntime::getEventBus()->Invoke(event);
     }
 
     ResumeGameThread();
@@ -126,20 +134,10 @@ void AmethystRuntime::RunMods()
 
 void AmethystRuntime::Shutdown()
 {
-    // Allow mods to do any shutdown logic.
-    getEventManager()->beforeModShutdown.Invoke();
+    BeforeModShutdownEvent shutdownEvent;
+    getEventBus()->Invoke(shutdownEvent);
 
-    // Unregister any input listeners and remove created input types
-    getInputManager()->Shutdown();
-
-    // Destroy all listeners on amethysts event manager.
-    getEventManager()->Shutdown();
-
-    // Remove any hooks and clear data for the next load
-    getHookManager()->Shutdown();
-
-    // Remove any patches that were applied to the game.
-    getPatchManager()->RemoveAllPatches();
+    getContext()->Shutdown();
 
     // Unload all mod dll's.
     for (auto& mod : mAmethystContext.mMods) {

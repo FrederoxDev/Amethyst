@@ -8,6 +8,8 @@ namespace mce {
     class RenderMaterialInfo : public std::enable_shared_from_this<RenderMaterialInfo> {
     public:
         HashedString mHashedName;
+
+        RenderMaterialInfo(const HashedString& name);
     };
 
     class MaterialPtr {
@@ -15,6 +17,6 @@ namespace mce {
         std::shared_ptr<RenderMaterialInfo> mRenderMaterialInfoPtr;
 
     public:
-        MaterialPtr(mce::RenderMaterialGroupBase &, const HashedString &);
+        MaterialPtr(mce::RenderMaterialGroupBase& materialGroup, const HashedString& materialName);
     };
 }

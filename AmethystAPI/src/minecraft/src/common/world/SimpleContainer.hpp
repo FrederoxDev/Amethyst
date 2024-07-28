@@ -1,5 +1,6 @@
 #pragma once
 #include <minecraft/src/common/world/Container.hpp>
+#include <minecraft/src/common/world/item/ItemStack.hpp>
 
 class SimpleContainer : public Container {
 public:
@@ -7,6 +8,7 @@ public:
     std::vector<ItemStack> mItems;
     
     void serverInitItemStackIds(int, int, std::function<void(int, const ItemStack&)>) override {}
+    
     const ItemStack& getItem(int slot) const override
     {
         if (slot < 0 || slot >= mItems.size())

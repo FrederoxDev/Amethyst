@@ -1,4 +1,5 @@
 #include "minecraft/src/common/world/item/ItemStackBase.hpp"
+#include <amethyst/Memory.hpp>
 
 //std::string ItemStackBase::getRawNameId() const
 //{

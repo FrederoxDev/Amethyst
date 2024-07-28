@@ -1,12 +1,11 @@
 #pragma once
 #include "amethyst/Memory.hpp"
-#include "minecraft/src/common/SharedPtr.hpp"
-#include "minecraft/src/common/world/level/Tick.hpp"
 #include <cstdint>
 #include <string>
 #include <optional>
 #include <chrono>
-#include "minecraft/src/common/nbt/CompoundTag.hpp"
+#include "minecraft/src/common/SharedPtr.hpp"
+#include "minecraft/src/common/world/level/Tick.hpp"
 
 class Item;
 class CompoundTag;

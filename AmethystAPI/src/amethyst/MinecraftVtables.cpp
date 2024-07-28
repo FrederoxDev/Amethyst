@@ -49,6 +49,12 @@ extern "C" void* ChestBlock_vtable = nullptr;
 extern "C" void* Container_vtable = nullptr;
 extern "C" void* FillingContainer_vtable = nullptr;
 extern "C" void* RandomizableBlockActorContainerBase_vtable = nullptr;
+extern "C" void* Dimension_vtable = nullptr;
+extern "C" void* OverworldDimension_vtable = nullptr;
+extern "C" void* Dimension_for_SavedData_vtable = nullptr;
+extern "C" void* Dimension_for_LevelListener_vtable = nullptr;
+extern "C" void* ChunkSource_vtable = nullptr;
+extern "C" void* WorldGenerator_vtable = nullptr;
 
 // Constructors
 extern "C" void* BlockItem_ctor = nullptr;
@@ -59,6 +65,11 @@ extern "C" void* BaseActorRenderer_ctor = nullptr;
 extern "C" void* ChestBlock_ctor = nullptr;
 extern "C" void* Container_ctor1 = nullptr;
 extern "C" void* Container_ctor2 = nullptr;
+extern "C" void* Dimension_ctor = nullptr;
+extern "C" void* OverworldDimension_ctor = nullptr;
+extern "C" void* WorldGenerator_ctor = nullptr;
+extern "C" void* StructureFeatureRegistry_ctor = nullptr;
+extern "C" void* TextureContainer_ctor = nullptr;
 
 // Static variables
 // 1.21.0.3
@@ -96,4 +107,21 @@ void InitializeVtablePtrs()
     InitializeVtbl(FillingContainer_vtable, "48 8D 05 ? ? ? ? 49 89 06 49 8D BE ? ? ? ? 33 C0");
 
     InitializeVtbl(RandomizableBlockActorContainerBase_vtable, "48 8D 05 ? ? ? ? 48 8D 8F ? ? ? ? 48 89 07");
+
+    InitializeVtbl(Dimension_vtable, "48 8D 05 ? ? ? ? 49 89 06 48 8D 05 ? ? ? ? 49 89 46 ? 48 8D 05 ? ? ? ? 49 89 46 ? 48 8D 05 ? ? ? ? 48 89 06");
+    InitializeCtor(Dimension_ctor, "48 89 5C 24 ? 48 89 74 24 ? 48 89 7C 24 ? 55 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 41 8B F9 41 8B D8"); 
+    InitializeVtbl(Dimension_for_SavedData_vtable, "48 8D 05 ? ? ? ? 49 89 46 ? 48 8D 05 ? ? ? ? 48 89 06");
+    InitializeVtbl(Dimension_for_LevelListener_vtable, "48 8D 05 ? ? ? ? 49 89 46 ? 48 8D 05 ? ? ? ? 49 89 46 ? 48 8D 05 ? ? ? ? 48 89 06");
+
+    InitializeVtbl(OverworldDimension_vtable, "48 8D 05 ? ? ? ? 48 89 06 48 8D 05 ? ? ? ? 48 89 46 ? 48 8D 05 ? ? ? ? 48 89 46 ? 48 8D 05 ? ? ? ? 48 89 46 ? C6 86");
+    InitializeCtor(OverworldDimension_ctor, "4C 8B DC 49 89 5B ? 55 56 57 48 83 EC ? 49 8B D8");
+
+    InitializeVtbl(ChunkSource_vtable, "48 8D 05 ? ? ? ? 48 89 07 8B 43 ? 89 47 ? 48 8B 43 ? 48 89 47");
+
+    InitializeVtbl(WorldGenerator_vtable, "48 8D 05 ? ? ? ? 48 89 07 48 8D 05 ? ? ? ? 48 89 47 ? 48 8D 4F ? E8 ? ? ? ? 90 48 8B 06");
+    InitializeCtor(WorldGenerator_ctor, "48 89 5C 24 ? 55 56 57 48 83 EC ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 44 24 ? 49 8B F0 48 8B DA 48 8B F9 48 89 4C 24 ? 4C 89 44 24");
+
+    InitializeCtor(StructureFeatureRegistry_ctor, "48 89 5C 24 ? 48 89 74 24 ? 48 89 4C 24 ? 57 48 83 EC ? 48 8B F9 33 F6 48 89 31 48 89 71 ? 48 89 71 ? 48 89 71 ? 48 89 71 ? 48 89 71 ? 48 89 71 ? 48 89 71 ? 48 89 71 ? 48 8D 59 ? 0F 57 C0");
+
+    InitializeCtor(TextureContainer_ctor, "48 8B C4 48 89 48 ? 53 48 83 EC ? 48 8B D9 33 C9 48 89 0B");
 }

@@ -1,4 +1,8 @@
 #include "hooks/Hooks.hpp"
+#include <amethyst/runtime/events/RenderingEvents.hpp>
+#include <minecraft/src/common/world/level/block/definition/BlockDefinitionGroup.hpp>
+#include <amethyst/runtime/events/RegisterEvents.hpp>
+#include <amethyst/runtime/events/GameEvents.hpp>
 
 SafetyHookInline _ScreenView_setupAndRender;
 SafetyHookInline _ClientInstance_onStartJoinGame;
@@ -8,74 +12,74 @@ SafetyHookInline _VanillaItems_registerItems;
 SafetyHookInline _BlockDefinitionGroup_registerBlocks;
 SafetyHookInline _LevelRenderer_renderLevel;
 SafetyHookInline _ClientInstance_ClientInstance;
+SafetyHookInline _BlockGraphics_initBlocks;
 
-void* ScreenView_setupAndRender(ScreenView* self, UIRenderContext* ctx)
+void ScreenView_setupAndRender(ScreenView* self, UIRenderContext* ctx)
 {
-    Amethyst::EventManager* events = AmethystRuntime::getEventManager();
-    events->beforeRenderUI.Invoke(self, ctx);
-    void* res = _ScreenView_setupAndRender.call<void*, ScreenView*, UIRenderContext*>(self, ctx);
-    events->afterRenderUI.Invoke(self, ctx);
-    return res;
+    Amethyst::EventBus* eventBus = AmethystRuntime::getEventBus();
+    BeforeRenderUIEvent ev(*self, *ctx);
+    eventBus->Invoke(ev);
+
+    _ScreenView_setupAndRender.call(self, ctx);
+
+    AfterRenderUIEvent afterEv(*self, *ctx);
+    eventBus->Invoke(afterEv);
 }
+
 
 int64_t ClientInstance_onStartJoinGame(ClientInstance* self, int64_t a2, int64_t a3, uint64_t a4)
 {
-    Amethyst::EventManager* events = AmethystRuntime::getEventManager();
-    events->onStartJoinGame.Invoke(self);
-
+    OnStartJoinGameEvent event(*self);
+    AmethystRuntime::getEventBus()->Invoke(event);
     return _ClientInstance_onStartJoinGame.call<int64_t, ClientInstance*, int64_t, int64_t, uint64_t>(self, a2, a3, a4);
 }
 
 void ClientInstance_requestLeaveGame(ClientInstance* self, char switchScreen, char sync)
 {
-    Amethyst::EventManager* events = AmethystRuntime::getEventManager();
-
-    events->onRequestLeaveGame.Invoke();
-
+    OnRequestLeaveGameEvent event(*self);
+    AmethystRuntime::getEventBus()->Invoke(event);
     _ClientInstance_requestLeaveGame.thiscall(self, switchScreen, sync);
 }
 
-bool Minecraft_update(Minecraft* self) {
-    Amethyst::EventManager* events = AmethystRuntime::getEventManager();
+BOOL Minecraft_update(Minecraft* self)
+{
+    BOOL value = _Minecraft_update.call<BOOL, Minecraft*>(self);
 
-    bool value = _Minecraft_update.call<bool, Minecraft*>(self);
-    events->update.Invoke();
+    UpdateEvent event;
+    AmethystRuntime::getEventBus()->Invoke(event);
 
     return value;
 }
 
-void* VanillaItems_registerItems(
+void VanillaItems_registerItems(
     void* a1,
-    const ItemRegistryRef itemRegistry,
+    const ItemRegistryRef* itemRegistry,
     const BaseGameVersion* baseGameVersion,
     const Experiments* experiments) 
 {
-    Amethyst::EventManager* events = AmethystRuntime::getEventManager();
-
     // Allow Vanilla to register its own items first
-    void* result = _VanillaItems_registerItems.fastcall<void*>(a1, &itemRegistry, baseGameVersion, experiments);
+    _VanillaItems_registerItems.fastcall(a1, itemRegistry, baseGameVersion, experiments);
 
-    std::shared_ptr<ItemRegistry> registry = itemRegistry.mItemRegistry.lock();
-
-    events->registerItems.Invoke(registry.get());
-
-    return result;
+    //std::shared_ptr<ItemRegistry> registry = itemRegistry.mItemRegistry.lock();
+    //RegisterItemsEvent event(*registry.get());
+    //AmethystRuntime::getEventBus()->Invoke(event);
 }
 
 void BlockDefinitionGroup_registerBlocks(BlockDefinitionGroup* self) {
-    Amethyst::EventManager* events = AmethystRuntime::getEventManager();
-
-    events->registerBlocks.Invoke(self);
-
+    RegisterBlocksEvent event(*self);
+    AmethystRuntime::getEventBus()->Invoke(event);
     _BlockDefinitionGroup_registerBlocks.thiscall<void>(self);
 }
 
-void* LevelRenderer_renderLevel(LevelRenderer* self, ScreenContext* screenContext, FrameRenderObject* frameRenderObject) {
-    Amethyst::EventManager* events = AmethystRuntime::getEventManager();
+void LevelEvent(Level* level) {
+    if (level == nullptr) {
+        OnLevelDestroyedEvent event;
+        AmethystRuntime::getEventBus()->Invoke(event);
+        return;
+    }
 
-    events->onRenderLevel.Invoke(self, screenContext, frameRenderObject);
-
-    return _LevelRenderer_renderLevel.thiscall<void*>(self, screenContext, frameRenderObject);
+    OnLevelConstructedEvent event(*level);
+    AmethystRuntime::getEventBus()->Invoke(event);
 }
 
 void* ClientInstance_ClientInstance(ClientInstance* self, uint64_t a2, uint64_t a3, uint64_t a4, char a5, void* a6, void* a7, uint64_t a8, void* a9) {
@@ -86,13 +90,39 @@ void* ClientInstance_ClientInstance(ClientInstance* self, uint64_t a2, uint64_t 
     return ret;
 }
 
+SafetyHookInline _Minecraft_Minecraft;
+
+Minecraft* Minecraft_Minecraft(Minecraft* a1, void* a2, void* a3, void* a4, void* a5, void* a6, void* a7, void* a8, void* a9, void* a10, char a11, void* a12, void* a13, void* a14, void* a15) {
+    _Minecraft_Minecraft.call<Minecraft*>(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15);
+    AmethystContext* ctx = AmethystRuntime::getContext();
+    
+    if (ctx->mClientMinecraft == nullptr) {
+        ctx->mClientMinecraft = a1;
+    }
+    else {
+        ctx->mServerMinecraft = a1;
+    }
+
+    auto context = Bedrock::PubSub::SubscriptionContext::makeDefaultContext("Amethyst LevelEvent Subscriber");
+    a1->mLevelSubscribers->_connectInternal(LevelEvent, Bedrock::PubSub::ConnectPosition::AtFront, std::move(context), std::nullopt);
+
+    return a1;
+}
+
+void BlockGraphics_initBlocks(ResourcePackManager& resources, const Experiments& experiments) {
+    _BlockGraphics_initBlocks.call<void, ResourcePackManager&, const Experiments&>(resources, experiments);
+
+    InitBlockGraphicsEvent event(resources, experiments);
+    AmethystRuntime::getEventBus()->Invoke(event);
+}
+
 void CreateModFunctionHooks() {
-    HookManager* hookManager = AmethystRuntime::getHookManager();
+    Amethyst::HookManager* hookManager = AmethystRuntime::getHookManager();
 
     hookManager->RegisterFunction<&ScreenView::setupAndRender>("48 8B C4 48 89 58 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D A8 ? ? ? ? 48 81 EC ? ? ? ? 0F 29 70 ? 0F 29 78 ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4C 8B FA");
     hookManager->CreateHook<&ScreenView::setupAndRender>(_ScreenView_setupAndRender, &ScreenView_setupAndRender);
-    
-    hookManager->RegisterFunction<&Minecraft::update>("48 8B C4 48 89 58 ? 48 89 70 ? 48 89 78 ? 55 41 54 41 55 41 56 41 57 48 8D A8 ? ? ? ? 48 81 EC ? ? ? ? 0F 29 70 ? 0F 29 78 ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4C 8B E9 48");
+
+    hookManager->RegisterFunction<&Minecraft::update>("48 8B C4 48 89 58 ? 48 89 70 ? 48 89 78 ? 55 41 54 41 55 41 56 41 57 48 8D A8 ? ? ? ? 48 81 EC ? ? ? ? 0F 29 70 ? 0F 29 78 ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4C 8B E9 48 89 4C 24");
     hookManager->CreateHook<&Minecraft::update>(_Minecraft_update, &Minecraft_update);
 
     hookManager->RegisterFunction<&ClientInstance::onStartJoinGame>("40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 45 8B F1");
@@ -103,13 +133,16 @@ void CreateModFunctionHooks() {
     
     hookManager->RegisterFunction<&ClientInstance::_ClientInstance>("48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 49 8B F9 49 8B D8 4C 8B E2");
     hookManager->CreateHook<&ClientInstance::_ClientInstance>(_ClientInstance_ClientInstance, &ClientInstance_ClientInstance);
-    
+
     hookManager->RegisterFunction<&VanillaItems::registerItems>("40 55 53 56 57 41 54 41 56 41 57 48 8D AC 24 ? ? ? ? B8 ? ? ? ? E8 ? ? ? ? 48 2B E0 0F 29 B4 24");
     hookManager->CreateHook<&VanillaItems::registerItems>(_VanillaItems_registerItems, &VanillaItems_registerItems);
-    
+
     hookManager->RegisterFunction<&BlockDefinitionGroup::registerBlocks>("48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 57 41 54 41 55 41 56 41 57 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 84 24 ? ? ? ? 45 33 E4");
     hookManager->CreateHook<&BlockDefinitionGroup::registerBlocks>(_BlockDefinitionGroup_registerBlocks, &BlockDefinitionGroup_registerBlocks);
     
-    //hookManager->RegisterFunction<&LevelRenderer::renderLevel>("48 89 5C 24 ? 48 89 74 24 ? 55 57 41 56 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 49 8B F0 48 8B DA 4C 8B F1");
-    //hookManager->CreateHook<&LevelRenderer::renderLevel>(_LevelRenderer_renderLevel, &LevelRenderer_renderLevel);
+    hookManager->RegisterFunction<&BlockGraphics::initBlocks>("48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4C 8B E2 48 89 95 ? ? ? ? 4C 8B F9 48 89 4D");
+    hookManager->CreateHook<&BlockGraphics::initBlocks>(_BlockGraphics_initBlocks, &BlockGraphics_initBlocks);
+
+    hookManager->RegisterFunction<&Minecraft::_Minecraft>("48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 4D 8B E1 49 8B D8 4C 8B EA");
+    hookManager->CreateHook<&Minecraft::_Minecraft>(_Minecraft_Minecraft, &Minecraft_Minecraft);
 }

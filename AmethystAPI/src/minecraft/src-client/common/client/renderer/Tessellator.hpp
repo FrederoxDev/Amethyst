@@ -5,7 +5,7 @@
 #include <cstdint>
 #include "glm/glm.hpp"
 #include "minecraft/src-deps/minecraftrenderer/renderer/MeshData.hpp"
-#include "minecraft/src-deps/minecraftrenderer/renderer/Mesh.hpp"
+#include <minecraft/src/common/world/phys/Vec2.hpp>
 
 struct TessellatorQuadInfo {
 public:
@@ -17,6 +17,8 @@ public:
 static_assert(sizeof(TessellatorQuadInfo) == 0x10);
 
 namespace mce {
+    class Mesh; 
+
     enum class PrimitiveMode : int {
         None = 0,
         QuadList = 1,
@@ -53,7 +55,7 @@ public:
     /* this + 0   */ bool mIsFormatFixed;
     /* this + 1   */ std::byte padding1[7];
     /* this + 8   */ mce::MeshData mMeshData;
-    /* this + 248 */ std::byte padding248[80];
+    /* this + 280 */ std::byte padding280[328 - 280];
     /* this + 328 */ std::optional<unsigned int> mNextColor;
     /* this + 336 */ std::byte padding336[12];
     /* this + 348 */ Vec3 mPostTransformOffset;
@@ -78,10 +80,13 @@ public:
 
     void vertex(float x, float y, float z);
     void vertex(const Vec3&);
+    void vertex(float x, float y);
+    void vertex(const Vec2&);
     void vertexUV(float x, float y, float z, float uvX, float uvY);
     void vertexUV(const Vec3&, float uvX, float uvY);
 
     void color(float r, float g, float b, float a);
+    void color(uint32_t packed);
 
     void setPostTransformOffset(float xo, float yo, float zo);
     void setPosTransformOffset(Vec3 v);
@@ -95,3 +100,5 @@ public:
     void clear();
     mce::Mesh endOverride(uint64_t a3, std::string_view debugName, int a5);
 };
+
+static_assert(offsetof(Tessellator, mBuildFaceData) == 561);

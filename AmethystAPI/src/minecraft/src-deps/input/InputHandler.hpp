@@ -1,5 +1,4 @@
 #pragma once
-#include "amethyst/Memory.hpp"
 #include <functional>
 #include <string>
 #include <map>

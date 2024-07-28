@@ -1,4 +1,5 @@
 #include "minecraft/src-client/common/client/options/BaseOptions.hpp"
+#include "amethyst/Memory.hpp"
 
 float BaseOptions::getSensitivity(unsigned int inputMode) {
     using function = decltype(&BaseOptions::getSensitivity);

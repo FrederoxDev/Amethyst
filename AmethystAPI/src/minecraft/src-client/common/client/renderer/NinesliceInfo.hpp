@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 #include "minecraft/src-client/common/client/renderer/ImageInfo.hpp"
 
 struct NinesliceInfo {

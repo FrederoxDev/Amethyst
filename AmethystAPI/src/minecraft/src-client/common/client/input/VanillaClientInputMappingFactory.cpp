@@ -1,4 +1,5 @@
 #include "minecraft/src-client/common/client/input/VanillaClientInputMappingFactory.hpp"
+#include <minecraft/src-client/common/client/input/RemappingLayout.hpp>
 
 //void VanillaClientInputMappingFactory::_bindActionToKeyboardAndMouseInput(KeyboardInputMapping* keyboardMap, MouseInputMapping* mouseMap, std::string* buttonID, Remapping::ActionEnum action, FocusImpact focusImpact)
 //{
