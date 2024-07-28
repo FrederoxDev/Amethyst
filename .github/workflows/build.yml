@@ -28,8 +28,8 @@ jobs:
             # Update the CMakeLists.txt file
             (Get-Content $filePath) -replace 'set\(MOD_VERSION ".*"\)', "set(MOD_VERSION `"$new_version`")" | Set-Content $filePath
 
-            Write-Output "##[set-output name=NEW_VERSION;$new_version]"
-            Write-Output "##[set-output name=FILE_PATH;$filePath]"
+            echo "NEW_VERSION=$new_version" >> $env:GITHUB_ENV
+            echo "FILE_PATH=$filePath" >> $env:GITHUB_ENV
           } else {
             Write-Error "Version line not found or does not match the expected format."
             exit 1
@@ -41,10 +41,8 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          $filePath = "${{ steps.increment_version.outputs.FILE_PATH }}"
-          $new_version = "${{ steps.increment_version.outputs.NEW_VERSION }}"
-          git add $filePath
-          git commit -m "Bump version to $new_version"
+          git add $env:FILE_PATH
+          git commit -m "Bump version to $env:NEW_VERSION"
           git push
 
         env:
