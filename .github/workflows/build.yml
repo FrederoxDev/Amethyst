@@ -17,6 +17,12 @@ jobs:
           choco install gh -y
         shell: cmd
 
+      - name: Authenticate with github CLI
+        run: gh auth login --with-token
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: pwsh
+
       - name: Setup Visual studio
         uses: microsoft/setup-msbuild@v2
 
@@ -83,17 +89,12 @@ jobs:
         run: |
           $tag_name = "v$env:NEW_VERSION"
           $release_name = "Release $env:NEW_VERSION"
-          $token = "${{ secrets.GITHUB_TOKEN }}"
-
-          gh release create $tag_name --title "$release_name" --notes "Automated release" --target main --repo ${{ github.repository }} --draft=false --prerelease=false --token $token
+          gh release create $tag_name --title "$release_name" --notes "Automated release" --target main --repo FrederoxDev/Amethyst --draft=false --prerelease=false
         shell: pwsh
 
       - name: Upload Release Asset
         run: |
-          $upload_url = "$(gh release view v$env:NEW_VERSION --json upload_url --jq .upload_url)"
           $asset_path = "dist/AmethystRuntime@$env:NEW_VERSION.zip"
           $asset_name = "AmethystRuntime@$env:NEW_VERSION.zip"
-          $token = "${{ secrets.GITHUB_TOKEN }}"
-
-          gh release upload v$env:NEW_VERSION $asset_path --name "$asset_name" --repo ${{ github.repository }} --token $token
+          gh release upload "v$env:NEW_VERSION" $asset_path --name "$asset_name" --repo FrederoxDev/Amethyst
         shell: pwsh
