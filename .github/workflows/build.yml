@@ -83,7 +83,7 @@ jobs:
         run: |
           $tag_name = "v$env:NEW_VERSION"
           $release_name = "Release $env:NEW_VERSION"
-          gh release create $tag_name --title "$release_name" --notes "Automated release" --target main --repo FrederoxDev/Amethyst --draft=false --prerelease=false
+          gh release create $tag_name --title "$release_name" --notes "Automated release" --target main --repo FrederoxDev/Amethyst --draft=true --prerelease=false
         shell: pwsh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
