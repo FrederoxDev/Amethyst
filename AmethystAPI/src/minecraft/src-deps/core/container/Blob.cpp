@@ -3,7 +3,10 @@
 mce::Blob::Blob() : mBlob(nullptr, Deleter()), mSize(0) {}
 
 mce::Blob::Blob(const iterator data, const size_type size)
-    : mBlob(data, defaultDeleter), mSize(size) {}
+    : mBlob(new value_type[size], defaultDeleter), mSize(size)
+{
+    std::copy(data, data + size, mBlob.get());
+}
 
 mce::Blob::Blob(const Blob& other)
     : mSize(other.mSize), mBlob(nullptr, Deleter(other.mBlob.get_deleter().getDeleteFunc()))
