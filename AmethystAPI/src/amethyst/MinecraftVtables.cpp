@@ -55,6 +55,7 @@ extern "C" void* Dimension_for_SavedData_vtable = nullptr;
 extern "C" void* Dimension_for_LevelListener_vtable = nullptr;
 extern "C" void* ChunkSource_vtable = nullptr;
 extern "C" void* WorldGenerator_vtable = nullptr;
+extern "C" void* ActorShaderManager_vtable = nullptr;
 
 // Constructors
 extern "C" void* BlockItem_ctor = nullptr;
