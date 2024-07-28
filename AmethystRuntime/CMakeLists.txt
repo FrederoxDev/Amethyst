@@ -6,6 +6,9 @@ set(MOD_TARGET_VERSION_MAJOR 1)
 set(MOD_TARGET_VERSION_MINOR 21)
 set(MOD_TARGET_VERSION_PATCH 3)
 
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 # Amethyst Minecraft Folder
 if (CI_CD_BUILD)
     configure_file(mod.json.in "${CMAKE_SOURCE_DIR}/dist/AmethystRuntime@${MOD_VERSION}/mod.json" @ONLY)
