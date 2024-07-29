@@ -2,4 +2,7 @@
 #include "minecraft/src/common/world/actor/player/Player.hpp"
 #include <cstdint>
 
-class LocalPlayer : public Player {};
+class LocalPlayer : public Player {
+public:
+    void setSprinting(bool isSprinting);
+};
