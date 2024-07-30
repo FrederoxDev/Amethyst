@@ -8,6 +8,20 @@ public:
     virtual ~BaseEvent() = default;
 };
 
+class CancelableEvent : public BaseEvent {
+private:
+    bool mCanceled = false;
+
+public:
+    void Cancel() {
+        mCanceled = true;
+    }
+
+    bool IsCanceled() const {
+        return mCanceled;
+    }
+};
+
 namespace Amethyst {
 class EventBus {
 public:
