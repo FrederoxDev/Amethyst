@@ -7,6 +7,7 @@
 #include "../core/fwd.hpp"
 #include "../core/type_traits.hpp"
 #include "../signal/delegate.hpp"
+#include "component.hpp"
 #include "fwd.hpp"
 #include "group.hpp"
 #include "storage.hpp"
@@ -21,8 +22,8 @@ namespace entt {
 template<typename Registry>
 class as_view {
     template<typename... Get, typename... Exclude>
-    auto dispatch(get_t<Get...>, exclude_t<Exclude...>) const {
-        return reg.template view<constness_as_t<typename Get::value_type, Get>...>(exclude_t<constness_as_t<typename Exclude::value_type, Exclude>...>{});
+    [[nodiscard]] auto dispatch(get_t<Get...>, exclude_t<Exclude...>) const {
+        return reg.template view<constness_as_t<typename Get::element_type, Get>...>(exclude_t<constness_as_t<typename Exclude::element_type, Exclude>...>{});
     }
 
 public:
@@ -60,11 +61,11 @@ private:
 template<typename Registry>
 class as_group {
     template<typename... Owned, typename... Get, typename... Exclude>
-    auto dispatch(owned_t<Owned...>, get_t<Get...>, exclude_t<Exclude...>) const {
+    [[nodiscard]] auto dispatch(owned_t<Owned...>, get_t<Get...>, exclude_t<Exclude...>) const {
         if constexpr(std::is_const_v<registry_type>) {
-            return reg.template group_if_exists<typename Owned::value_type...>(get_t<typename Get::value_type...>{}, exclude_t<typename Exclude::value_type...>{});
+            return reg.template group_if_exists<typename Owned::element_type...>(get_t<typename Get::element_type...>{}, exclude_t<typename Exclude::element_type...>{});
         } else {
-            return reg.template group<constness_as_t<typename Owned::value_type, Owned>...>(get_t<constness_as_t<typename Get::value_type, Get>...>{}, exclude_t<constness_as_t<typename Exclude::value_type, Exclude>...>{});
+            return reg.template group<constness_as_t<typename Owned::element_type, Owned>...>(get_t<constness_as_t<typename Get::element_type, Get>...>{}, exclude_t<constness_as_t<typename Exclude::element_type, Exclude>...>{});
         }
     }
 
@@ -99,10 +100,10 @@ private:
 
 /**
  * @brief Helper to create a listener that directly invokes a member function.
- * @tparam Member Member function to invoke on a component of the given type.
+ * @tparam Member Member function to invoke on an element of the given type.
  * @tparam Registry Basic registry type.
- * @param reg A registry that contains the given entity and its components.
- * @param entt Entity from which to get the component.
+ * @param reg A registry that contains the given entity and its elements.
+ * @param entt Entity from which to get the element.
  */
 template<auto Member, typename Registry = std::decay_t<nth_argument_t<0u, decltype(Member)>>>
 void invoke(Registry &reg, const typename Registry::entity_type entt) {
@@ -113,44 +114,28 @@ void invoke(Registry &reg, const typename Registry::entity_type entt) {
 }
 
 /**
- * @brief Returns the entity associated with a given component.
+ * @brief Returns the entity associated with a given element.
  *
  * @warning
  * Currently, this function only works correctly with the default storage as it
- * makes assumptions about how the components are laid out.
+ * makes assumptions about how the elements are laid out.
  *
  * @tparam Args Storage type template parameters.
- * @param storage A storage that contains the given component.
- * @param instance A valid component instance.
- * @return The entity associated with the given component.
+ * @param storage A storage that contains the given element.
+ * @param instance A valid element instance.
+ * @return The entity associated with the given element.
  */
 template<typename... Args>
-auto to_entity(const basic_storage<Args...> &storage, const typename basic_storage<Args...>::value_type &instance) -> typename basic_storage<Args...>::entity_type {
-    constexpr auto page_size = basic_storage<Args...>::traits_type::page_size;
+typename basic_storage<Args...>::entity_type to_entity(const basic_storage<Args...> &storage, const typename basic_storage<Args...>::value_type &instance) {
+    using traits_type = component_traits<typename basic_storage<Args...>::value_type>;
+    static_assert(traits_type::page_size != 0u, "Unexpected page size");
     const typename basic_storage<Args...>::base_type &base = storage;
     const auto *addr = std::addressof(instance);
 
-    for(auto it = base.rbegin(), last = base.rend(); it < last; it += page_size) {
-        if(const auto dist = (addr - std::addressof(storage.get(*it))); dist >= 0 && dist < static_cast<decltype(dist)>(page_size)) {
+    for(auto it = base.rbegin(), last = base.rend(); it < last; it += traits_type::page_size) {
+        if(const auto dist = (addr - std::addressof(storage.get(*it))); dist >= 0 && dist < static_cast<decltype(dist)>(traits_type::page_size)) {
             return *(it + dist);
         }
-    }
-
-    return null;
-}
-
-/**
- * @copybrief to_entity
- * @tparam Args Registry type template parameters.
- * @tparam Component Type of component.
- * @param reg A registry that contains the given entity and its components.
- * @param instance A valid component instance.
- * @return The entity associated with the given component.
- */
-template<typename... Args, typename Component>
-[[deprecated("use storage based to_entity instead")]] typename basic_registry<Args...>::entity_type to_entity(const basic_registry<Args...> &reg, const Component &instance) {
-    if(const auto *storage = reg.template storage<Component>(); storage) {
-        return to_entity(*storage, instance);
     }
 
     return null;

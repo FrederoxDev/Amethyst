@@ -19,10 +19,9 @@
 #include <minecraft/src/common/world/phys/ShapeType.hpp>
 #include <minecraft/src-deps/core/utility/AutomaticID.hpp>
 #include <minecraft/src/common/world/level/chunk/ChunkSource.hpp>
+#include <minecraft/src/common/world/actor/ActorTypes.hpp>
 
 namespace BlockSourceVisitor { struct CollisionShape {}; }
-
-enum ActorType {};
 
 // Auto-generated: Forward declarations
 class Block;

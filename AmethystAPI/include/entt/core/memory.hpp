@@ -2,7 +2,6 @@
 #define ENTT_CORE_MEMORY_HPP
 
 #include <cstddef>
-#include <limits>
 #include <memory>
 #include <tuple>
 #include <type_traits>
@@ -10,44 +9,6 @@
 #include "../config/config.h"
 
 namespace entt {
-
-/**
- * @brief Checks whether a value is a power of two or not (waiting for C++20 and
- * `std::has_single_bit`).
- * @param value A value that may or may not be a power of two.
- * @return True if the value is a power of two, false otherwise.
- */
-[[nodiscard]] inline constexpr bool is_power_of_two(const std::size_t value) noexcept {
-    return value && ((value & (value - 1)) == 0);
-}
-
-/**
- * @brief Computes the smallest power of two greater than or equal to a value
- * (waiting for C++20 and `std::bit_ceil`).
- * @param value The value to use.
- * @return The smallest power of two greater than or equal to the given value.
- */
-[[nodiscard]] inline constexpr std::size_t next_power_of_two(const std::size_t value) noexcept {
-    ENTT_ASSERT_CONSTEXPR(value < (std::size_t{1u} << (std::numeric_limits<std::size_t>::digits - 1)), "Numeric limits exceeded");
-    std::size_t curr = value - (value != 0u);
-
-    for(int next = 1; next < std::numeric_limits<std::size_t>::digits; next = next * 2) {
-        curr |= curr >> next;
-    }
-
-    return ++curr;
-}
-
-/**
- * @brief Fast module utility function (powers of two only).
- * @param value A value for which to calculate the modulus.
- * @param mod _Modulus_, it must be a power of two.
- * @return The common remainder.
- */
-[[nodiscard]] inline constexpr std::size_t fast_mod(const std::size_t value, const std::size_t mod) noexcept {
-    ENTT_ASSERT_CONSTEXPR(is_power_of_two(mod), "Value must be a power of two");
-    return value & (mod - 1u);
-}
 
 /**
  * @brief Unwraps fancy pointers, does nothing otherwise (waiting for C++20).
@@ -165,11 +126,7 @@ ENTT_CONSTEXPR auto allocate_unique(Allocator &allocator, Args &&...args) {
     return std::unique_ptr<Type, allocation_deleter<allocator_type>>{ptr, alloc};
 }
 
-/**
- * @cond TURN_OFF_DOXYGEN
- * Internal details not to be documented.
- */
-
+/*! @cond TURN_OFF_DOXYGEN */
 namespace internal {
 
 template<typename Type>
@@ -225,11 +182,7 @@ struct uses_allocator_construction<std::pair<Type, Other>> {
 };
 
 } // namespace internal
-
-/**
- * Internal details not to be documented.
- * @endcond
- */
+/*! @endcond */
 
 /**
  * @brief Uses-allocator construction utility (waiting for C++20).
@@ -283,7 +236,7 @@ constexpr Type make_obj_using_allocator(const Allocator &allocator, Args &&...ar
  */
 template<typename Type, typename Allocator, typename... Args>
 constexpr Type *uninitialized_construct_using_allocator(Type *value, const Allocator &allocator, Args &&...args) {
-    return std::apply([value](auto &&...curr) { return new(value) Type(std::forward<decltype(curr)>(curr)...); }, internal::uses_allocator_construction<Type>::args(allocator, std::forward<Args>(args)...));
+    return std::apply([value](auto &&...curr) { return ::new(value) Type(std::forward<decltype(curr)>(curr)...); }, internal::uses_allocator_construction<Type>::args(allocator, std::forward<Args>(args)...));
 }
 
 } // namespace entt

@@ -1,26 +1,25 @@
 #ifndef ENTT_ENTITY_GROUP_HPP
 #define ENTT_ENTITY_GROUP_HPP
 
+#include <array>
+#include <cstddef>
+#include <iterator>
 #include <tuple>
 #include <type_traits>
 #include <utility>
 #include "../config/config.h"
+#include "../core/algorithm.hpp"
 #include "../core/fwd.hpp"
 #include "../core/iterator.hpp"
 #include "../core/type_info.hpp"
 #include "../core/type_traits.hpp"
+#include "component.hpp"
 #include "entity.hpp"
 #include "fwd.hpp"
-#include "sparse_set.hpp"
-#include "storage.hpp"
 
 namespace entt {
 
-/**
- * @cond TURN_OFF_DOXYGEN
- * Internal details not to be documented.
- */
-
+/*! @cond TURN_OFF_DOXYGEN */
 namespace internal {
 
 template<typename, typename, typename>
@@ -29,8 +28,8 @@ class extended_group_iterator;
 template<typename It, typename... Owned, typename... Get>
 class extended_group_iterator<It, owned_t<Owned...>, get_t<Get...>> {
     template<typename Type>
-    auto index_to_element([[maybe_unused]] Type &cpool) const {
-        if constexpr(Type::traits_type::page_size == 0u) {
+    [[nodiscard]] auto index_to_element([[maybe_unused]] Type &cpool) const {
+        if constexpr(component_traits<typename Type::value_type>::page_size == 0u) {
             return std::make_tuple();
         } else {
             return std::forward_as_tuple(cpool.rbegin()[it.index()]);
@@ -39,10 +38,10 @@ class extended_group_iterator<It, owned_t<Owned...>, get_t<Get...>> {
 
 public:
     using iterator_type = It;
-    using difference_type = std::ptrdiff_t;
     using value_type = decltype(std::tuple_cat(std::make_tuple(*std::declval<It>()), std::declval<Owned>().get_as_tuple({})..., std::declval<Get>().get_as_tuple({})...));
     using pointer = input_iterator_pointer<value_type>;
     using reference = value_type;
+    using difference_type = std::ptrdiff_t;
     using iterator_category = std::input_iterator_tag;
     using iterator_concept = std::forward_iterator_tag;
 
@@ -50,9 +49,9 @@ public:
         : it{},
           pools{} {}
 
-    extended_group_iterator(iterator_type from, const std::tuple<Owned *..., Get *...> &cpools)
+    extended_group_iterator(iterator_type from, std::tuple<Owned *..., Get *...> cpools)
         : it{from},
-          pools{cpools} {}
+          pools{std::move(cpools)} {}
 
     extended_group_iterator &operator++() noexcept {
         return ++it, *this;
@@ -95,69 +94,69 @@ template<typename... Lhs, typename... Rhs>
 
 struct group_descriptor {
     using size_type = std::size_t;
-    virtual ~group_descriptor() = default;
+    virtual ~group_descriptor() noexcept = default;
     virtual size_type owned(const id_type *, const size_type) const noexcept {
         return 0u;
     }
 };
 
-template<typename, typename, typename>
-class group_handler;
-
-template<typename... Owned, typename... Get, typename... Exclude>
-class group_handler<owned_t<Owned...>, get_t<Get...>, exclude_t<Exclude...>> final: public group_descriptor {
-    // nasty workaround for an issue with the toolset v141 that doesn't accept a fold expression here
-    static_assert(!std::disjunction_v<std::bool_constant<Owned::traits_type::in_place_delete>...>, "Groups do not support in-place delete");
-    static_assert(!std::disjunction_v<std::is_const<Owned>..., std::is_const<Get>..., std::is_const<Exclude>...>, "Const storage type not allowed");
-
-    using base_type = std::common_type_t<typename Owned::base_type..., typename Get::base_type..., typename Exclude::base_type...>;
-    using entity_type = typename base_type::entity_type;
+template<typename Type, std::size_t Owned, std::size_t Get, std::size_t Exclude>
+class group_handler final: public group_descriptor {
+    using entity_type = typename Type::entity_type;
 
     void swap_elements(const std::size_t pos, const entity_type entt) {
-        std::apply([pos, entt](auto *...cpool) { (cpool->swap_elements(cpool->data()[pos], entt), ...); }, pools);
+        for(auto first = pools.begin(), last = first + Owned; first != last; ++first) {
+            (*first)->swap_elements((**first)[pos], entt);
+        }
     }
 
     void push_on_construct(const entity_type entt) {
-        if(std::apply([entt, len = len](auto *cpool, auto *...other) { return cpool->contains(entt) && !(cpool->index(entt) < len) && (other->contains(entt) && ...); }, pools)
+        if(std::apply([entt, pos = len](auto *cpool, auto *...other) { return cpool->contains(entt) && !(cpool->index(entt) < pos) && (other->contains(entt) && ...); }, pools)
            && std::apply([entt](auto *...cpool) { return (!cpool->contains(entt) && ...); }, filter)) {
             swap_elements(len++, entt);
         }
     }
 
     void push_on_destroy(const entity_type entt) {
-        if(std::apply([entt, len = len](auto *cpool, auto *...other) { return cpool->contains(entt) && !(cpool->index(entt) < len) && (other->contains(entt) && ...); }, pools)
+        if(std::apply([entt, pos = len](auto *cpool, auto *...other) { return cpool->contains(entt) && !(cpool->index(entt) < pos) && (other->contains(entt) && ...); }, pools)
            && std::apply([entt](auto *...cpool) { return (0u + ... + cpool->contains(entt)) == 1u; }, filter)) {
             swap_elements(len++, entt);
         }
     }
 
     void remove_if(const entity_type entt) {
-        if(std::get<0>(pools)->contains(entt) && (std::get<0>(pools)->index(entt) < len)) {
+        if(pools[0u]->contains(entt) && (pools[0u]->index(entt) < len)) {
             swap_elements(--len, entt);
         }
     }
 
-public:
-    using size_type = typename base_type::size_type;
-
-    group_handler(Owned &...opool, Get &...gpool, Exclude &...epool)
-        : pools{&opool..., &gpool...},
-          filter{&epool...},
-          len{} {
-        std::apply([this](auto *...cpool) { ((cpool->on_construct().template connect<&group_handler::push_on_construct>(*this), cpool->on_destroy().template connect<&group_handler::remove_if>(*this)), ...); }, pools);
-        std::apply([this](auto *...cpool) { ((cpool->on_construct().template connect<&group_handler::remove_if>(*this), cpool->on_destroy().template connect<&group_handler::push_on_destroy>(*this)), ...); }, filter);
-
+    void common_setup() {
         // we cannot iterate backwards because we want to leave behind valid entities in case of owned types
-        for(auto *first = std::get<0>(pools)->data(), *last = first + std::get<0>(pools)->size(); first != last; ++first) {
+        for(auto first = pools[0u]->rbegin(), last = first + pools[0u]->size(); first != last; ++first) {
             push_on_construct(*first);
         }
+    }
+
+public:
+    using common_type = Type;
+    using size_type = typename Type::size_type;
+
+    template<typename... OGType, typename... EType>
+    group_handler(std::tuple<OGType &...> ogpool, std::tuple<EType &...> epool)
+        : pools{std::apply([](auto &&...cpool) { return std::array<common_type *, (Owned + Get)>{&cpool...}; }, ogpool)},
+          filter{std::apply([](auto &&...cpool) { return std::array<common_type *, Exclude>{&cpool...}; }, epool)} {
+        std::apply([this](auto &...cpool) { ((cpool.on_construct().template connect<&group_handler::push_on_construct>(*this), cpool.on_destroy().template connect<&group_handler::remove_if>(*this)), ...); }, ogpool);
+        std::apply([this](auto &...cpool) { ((cpool.on_construct().template connect<&group_handler::remove_if>(*this), cpool.on_destroy().template connect<&group_handler::push_on_destroy>(*this)), ...); }, epool);
+        common_setup();
     }
 
     size_type owned(const id_type *elem, const size_type length) const noexcept final {
         size_type cnt = 0u;
 
         for(auto pos = 0u; pos < length; ++pos) {
-            cnt += ((elem[pos] == entt::type_hash<typename Owned::value_type>::value()) || ...);
+            for(auto next = 0u; next < Owned; ++next) {
+                cnt += (elem[pos] == pools[next]->type().hash());
+            }
         }
 
         return cnt;
@@ -167,29 +166,24 @@ public:
         return len;
     }
 
-    template<typename Type>
-    Type pools_as() const noexcept {
-        return pools;
-    }
-
-    template<typename Type>
-    Type filter_as() const noexcept {
-        return filter;
+    template<std::size_t Index>
+    [[nodiscard]] common_type *storage() const noexcept {
+        if constexpr(Index < (Owned + Get)) {
+            return pools[Index];
+        } else {
+            return filter[Index - (Owned + Get)];
+        }
     }
 
 private:
-    std::tuple<Owned *..., Get *...> pools;
-    std::tuple<Exclude *...> filter;
-    std::size_t len;
+    std::array<common_type *, (Owned + Get)> pools;
+    std::array<common_type *, Exclude> filter;
+    std::size_t len{};
 };
 
-template<typename... Get, typename... Exclude>
-class group_handler<owned_t<>, get_t<Get...>, exclude_t<Exclude...>> final: public group_descriptor {
-    // nasty workaround for an issue with the toolset v141 that doesn't accept a fold expression here
-    static_assert(!std::disjunction_v<std::is_const<Get>..., std::is_const<Exclude>...>, "Const storage type not allowed");
-
-    using base_type = std::common_type_t<typename Get::base_type..., typename Exclude::base_type...>;
-    using entity_type = typename base_type::entity_type;
+template<typename Type, std::size_t Get, std::size_t Exclude>
+class group_handler<Type, 0u, Get, Exclude> final: public group_descriptor {
+    using entity_type = typename Type::entity_type;
 
     void push_on_construct(const entity_type entt) {
         if(!elem.contains(entt)
@@ -211,52 +205,50 @@ class group_handler<owned_t<>, get_t<Get...>, exclude_t<Exclude...>> final: publ
         elem.remove(entt);
     }
 
-public:
-    using common_type = base_type;
-
-    template<typename Alloc>
-    group_handler(const Alloc &alloc, Get &...gpool, Exclude &...epool)
-        : pools{&gpool...},
-          filter{&epool...},
-          elem{alloc} {
-        std::apply([this](auto *...cpool) { ((cpool->on_construct().template connect<&group_handler::push_on_construct>(*this), cpool->on_destroy().template connect<&group_handler::remove_if>(*this)), ...); }, pools);
-        std::apply([this](auto *...cpool) { ((cpool->on_construct().template connect<&group_handler::remove_if>(*this), cpool->on_destroy().template connect<&group_handler::push_on_destroy>(*this)), ...); }, filter);
-
-        for(const auto entity: static_cast<base_type &>(*std::get<0>(pools))) {
+    void common_setup() {
+        for(const auto entity: *pools[0u]) {
             push_on_construct(entity);
         }
     }
 
-    common_type &handle() noexcept {
+public:
+    using common_type = Type;
+
+    template<typename Allocator, typename... GType, typename... EType>
+    group_handler(const Allocator &allocator, std::tuple<GType &...> gpool, std::tuple<EType &...> epool)
+        : pools{std::apply([](auto &&...cpool) { return std::array<common_type *, Get>{&cpool...}; }, gpool)},
+          filter{std::apply([](auto &&...cpool) { return std::array<common_type *, Exclude>{&cpool...}; }, epool)},
+          elem{allocator} {
+        std::apply([this](auto &...cpool) { ((cpool.on_construct().template connect<&group_handler::push_on_construct>(*this), cpool.on_destroy().template connect<&group_handler::remove_if>(*this)), ...); }, gpool);
+        std::apply([this](auto &...cpool) { ((cpool.on_construct().template connect<&group_handler::remove_if>(*this), cpool.on_destroy().template connect<&group_handler::push_on_destroy>(*this)), ...); }, epool);
+        common_setup();
+    }
+
+    [[nodiscard]] common_type &handle() noexcept {
         return elem;
     }
 
-    const common_type &handle() const noexcept {
+    [[nodiscard]] const common_type &handle() const noexcept {
         return elem;
     }
 
-    template<typename Type>
-    Type pools_as() const noexcept {
-        return pools;
-    }
-
-    template<typename Type>
-    Type filter_as() const noexcept {
-        return filter;
+    template<std::size_t Index>
+    [[nodiscard]] common_type *storage() const noexcept {
+        if constexpr(Index < Get) {
+            return pools[Index];
+        } else {
+            return filter[Index - Get];
+        }
     }
 
 private:
-    std::tuple<Get *...> pools;
-    std::tuple<Exclude *...> filter;
-    base_type elem;
+    std::array<common_type *, Get> pools;
+    std::array<common_type *, Exclude> filter;
+    common_type elem;
 };
 
 } // namespace internal
-
-/**
- * Internal details not to be documented.
- * @endcond
- */
+/*! @endcond */
 
 /**
  * @brief Group.
@@ -279,7 +271,7 @@ class basic_group;
  * Iterators aren't invalidated if:
  *
  * * New elements are added to the storage.
- * * The entity currently pointed is modified (for example, components are added
+ * * The entity currently pointed is modified (for example, elements are added
  *   or removed from it).
  * * The entity currently pointed is destroyed.
  *
@@ -295,16 +287,12 @@ class basic_group<owned_t<>, get_t<Get...>, exclude_t<Exclude...>> {
     using underlying_type = typename base_type::entity_type;
 
     template<typename Type>
-    static constexpr std::size_t index_of = type_list_index_v<std::remove_const_t<Type>, type_list<typename Get::value_type..., typename Exclude::value_type...>>;
+    static constexpr std::size_t index_of = type_list_index_v<std::remove_const_t<Type>, type_list<typename Get::element_type..., typename Exclude::element_type...>>;
 
-    auto pools() const noexcept {
+    template<std::size_t... Index>
+    [[nodiscard]] auto pools_for(std::index_sequence<Index...>) const noexcept {
         using return_type = std::tuple<Get *...>;
-        return descriptor ? descriptor->template pools_as<return_type>() : return_type{};
-    }
-
-    auto filter() const noexcept {
-        using return_type = std::tuple<Exclude *...>;
-        return descriptor ? descriptor->template filter_as<return_type>() : return_type{};
+        return descriptor ? return_type{static_cast<Get *>(descriptor->template storage<Index>())...} : return_type{};
     }
 
 public:
@@ -316,12 +304,20 @@ public:
     using common_type = base_type;
     /*! @brief Random access iterator type. */
     using iterator = typename common_type::iterator;
-    /*! @brief Reversed iterator type. */
+    /*! @brief Reverse iterator type. */
     using reverse_iterator = typename common_type::reverse_iterator;
     /*! @brief Iterable group type. */
     using iterable = iterable_adaptor<internal::extended_group_iterator<iterator, owned_t<>, get_t<Get...>>>;
     /*! @brief Group handler type. */
-    using handler = internal::group_handler<owned_t<>, get_t<std::remove_const_t<Get>...>, exclude_t<std::remove_const_t<Exclude>...>>;
+    using handler = internal::group_handler<common_type, 0u, sizeof...(Get), sizeof...(Exclude)>;
+
+    /**
+     * @brief Group opaque identifier.
+     * @return Group opaque identifier.
+     */
+    static id_type group_id() noexcept {
+        return type_hash<basic_group<owned_t<>, get_t<std::remove_const_t<Get>...>, exclude_t<std::remove_const_t<Exclude>...>>>::value();
+    }
 
     /*! @brief Default constructor to use to create empty, invalid groups. */
     basic_group() noexcept
@@ -343,9 +339,9 @@ public:
     }
 
     /**
-     * @brief Returns the storage for a given component type, if any.
-     * @tparam Type Type of component of which to return the storage.
-     * @return The storage for the given component type.
+     * @brief Returns the storage for a given element type, if any.
+     * @tparam Type Type of element of which to return the storage.
+     * @return The storage for the given element type.
      */
     template<typename Type>
     [[nodiscard]] auto *storage() const noexcept {
@@ -359,13 +355,8 @@ public:
      */
     template<std::size_t Index>
     [[nodiscard]] auto *storage() const noexcept {
-        constexpr auto offset = sizeof...(Get);
-
-        if constexpr(Index < offset) {
-            return std::get<Index>(pools());
-        } else {
-            return std::get<Index - offset>(filter());
-        }
+        using type = type_list_element_t<Index, type_list<Get..., Exclude...>>;
+        return *this ? static_cast<type *>(descriptor->template storage<Index>()) : nullptr;
     }
 
     /**
@@ -498,11 +489,11 @@ public:
     }
 
     /**
-     * @brief Returns the components assigned to the given entity.
-     * @tparam Type Type of the component to get.
-     * @tparam Other Other types of components to get.
+     * @brief Returns the elements assigned to the given entity.
+     * @tparam Type Type of the element to get.
+     * @tparam Other Other types of elements to get.
      * @param entt A valid identifier.
-     * @return The components assigned to the entity.
+     * @return The elements assigned to the entity.
      */
     template<typename Type, typename... Other>
     [[nodiscard]] decltype(auto) get(const entity_type entt) const {
@@ -510,14 +501,14 @@ public:
     }
 
     /**
-     * @brief Returns the components assigned to the given entity.
-     * @tparam Index Indexes of the components to get.
+     * @brief Returns the elements assigned to the given entity.
+     * @tparam Index Indexes of the elements to get.
      * @param entt A valid identifier.
-     * @return The components assigned to the entity.
+     * @return The elements assigned to the entity.
      */
     template<std::size_t... Index>
     [[nodiscard]] decltype(auto) get(const entity_type entt) const {
-        const auto cpools = pools();
+        const auto cpools = pools_for(std::index_sequence_for<Get...>{});
 
         if constexpr(sizeof...(Index) == 0) {
             return std::apply([entt](auto *...curr) { return std::tuple_cat(curr->get_as_tuple(entt)...); }, cpools);
@@ -529,12 +520,12 @@ public:
     }
 
     /**
-     * @brief Iterates entities and components and applies the given function
+     * @brief Iterates entities and elements and applies the given function
      * object to them.
      *
      * The function object is invoked for each entity. It is provided with the
-     * entity itself and a set of references to non-empty components. The
-     * _constness_ of the components is as requested.<br/>
+     * entity itself and a set of references to non-empty elements. The
+     * _constness_ of the elements is as requested.<br/>
      * The signature of the function must be equivalent to one of the following
      * forms:
      *
@@ -565,8 +556,8 @@ public:
      * @brief Returns an iterable object to use to _visit_ a group.
      *
      * The iterable object returns tuples that contain the current entity and a
-     * set of references to its non-empty components. The _constness_ of the
-     * components is as requested.
+     * set of references to its non-empty elements. The _constness_ of the
+     * elements is as requested.
      *
      * @note
      * Empty types aren't explicitly instantiated and therefore they are never
@@ -575,7 +566,7 @@ public:
      * @return An iterable object to use to _visit_ the group.
      */
     [[nodiscard]] iterable each() const noexcept {
-        const auto cpools = pools();
+        const auto cpools = pools_for(std::index_sequence_for<Get...>{});
         return iterable{{begin(), cpools}, {end(), cpools}};
     }
 
@@ -603,8 +594,8 @@ public:
      * * An iterator past the last element of the range to sort.
      * * A comparison function to use to compare the elements.
      *
-     * @tparam Type Optional type of component to compare.
-     * @tparam Other Other optional types of components to compare.
+     * @tparam Type Optional type of element to compare.
+     * @tparam Other Other optional types of elements to compare.
      * @tparam Compare Type of comparison function object.
      * @tparam Sort Type of sort function object.
      * @tparam Args Types of arguments to forward to the sort function object.
@@ -622,7 +613,7 @@ public:
      *
      * @sa sort
      *
-     * @tparam Index Optional indexes of components to compare.
+     * @tparam Index Optional indexes of elements to compare.
      * @tparam Compare Type of comparison function object.
      * @tparam Sort Type of sort function object.
      * @tparam Args Types of arguments to forward to the sort function object.
@@ -637,7 +628,7 @@ public:
                 static_assert(std::is_invocable_v<Compare, const entity_type, const entity_type>, "Invalid comparison function");
                 descriptor->handle().sort(std::move(compare), std::move(algo), std::forward<Args>(args)...);
             } else {
-                auto comp = [&compare, cpools = pools()](const entity_type lhs, const entity_type rhs) {
+                auto comp = [&compare, cpools = pools_for(std::index_sequence_for<Get...>{})](const entity_type lhs, const entity_type rhs) {
                     if constexpr(sizeof...(Index) == 1) {
                         return compare((std::get<Index>(cpools)->get(lhs), ...), (std::get<Index>(cpools)->get(rhs), ...));
                     } else {
@@ -667,14 +658,6 @@ public:
         }
     }
 
-    /**
-     * @brief Sort entities according to their order in a range.
-     * @param other The storage to use to impose the order.
-     */
-    [[deprecated("use iterator based sort_as instead")]] void sort_as(const common_type &other) const {
-        sort_as(other.begin(), other.end());
-    }
-
 private:
     handler *descriptor;
 };
@@ -687,7 +670,7 @@ private:
  *
  * * It's guaranteed that the entity list is tightly packed in memory for fast
  *   iterations.
- * * It's guaranteed that all components in the owned storage are tightly packed
+ * * It's guaranteed that all elements in the owned storage are tightly packed
  *   in memory for even faster iterations and to allow direct access.
  * * They stay true to the order of the owned storage and all instances have the
  *   same order in memory.
@@ -699,7 +682,7 @@ private:
  * Iterators aren't invalidated if:
  *
  * * New elements are added to the storage.
- * * The entity currently pointed is modified (for example, components are added
+ * * The entity currently pointed is modified (for example, elements are added
  *   or removed from it).
  * * The entity currently pointed is destroyed.
  *
@@ -712,20 +695,18 @@ private:
  */
 template<typename... Owned, typename... Get, typename... Exclude>
 class basic_group<owned_t<Owned...>, get_t<Get...>, exclude_t<Exclude...>> {
+    static_assert((!component_traits<typename Owned::value_type>::in_place_delete && ...), "Groups do not support in-place delete");
+
     using base_type = std::common_type_t<typename Owned::base_type..., typename Get::base_type..., typename Exclude::base_type...>;
     using underlying_type = typename base_type::entity_type;
 
     template<typename Type>
-    static constexpr std::size_t index_of = type_list_index_v<std::remove_const_t<Type>, type_list<typename Owned::value_type..., typename Get::value_type..., typename Exclude::value_type...>>;
+    static constexpr std::size_t index_of = type_list_index_v<std::remove_const_t<Type>, type_list<typename Owned::element_type..., typename Get::element_type..., typename Exclude::element_type...>>;
 
-    auto pools() const noexcept {
+    template<std::size_t... Index, std::size_t... Other>
+    [[nodiscard]] auto pools_for(std::index_sequence<Index...>, std::index_sequence<Other...>) const noexcept {
         using return_type = std::tuple<Owned *..., Get *...>;
-        return descriptor ? descriptor->template pools_as<return_type>() : return_type{};
-    }
-
-    auto filter() const noexcept {
-        using return_type = std::tuple<Exclude *...>;
-        return descriptor ? descriptor->template filter_as<return_type>() : return_type{};
+        return descriptor ? return_type{static_cast<Owned *>(descriptor->template storage<Index>())..., static_cast<Get *>(descriptor->template storage<sizeof...(Owned) + Other>())...} : return_type{};
     }
 
 public:
@@ -737,12 +718,20 @@ public:
     using common_type = base_type;
     /*! @brief Random access iterator type. */
     using iterator = typename common_type::iterator;
-    /*! @brief Reversed iterator type. */
+    /*! @brief Reverse iterator type. */
     using reverse_iterator = typename common_type::reverse_iterator;
     /*! @brief Iterable group type. */
     using iterable = iterable_adaptor<internal::extended_group_iterator<iterator, owned_t<Owned...>, get_t<Get...>>>;
     /*! @brief Group handler type. */
-    using handler = internal::group_handler<owned_t<std::remove_const_t<Owned>...>, get_t<std::remove_const_t<Get>...>, exclude_t<std::remove_const_t<Exclude>...>>;
+    using handler = internal::group_handler<common_type, sizeof...(Owned), sizeof...(Get), sizeof...(Exclude)>;
+
+    /**
+     * @brief Group opaque identifier.
+     * @return Group opaque identifier.
+     */
+    static id_type group_id() noexcept {
+        return type_hash<basic_group<owned_t<std::remove_const_t<Owned>...>, get_t<std::remove_const_t<Get>...>, exclude_t<std::remove_const_t<Exclude>...>>>::value();
+    }
 
     /*! @brief Default constructor to use to create empty, invalid groups. */
     basic_group() noexcept
@@ -764,9 +753,9 @@ public:
     }
 
     /**
-     * @brief Returns the storage for a given component type, if any.
-     * @tparam Type Type of component of which to return the storage.
-     * @return The storage for the given component type.
+     * @brief Returns the storage for a given element type, if any.
+     * @tparam Type Type of element of which to return the storage.
+     * @return The storage for the given element type.
      */
     template<typename Type>
     [[nodiscard]] auto *storage() const noexcept {
@@ -780,13 +769,8 @@ public:
      */
     template<std::size_t Index>
     [[nodiscard]] auto *storage() const noexcept {
-        constexpr auto offset = sizeof...(Owned) + sizeof...(Get);
-
-        if constexpr(Index < offset) {
-            return std::get<Index>(pools());
-        } else {
-            return std::get<Index - offset>(filter());
-        }
+        using type = type_list_element_t<Index, type_list<Owned..., Get..., Exclude...>>;
+        return *this ? static_cast<type *>(descriptor->template storage<Index>()) : nullptr;
     }
 
     /**
@@ -904,11 +888,11 @@ public:
     }
 
     /**
-     * @brief Returns the components assigned to the given entity.
-     * @tparam Type Type of the component to get.
-     * @tparam Other Other types of components to get.
+     * @brief Returns the elements assigned to the given entity.
+     * @tparam Type Type of the element to get.
+     * @tparam Other Other types of elements to get.
      * @param entt A valid identifier.
-     * @return The components assigned to the entity.
+     * @return The elements assigned to the entity.
      */
     template<typename Type, typename... Other>
     [[nodiscard]] decltype(auto) get(const entity_type entt) const {
@@ -916,14 +900,14 @@ public:
     }
 
     /**
-     * @brief Returns the components assigned to the given entity.
-     * @tparam Index Indexes of the components to get.
+     * @brief Returns the elements assigned to the given entity.
+     * @tparam Index Indexes of the elements to get.
      * @param entt A valid identifier.
-     * @return The components assigned to the entity.
+     * @return The elements assigned to the entity.
      */
     template<std::size_t... Index>
     [[nodiscard]] decltype(auto) get(const entity_type entt) const {
-        const auto cpools = pools();
+        const auto cpools = pools_for(std::index_sequence_for<Owned...>{}, std::index_sequence_for<Get...>{});
 
         if constexpr(sizeof...(Index) == 0) {
             return std::apply([entt](auto *...curr) { return std::tuple_cat(curr->get_as_tuple(entt)...); }, cpools);
@@ -935,12 +919,12 @@ public:
     }
 
     /**
-     * @brief Iterates entities and components and applies the given function
+     * @brief Iterates entities and elements and applies the given function
      * object to them.
      *
      * The function object is invoked for each entity. It is provided with the
-     * entity itself and a set of references to non-empty components. The
-     * _constness_ of the components is as requested.<br/>
+     * entity itself and a set of references to non-empty elements. The
+     * _constness_ of the elements is as requested.<br/>
      * The signature of the function must be equivalent to one of the following
      * forms:
      *
@@ -971,8 +955,8 @@ public:
      * @brief Returns an iterable object to use to _visit_ a group.
      *
      * The iterable object returns tuples that contain the current entity and a
-     * set of references to its non-empty components. The _constness_ of the
-     * components is as requested.
+     * set of references to its non-empty elements. The _constness_ of the
+     * elements is as requested.
      *
      * @note
      * Empty types aren't explicitly instantiated and therefore they are never
@@ -981,8 +965,8 @@ public:
      * @return An iterable object to use to _visit_ the group.
      */
     [[nodiscard]] iterable each() const noexcept {
-        const auto cpools = pools();
-        return {{begin(), cpools}, {end(), cpools}};
+        const auto cpools = pools_for(std::index_sequence_for<Owned...>{}, std::index_sequence_for<Get...>{});
+        return iterable{{begin(), cpools}, {end(), cpools}};
     }
 
     /**
@@ -1010,8 +994,8 @@ public:
      * * An iterator past the last element of the range to sort.
      * * A comparison function to use to compare the elements.
      *
-     * @tparam Type Optional type of component to compare.
-     * @tparam Other Other optional types of components to compare.
+     * @tparam Type Optional type of element to compare.
+     * @tparam Other Other optional types of elements to compare.
      * @tparam Compare Type of comparison function object.
      * @tparam Sort Type of sort function object.
      * @tparam Args Types of arguments to forward to the sort function object.
@@ -1029,7 +1013,7 @@ public:
      *
      * @sa sort
      *
-     * @tparam Index Optional indexes of components to compare.
+     * @tparam Index Optional indexes of elements to compare.
      * @tparam Compare Type of comparison function object.
      * @tparam Sort Type of sort function object.
      * @tparam Args Types of arguments to forward to the sort function object.
@@ -1039,7 +1023,7 @@ public:
      */
     template<std::size_t... Index, typename Compare, typename Sort = std_sort, typename... Args>
     void sort(Compare compare, Sort algo = Sort{}, Args &&...args) const {
-        const auto cpools = pools();
+        const auto cpools = pools_for(std::index_sequence_for<Owned...>{}, std::index_sequence_for<Get...>{});
 
         if constexpr(sizeof...(Index) == 0) {
             static_assert(std::is_invocable_v<Compare, const entity_type, const entity_type>, "Invalid comparison function");

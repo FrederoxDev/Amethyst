@@ -1,6 +1,7 @@
 #ifndef ENTT_CORE_ANY_HPP
 #define ENTT_CORE_ANY_HPP
 
+#include <array>
 #include <cstddef>
 #include <memory>
 #include <type_traits>
@@ -13,11 +14,7 @@
 
 namespace entt {
 
-/**
- * @cond TURN_OFF_DOXYGEN
- * Internal details not to be documented.
- */
-
+/*! @cond TURN_OFF_DOXYGEN */
 namespace internal {
 
 enum class any_operation : std::uint8_t {
@@ -31,11 +28,7 @@ enum class any_operation : std::uint8_t {
 };
 
 } // namespace internal
-
-/**
- * Internal details not to be documented.
- * @endcond
- */
+/*! @endcond */
 
 /*! @brief Possible modes of an any object. */
 enum class any_policy : std::uint8_t {
@@ -57,67 +50,63 @@ class basic_any {
     using operation = internal::any_operation;
     using vtable_type = const void *(const operation, const basic_any &, const void *);
 
-    struct storage_type {
-        alignas(Align) std::byte data[Len + !Len];
-    };
-
     template<typename Type>
     static constexpr bool in_situ = Len && alignof(Type) <= Align && sizeof(Type) <= Len && std::is_nothrow_move_constructible_v<Type>;
 
     template<typename Type>
     static const void *basic_vtable(const operation op, const basic_any &value, const void *other) {
         static_assert(!std::is_void_v<Type> && std::is_same_v<std::remove_cv_t<std::remove_reference_t<Type>>, Type>, "Invalid type");
-        const Type *element = nullptr;
+        const Type *elem = nullptr;
 
         if constexpr(in_situ<Type>) {
-            element = (value.mode == any_policy::owner) ? reinterpret_cast<const Type *>(&value.storage) : static_cast<const Type *>(value.instance);
+            elem = (value.mode == any_policy::owner) ? reinterpret_cast<const Type *>(value.storage.data()) : static_cast<const Type *>(value.instance);
         } else {
-            element = static_cast<const Type *>(value.instance);
+            elem = static_cast<const Type *>(value.instance);
         }
 
         switch(op) {
         case operation::copy:
             if constexpr(std::is_copy_constructible_v<Type>) {
-                static_cast<basic_any *>(const_cast<void *>(other))->initialize<Type>(*element);
+                static_cast<basic_any *>(const_cast<void *>(other))->initialize<Type>(*elem);
             }
             break;
         case operation::move:
             if constexpr(in_situ<Type>) {
                 if(value.mode == any_policy::owner) {
-                    return new(&static_cast<basic_any *>(const_cast<void *>(other))->storage) Type{std::move(*const_cast<Type *>(element))};
+                    return ::new(static_cast<basic_any *>(const_cast<void *>(other))->storage.data()) Type{std::move(*const_cast<Type *>(elem))};
                 }
             }
 
             return (static_cast<basic_any *>(const_cast<void *>(other))->instance = std::exchange(const_cast<basic_any &>(value).instance, nullptr));
         case operation::transfer:
             if constexpr(std::is_move_assignable_v<Type>) {
-                *const_cast<Type *>(element) = std::move(*static_cast<Type *>(const_cast<void *>(other)));
+                *const_cast<Type *>(elem) = std::move(*static_cast<Type *>(const_cast<void *>(other)));
                 return other;
             }
             [[fallthrough]];
         case operation::assign:
             if constexpr(std::is_copy_assignable_v<Type>) {
-                *const_cast<Type *>(element) = *static_cast<const Type *>(other);
+                *const_cast<Type *>(elem) = *static_cast<const Type *>(other);
                 return other;
             }
             break;
         case operation::destroy:
             if constexpr(in_situ<Type>) {
-                element->~Type();
+                elem->~Type();
             } else if constexpr(std::is_array_v<Type>) {
-                delete[] element;
+                delete[] elem;
             } else {
-                delete element;
+                delete elem;
             }
             break;
         case operation::compare:
             if constexpr(!std::is_function_v<Type> && !std::is_array_v<Type> && is_equality_comparable_v<Type>) {
-                return *element == *static_cast<const Type *>(other) ? other : nullptr;
+                return *elem == *static_cast<const Type *>(other) ? other : nullptr;
             } else {
-                return (element == other) ? other : nullptr;
+                return (elem == other) ? other : nullptr;
             }
         case operation::get:
-            return element;
+            return elem;
         }
 
         return nullptr;
@@ -136,9 +125,9 @@ class basic_any {
                 instance = (std::addressof(args), ...);
             } else if constexpr(in_situ<std::remove_cv_t<std::remove_reference_t<Type>>>) {
                 if constexpr(std::is_aggregate_v<std::remove_cv_t<std::remove_reference_t<Type>>> && (sizeof...(Args) != 0u || !std::is_default_constructible_v<std::remove_cv_t<std::remove_reference_t<Type>>>)) {
-                    new(&storage) std::remove_cv_t<std::remove_reference_t<Type>>{std::forward<Args>(args)...};
+                    ::new(storage.data()) std::remove_cv_t<std::remove_reference_t<Type>>{std::forward<Args>(args)...};
                 } else {
-                    new(&storage) std::remove_cv_t<std::remove_reference_t<Type>>(std::forward<Args>(args)...);
+                    ::new(storage.data()) std::remove_cv_t<std::remove_reference_t<Type>>(std::forward<Args>(args)...);
                 }
             } else {
                 if constexpr(std::is_aggregate_v<std::remove_cv_t<std::remove_reference_t<Type>>> && (sizeof...(Args) != 0u || !std::is_default_constructible_v<std::remove_cv_t<std::remove_reference_t<Type>>>)) {
@@ -216,7 +205,7 @@ public:
     }
 
     /*! @brief Frees the internal storage, whatever it means. */
-    ~basic_any() {
+    ~basic_any() noexcept {
         if(vtable && (mode == any_policy::owner)) {
             vtable(operation::destroy, *this, nullptr);
         }
@@ -261,9 +250,8 @@ public:
      * @param value An instance of an object to use to initialize the wrapper.
      * @return This any object.
      */
-    template<typename Type>
-    std::enable_if_t<!std::is_same_v<std::decay_t<Type>, basic_any>, basic_any &>
-    operator=(Type &&value) {
+    template<typename Type, typename = std::enable_if_t<!std::is_same_v<std::decay_t<Type>, basic_any>>>
+    basic_any &operator=(Type &&value) {
         emplace<std::decay_t<Type>>(std::forward<Type>(value));
         return *this;
     }
@@ -405,14 +393,6 @@ public:
     }
 
     /**
-     * @brief Returns true if a wrapper owns its object, false otherwise.
-     * @return True if the wrapper owns its object, false otherwise.
-     */
-    [[deprecated("use policy() and any_policy instead")]] [[nodiscard]] bool owner() const noexcept {
-        return (mode == any_policy::owner);
-    }
-
-    /**
      * @brief Returns the current mode of an any object.
      * @return The current mode of the any object.
      */
@@ -423,7 +403,7 @@ public:
 private:
     union {
         const void *instance;
-        storage_type storage;
+        alignas(Align) std::array<std::byte, Len> storage;
     };
     const type_info *info;
     vtable_type *vtable;

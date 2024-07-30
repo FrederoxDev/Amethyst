@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <memory>
 #include <type_traits>
+#include "../config/config.h"
 #include "../core/fwd.hpp"
 #include "../core/type_traits.hpp"
 
@@ -50,7 +51,7 @@ template<typename>
 class basic_organizer;
 
 template<typename, typename...>
-struct basic_handle;
+class basic_handle;
 
 template<typename>
 class basic_snapshot;
@@ -66,7 +67,7 @@ using sparse_set = basic_sparse_set<>;
 
 /**
  * @brief Alias declaration for the most common use case.
- * @tparam Type Type of objects assigned to the entities.
+ * @tparam Type Element type.
  */
 template<typename Type>
 using storage = basic_storage<Type>;
@@ -129,7 +130,7 @@ using const_runtime_view = basic_runtime_view<const sparse_set>;
 template<typename... Type>
 struct exclude_t final: type_list<Type...> {
     /*! @brief Default constructor. */
-    explicit constexpr exclude_t() {}
+    explicit constexpr exclude_t() = default;
 };
 
 /**
@@ -140,34 +141,34 @@ template<typename... Type>
 inline constexpr exclude_t<Type...> exclude{};
 
 /**
- * @brief Alias for lists of observed components.
+ * @brief Alias for lists of observed elements.
  * @tparam Type List of types.
  */
 template<typename... Type>
 struct get_t final: type_list<Type...> {
     /*! @brief Default constructor. */
-    explicit constexpr get_t() {}
+    explicit constexpr get_t() = default;
 };
 
 /**
- * @brief Variable template for lists of observed components.
+ * @brief Variable template for lists of observed elements.
  * @tparam Type List of types.
  */
 template<typename... Type>
 inline constexpr get_t<Type...> get{};
 
 /**
- * @brief Alias for lists of owned components.
+ * @brief Alias for lists of owned elements.
  * @tparam Type List of types.
  */
 template<typename... Type>
 struct owned_t final: type_list<Type...> {
     /*! @brief Default constructor. */
-    explicit constexpr owned_t() {}
+    explicit constexpr owned_t() = default;
 };
 
 /**
- * @brief Variable template for lists of owned components.
+ * @brief Variable template for lists of owned elements.
  * @tparam Type List of types.
  */
 template<typename... Type>
@@ -215,7 +216,7 @@ struct type_list_transform<owned_t<Type...>, Op> {
 template<typename Type, typename Entity = entity, typename Allocator = std::allocator<Type>, typename = void>
 struct storage_type {
     /*! @brief Type-to-storage conversion result. */
-    using type = sigh_mixin<basic_storage<Type, Entity, Allocator>>;
+    using type = ENTT_STORAGE(sigh_mixin, basic_storage<Type, Entity, Allocator>);
 };
 
 /**

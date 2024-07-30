@@ -12,11 +12,7 @@
 
 namespace entt {
 
-/**
- * @cond TURN_OFF_DOXYGEN
- * Internal details not to be documented.
- */
-
+/*! @cond TURN_OFF_DOXYGEN */
 namespace internal {
 
 template<typename Ret, typename... Args>
@@ -43,11 +39,7 @@ template<typename... Class, typename Ret, typename... Args>
 }
 
 } // namespace internal
-
-/**
- * Internal details not to be documented.
- * @endcond
- */
+/*! @endcond */
 
 /**
  * @brief Basic delegate implementation.
@@ -125,9 +117,7 @@ public:
     using result_type = Ret;
 
     /*! @brief Default constructor. */
-    delegate() noexcept
-        : instance{nullptr},
-          fn{nullptr} {}
+    delegate() noexcept = default;
 
     /**
      * @brief Constructs a delegate with a given object or payload, if any.
@@ -303,8 +293,8 @@ public:
     }
 
 private:
-    const void *instance;
-    function_type *fn;
+    const void *instance{};
+    function_type *fn{};
 };
 
 /**

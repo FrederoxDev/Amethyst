@@ -38,8 +38,8 @@ template<>
 struct basic_collector<> {
     /**
      * @brief Adds a grouping matcher to the collector.
-     * @tparam AllOf Types of components tracked by the matcher.
-     * @tparam NoneOf Types of components used to filter out entities.
+     * @tparam AllOf Types of elements tracked by the matcher.
+     * @tparam NoneOf Types of elements used to filter out entities.
      * @return The updated collector.
      */
     template<typename... AllOf, typename... NoneOf>
@@ -49,7 +49,7 @@ struct basic_collector<> {
 
     /**
      * @brief Adds an observing matcher to the collector.
-     * @tparam AnyOf Type of component for which changes should be detected.
+     * @tparam AnyOf Type of element for which changes should be detected.
      * @return The updated collector.
      */
     template<typename AnyOf>
@@ -73,8 +73,8 @@ struct basic_collector<matcher<type_list<Reject...>, type_list<Require...>, Rule
 
     /**
      * @brief Adds a grouping matcher to the collector.
-     * @tparam AllOf Types of components tracked by the matcher.
-     * @tparam NoneOf Types of components used to filter out entities.
+     * @tparam AllOf Types of elements tracked by the matcher.
+     * @tparam NoneOf Types of elements used to filter out entities.
      * @return The updated collector.
      */
     template<typename... AllOf, typename... NoneOf>
@@ -84,7 +84,7 @@ struct basic_collector<matcher<type_list<Reject...>, type_list<Require...>, Rule
 
     /**
      * @brief Adds an observing matcher to the collector.
-     * @tparam AnyOf Type of component for which changes should be detected.
+     * @tparam AnyOf Type of element for which changes should be detected.
      * @return The updated collector.
      */
     template<typename AnyOf>
@@ -94,8 +94,8 @@ struct basic_collector<matcher<type_list<Reject...>, type_list<Require...>, Rule
 
     /**
      * @brief Updates the filter of the last added matcher.
-     * @tparam AllOf Types of components required by the matcher.
-     * @tparam NoneOf Types of components used to filter out entities.
+     * @tparam AllOf Types of elements required by the matcher.
+     * @tparam NoneOf Types of elements used to filter out entities.
      * @return The updated collector.
      */
     template<typename... AllOf, typename... NoneOf>
@@ -114,13 +114,13 @@ inline constexpr basic_collector<> collector{};
  * An observer returns all the entities and only the entities that fit the
  * requirements of at least one matcher. Moreover, it's guaranteed that the
  * entity list is tightly packed in memory for fast iterations.<br/>
- * In general, observers don't stay true to the order of any set of components.
+ * In general, observers don't stay true to the order of any set of elements.
  *
  * Observers work mainly with two types of matchers, provided through a
  * collector:
  *
  * * Observing matcher: an observer will return at least all the living entities
- *   for which one or more of the given components have been updated and not yet
+ *   for which one or more of the given elements have been updated and not yet
  *   destroyed.
  * * Grouping matcher: an observer will return at least all the living entities
  *   that would have entered the given group if it existed and that would have
@@ -140,13 +140,13 @@ inline constexpr basic_collector<> collector{};
  *
  * Iterators aren't invalidated if:
  *
- * * New instances of the given components are created and assigned to entities.
+ * * New instances of the given elements are created and assigned to entities.
  * * The entity currently pointed is modified (as an example, if one of the
- *   given components is removed from the entity to which the iterator points).
+ *   given elements is removed from the entity to which the iterator points).
  * * The entity currently pointed is destroyed.
  *
- * In all the other cases, modifying the pools of the given components in any
- * way invalidates all the iterators.
+ * In all the other cases, modifying the pools of the given elements in any way
+ * invalidates all the iterators.
  *
  * @warning
  * Lifetime of an observer doesn't necessarily have to overcome that of the
@@ -256,20 +256,20 @@ class basic_observer: private basic_storage<Mask, typename Registry::entity_type
 
     template<typename... Matcher, std::size_t... Index>
     void connect(Registry &reg, std::index_sequence<Index...>) {
-        static_assert(sizeof...(Matcher) < std::numeric_limits<typename base_type::value_type>::digits, "Too many matchers");
+        static_assert(sizeof...(Matcher) < std::numeric_limits<Mask>::digits, "Too many matchers");
         (matcher_handler<Matcher>::template connect<Index>(*this, reg), ...);
         release.template connect<&basic_observer::disconnect<Matcher...>>(reg);
     }
 
 public:
+    /*! @brief Allocator type. */
+    using allocator_type = Allocator;
     /*! Basic registry type. */
     using registry_type = Registry;
     /*! @brief Underlying entity identifier. */
     using entity_type = typename registry_type::entity_type;
     /*! @brief Unsigned integer type. */
     using size_type = std::size_t;
-    /*! @brief Allocator type. */
-    using allocator_type = Allocator;
     /*! @brief Random access iterator type. */
     using iterator = typename registry_type::common_type::iterator;
 
@@ -302,6 +302,9 @@ public:
         : basic_observer{allocator} {
         connect<Matcher...>(reg, std::index_sequence_for<Matcher...>{});
     }
+
+    /*! @brief Default destructor. */
+    ~basic_observer() noexcept override = default;
 
     /**
      * @brief Default copy assignment operator, deleted on purpose.

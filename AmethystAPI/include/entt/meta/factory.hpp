@@ -22,11 +22,7 @@
 
 namespace entt {
 
-/**
- * @cond TURN_OFF_DOXYGEN
- * Internal details not to be documented.
- */
-
+/*! @cond TURN_OFF_DOXYGEN */
 namespace internal {
 
 [[nodiscard]] inline decltype(auto) owner(meta_ctx &ctx, const type_info &info) {
@@ -57,11 +53,7 @@ inline meta_func_node &meta_extend(internal::meta_type_node &parent, const id_ty
 }
 
 } // namespace internal
-
-/**
- * Internal details not to be documented.
- * @endcond
- */
+/*! @endcond */
 
 /**
  * @brief Basic meta factory to be used for reflection purposes.
@@ -92,17 +84,14 @@ class meta_factory {
 
 public:
     /*! @brief Default constructor. */
-    meta_factory() noexcept
-        : meta_factory{locator<meta_ctx>::value_or()} {}
+    meta_factory() noexcept = default;
 
     /**
      * @brief Context aware constructor.
      * @param area The context into which to construct meta types.
      */
     meta_factory(meta_ctx &area) noexcept
-        : ctx{&area},
-          bucket{},
-          info{&type_id<Type>()} {
+        : ctx{&area} {
         auto &&elem = internal::owner(*ctx, *info);
 
         if(!elem.details) {
@@ -452,9 +441,9 @@ public:
     }
 
 private:
-    meta_ctx *ctx;
-    dense_map<id_type, internal::meta_prop_node, identity> *bucket;
-    const type_info *info;
+    meta_ctx *ctx{&locator<meta_ctx>::value_or()};
+    dense_map<id_type, internal::meta_prop_node, identity> *bucket{};
+    const type_info *info{&type_id<Type>()};
 };
 
 /**

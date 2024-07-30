@@ -22,11 +22,7 @@ class meta_any;
 class meta_type;
 struct meta_handle;
 
-/**
- * @cond TURN_OFF_DOXYGEN
- * Internal details not to be documented.
- */
-
+/*! @cond TURN_OFF_DOXYGEN */
 namespace internal {
 
 enum class meta_traits : std::uint32_t {
@@ -39,9 +35,10 @@ enum class meta_traits : std::uint32_t {
     is_array = 0x0020,
     is_enum = 0x0040,
     is_class = 0x0080,
-    is_meta_pointer_like = 0x0100,
-    is_meta_sequence_container = 0x0200,
-    is_meta_associative_container = 0x0400,
+    is_pointer = 0x0100,
+    is_meta_pointer_like = 0x0200,
+    is_meta_sequence_container = 0x0400,
+    is_meta_associative_container = 0x0800,
     _entt_enum_as_bitmask
 };
 
@@ -223,6 +220,7 @@ template<typename Type>
             | (std::is_array_v<Type> ? meta_traits::is_array : meta_traits::is_none)
             | (std::is_enum_v<Type> ? meta_traits::is_enum : meta_traits::is_none)
             | (std::is_class_v<Type> ? meta_traits::is_class : meta_traits::is_none)
+            | (std::is_pointer_v<Type> ? meta_traits::is_pointer : meta_traits::is_none)
             | (is_meta_pointer_like_v<Type> ? meta_traits::is_meta_pointer_like : meta_traits::is_none)
             | (is_complete_v<meta_sequence_container_traits<Type>> ? meta_traits::is_meta_sequence_container : meta_traits::is_none)
             | (is_complete_v<meta_associative_container_traits<Type>> ? meta_traits::is_meta_associative_container : meta_traits::is_none),
@@ -237,22 +235,22 @@ template<typename Type>
     }
 
     if constexpr(std::is_arithmetic_v<Type>) {
-        node.conversion_helper = +[](void *bin, const void *value) {
-            return bin ? static_cast<double>(*static_cast<Type *>(bin) = static_cast<Type>(*static_cast<const double *>(value))) : static_cast<double>(*static_cast<const Type *>(value));
+        node.conversion_helper = +[](void *lhs, const void *rhs) {
+            return lhs ? static_cast<double>(*static_cast<Type *>(lhs) = static_cast<Type>(*static_cast<const double *>(rhs))) : static_cast<double>(*static_cast<const Type *>(rhs));
         };
     } else if constexpr(std::is_enum_v<Type>) {
-        node.conversion_helper = +[](void *bin, const void *value) {
-            return bin ? static_cast<double>(*static_cast<Type *>(bin) = static_cast<Type>(static_cast<std::underlying_type_t<Type>>(*static_cast<const double *>(value)))) : static_cast<double>(*static_cast<const Type *>(value));
+        node.conversion_helper = +[](void *lhs, const void *rhs) {
+            return lhs ? static_cast<double>(*static_cast<Type *>(lhs) = static_cast<Type>(static_cast<std::underlying_type_t<Type>>(*static_cast<const double *>(rhs)))) : static_cast<double>(*static_cast<const Type *>(rhs));
         };
     }
 
     if constexpr(!std::is_void_v<Type> && !std::is_function_v<Type>) {
-        node.from_void = +[](const meta_ctx &ctx, void *element, const void *as_const) {
-            if(element) {
-                return meta_any{ctx, std::in_place_type<std::decay_t<Type> &>, *static_cast<std::decay_t<Type> *>(element)};
+        node.from_void = +[](const meta_ctx &ctx, void *elem, const void *celem) {
+            if(elem) {
+                return meta_any{ctx, std::in_place_type<std::decay_t<Type> &>, *static_cast<std::decay_t<Type> *>(elem)};
             }
 
-            return meta_any{ctx, std::in_place_type<const std::decay_t<Type> &>, *static_cast<const std::decay_t<Type> *>(as_const)};
+            return meta_any{ctx, std::in_place_type<const std::decay_t<Type> &>, *static_cast<const std::decay_t<Type> *>(celem)};
         };
     }
 
@@ -267,11 +265,7 @@ template<typename Type>
 }
 
 } // namespace internal
-
-/**
- * Internal details not to be documented.
- * @endcond
- */
+/*! @endcond */
 
 } // namespace entt
 

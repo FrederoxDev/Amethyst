@@ -13,11 +13,7 @@
 
 namespace entt {
 
-/**
- * @cond TURN_OFF_DOXYGEN
- * Internal details not to be documented.
- */
-
+/*! @cond TURN_OFF_DOXYGEN */
 namespace internal {
 
 template<typename It>
@@ -32,12 +28,7 @@ public:
     using iterator_category = std::input_iterator_tag;
     using iterator_concept = std::forward_iterator_tag;
 
-    constexpr edge_iterator() noexcept
-        : it{},
-          vert{},
-          pos{},
-          last{},
-          offset{} {}
+    constexpr edge_iterator() noexcept = default;
 
     constexpr edge_iterator(It base, const size_type vertices, const size_type from, const size_type to, const size_type step) noexcept
         : it{std::move(base)},
@@ -70,10 +61,10 @@ public:
     friend constexpr bool operator==(const edge_iterator<Type> &, const edge_iterator<Type> &) noexcept;
 
 private:
-    It it;
-    size_type vert;
-    size_type pos;
-    size_type last;
+    It it{};
+    size_type vert{};
+    size_type pos{};
+    size_type last{};
     size_type offset{};
 };
 
@@ -88,11 +79,7 @@ template<typename Container>
 }
 
 } // namespace internal
-
-/**
- * Internal details not to be documented.
- * @endcond
- */
+/*! @endcond */
 
 /**
  * @brief Basic implementation of a directed adjacency matrix.
@@ -119,16 +106,17 @@ public:
     using vertex_iterator = iota_iterator<vertex_type>;
     /*! @brief Edge iterator type. */
     using edge_iterator = internal::edge_iterator<typename container_type::const_iterator>;
-    /*! @brief Out edge iterator type. */
+    /*! @brief Out-edge iterator type. */
     using out_edge_iterator = edge_iterator;
-    /*! @brief In edge iterator type. */
+    /*! @brief In-edge iterator type. */
     using in_edge_iterator = edge_iterator;
     /*! @brief Graph category tag. */
     using graph_category = Category;
 
     /*! @brief Default constructor. */
     adjacency_matrix() noexcept(noexcept(allocator_type{}))
-        : adjacency_matrix{0u} {}
+        : adjacency_matrix{0u} {
+    }
 
     /**
      * @brief Constructs an empty container with a given allocator.
@@ -147,12 +135,8 @@ public:
         : matrix{vertices * vertices, allocator},
           vert{vertices} {}
 
-    /**
-     * @brief Copy constructor.
-     * @param other The instance to copy from.
-     */
-    adjacency_matrix(const adjacency_matrix &other)
-        : adjacency_matrix{other, other.get_allocator()} {}
+    /*! @brief Default copy constructor. */
+    adjacency_matrix(const adjacency_matrix &) = default;
 
     /**
      * @brief Allocator-extended copy constructor.
@@ -163,12 +147,8 @@ public:
         : matrix{other.matrix, allocator},
           vert{other.vert} {}
 
-    /**
-     * @brief Move constructor.
-     * @param other The instance to move from.
-     */
-    adjacency_matrix(adjacency_matrix &&other) noexcept
-        : adjacency_matrix{std::move(other), other.get_allocator()} {}
+    /*! @brief Default move constructor. */
+    adjacency_matrix(adjacency_matrix &&) noexcept = default;
 
     /**
      * @brief Allocator-extended move constructor.
@@ -177,29 +157,22 @@ public:
      */
     adjacency_matrix(adjacency_matrix &&other, const allocator_type &allocator)
         : matrix{std::move(other.matrix), allocator},
-          vert{std::exchange(other.vert, 0u)} {}
+          vert{other.vert} {}
+
+    /*! @brief Default destructor. */
+    ~adjacency_matrix() noexcept = default;
 
     /**
      * @brief Default copy assignment operator.
-     * @param other The instance to copy from.
      * @return This container.
      */
-    adjacency_matrix &operator=(const adjacency_matrix &other) {
-        matrix = other.matrix;
-        vert = other.vert;
-        return *this;
-    }
+    adjacency_matrix &operator=(const adjacency_matrix &) = default;
 
     /**
      * @brief Default move assignment operator.
-     * @param other The instance to move from.
      * @return This container.
      */
-    adjacency_matrix &operator=(adjacency_matrix &&other) noexcept {
-        matrix = std::move(other.matrix);
-        vert = std::exchange(other.vert, 0u);
-        return *this;
-    }
+    adjacency_matrix &operator=(adjacency_matrix &&) noexcept = default;
 
     /**
      * @brief Returns the associated allocator.
@@ -223,6 +196,19 @@ public:
         using std::swap;
         swap(matrix, other.matrix);
         swap(vert, other.vert);
+    }
+
+    /**
+     * @brief Returns true if an adjacency matrix is empty, false otherwise.
+     *
+     * @warning
+     * Potentially expensive, try to avoid it on hot paths.
+     *
+     * @return True if the adjacency matrix is empty, false otherwise.
+     */
+    [[nodiscard]] bool empty() const noexcept {
+        const auto iterable = edges();
+        return (iterable.begin() == iterable.end());
     }
 
     /**
@@ -252,9 +238,9 @@ public:
     }
 
     /**
-     * @brief Returns an iterable object to visit all out edges of a vertex.
-     * @param vertex The vertex of which to return all out edges.
-     * @return An iterable object to visit all out edges of a vertex.
+     * @brief Returns an iterable object to visit all out-edges of a vertex.
+     * @param vertex The vertex of which to return all out-edges.
+     * @return An iterable object to visit all out-edges of a vertex.
      */
     [[nodiscard]] iterable_adaptor<out_edge_iterator> out_edges(const vertex_type vertex) const noexcept {
         const auto it = matrix.cbegin();
@@ -264,9 +250,9 @@ public:
     }
 
     /**
-     * @brief Returns an iterable object to visit all in edges of a vertex.
-     * @param vertex The vertex of which to return all in edges.
-     * @return An iterable object to visit all in edges of a vertex.
+     * @brief Returns an iterable object to visit all in-edges of a vertex.
+     * @param vertex The vertex of which to return all in-edges.
+     * @return An iterable object to visit all in-edges of a vertex.
      */
     [[nodiscard]] iterable_adaptor<in_edge_iterator> in_edges(const vertex_type vertex) const noexcept {
         const auto it = matrix.cbegin();

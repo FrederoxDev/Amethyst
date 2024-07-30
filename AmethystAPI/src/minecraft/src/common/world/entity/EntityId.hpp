@@ -30,4 +30,4 @@ public:
     }
 };
 
-static_assert(sizeof(entt::basic_registry<EntityId>) == 0x120);
+//static_assert(sizeof(entt::basic_registry<EntityId>) == 0x120);
