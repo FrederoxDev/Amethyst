@@ -15,8 +15,9 @@ namespace mce {
     class MaterialPtr {
     public:
         std::shared_ptr<RenderMaterialInfo> mRenderMaterialInfoPtr;
-
-    public:
-        MaterialPtr(mce::RenderMaterialGroupBase& materialGroup, const HashedString& materialName);
+     
+     // error LNK2005
+    // public:
+   // MaterialPtr(mce::RenderMaterialGroupBase& materialGroup, const HashedString& materialName);
     };
 }
