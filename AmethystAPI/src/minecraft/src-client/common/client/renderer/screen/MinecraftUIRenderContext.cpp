@@ -30,10 +30,10 @@
 //    return reinterpret_cast<function>(this->vtable[6])(this, deltaTime);
 //}
 //
-//void MinecraftUIRenderContext::drawImage(const mce::TexturePtr& texture, const glm::tvec2<float>* position, const glm::tvec2<float>* size, glm::tvec2<float>* uv, glm::tvec2<float>* uvSize, int degree)
+//void MinecraftUIRenderContext::drawImage(const mce::TexturePtr& texture, const glm::tvec2<float>* position, const glm::tvec2<float>* size, glm::tvec2<float>* uv, glm::tvec2<float>* uvSize)
 //{
-//    using function = void(__thiscall*)(MinecraftUIRenderContext*, const mce::TexturePtr&, const glm::tvec2<float>*, const glm::tvec2<float>*, glm::tvec2<float>*, glm::tvec2<float>*, int);
-//    return reinterpret_cast<function>(this->vtable[7])(this, texture, position, size, uv, uvSize, degree);
+//    using function = void(__thiscall*)(MinecraftUIRenderContext*, const mce::TexturePtr&, const glm::tvec2<float>*, const glm::tvec2<float>*, glm::tvec2<float>*, glm::tvec2<float>*);
+//    return reinterpret_cast<function>(this->vtable[7])(this, texture, position, size, uv, uvSize);
 //}
 //
 //void MinecraftUIRenderContext::drawNineslice(const mce::TexturePtr* texture, const NinesliceInfo* nineslice) {
