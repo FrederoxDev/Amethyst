@@ -124,8 +124,8 @@ void CreateModFunctionHooks() {
         auto scan = SigScanSafe(signature);                                                                                                 \
         if (!scan.has_value()) Log::Warning("[SAFE_HOOK] SigScan failed for {}::{}, signature = {}", #className, #functionName, signature); \
         else {                                                                                                                              \
-            hookManager->RegisterFunction<&className::functionName>(scan.value());                                                           \
-            hookManager->CreateHook<&className::functionName>(_##className##_##functionName, &className##_##functionName);                   \
+            hookManager->RegisterFunction<&className::functionName>(scan.value());                                                          \
+            hookManager->CreateHook<&className::functionName>(_##className##_##functionName, &className##_##functionName);                  \
         }                                                                                                                                   \
     }
 
