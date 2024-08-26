@@ -11,7 +11,7 @@ SafetyHookInline _Minecraft_update;
 SafetyHookInline _VanillaItems_registerItems;
 SafetyHookInline _BlockDefinitionGroup_registerBlocks;
 SafetyHookInline _LevelRenderer_renderLevel;
-SafetyHookInline _ClientInstance_ClientInstance;
+SafetyHookInline _ClientInstance__ClientInstance;
 SafetyHookInline _BlockGraphics_initBlocks;
 
 void ScreenView_setupAndRender(ScreenView* self, UIRenderContext* ctx)
@@ -82,18 +82,18 @@ void LevelEvent(Level* level) {
     AmethystRuntime::getEventBus()->Invoke(event);
 }
 
-void* ClientInstance_ClientInstance(ClientInstance* self, uint64_t a2, uint64_t a3, uint64_t a4, char a5, void* a6, void* a7, uint64_t a8, void* a9) {
-    void* ret = _ClientInstance_ClientInstance.call<void*>(self, a2, a3, a4, a5, a6, a7, a8, a9);
+void* ClientInstance__ClientInstance(ClientInstance* self, uint64_t a2, uint64_t a3, uint64_t a4, char a5, void* a6, void* a7, uint64_t a8, void* a9) {
+    void* ret = _ClientInstance__ClientInstance.call<void*>(self, a2, a3, a4, a5, a6, a7, a8, a9);
 
     AmethystRuntime::getContext()->mClientInstance = self;
 
     return ret;
 }
 
-SafetyHookInline _Minecraft_Minecraft;
+SafetyHookInline _Minecraft__Minecraft;
 
-Minecraft* Minecraft_Minecraft(Minecraft* a1, void* a2, void* a3, void* a4, void* a5, void* a6, void* a7, void* a8, void* a9, void* a10, char a11, void* a12, void* a13, void* a14, void* a15) {
-    _Minecraft_Minecraft.call<Minecraft*>(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15);
+Minecraft* Minecraft__Minecraft(Minecraft* a1, void* a2, void* a3, void* a4, void* a5, void* a6, void* a7, void* a8, void* a9, void* a10, char a11, void* a12, void* a13, void* a14, void* a15) {
+    _Minecraft__Minecraft.call<Minecraft*>(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13, a14, a15);
     AmethystContext* ctx = AmethystRuntime::getContext();
     
     if (ctx->mClientMinecraft == nullptr) {
@@ -119,30 +119,23 @@ void BlockGraphics_initBlocks(ResourcePackManager& resources, const Experiments&
 void CreateModFunctionHooks() {
     Amethyst::HookManager* hookManager = AmethystRuntime::getHookManager();
 
-    hookManager->RegisterFunction<&ScreenView::setupAndRender>("48 8B C4 48 89 58 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D A8 ? ? ? ? 48 81 EC ? ? ? ? 0F 29 70 ? 0F 29 78 ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4C 8B FA");
-    hookManager->CreateHook<&ScreenView::setupAndRender>(_ScreenView_setupAndRender, &ScreenView_setupAndRender);
+    // i hope its fine to declare macros inside a function, because im doing it right now
+    #define NO_THROW_HOOK(className, functionName, signature) {                                                                             \
+        auto scan = SigScanSafe(signature);                                                                                                 \
+        if (!scan.has_value()) Log::Warning("[SAFE_HOOK] SigScan failed for {}::{}, signature = {}", #className, #functionName, signature); \
+        else {                                                                                                                              \
+            hookManager->RegisterFunction<&className::functionName>(scan.value());                                                           \
+            hookManager->CreateHook<&className::functionName>(_##className##_##functionName, &className##_##functionName);                   \
+        }                                                                                                                                   \
+    }
 
-    hookManager->RegisterFunction<&Minecraft::update>("48 8B C4 48 89 58 ? 48 89 70 ? 48 89 78 ? 55 41 54 41 55 41 56 41 57 48 8D A8 ? ? ? ? 48 81 EC ? ? ? ? 0F 29 70 ? 0F 29 78 ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4C 8B E9 48 89 4C 24");
-    hookManager->CreateHook<&Minecraft::update>(_Minecraft_update, &Minecraft_update);
-
-    hookManager->RegisterFunction<&ClientInstance::onStartJoinGame>("40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 45 8B F1");
-    hookManager->CreateHook<&ClientInstance::onStartJoinGame>(_ClientInstance_onStartJoinGame, &ClientInstance_onStartJoinGame);
-    
-    hookManager->RegisterFunction<&ClientInstance::requestLeaveGame>("48 89 5C 24 ? 48 89 74 24 ? 55 57 41 54 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 45 0F B6 F0 44 0F B6 FA");
-    hookManager->CreateHook<&ClientInstance::requestLeaveGame>(_ClientInstance_requestLeaveGame, &ClientInstance_requestLeaveGame);
-    
-    hookManager->RegisterFunction<&ClientInstance::_ClientInstance>("48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 49 8B F9 49 8B D8 4C 8B E2");
-    hookManager->CreateHook<&ClientInstance::_ClientInstance>(_ClientInstance_ClientInstance, &ClientInstance_ClientInstance);
-
-    hookManager->RegisterFunction<&VanillaItems::registerItems>("40 55 53 56 57 41 54 41 56 41 57 48 8D AC 24 ? ? ? ? B8 ? ? ? ? E8 ? ? ? ? 48 2B E0 0F 29 B4 24");
-    hookManager->CreateHook<&VanillaItems::registerItems>(_VanillaItems_registerItems, &VanillaItems_registerItems);
-
-    hookManager->RegisterFunction<&BlockDefinitionGroup::registerBlocks>("48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 57 41 54 41 55 41 56 41 57 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 84 24 ? ? ? ? 45 33 E4");
-    hookManager->CreateHook<&BlockDefinitionGroup::registerBlocks>(_BlockDefinitionGroup_registerBlocks, &BlockDefinitionGroup_registerBlocks);
-    
-    hookManager->RegisterFunction<&BlockGraphics::initBlocks>("48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4C 8B E2 48 89 95 ? ? ? ? 4C 8B F9 48 89 4D");
-    hookManager->CreateHook<&BlockGraphics::initBlocks>(_BlockGraphics_initBlocks, &BlockGraphics_initBlocks);
-
-    hookManager->RegisterFunction<&Minecraft::_Minecraft>("48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 4D 8B E1 49 8B D8 4C 8B EA");
-    hookManager->CreateHook<&Minecraft::_Minecraft>(_Minecraft_Minecraft, &Minecraft_Minecraft);
+    NO_THROW_HOOK(ScreenView, setupAndRender, "48 8B C4 48 89 58 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D A8 ? ? ? ? 48 81 EC ? ? ? ? 0F 29 70 ? 0F 29 78 ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4C 8B FA");
+    NO_THROW_HOOK(Minecraft, update, "48 8B C4 48 89 58 ? 48 89 70 ? 48 89 78 ? 55 41 54 41 55 41 56 41 57 48 8D A8 ? ? ? ? 48 81 EC ? ? ? ? 0F 29 70 ? 0F 29 78 ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4C 8B E9 48 89 4C 24");
+    NO_THROW_HOOK(ClientInstance, onStartJoinGame, "40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 45 8B F1");
+    NO_THROW_HOOK(ClientInstance, requestLeaveGame, "48 89 5C 24 ? 48 89 74 24 ? 55 57 41 54 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 45 0F B6 F0 44 0F B6 FA");
+    NO_THROW_HOOK(ClientInstance, _ClientInstance, "48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 49 8B F9 49 8B D8 4C 8B E2");
+    NO_THROW_HOOK(VanillaItems, registerItems, "40 55 53 56 57 41 54 41 56 41 57 48 8D AC 24 ? ? ? ? B8 ? ? ? ? E8 ? ? ? ? 48 2B E0 0F 29 B4 24");
+    NO_THROW_HOOK(BlockDefinitionGroup, registerBlocks, "48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 57 41 54 41 55 41 56 41 57 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 84 24 ? ? ? ? 45 33 E4");
+    NO_THROW_HOOK(BlockGraphics, initBlocks, "48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4C 8B E2 48 89 95 ? ? ? ? 4C 8B F9 48 89 4D");
+    NO_THROW_HOOK(Minecraft, _Minecraft, "48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 4D 8B E1 49 8B D8 4C 8B EA");
 }
