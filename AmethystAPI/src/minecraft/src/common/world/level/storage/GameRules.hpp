@@ -43,8 +43,10 @@ enum GameRulesIndex {
 
 class GameRule {
 public:
-    /* this + 0 */ std::byte padding0[8];
-    /* this + 8 */ std::string mName;
+    /* this + 0  */ std::byte padding0[4];
+    /* this + 4  */ bool mEnabled;
+    /* this + 5  */ std::byte padding5[3];
+    /* this + 8  */ std::string mName;
     /* this + 40 */ std::byte padding40[3];
     /* this + 43 */ bool mRequiresCheats;
     /* this + 44 */ std::byte padding44[132];

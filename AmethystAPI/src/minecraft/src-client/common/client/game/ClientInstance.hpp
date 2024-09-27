@@ -1,6 +1,7 @@
 #pragma once
 #include <cstdint>
 #include <functional>
+#include <string>
 #include <memory>
 #include "minecraft/src-deps/renderer/Camera.hpp"
 
