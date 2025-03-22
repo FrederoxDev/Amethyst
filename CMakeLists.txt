@@ -15,7 +15,7 @@ set(CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Choose the type of build, op
 FetchContent_Declare(
     libhat
     GIT_REPOSITORY  https://github.com/BasedInc/libhat.git
-    GIT_TAG         9ef05d6961ce37a4c801f11159de895aa21878a9
+    GIT_TAG         3321c66b7e699e5585948bdb663c105efa48c680
 )
 FetchContent_MakeAvailable(libhat)
 
