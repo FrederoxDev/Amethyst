@@ -1,4 +1,5 @@
 #include "minecraft/src/common/world/item/ItemStackBase.hpp"
+#include "minecraft/src/common/world/item/Item.hpp"
 #include <amethyst/Memory.hpp>
 
 //std::string ItemStackBase::getRawNameId() const
@@ -122,4 +123,16 @@ ItemStackBase &ItemStackBase::operator=(const ItemStackBase& rhs) {
     // setUserData(clonedData);
     // _cloneComponents(rhs)
     return *this;
+}
+
+bool ItemStackBase::isNull() const {
+    if (!mValid) return true;
+    Item* item = mItem.get();
+
+    if (!item || item->mFullName != HashedString("minecraft:air")) {
+        if (mCount != 0 || mBlock != nullptr || mAuxValue != 0) return false;
+        if (item || mUserData != 0 || mCanDestroyHash != 0 || mCanPlaceOnHash != 0) return false;
+    }
+
+    return true;
 }

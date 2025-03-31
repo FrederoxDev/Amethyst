@@ -12,6 +12,7 @@ struct StateVectorComponent;
 struct ActorRotationComponent;
 class DefaultDataLoadHelper;
 class CompoundTag;
+class ILevel;
 
 struct BuiltInActorComponents {
     gsl::not_null<StateVectorComponent*> mStateVectorComponent;
@@ -39,7 +40,8 @@ public:
     /* this + 32  */ ActorInitializationMethod mInitMethod;
     /* this + 33  */ std::byte padding33[576 - 33];
     /* this + 576 */ std::weak_ptr<Dimension> mDimension; // moved -16 in 1.21
-    /* this + 592 */ std::byte padding592[64];
+    /* this + 592 */ ILevel* mLevel;
+    /* this + 600 */ std::byte padding592[56];
     /* this + 656 */ BuiltInActorComponents mBuiltInComponents; // 1.21
     /* this + 688 */ std::byte padding688[536];
 

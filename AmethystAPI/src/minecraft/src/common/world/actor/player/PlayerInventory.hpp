@@ -16,7 +16,19 @@ enum ContainerID : unsigned char {
     CONTAINER_ID_PLAYER_ONLY_UI = 0x007c,
 };
 
-class PlayerInventory {
+// yes these two funcs come before the destructors
+
+class ContainerSizeChangeListener {
+    virtual void containerSizeChanged(int);
+    virtual ~ContainerSizeChangeListener() = default;
+};
+
+class ContainerContentChangeListener {
+    virtual void containerContentChanged(int); 
+    virtual ~ContainerContentChangeListener() = default;
+};
+
+class PlayerInventory : public ContainerSizeChangeListener, public ContainerContentChangeListener {
 public:
     class SlotData {
     public:
@@ -25,13 +37,14 @@ public:
     };
 
 public:
-    uintptr_t** vtable0; // PlayerInventory::`vftable'{for `ContainerSizeChangeListener'}
-    uintptr_t** vtable1; // PlayerInventory::`vftable'{for `ContainerContentChangeListener'}
     int32_t mSelected;
     ItemStack mInfiniteItem;
+    ContainerID mSelectedContainerId;
     std::unique_ptr<Inventory> mInventory;
     std::vector<ItemStack> mComplexItems;
     std::weak_ptr<HudContainerManagerModel> mHudContainerManager;
+
+    virtual void createTransactionContext(std::function<void>(Container&, int, const ItemStack&, const ItemStack&), std::function<void()>);
 };
 
 //static_assert(offsetof(PlayerInventory, mInventory) == 224);

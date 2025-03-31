@@ -74,7 +74,7 @@ public:
     /* this + 168 */ std::string mDescriptionId;
     /* this + 200 */ HashedString mRawNameId;
     /* this + 248 */ std::string mNamespace;
-    /* this + 280 */ std::byte padding280[48];
+    /* this + 280 */ HashedString mFullName;
     /* this + 328 */ short mMaxUseDuration;
     /* this + 330 */ bool unknown0 : 1;
     /* this + 330 */ bool unknown1 : 1;
