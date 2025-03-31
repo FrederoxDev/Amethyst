@@ -61,8 +61,9 @@ void VanillaItems_registerItems(
     _VanillaItems_registerItems.fastcall(a1, itemRegistry, baseGameVersion, experiments);
 
     //std::shared_ptr<ItemRegistry> registry = itemRegistry.mItemRegistry.lock();
-    //RegisterItemsEvent event(*registry.get());
-    //AmethystRuntime::getEventBus()->Invoke(event);
+    ItemRegistry* registry = itemRegistry->mItemRegistry.lock().get();
+    RegisterItemsEvent event(*registry);
+    AmethystRuntime::getEventBus()->Invoke(event);
 }
 
 void BlockDefinitionGroup_registerBlocks(BlockDefinitionGroup* self) {

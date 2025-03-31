@@ -33,6 +33,11 @@ const std::string& Item::getRawNameId() const {
     return mRawNameId.getString();
 }
 
+void Item::setAllowOffhand(bool allowsOffhand)
+{
+    mAllowOffhand = allowsOffhand;
+}
+
 //
 //uint64_t Item::getMaxDamage() const
 //{

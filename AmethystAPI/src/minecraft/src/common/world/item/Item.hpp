@@ -76,7 +76,15 @@ public:
     /* this + 248 */ std::string mNamespace;
     /* this + 280 */ std::byte padding280[48];
     /* this + 328 */ short mMaxUseDuration;
-    /* this + 330 */ std::byte padding330[126];
+    /* this + 330 */ bool unknown0 : 1;
+    /* this + 330 */ bool unknown1 : 1;
+    /* this + 330 */ bool unknown2 : 1;
+    /* this + 330 */ bool unknown3 : 1;
+    /* this + 330 */ bool unknown4 : 1;
+    /* this + 330 */ bool unknown5 : 1;
+    /* this + 330 */ bool unknown6 : 1;
+    /* this + 330 */ bool mAllowOffhand : 1;
+    /* this + 331 */ std::byte padding331[125];   
     /* this + 456 */ WeakPtr<BlockLegacy> mLegacyBlock;
     /* this + 464 */ CreativeItemCategory mCreativeCategory;
     /* this + 468 */ std::byte padding468[132];
@@ -208,6 +216,7 @@ public:
     Item(const std::string&, short);
     short getDamageValue(CompoundTag* mUserData) const;
     const std::string& getRawNameId() const;
+    void setAllowOffhand(bool allowsOffhand);
 
     // 1.20.51.1 - 48 89 4C 24 ? 53 48 81 EC ? ? ? ? 48 8B D9 45 33 C9
     static void addCreativeItem(ItemRegistryRef*, const Block*);

@@ -31,6 +31,7 @@ enum ActorInitializationMethod : __int8 {
     LEGACY = 0x7,
 };
 
+#pragma pack(push, 1)
 class Actor {
 public:
     /* this + 0   */ uintptr_t** vtable;
@@ -69,5 +70,6 @@ public:
     int load(const CompoundTag&, DefaultDataLoadHelper&);
     void reload();
 };
+#pragma pack(pop)   
 
 static_assert(sizeof(Actor) == 1224);

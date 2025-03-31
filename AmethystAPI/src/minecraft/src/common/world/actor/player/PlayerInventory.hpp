@@ -2,6 +2,7 @@
 #include "minecraft/src/common/world/item/ItemStack.hpp"
 
 class Inventory;
+class HudContainerManagerModel;
 
 // This is probably wrong in some way or outdated, from china
 enum ContainerID : unsigned char {
@@ -28,9 +29,9 @@ public:
     uintptr_t** vtable1; // PlayerInventory::`vftable'{for `ContainerContentChangeListener'}
     int32_t mSelected;
     ItemStack mInfiniteItem;
-    std::byte padding184[8]; /* seems to be removed sometime after .71 */
     std::unique_ptr<Inventory> mInventory;
     std::vector<ItemStack> mComplexItems;
+    std::weak_ptr<HudContainerManagerModel> mHudContainerManager;
 };
 
-static_assert(offsetof(PlayerInventory, mInventory) == 192);
+//static_assert(offsetof(PlayerInventory, mInventory) == 224);

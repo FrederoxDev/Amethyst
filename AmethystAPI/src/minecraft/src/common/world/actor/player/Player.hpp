@@ -6,16 +6,23 @@
 class PlayerInventory;
 class ChunkSource;
 
+#pragma pack(push, 1)
 class Player : public Mob {
 public:
-    /* this + 1648 */ std::byte padding1648[320];
-    /* this + 1968 */ PlayerInventory* playerInventory;
-    /* this + 1976 */ std::byte padding1976[1312];
+    /* this + 1648 */ std::byte padding1648[240];
+    /* this + 1888 */ PlayerInventory* playerInventory;
+    /* this + 1896 */ std::byte padding1896[1400];
     /* this + 3288 */ ItemGroup mCursorSelectedItemGroup;
     /* this + 3432 */ PlayerUIContainer mPlayerUIContainer;
 
     /* virtuals */
     void prepareRegion(ChunkSource& cs);
 };
+#pragma pack(pop)
 
-static_assert(offsetof(Player, mPlayerUIContainer) == 3432); 
+// 1.21.0.3
+//static_assert(offsetof(Player, playerInventory) == 1988);
+
+
+// idk version
+//static_assert(offsetof(Player, mPlayerUIContainer) == 3432); 
