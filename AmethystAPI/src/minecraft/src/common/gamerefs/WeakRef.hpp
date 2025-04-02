@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 #include <cstddef>
+#include "minecraft/src/common/world/entity/EntityContext.hpp"
 
 template <typename T>
 class WeakRef {
@@ -96,3 +97,5 @@ public:
 
     constexpr T* operator->() const { return get(); }
 };
+
+class WeakEntityRef : public WeakRef<EntityContext> {};

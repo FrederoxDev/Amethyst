@@ -13,6 +13,7 @@ struct ActorRotationComponent;
 class DefaultDataLoadHelper;
 class CompoundTag;
 class ILevel;
+class BlockSource;
 
 struct BuiltInActorComponents {
     gsl::not_null<StateVectorComponent*> mStateVectorComponent;
@@ -43,7 +44,7 @@ public:
     /* this + 592 */ ILevel* mLevel;
     /* this + 600 */ std::byte padding592[56];
     /* this + 656 */ BuiltInActorComponents mBuiltInComponents; // 1.21
-    /* this + 688 */ std::byte padding688[536];
+    /* this + 688 */ std::byte padding688[408];
 
 public:
     Vec3* getPosition() const;
@@ -51,6 +52,7 @@ public:
     void moveTo(const Vec3&, const Vec2&);
 
     const Dimension& getDimensionConst() const;
+    const BlockSource& getDimensionBlockSourceConst() const;
     bool hasDimension() const;
     void setDimension(WeakRef<Dimension> dimension);
 
@@ -74,4 +76,5 @@ public:
 };
 #pragma pack(pop)   
 
-static_assert(sizeof(Actor) == 1224);
+// 1.21.0.3
+static_assert(sizeof(Actor) == 1096);

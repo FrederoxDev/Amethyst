@@ -1,6 +1,8 @@
 #pragma once
+#include <functional>
 #include "minecraft/src/common/world/item/ItemStack.hpp"
 
+class Container;
 class Inventory;
 class HudContainerManagerModel;
 
@@ -44,7 +46,13 @@ public:
     std::vector<ItemStack> mComplexItems;
     std::weak_ptr<HudContainerManagerModel> mHudContainerManager;
 
-    virtual void createTransactionContext(std::function<void>(Container&, int, const ItemStack&, const ItemStack&), std::function<void()>);
+    virtual ~PlayerInventory();
+    virtual void createTransactionContext(
+        std::function<void __cdecl(Container&, int, ItemStack const&, ItemStack const&)> callback,
+        std::function<void __cdecl(void)> execute
+    );
+
+    const ItemStack& getSelectedItem() const;
 };
 
 //static_assert(offsetof(PlayerInventory, mInventory) == 224);

@@ -1,5 +1,6 @@
 #include <amethyst/Memory.hpp>
 #include "minecraft/src/common/world/actor/Actor.hpp"
+#include "minecraft/src/common/world/level/dimension/Dimension.hpp"
 #include "minecraft/src/common/world/entity/components/ActorHeadRotationComponent.hpp"
 #include "minecraft/src/common/world/entity/components/ActorRotationComponent.hpp"
 #include "minecraft/src/common/world/entity/components/StateVectorComponent.hpp"
@@ -24,6 +25,11 @@ void Actor::moveTo(const Vec3& a1, const Vec2& a2)
 const Dimension& Actor::getDimensionConst() const
 {
     return *mDimension.lock();
+}
+
+const BlockSource& Actor::getDimensionBlockSourceConst() const
+{
+    return *getDimensionConst().mBlockSource.get();
 }
 
 bool Actor::hasDimension() const

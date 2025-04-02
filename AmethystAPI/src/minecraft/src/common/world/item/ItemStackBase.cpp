@@ -136,3 +136,7 @@ bool ItemStackBase::isNull() const {
 
     return true;
 }
+
+const Item* ItemStackBase::getItem() const {
+    return mItem.get();
+}

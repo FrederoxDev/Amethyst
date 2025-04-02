@@ -29,8 +29,13 @@ enum LevelSoundEvent {};
 } // namespace Puv
 
 class InteractionResult {
+    enum class Result : int32_t {
+        SUCCESS,
+        SWING
+    };
+
 public:
-    int mResult;
+    Result mResult;
 };
 
 // Auto-generated: Forward declarations
