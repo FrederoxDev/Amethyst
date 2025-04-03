@@ -89,6 +89,8 @@ public:
     {
         return x == other.x && y == other.y && z == other.z;
     }
+
+    BlockPos(const BlockPos& other) : x(other.x), y(other.y), z(other.z) {}
 };
 
 // BinaryStream specialization

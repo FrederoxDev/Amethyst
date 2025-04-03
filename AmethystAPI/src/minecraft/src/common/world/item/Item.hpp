@@ -209,9 +209,7 @@ public:
     virtual void playSoundIncrementally(const ItemStack& itemStack, Mob& mob) const;
     virtual float getFurnaceXPmultiplier(const ItemStackBase& instance) const;
     virtual std::string getAuxValuesDescription() const;
-    virtual bool calculatePlacePos(ItemStackBase& instance, Actor& entity, unsigned char& face, BlockPos& pos) const;
-
-private:
+    virtual bool calculatePlacePos(ItemStackBase& instance, Actor& entity, FacingID& face, BlockPos& pos) const;
     virtual bool _checkUseOnPermissions(Actor& entity, ItemStackBase& item, const unsigned char& face, const BlockPos& pos) const;
     virtual bool _calculatePlacePos(ItemStackBase& instance, Actor& entity, unsigned char& face, BlockPos& pos) const;
     virtual bool _shouldAutoCalculatePlacePos() const;

@@ -53,8 +53,14 @@ public:
 
     const Dimension& getDimensionConst() const;
     const BlockSource& getDimensionBlockSourceConst() const;
+    BlockSource& getDimensionBlockSource() const;
     bool hasDimension() const;
     void setDimension(WeakRef<Dimension> dimension);
+
+    ILevel* getLevel() const
+    {
+        return mLevel;
+    }
 
     // Generics
     template <typename T>

@@ -6,6 +6,8 @@
 class PlayerInventory;
 class ChunkSource;
 class ItemStackNetManagerBase;
+class PlayerEventCoordinator;
+class InventoryTransaction;
 
 #pragma pack(push, 1)
 class Player : public Mob {
@@ -23,6 +25,8 @@ public:
     void prepareRegion(ChunkSource& cs);
     const PlayerInventory& getSupplies() const;
     const ItemStack& getSelectedItem() const;
+    PlayerEventCoordinator* getPlayerEventCoordinator(); // pure virt
+    void sendInventoryTransaction(const InventoryTransaction& transaction); // pure virt
 };
 #pragma pack(pop)
 

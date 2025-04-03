@@ -50,3 +50,7 @@ mce::Color Block::getMapColor(BlockSource& region, const BlockPos& pos) const
 {
     return this->mLegacyBlock->getMapColor(region, pos, *this);
 }
+
+bool Block::canBeBuiltOver(BlockSource& region, const BlockPos& pos) const {
+    return mLegacyBlock->canBeBuiltOver(region, pos);
+}

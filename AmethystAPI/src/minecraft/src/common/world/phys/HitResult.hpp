@@ -1,5 +1,8 @@
 #pragma once
 #include "minecraft/src/common/gamerefs/WeakRef.hpp"
+#include "minecraft/src/common/world/Facing.hpp"
+#include "minecraft/src/common/world/level/BlockPos.hpp"
+#include "minecraft/src/common/world/phys/Vec3.hpp"
 
 enum class HitResultType : __int32 {
     TILE = 0x0,

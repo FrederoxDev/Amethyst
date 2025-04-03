@@ -32,6 +32,11 @@ const BlockSource& Actor::getDimensionBlockSourceConst() const
     return *getDimensionConst().mBlockSource.get();
 }
 
+BlockSource& Actor::getDimensionBlockSource() const
+{
+    return *getDimensionConst().mBlockSource.get();
+}
+
 bool Actor::hasDimension() const
 {
     return mDimension.lock() != nullptr;

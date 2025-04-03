@@ -12,6 +12,8 @@
 //("gsl::not_null<BlockLegacy*>", "mLegacyBlock", 8, 0x30),
 //]
 
+typedef uint32_t BlockRuntimeId;
+
 namespace mce {
 class Color;
 }
@@ -23,7 +25,10 @@ class Block : public BlockComponentStorage {
 public:
     /* this + 40  */ const uint16_t mData;
     /* this + 48  */ gsl::not_null<class BlockLegacy*> mLegacyBlock;
-    /* this + 56  */ std::byte padding56[152];
+    /* this + 56  */ std::byte padding56[140];
+    /* this + 196 */ BlockRuntimeId mNetworkId;
+    /* this + 204 */ bool mHasRuntimeId;
+
 
 public:
     // Circular dependency between this and BlockLegacy because of permutations vector
@@ -40,6 +45,12 @@ public:
     // Needed because `BlockLegacy::getMapColor` is a protected function and the Block class
     // is its friend, how adorable..
     mce::Color getMapColor(BlockSource& region, const BlockPos& pos) const;
+
+    bool canBeBuiltOver(BlockSource& region, const BlockPos&) const;
+
+    BlockRuntimeId getRuntimeId() const {
+        return mNetworkId;
+    }
 };
 
 static_assert(sizeof(Block) == 208);

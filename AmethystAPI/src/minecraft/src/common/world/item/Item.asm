@@ -584,28 +584,28 @@ global ?getAuxValuesDescription@Item@@UEBA?AV?$basic_string@DU?$char_traits@D@st
 	mov rax, [rel Item_vtable]
 	jmp [rax + 904]
 
-global ?calculatePlacePos@Item@@UEBA_NAEAVItemStackBase@@AEAVActor@@AEAEAEAVBlockPos@@@Z
-?calculatePlacePos@Item@@UEBA_NAEAVItemStackBase@@AEAVActor@@AEAEAEAVBlockPos@@@Z:
+global ?calculatePlacePos@Item@@UEBA_NAEAVItemStackBase@@AEAVActor@@AEAW4Name@Facing@@AEAVBlockPos@@@Z
+?calculatePlacePos@Item@@UEBA_NAEAVItemStackBase@@AEAVActor@@AEAW4Name@Facing@@AEAVBlockPos@@@Z:
 	mov rax, [rel Item_vtable]
 	jmp [rax + 912]
 
-global ?_checkUseOnPermissions@Item@@EEBA_NAEAVActor@@AEAVItemStackBase@@AEBEAEBVBlockPos@@@Z
-?_checkUseOnPermissions@Item@@EEBA_NAEAVActor@@AEAVItemStackBase@@AEBEAEBVBlockPos@@@Z:
+global ?_checkUseOnPermissions@Item@@UEBA_NAEAVActor@@AEAVItemStackBase@@AEBEAEBVBlockPos@@@Z
+?_checkUseOnPermissions@Item@@UEBA_NAEAVActor@@AEAVItemStackBase@@AEBEAEBVBlockPos@@@Z:
 	mov rax, [rel Item_vtable]
 	jmp [rax + 920]
 
-global ?_calculatePlacePos@Item@@EEBA_NAEAVItemStackBase@@AEAVActor@@AEAEAEAVBlockPos@@@Z
-?_calculatePlacePos@Item@@EEBA_NAEAVItemStackBase@@AEAVActor@@AEAEAEAVBlockPos@@@Z:
+global ?_calculatePlacePos@Item@@UEBA_NAEAVItemStackBase@@AEAVActor@@AEAEAEAVBlockPos@@@Z
+?_calculatePlacePos@Item@@UEBA_NAEAVItemStackBase@@AEAVActor@@AEAEAEAVBlockPos@@@Z
 	mov rax, [rel Item_vtable]
 	jmp [rax + 928]
 
-global ?_shouldAutoCalculatePlacePos@Item@@EEBA_NXZ
-?_shouldAutoCalculatePlacePos@Item@@EEBA_NXZ:
+global ?_shouldAutoCalculatePlacePos@Item@@UEBA_NXZ
+?_shouldAutoCalculatePlacePos@Item@@UEBA_NXZ:
 	mov rax, [rel Item_vtable]
 	jmp [rax + 936]
 
-global ?_useOn@Item@@EEBA?AVInteractionResult@@AEAVItemStack@@AEAVActor@@VBlockPos@@EAEBVVec3@@@Z
-?_useOn@Item@@EEBA?AVInteractionResult@@AEAVItemStack@@AEAVActor@@VBlockPos@@EAEBVVec3@@@Z:
+global ?_useOn@Item@@UEBA?AVInteractionResult@@AEAVItemStack@@AEAVActor@@VBlockPos@@EAEBVVec3@@@Z
+?_useOn@Item@@UEBA?AVInteractionResult@@AEAVItemStack@@AEAVActor@@VBlockPos@@EAEBVVec3@@@Z:
 	mov rax, [rel Item_vtable]
 	jmp [rax + 944]
 
