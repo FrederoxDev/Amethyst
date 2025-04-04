@@ -8,7 +8,8 @@ public:
         NORTH,
         SOUTH,
         WEST,
-        EAST
+        EAST,
+        MAX
     };
 
     static Facing::Name getOpposite(Facing::Name face);

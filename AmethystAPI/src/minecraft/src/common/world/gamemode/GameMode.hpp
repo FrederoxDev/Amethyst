@@ -4,6 +4,7 @@
 #include "minecraft/src/common/world/level/BlockPos.hpp"
 #include "minecraft/src/common/world/phys/Vec3.hpp"
 #include "minecraft/src/common/world/Facing.hpp"
+#include "minecraft/src/common/world/item/Item.hpp"
 
 class Player;
 class IGameModeTimer;
@@ -24,7 +25,6 @@ public:
         unsigned char mContinueFacing;
     };
 
-    uint64_t vtable;
     Player& mPlayer;
     BlockPos mDestroyBlockPos;
     uint8_t mDestroyBlockFace;
@@ -49,4 +49,18 @@ public:
     std::unique_ptr<IGameModeMessenger> mMessenger;
 
     BlockPos _calculatePlacePos(ItemStack& heldStack, const BlockPos& pos, FacingID& face);
+
+    virtual ~GameMode() = default;
+    virtual void ukn1();
+    virtual void ukn2();
+    virtual void ukn3();
+    virtual void ukn4();
+    virtual void ukn5();
+    virtual void ukn6();
+    virtual void ukn7();
+    virtual void ukn8();
+    virtual void ukn9();
+    virtual void ukn10();
+    virtual void ukn11();
+    virtual InteractionResult useItemOn(ItemStack& item, const BlockPos& pos, FacingID face, const Vec3& clickPos, const Block* block);
 };

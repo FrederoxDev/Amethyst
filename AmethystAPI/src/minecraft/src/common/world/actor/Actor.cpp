@@ -62,3 +62,8 @@ void Actor::reload()
     static auto func = std::bit_cast<function>(SigScan("48 89 5C 24 ? 48 89 74 24 ? 55 57 41 54 41 56 41 57 48 8B EC 48 83 EC ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 48 8B F1 45 33 E4"));
     return (this->*func)();
 }
+
+bool Actor::isClientSide() const
+{
+    return mLevel->isClientSide();
+}

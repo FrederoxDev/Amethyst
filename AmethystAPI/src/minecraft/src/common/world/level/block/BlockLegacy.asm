@@ -189,8 +189,8 @@ global ?isWaterBlocking@BlockLegacy@@UEBA_NXZ
 	jmp [rax + 264]
 
 ; BlockLegacy_vtable[34] is unknown
-global ?_unknown_34@BlockLegacy@@UEAAXXZ
-?_unknown_34@BlockLegacy@@UEAAXXZ:
+global ?isFenceBlock@BlockLegacy@@UEAA_NXZ
+?isFenceBlock@BlockLegacy@@UEAA_NXZ:
 	mov rax, [rel BlockLegacy_vtable]
 	jmp [rax + 272]
 

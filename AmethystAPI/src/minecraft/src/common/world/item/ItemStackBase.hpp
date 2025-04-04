@@ -74,6 +74,8 @@ public:
     const Item* getItem() const;
 
     bool isNull() const;
+
+    void setUserData(std::unique_ptr<CompoundTag> userData);
 };
 
 static_assert(sizeof(ItemStackBase) == 0x88);

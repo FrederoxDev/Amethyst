@@ -33,6 +33,7 @@ public:
     void rotateAroundPointDegrees(const Vec3& pivot, const Vec3& angle);
 
     static Vec3 lerp(const Vec3& start, const Vec3& end, float t);
+    static Vec3 ZERO;
 };
 
 // BinaryStream specialization

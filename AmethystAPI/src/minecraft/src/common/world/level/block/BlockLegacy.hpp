@@ -172,7 +172,7 @@ public:
     virtual bool isContainerBlock() const;
     virtual void _unknown_32();
     virtual bool isWaterBlocking() const;
-    virtual void _unknown_34();
+    virtual bool isFenceBlock();
     virtual void _unknown_35();
     virtual void _unknown_36();
     virtual void _unknown_37();

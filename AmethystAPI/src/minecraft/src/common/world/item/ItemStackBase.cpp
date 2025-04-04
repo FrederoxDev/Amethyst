@@ -91,7 +91,16 @@ ItemStackBase::ItemStackBase(const ItemStackBase& other) :
     mValid(other.mValid),
     mPickupTime(other.mPickupTime)
 {
+    static uintptr_t itemStackBaseVtable = AddressFromLeaInstruction(
+        SigScan("4C 8D 35 ?? ?? ?? ?? 4C 89 74 24 ?? 48 89 74 24 ?? 48 89 74 24"));
+
+    this->vtable = reinterpret_cast<uintptr_t**>(itemStackBaseVtable);
+    this->mUserData = nullptr;
     
+    if (other.mUserData != nullptr) {
+        std::unique_ptr<CompoundTag> clonedData = other.mUserData->clone();
+        setUserData(std::move(clonedData));
+    }
 
     /*std::unique_ptr<CompoundTag> clonedData = nullptr;
 
@@ -113,6 +122,7 @@ ItemStackBase &ItemStackBase::operator=(const ItemStackBase& rhs) {
     mBlock = rhs.mBlock;
     mValid = rhs.mValid;
     mPickupTime = rhs.mPickupTime;
+    mUserData = nullptr;
 
     /*std::unique_ptr<CompoundTag> clonedData = nullptr;
 
@@ -120,8 +130,14 @@ ItemStackBase &ItemStackBase::operator=(const ItemStackBase& rhs) {
         clonedData = rhs.mUserData->clone();
     }*/
 
+    if (rhs.mUserData) {
+        std::unique_ptr<CompoundTag> clonedData = rhs.mUserData->clone();
+        setUserData(std::move(clonedData));
+    }
+
     // setUserData(clonedData);
     // _cloneComponents(rhs)
+
     return *this;
 }
 
@@ -135,6 +151,13 @@ bool ItemStackBase::isNull() const {
     }
 
     return true;
+}
+
+void ItemStackBase::setUserData(std::unique_ptr<CompoundTag> userData)
+{
+    using function = decltype(&ItemStackBase::setUserData);
+    static auto func = std::bit_cast<function>(SigScan("48 89 5C 24 ? 48 89 74 24 ? 57 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 84 24 ? ? ? ? 48 8B FA 48 8B F1 48 89 94 24 ? ? ? ? 48 8D 59"));
+    return (this->*func)(std::move(userData));
 }
 
 const Item* ItemStackBase::getItem() const {

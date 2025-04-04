@@ -179,3 +179,5 @@ void BinaryStream::write(Vec3 vec3) {
     write(vec3.y);
     write(vec3.z);
 }
+
+Vec3 Vec3::ZERO = Vec3(0, 0, 0);

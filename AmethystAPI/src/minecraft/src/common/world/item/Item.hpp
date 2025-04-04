@@ -29,9 +29,12 @@ enum LevelSoundEvent {};
 } // namespace Puv
 
 class InteractionResult {
+public:
     enum class Result : int32_t {
-        SUCCESS,
-        SWING
+        FAIL = 0,
+        SUCCESS = 1,
+        SWING = 2,
+        UNKN_3 = 3
     };
 
 public:

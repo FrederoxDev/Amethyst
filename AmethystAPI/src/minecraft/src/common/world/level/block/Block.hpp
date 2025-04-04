@@ -51,6 +51,8 @@ public:
     BlockRuntimeId getRuntimeId() const {
         return mNetworkId;
     }
+
+    bool isFenceBlock() const;
 };
 
 static_assert(sizeof(Block) == 208);

@@ -79,6 +79,8 @@ public:
 
     int load(const CompoundTag&, DefaultDataLoadHelper&);
     void reload();
+
+    bool isClientSide() const;
 };
 #pragma pack(pop)   
 
