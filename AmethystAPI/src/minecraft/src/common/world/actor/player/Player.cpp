@@ -20,13 +20,13 @@ const ItemStack& Player::getSelectedItem() const
 
 PlayerEventCoordinator* Player::getPlayerEventCoordinator() {
     using function = decltype(&Player::getPlayerEventCoordinator);
-    static auto func = std::bit_cast<function>(this->vtable[244]);
+    auto func = std::bit_cast<function>(this->vtable[244]);
     return (this->*func)();
 }
 
 void Player::sendInventoryTransaction(const InventoryTransaction& transaction)
 {
     using function = decltype(&Player::sendInventoryTransaction);
-    static auto func = std::bit_cast<function>(this->vtable[242]);
+    auto func = std::bit_cast<function>(this->vtable[242]);
     return (this->*func)(transaction);
 }

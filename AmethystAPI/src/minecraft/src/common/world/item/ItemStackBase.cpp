@@ -160,6 +160,16 @@ void ItemStackBase::setUserData(std::unique_ptr<CompoundTag> userData)
     return (this->*func)(std::move(userData));
 }
 
+bool ItemStackBase::isLiquidClipItem() const
+{
+    return mItem && mItem->isLiquidClipItem();
+}
+
+bool ItemStackBase::shouldInteractionWithBlockBypassLiquid(const Block& block) const
+{
+    return mItem && mItem->shouldInteractionWithBlockBypassLiquid(block);
+}
+
 const Item* ItemStackBase::getItem() const {
     return mItem.get();
 }

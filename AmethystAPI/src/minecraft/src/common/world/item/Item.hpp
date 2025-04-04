@@ -30,15 +30,16 @@ enum LevelSoundEvent {};
 
 class InteractionResult {
 public:
+    // used as a bitmask?
     enum class Result : int32_t {
-        FAIL = 0,
         SUCCESS = 1,
         SWING = 2,
-        UNKN_3 = 3
     };
 
 public:
-    Result mResult;
+    int mResult; // result is made up of Result bitmask
+
+    InteractionResult() : mResult(0) {}
 };
 
 // Auto-generated: Forward declarations

@@ -76,6 +76,9 @@ public:
     bool isNull() const;
 
     void setUserData(std::unique_ptr<CompoundTag> userData);
+
+    bool isLiquidClipItem() const;
+    bool shouldInteractionWithBlockBypassLiquid(const Block& block) const;
 };
 
 static_assert(sizeof(ItemStackBase) == 0x88);
