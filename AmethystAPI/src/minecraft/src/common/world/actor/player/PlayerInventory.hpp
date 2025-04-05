@@ -7,7 +7,7 @@ class Inventory;
 class HudContainerManagerModel;
 
 // This is probably wrong in some way or outdated, from china
-enum ContainerID : unsigned char {
+enum class ContainerID : unsigned char {
     CONTAINER_ID_NONE = 0xff,
     CONTAINER_ID_INVENTORY = 0x0000,
     CONTAINER_ID_FIRST = 0x0001,

@@ -29,6 +29,12 @@ public:
     {
         this->mTargetBlockId = block.getRuntimeId();
     }
+
+    void setSelectedItem(const ItemStack& stack)
+    {
+        NetworkItemStackDescriptor networkDescriptor(stack);
+        
+    }
 };
 
 static_assert(sizeof(ItemUseInventoryTransaction) == 0x100);

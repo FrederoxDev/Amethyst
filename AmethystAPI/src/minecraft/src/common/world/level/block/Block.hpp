@@ -2,6 +2,7 @@
 #include "minecraft/src-deps/core/headerIncludes/gsl_includes.hpp"
 #include "minecraft/src/common/world/level/block/components/BlockComponentStorage.hpp"
 #include <minecraft/src/common/world/level/block/BlockState.hpp>
+#include <minecraft/src/common/CommonTypes.hpp>
 
 //is_virtual = True
 //hide_vtable = False
@@ -11,8 +12,6 @@
 //struct = [
 //("gsl::not_null<BlockLegacy*>", "mLegacyBlock", 8, 0x30),
 //]
-
-typedef uint32_t BlockRuntimeId;
 
 namespace mce {
 class Color;

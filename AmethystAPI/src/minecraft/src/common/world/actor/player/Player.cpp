@@ -1,5 +1,6 @@
 #include <minecraft/src/common/world/actor/player/Player.hpp>
 #include <minecraft/src/common/world/actor/player/PlayerInventory.hpp>
+#include <minecraft/src/common/world/inventory/transaction/ComplexInventoryTransaction.hpp>
 
 void Player::prepareRegion(ChunkSource& cs)
 {
@@ -27,6 +28,13 @@ PlayerEventCoordinator& Player::getPlayerEventCoordinator() {
 void Player::sendInventoryTransaction(const InventoryTransaction& transaction)
 {
     using function = decltype(&Player::sendInventoryTransaction);
-    auto func = std::bit_cast<function>(this->vtable[242]);
+    auto func = std::bit_cast<function>(this->vtable[241]);
     return (this->*func)(transaction);
+}
+
+void Player::sendComplexInventoryTransaction(std::unique_ptr<ComplexInventoryTransaction> transaction) const
+{
+    /*using function = decltype(&Player::sendComplexInventoryTransaction);
+    auto func = std::bit_cast<function>(this->vtable[242]);
+    return (this->*func)(std::move(transaction));*/
 }

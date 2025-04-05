@@ -4,7 +4,7 @@
 
 class ComplexInventoryTransaction {
 public:
-    enum Type {
+    enum class Type {
         NormalTransaction = 0x0,
         InventoryMismatch = 0x1,
         ItemUseTransaction = 0x2,

@@ -1,4 +1,5 @@
 #pragma once
+#include <cstdint>
 #include <minecraft/src/common/util/NewType.hpp>
 
 struct Brightness : public NewType<unsigned char> {
@@ -21,3 +22,5 @@ enum class SubClientId : unsigned char {
 	ExtraIdSlotStart = 100, 
 	EditorUI
 };
+
+typedef uint32_t BlockRuntimeId;

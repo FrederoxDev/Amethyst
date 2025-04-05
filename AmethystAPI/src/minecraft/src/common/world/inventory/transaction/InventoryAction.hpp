@@ -11,4 +11,7 @@ public:
     NetworkItemStackDescriptor mToItemDescriptor;
     ItemStack mFromItem;
     ItemStack mToItem;
+
+    InventoryAction(InventorySource source, unsigned int slot, const ItemStack& fromItem, const ItemStack& toItem)
+        : mSource(source), mSlot(slot), mFromItemDescriptor(fromItem), mToItemDescriptor(toItem), mFromItem(fromItem), mToItem(toItem) {}
 };

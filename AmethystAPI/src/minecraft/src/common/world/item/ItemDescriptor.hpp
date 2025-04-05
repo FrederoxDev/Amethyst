@@ -9,13 +9,18 @@ public:
         short mAuxValue;
     };
 
-    struct BaseDescriptor {
-        virtual std::unique_ptr<BaseDescriptor> clone() const;
+    class BaseDescriptor {
+    public:
+        virtual std::unique_ptr<BaseDescriptor> clone() const = 0;
     };
 
     std::unique_ptr<BaseDescriptor> mImpl;
 
-    virtual std::unique_ptr<BaseDescriptor> clone() const;
+    virtual std::unique_ptr<BaseDescriptor> clone() const {
+        using function = decltype(&ItemDescriptor::clone);
+        auto func = std::bit_cast<function>(((uintptr_t**)this)[0]);
+        return (this->*func)();
+    };
 
     ItemDescriptor(const ItemDescriptor& other)
     {
