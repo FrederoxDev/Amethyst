@@ -25,7 +25,7 @@ public:
     void prepareRegion(ChunkSource& cs);
     const PlayerInventory& getSupplies() const;
     const ItemStack& getSelectedItem() const;
-    PlayerEventCoordinator* getPlayerEventCoordinator(); // pure virt
+    PlayerEventCoordinator& getPlayerEventCoordinator(); // pure virt
     void sendInventoryTransaction(const InventoryTransaction& transaction); // pure virt
 };
 #pragma pack(pop)

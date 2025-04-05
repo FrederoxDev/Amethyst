@@ -18,7 +18,7 @@ const ItemStack& Player::getSelectedItem() const
     return playerInventory->getSelectedItem();
 }
 
-PlayerEventCoordinator* Player::getPlayerEventCoordinator() {
+PlayerEventCoordinator& Player::getPlayerEventCoordinator() {
     using function = decltype(&Player::getPlayerEventCoordinator);
     auto func = std::bit_cast<function>(this->vtable[244]);
     return (this->*func)();
