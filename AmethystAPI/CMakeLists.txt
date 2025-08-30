@@ -43,6 +43,7 @@ target_include_directories(AmethystAPI PUBLIC
 target_link_libraries(AmethystAPI PRIVATE 
     ${CMAKE_CURRENT_SOURCE_DIR}/lib/fmt.lib
     libhat
+    runtimeobject.lib
 )
 
 target_compile_options(AmethystAPI PRIVATE

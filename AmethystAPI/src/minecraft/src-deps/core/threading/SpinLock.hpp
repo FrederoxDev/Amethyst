@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <functional>
 #include <thread>
+#include <system_error>
 
 class SpinLock {
     static const uint32_t LOOP_LIMIT_BEFORE_YIELD = 3000;
