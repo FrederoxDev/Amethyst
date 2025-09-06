@@ -39,16 +39,16 @@ jobs:
           choco install git -y
           choco install deno -y
           choco install nim -y
+          choco install nasm -y
           
           Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
           refreshenv
-
-        # Add xmake to PATH
-          # Add xmake to PATH
+          
+      # Add xmake to PATH
       - name: Add xmake to PATH
         uses: xmake-io/github-action-setup-xmake@v1
         with:
-            version: 'latest'
+          version: 'latest'
 
       # Add the Amethyst API so it recognizes it when building
       - name: Add AmethystAPI
@@ -60,7 +60,7 @@ jobs:
 
       # Build with MSVC
       - name: Build with MSVC
-        run: xmake build
+        run: xmake build -v
 
       # Get the version from mod.json and commit it back
       - name: Get and Commit Version
