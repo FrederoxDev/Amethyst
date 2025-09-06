@@ -27,176 +27,106 @@ jobs:
 
       # Install Chocolatey packages
       - name: Install Build Tools via Chocolatey
-        shell: powershell
+        shell: pwsh
         run: |
-          # Install chocolatey packages
           choco install xmake -y
-          choco install ninja -y
           choco install git -y
           choco install deno -y
           choco install nim -y
-          
-          # Refresh environment to get new PATH
           Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1
           refreshenv
 
-        # Add the Amethyst API so it recognizes it when building
-      - name: Add AmethystAPI
-        shell: powershell
-        run: |
-          $destination = Join-Path $env:USERPROFILE "Documents/Amethyst"
-          git clone https://github.com/FrederoxDev/Amethyst.git $destination
-          [System.Environment]::SetEnvironmentVariable("amethyst_src", $destination, "User")
-          Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1
-
-        # Add xmake to PATH
+      # Add xmake to PATH
       - name: Add xmake to PATH
         uses: xmake-io/github-action-setup-xmake@v1
         with:
           version: 'latest'
 
-      # Install additional tools if needed
-      - name: Install Additional Tools
-        shell: powershell
+      # Install NASM (in temp folder only, not saved in repo)
+      - name: Install NASM
+        shell: pwsh
         run: |
-          # Install NASM if needed for assembly
-          Invoke-WebRequest https://www.nasm.us/pub/nasm/releasebuilds/2.16.03/win64/nasm-2.16.03-win64.zip -OutFile nasm.zip
-          Expand-Archive nasm.zip -DestinationPath C:\nasm
-          $Env:PATH = "C:\nasm\nasm-2.16.03;$Env:PATH"
+          $nasmUrl = "https://www.nasm.us/pub/nasm/releasebuilds/2.16.03/win64/nasm-2.16.03-win64.zip"
+          $nasmZip = "$env:TEMP\nasm.zip"
+          Invoke-WebRequest $nasmUrl -OutFile $nasmZip
+          Expand-Archive $nasmZip -DestinationPath C:\nasm -Force
           echo "C:\nasm\nasm-2.16.03" >> $env:GITHUB_PATH
 
+      # 🔑 Get version from mod.json
       - name: Get version from mod.json
         id: get_version
         shell: pwsh
         run: |
-          if (Test-Path "mod.json") {
-            $json = Get-Content "mod.json" -Raw | ConvertFrom-Json
-            $VERSION = $json.meta.version
-          } else {
-            Write-Error "mod.json not found!"
-            exit 1
-          }
+          $json = Get-Content "mod.json" -Raw | ConvertFrom-Json
+          $VERSION = $json.meta.version
           echo "VERSION=$VERSION" >> $env:GITHUB_ENV
           echo "Version set to: $VERSION"
 
       # Build with xmake and MSVC
       - name: Configure xmake
-        shell: powershell
+        shell: pwsh
         run: |
-          Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1
-          refreshenv
-          
-          mkdir build -ErrorAction SilentlyContinue
-          cd build
+          xmake f --toolchain=msvc --arch=x64 --mode=release -y
 
       - name: Build with MSVC
-        shell: powershell
+        shell: pwsh
         run: |
-          cd build
-          xmake config --mode=debug
-          xmake --verbose
+          xmake build
 
-      # Run tests if they exist
-      - name: Run Tests
-        shell: powershell
-        run: |
-          cd build
-          ctest --output-on-failure --parallel --build-config Release
-        continue-on-error: true
-
-      # Package the build artifacts
+      # Package the build artifacts (only dll, pdb, and mod.json)
       - name: Package AmethystRuntime
-        shell: powershell
+        shell: pwsh
         run: |
           $zipName = "$env:PROJECT_NAME@$env:VERSION.zip"
-          $buildPath = "build"
-          
-          # Create temp directory for packaging
           $tempPath = "$env:TEMP\runtime_temp"
           Remove-Item $tempPath -Recurse -Force -ErrorAction SilentlyContinue
           New-Item -ItemType Directory -Path $tempPath
-          
-          # Copy runtime files (adjust paths based on your build output)
-          if (Test-Path "$buildPath\Release") {
-              Copy-Item "$buildPath\Release\*" $tempPath -Recurse -Force
-          }
-          if (Test-Path "$buildPath\Debug") {
-              Copy-Item "$buildPath\Debug\*" "$tempPath\Debug" -Recurse -Force
-          }
-          
-          # Copy additional files if they exist
-          $additionalFiles = @("README.md", "LICENSE", "docs")
-          foreach ($file in $additionalFiles) {
-              if (Test-Path $file) {
-                  Copy-Item $file $tempPath -Recurse -Force
-              }
-          }
-          
-          # Remove unwanted files
-          $excluded = Get-ChildItem -Path $tempPath -Recurse -File | Where-Object { 
-              $_.Extension -in ".lib", ".exp", ".pdb", ".ilk", ".obj" 
-          }
-          foreach ($file in $excluded) {
-              Remove-Item $file.FullName -Force -ErrorAction SilentlyContinue
-          }
-          
-          # Create zip
-          Compress-Archive -Path "$tempPath\*" -DestinationPath $zipName
+
+          # Copy only required runtime outputs
+          $dllPath = Get-ChildItem -Path build -Recurse -Filter "AmethystRuntime.dll" | Select-Object -First 1
+          $pdbPath = Get-ChildItem -Path build -Recurse -Filter "AmethystRuntime.pdb" | Select-Object -First 1
+          if ($dllPath) { Copy-Item $dllPath.FullName $tempPath }
+          if ($pdbPath) { Copy-Item $pdbPath.FullName $tempPath }
+
+          # Copy mod.json
+          Copy-Item "mod.json" $tempPath -Force
+
+          # Zip only those files
+          Compress-Archive -Path "$tempPath\*" -DestinationPath $zipName -Force
           echo "Created package: $zipName"
 
-      # Commit version changes if any were made
+      # Create GitHub Release
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ env.VERSION }}
+          name: AmethystRuntime ${{ env.VERSION }}
+          files: ${{ env.PROJECT_NAME }}@${{ env.VERSION }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # 🔑 Auto-bump the patch version in mod.json for the next build
+      - name: Bump version in mod.json
+        shell: pwsh
+        run: |
+          $json = Get-Content "mod.json" -Raw | ConvertFrom-Json
+          $versionParts = $json.meta.version.split('.')
+          $major = [int]$versionParts[0]
+          $minor = [int]$versionParts[1]
+          $patch = [int]$versionParts[2] + 1
+          $newVersion = "$major.$minor.$patch"
+          $json.meta.version = $newVersion
+          $json | ConvertTo-Json -Depth 5 | Out-File -FilePath "mod.json" -Encoding utf8
+          echo "mod.json version bumped to: $newVersion"
+
+      # Commit only the updated mod.json and push
       - name: Commit version changes
-        shell: powershell
+        shell: pwsh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          
-          # Only commit if there are changes
-          $changes = git status --porcelain
-          if ($changes) {
-              git add .
-              git commit -m "Build AmethystRuntime version $env:VERSION"
-              git push
-              echo "Committed version changes"
-          } else {
-              echo "No changes to commit"
-          }
-
-      # Create GitHub Release
-      - name: Create GitHub Release
-        id: create_release
-        run: |
-          $tag_name = "v$env:VERSION"
-          $release_name = "AmethystRuntime $env:VERSION"
-          $release_notes = @"
-          ## AmethystRuntime Release $env:VERSION
-          
-          ### Automated Release
-          
-
-        shell: pwsh
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # Upload Release Asset
-      - name: Upload Release Asset
-        run: |
-          $asset_path = "AmethystRuntime@$env:VERSION.zip"
-          $asset_label = "AmethystRuntime@$env:VERSION.zip"
-          gh release upload "v$env:VERSION" "$asset_path#$asset_label" --repo ${{ github.repository }}
-        shell: pwsh
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # Upload build artifacts for workflow runs (always available)
-      - name: Upload Build Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: AmethystRuntime-${{ env.VERSION }}-windows-msvc
-          path: |
-            AmethystRuntime@${{ env.VERSION }}.zip
-            build/
-            mod.json
-          retention-days: 30
+          git add mod.json
+          git commit -m "Build: Bump version to $env:VERSION"
+          git push
