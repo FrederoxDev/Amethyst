@@ -60,7 +60,7 @@ jobs:
 
       # Build with MSVC
       - name: Build with MSVC
-        run: xmake build -m release
+        run: xmake build
 
       # Get the version from mod.json and commit it back
       - name: Get and Commit Version
