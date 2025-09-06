@@ -34,9 +34,10 @@ jobs:
         shell: powershell
         run: |
           # Install chocolatey packages
-          choco install cmake -y
+          choco install xmake -y
           choco install ninja -y
           choco install git -y
+          choco install deno -y
           
           # Refresh environment to get new PATH
           Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1
@@ -79,7 +80,7 @@ jobs:
           echo "Version set to: $VERSION"
 
       # Build with CMake and MSVC
-      - name: Configure CMake
+      - name: Configure xmake
         shell: powershell
         run: |
           Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1
@@ -87,18 +88,13 @@ jobs:
           
           mkdir build -ErrorAction SilentlyContinue
           cd build
-          
-          # Configure with MSVC
-          cmake .. -G "Visual Studio 17 2022" -A x64 -DCMAKE_BUILD_TYPE=Release
 
       - name: Build with MSVC
         shell: powershell
         run: |
           cd build
-          cmake --build . --config Release --parallel
-          
-          # Also build Debug if needed
-          cmake --build . --config Debug --parallel
+          xmake config --mode=debug
+          xmake --verbose
 
       # Run tests if they exist
       - name: Run Tests
@@ -197,8 +193,8 @@ jobs:
       # Upload Release Asset
       - name: Upload Release Asset
         run: |
-          $asset_path = "$env:PROJECT_NAME@$env:VERSION.zip"
-          $asset_label = "$env:PROJECT_NAME@$env:VERSION.zip"
+          $asset_path = "AmethystRuntime@$env:VERSION.zip"
+          $asset_label = "AmethystRuntime@$env:VERSION.zip"
           gh release upload "v$env:VERSION" "$asset_path#$asset_label" --repo ${{ github.repository }}
         shell: pwsh
         env:
@@ -210,6 +206,7 @@ jobs:
         with:
           name: AmethystRuntime-${{ env.VERSION }}-windows-msvc
           path: |
-            ${{ env.PROJECT_NAME }}@${{ env.VERSION }}.zip
+            AmethystRuntime@${{ env.VERSION }}.zip
             build/
+            mod.json
           retention-days: 30
