@@ -71,7 +71,7 @@ jobs:
       - name: Build with MSVC
         shell: pwsh
         run: |
-          xmake build
+          xmake build -v
 
       # Package the build artifacts (only dll, pdb, and mod.json)
       - name: Package AmethystRuntime
