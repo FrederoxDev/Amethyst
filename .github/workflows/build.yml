@@ -102,6 +102,7 @@ jobs:
           tag_name: v${{ env.VERSION }}
           name: AmethystRuntime ${{ env.VERSION }}
           files: ${{ env.PROJECT_NAME }}@${{ env.VERSION }}.zip
+          overwrite: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
