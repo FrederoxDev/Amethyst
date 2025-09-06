@@ -1,0 +1,118 @@
+name: Release new Amethyst Runtime
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+env:
+  PROJECT_NAME: AmethystRuntime
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      # Checkout Amethyst repository
+      - name: Checkout Amethyst
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      # Setup MSVC and Visual Studio Build Tools
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Setup Visual Studio Developer Command Prompt
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      # Install Chocolatey packages
+      - name: Install Build Tools via Chocolatey
+        shell: powershell
+        run: |
+          choco install xmake -y
+          choco install ninja -y
+          choco install git -y
+          choco install deno -y
+          choco install nim -y
+          
+          Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
+          refreshenv
+
+      # Add the Amethyst API so it recognizes it when building
+      - name: Add AmethystAPI
+        shell: powershell
+        run: |
+          $destination = Join-Path $env:USERPROFILE "Documents/Amethyst"
+          git clone https://github.com/cubethethird/Amethyst $destination
+          echo "AMETHYST_SRC=$destination" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8
+
+      # Build with MSVC
+      - name: Build with MSVC
+        run: xmake build -m release
+
+      # Get the version from mod.json and commit it back
+      - name: Get and Commit Version
+        shell: pwsh
+        run: |
+          $modJson = Get-Content -Path "mod.json" | ConvertFrom-Json
+          $version = $modJson.version
+          echo "VERSION=$version" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8
+
+          # Check for uncommitted changes to mod.json
+          $changes = git status --porcelain
+          if ($changes) {
+              git add mod.json
+              git commit -m "Build AmethystRuntime version $env:VERSION"
+              git push
+              echo "Committed version changes"
+          } else {
+              echo "No changes to commit"
+          }
+
+      # Package the build artifacts (only dll, pdb, and mod.json)
+      - name: Package AmethystRuntime
+        shell: pwsh
+        run: |
+          $zipName = "$env:PROJECT_NAME@$env:VERSION.zip"
+          $tempPath = "$env:TEMP\runtime_temp"
+          Remove-Item $tempPath -Recurse -Force -ErrorAction SilentlyContinue
+          New-Item -ItemType Directory -Path $tempPath
+
+          # Use xmake to dynamically get the output directory of the 'AmethystRuntime' target
+          $buildPath = xmake show -t AmethystRuntime -o
+          if (-not $buildPath) {
+            Write-Error "Could not find build output path for target 'AmethystRuntime'."
+            exit 1
+          }
+
+          # Copy only required runtime outputs
+          $dllPath = Get-ChildItem -Path $buildPath -Filter "AmethystRuntime.dll" | Select-Object -First 1
+          $pdbPath = Get-ChildItem -Path $buildPath -Filter "AmethystRuntime.pdb" | Select-Object -First 1
+          
+          if ($dllPath) { Copy-Item $dllPath.FullName $tempPath }
+          if ($pdbPath) { Copy-Item $pdbPath.FullName $tempPath }
+
+          # Copy mod.json
+          Copy-Item "mod.json" $tempPath -Force
+
+          # Zip only those files
+          Compress-Archive -Path "$tempPath\*" -DestinationPath $zipName -Force
+          echo "Created package: $zipName"
+
+      # Create GitHub Release and Upload Release Asset
+      # This single step replaces the two previous steps
+      - name: Create and Upload GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          tag_name: v${{ env.VERSION }}
+          name: AmethystRuntime ${{ env.VERSION }}
+          files: ${{ env.PROJECT_NAME }}@${{ env.VERSION }}.zip
+          overwrite: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
