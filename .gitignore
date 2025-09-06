@@ -10,3 +10,4 @@ dist
 **/vsxmake2022
 /generated
 /.vscode/compile_commands.json
+/.idea
