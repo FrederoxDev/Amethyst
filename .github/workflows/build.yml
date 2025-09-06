@@ -47,7 +47,7 @@ jobs:
           $destination = Join-Path $env:USERPROFILE "Documents/Amethyst"
           git clone https://github.com/FrederoxDev/Amethyst.git $destination
           [System.Environment]::SetEnvironmentVariable("amethyst_src", $destination, "User")
-          refreshenv
+          Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1
 
         # Add xmake to PATH
       - name: Add xmake to PATH
