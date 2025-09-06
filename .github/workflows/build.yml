@@ -2,10 +2,6 @@ name: Release new Amethyst Runtime
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
 
 env:
   PROJECT_NAME: AmethystRuntime
@@ -51,6 +47,7 @@ jobs:
           $destination = Join-Path $env:USERPROFILE "Documents/Amethyst"
           git clone https://github.com/FrederoxDev/Amethyst.git $destination
           [System.Environment]::SetEnvironmentVariable("amethyst_src", $destination, "User")
+          refreshenv
 
         # Add xmake to PATH
       - name: Add xmake to PATH
