@@ -43,6 +43,13 @@ jobs:
           Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
           refreshenv
 
+        # Add xmake to PATH
+          # Add xmake to PATH
+      - name: Add xmake to PATH
+        uses: xmake-io/github-action-setup-xmake@v1
+        with:
+            version: 'latest'
+
       # Add the Amethyst API so it recognizes it when building
       - name: Add AmethystAPI
         shell: powershell
