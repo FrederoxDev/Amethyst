@@ -38,6 +38,7 @@ jobs:
           choco install ninja -y
           choco install git -y
           choco install deno -y
+          choco install nim -y
           
           # Refresh environment to get new PATH
           Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1
