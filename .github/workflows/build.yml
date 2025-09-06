@@ -65,29 +65,17 @@ jobs:
           $Env:PATH = "C:\nasm\nasm-2.16.03;$Env:PATH"
           echo "C:\nasm\nasm-2.16.03" >> $env:GITHUB_PATH
 
-      - name: Get or bump version
+      - name: Get version from mod.json
         id: get_version
-        shell: powershell
+        shell: pwsh
         run: |
-          # Try to read version from a version file, or generate one
-          if (Test-Path "VERSION") {
-              $VERSION = Get-Content "VERSION" -Raw
-              $VERSION = $VERSION.Trim()
-          } elseif (Test-Path "xmake.lua") {
-              # Try to extract version from xmake.lua
-              $content = Get-Content "xmake.lua" -Raw
-              if ($content -match 'set_version\("([^"]+)"\)') {
-                  $VERSION = $matches[1]
-              } else {
-                  $VERSION = "1.0.0"
-              }
+          if (Test-Path "mod.json") {
+            $json = Get-Content "mod.json" -Raw | ConvertFrom-Json
+            $VERSION = $json.meta.version
           } else {
-              # Generate version based on date and commit
-              $DATE = Get-Date -Format "yyyy.MM.dd"
-              $SHORT_SHA = git rev-parse --short HEAD
-              $VERSION = "$DATE.$SHORT_SHA"
+            Write-Error "mod.json not found!"
+            exit 1
           }
-          
           echo "VERSION=$VERSION" >> $env:GITHUB_ENV
           echo "Version set to: $VERSION"
 
@@ -185,19 +173,9 @@ jobs:
           $release_notes = @"
           ## AmethystRuntime Release $env:VERSION
           
-          ### Changes
-          - Built with MSVC on Windows
-          - Manual build from commit $(git rev-parse --short HEAD)
+          ### Automated Release
           
-          ### Build Information
-          - **Platform**: Windows x64
-          - **Compiler**: MSVC (Visual Studio 2022)
-          - **Build Tool**: XMake
-          - **Build Type**: Release
-          - **Built on**: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss UTC')
-          "@
-          
-          gh release create $tag_name --title "$release_name" --notes "$release_notes" --target main --repo ${{ github.repository }} --draft=false --prerelease=false
+
         shell: pwsh
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
