@@ -42,7 +42,14 @@ jobs:
           # Refresh environment to get new PATH
           Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1
           refreshenv
-          
+
+        # Add the Amethyst API so it recognizes it when building
+      - name: Add AmethystAPI
+        shell: powershell
+        run: |
+          $destination = Join-Path $env:USERPROFILE "Documents/Amethyst"
+          git clone https://github.com/FrederoxDev/Amethyst.git $destination
+          [System.Environment]::SetEnvironmentVariable("amethyst_src", $destination, "User")
 
         # Add xmake to PATH
       - name: Add xmake to PATH
@@ -86,7 +93,7 @@ jobs:
           echo "VERSION=$VERSION" >> $env:GITHUB_ENV
           echo "Version set to: $VERSION"
 
-      # Build with CMake and MSVC
+      # Build with xmake and MSVC
       - name: Configure xmake
         shell: powershell
         run: |
