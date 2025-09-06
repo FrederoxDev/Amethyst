@@ -52,19 +52,18 @@ jobs:
           $Env:PATH = "C:\nasm\nasm-2.16.03;$Env:PATH"
           echo "C:\nasm\nasm-2.16.03" >> $env:GITHUB_PATH
 
-      # Get or bump version (modify this based on your versioning strategy)
-      - name: Get version
+      - name: Get or bump version
         id: get_version
         shell: powershell
         run: |
-          # Try to read version from a version file, CMakeLists.txt, or generate one
+          # Try to read version from a version file, or generate one
           if (Test-Path "VERSION") {
               $VERSION = Get-Content "VERSION" -Raw
               $VERSION = $VERSION.Trim()
-          } elseif (Test-Path "CMakeLists.txt") {
-              # Try to extract version from CMakeLists.txt
-              $content = Get-Content "CMakeLists.txt" -Raw
-              if ($content -match 'VERSION\s+(\d+\.\d+\.\d+)') {
+          } elseif (Test-Path "xmake.lua") {
+              # Try to extract version from xmake.lua
+              $content = Get-Content "xmake.lua" -Raw
+              if ($content -match 'set_version\("([^"]+)"\)') {
                   $VERSION = $matches[1]
               } else {
                   $VERSION = "1.0.0"
