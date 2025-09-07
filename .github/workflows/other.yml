@@ -71,7 +71,7 @@ jobs:
       - name: Configure AmethystAPI
         run: |
           cd "$env:AMETHYST_SRC"
-          xmake f --mode=release -v
+          xmake f --mode=release
 
       # Build the Amethyst API so we can link against it
       - name: Build AmethystAPI
@@ -92,7 +92,7 @@ jobs:
 
       # Configure runtime build mode
       - name: Configure runtime
-        run: xmake f --mode=release -v
+        run: xmake f --mode=release
 
       # Build with MSVC
       - name: Build with MSVC
