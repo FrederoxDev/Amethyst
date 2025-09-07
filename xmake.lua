@@ -21,10 +21,18 @@ if isAutomatedBuild then
     -- Use the hardcoded path for the GitHub Actions runner
     amethystApiSrc = "C:\\Users\\runneradmin\\Documents\\Amethyst"
 else
-    -- For a local build, use the environment variable
+    -- For a local build, first try the environment variable
     amethystApiSrc = os.getenv("AMETHYST_SRC")
+
+    -- If the environment variable is not set, try the default Documents folder
     if amethystApiSrc == nil then
-        error("AMETHYST_SRC environment variable is not set. Please set it to the path of the Amethyst API source.")
+        local documentsPath = path.join(os.getenv("USERPROFILE"), "Documents", "Amethyst")
+        if os.isdir(documentsPath) then
+            amethystApiSrc = documentsPath
+        else
+            -- If all else fails, print a warning and let the includes() fail gracefully
+            print("AMETHYST_SRC environment variable is not set and Amethyst API was not found in the expected folder.")
+        end
     end
 end
 
