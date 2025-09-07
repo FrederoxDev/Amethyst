@@ -31,8 +31,8 @@ jobs:
         run: |
           choco install xmake -y
           choco install git -y
-          choco install deno -y
           choco install nim -y
+          echo "C:\ProgramData\chocolatey\bin" >> $env:GITHUB_PATH
           Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1
           refreshenv
 
