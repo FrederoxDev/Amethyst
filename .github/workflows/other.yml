@@ -44,6 +44,7 @@ jobs:
           echo "C:\ProgramData\chocolatey\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8
           Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
           refreshenv
+
       # Add xmake to PATH
       - name: Add xmake to PATH
         uses: xmake-io/github-action-setup-xmake@v1
@@ -121,8 +122,8 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           
-          # Use Deno to read, update, and write the mod.json file
-          deno run --allow-read --allow-write --allow-env - << 'EOF'
+          # Deno script content
+          $denoScript = @'
           import { readJson, writeJson } from "https://deno.land/x/jsonc@1.1.0/mod.ts";
           
           const filePath = "mod.json";
@@ -137,7 +138,14 @@ jobs:
           
           await writeJson(filePath, mod, { spaces: 2 });
           console.log("Updated mod.json with new version");
-          EOF
+          '@
+
+          # Write Deno script to a temporary file
+          $denoScriptPath = Join-Path $env:TEMP "bump_version.ts"
+          Set-Content -Path $denoScriptPath -Value $denoScript
+
+          # Execute the Deno script
+          deno run --allow-read --allow-write --allow-env $denoScriptPath
           
           # Check for changes and commit
           $changes = git status --porcelain
