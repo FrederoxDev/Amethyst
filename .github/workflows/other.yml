@@ -99,45 +99,6 @@ jobs:
       - name: Build with MSVC
         run: xmake build -v
 
-      # DEBUG: Search entire runner user directory
-      - name: Debug - Search entire system for DLL/PDB
-        shell: pwsh
-        run: |
-          echo "=== SEARCHING ENTIRE RUNNER USER DIRECTORY ==="
-          
-          # Search the entire user profile
-          Get-ChildItem -Path $env:USERPROFILE -Recurse -File -ErrorAction SilentlyContinue | Where-Object { 
-              $_.Name -like "*AmethystRuntime*" -and ($_.Extension -eq ".dll" -or $_.Extension -eq ".pdb")
-          } | Format-Table Name, Directory, FullName
-          
-          echo "=== SEARCHING C:\ FOR AMETHYST FILES ==="
-          
-          # Search entire C: drive (might be slow but thorough)
-          Get-ChildItem -Path "C:\" -Recurse -File -ErrorAction SilentlyContinue | Where-Object { 
-              $_.Name -like "*AmethystRuntime*" -and ($_.Extension -eq ".dll" -or $_.Extension -eq ".pdb")
-          } | Select-Object -First 10 | Format-Table Name, Directory, FullName
-          
-          echo "=== CHECKING ALL BUILD-RELATED DIRECTORIES ==="
-          
-          $searchPaths = @(
-              ".",
-              "build",
-              ".xmake",
-              "$env:USERPROFILE\Documents",
-              "$env:USERPROFILE\AppData\Local",
-              "$env:TEMP",
-              "C:\Users\runneradmin"
-          )
-          
-          foreach ($path in $searchPaths) {
-              if (Test-Path $path) {
-                  echo "--- Searching $path ---"
-                  Get-ChildItem -Path $path -Recurse -File -ErrorAction SilentlyContinue | Where-Object { 
-                      $_.Name -like "*Amethyst*" -and ($_.Extension -eq ".dll" -or $_.Extension -eq ".pdb" -or $_.Extension -eq ".exe")
-                  } | Format-Table Name, Directory, FullName
-              }
-          }
-
       # Package the build artifacts from Minecraft directory
       - name: Package AmethystRuntime
         shell: pwsh
