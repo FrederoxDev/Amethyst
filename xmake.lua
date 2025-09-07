@@ -22,7 +22,7 @@ if isAutomatedBuild then
     amethystApiSrc = "C:\\Users\\runneradmin\\Documents\\Amethyst"
 else
     -- For a local build, first try the environment variable
-    amethystApiSrc = os.getenv("AMETHYST_SRC")
+    amethystApiSrc = os.getenv("amethyst_src")
 
     -- If the environment variable is not set, try the default Documents folder
     if amethystApiSrc == nil then
@@ -31,7 +31,7 @@ else
             amethystApiSrc = documentsPath
         else
             -- If all else fails, print a warning and let the includes() fail gracefully
-            print("AMETHYST_SRC environment variable is not set and Amethyst API was not found in the expected folder.")
+            print("amethyst_src environment variable is not set and Amethyst API was not found in the expected folder.")
         end
     end
 end
