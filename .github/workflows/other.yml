@@ -85,8 +85,9 @@ jobs:
         shell: pwsh
         run: |
           $json = Get-Content "mod.json" -Raw | ConvertFrom-Json
-          $versionArray = $json.version
-          $version = "$($versionArray[0]).$($versionArray[1]).$($versionArray[2])"
+          $version = $json.meta.version
+          $versionParts = $version.Split('.')
+          $version = "$($versionParts[0]).$($versionParts[1]).$($versionParts[2])"
           echo "VERSION=$version" >> $env:GITHUB_ENV
           Write-Host "Version set to: $version"
 
