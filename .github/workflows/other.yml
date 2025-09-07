@@ -99,7 +99,26 @@ jobs:
       - name: Build with MSVC
         run: xmake build -v
 
-      # Package the build artifacts from Minecraft directory
+      # Find the DLL and PDB files
+      - name: Find Build Artifacts
+        id: find_artifacts
+        shell: pwsh
+        run: |
+          $dllPath = Get-ChildItem -Path "." -Recurse -File -ErrorAction SilentlyContinue | Where-Object { $_.Name -eq "AmethystRuntime.dll" } | Select-Object -ExpandProperty FullName
+          if (-not $dllPath) {
+              echo "ERROR: AmethystRuntime.dll not found."
+              exit 1
+          }
+          echo "AMETHYST_DLL_PATH=$dllPath" | Out-File -FilePath $env:GITHUB_ENV -Append
+
+          $pdbPath = Get-ChildItem -Path "." -Recurse -File -ErrorAction SilentlyContinue | Where-Object { $_.Name -eq "AmethystRuntime.pdb" } | Select-Object -ExpandProperty FullName
+          if (-not $pdbPath) {
+              echo "WARNING: AmethystRuntime.pdb not found. Skipping PDB."
+          } else {
+              echo "AMETHYST_PDB_PATH=$pdbPath" | Out-File -FilePath $env:GITHUB_ENV -Append
+          }
+
+      # Package the build artifacts from their found locations
       - name: Package AmethystRuntime
         shell: pwsh
         run: |
@@ -107,22 +126,20 @@ jobs:
           $tempPath = "$env:TEMP\runtime_temp"
           Remove-Item $tempPath -Recurse -Force -ErrorAction SilentlyContinue
           New-Item -ItemType Directory -Path $tempPath
-          $minecraftPath = "C:\Users\runneradmin\AppData\Local\Packages\Microsoft.MinecraftUWP_8wekyb3d8bbwe\LocalState\games\com.mojang\amethyst\mods\AmethystRuntime@$env:VERSION"
-          $dllPath = "$minecraftPath"
-          $pdbPath = "$minecraftPath"
           
-          if (Test-Path $dllPath) {
-              Copy-Item $dllPath $tempPath -Force
-              echo "Copied DLL from: $dllPath"
+          if (Test-Path $env:AMETHYST_DLL_PATH) {
+              Copy-Item $env:AMETHYST_DLL_PATH $tempPath -Force
+              echo "Copied DLL from: $env:AMETHYST_DLL_PATH"
           } else {
-              echo "ERROR: DLL not found at $dllPath"
+              echo "ERROR: DLL not found at $env:AMETHYST_DLL_PATH"
+              exit 1
           }
           
-          if (Test-Path $pdbPath) {
-              Copy-Item $pdbPath $tempPath -Force
-              echo "Copied PDB from: $pdbPath"
+          if (Test-Path $env:AMETHYST_PDB_PATH) {
+              Copy-Item $env:AMETHYST_PDB_PATH $tempPath -Force
+              echo "Copied PDB from: $env:AMETHYST_PDB_PATH"
           } else {
-              echo "ERROR: PDB not found at $pdbPath"
+              echo "WARNING: PDB not found. Skipping PDB copy."
           }
 
           Copy-Item "mod.json" $tempPath -Force
