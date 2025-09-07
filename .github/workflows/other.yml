@@ -71,7 +71,7 @@ jobs:
       - name: Build AmethystAPI
         run: |
           cd "$env:AMETHYST_SRC"
-          xmake build AmethystAPI -m release -v
+          xmake build AmethystAPI -v
 
       # Get version from mod.json and set env variable for subsequent steps
       - name: Get version from mod.json
@@ -86,7 +86,7 @@ jobs:
 
       # Build with MSVC
       - name: Build with MSVC
-        run: xmake build -m release -v
+        run: xmake build -v
 
       # Package the build artifacts (only dll, pdb, and mod.json)
       - name: Package AmethystRuntime
