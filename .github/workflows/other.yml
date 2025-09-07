@@ -1,9 +1,6 @@
 name: Release new Amethyst Runtime (#2)
 
 on:
-  push:
-    tags:
-      - 'v*'
   workflow_dispatch:
 
 env:
@@ -15,8 +12,8 @@ jobs:
     permissions:
       contents: write
     steps:
-      # Checkout Amethyst repository
-      - name: Checkout Amethyst
+      # Checkout Amethyst Runtime repository
+      - name: Checkout Amethyst Runtime
         uses: actions/checkout@v4
         with:
           submodules: recursive
@@ -37,16 +34,10 @@ jobs:
           choco install xmake -y
           choco install ninja -y
           choco install git -y
-          choco install deno -y
           choco install nim -y
           
           # Add Chocolatey's bin directory to the GitHub Actions PATH for all subsequent steps
           echo "C:\ProgramData\chocolatey\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8
-          Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
-
-        # Setup Deno
-      - name: Setup Deno
-        uses: denoland/setup-deno@v2.0.3
 
       # Add xmake to PATH
       - name: Add xmake to PATH
@@ -64,23 +55,38 @@ jobs:
           Expand-Archive $nasmZip -DestinationPath C:\nasm -Force
           echo "C:\nasm\nasm-2.16.03" >> $env:GITHUB_PATH
 
+      # Setup Deno
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2.0.3
+
       # Add the Amethyst API so it recognizes it when building
       - name: Add AmethystAPI
         shell: powershell
         run: |
           $destination = Join-Path $env:USERPROFILE "Documents/Amethyst"
-          git clone --recursive https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/FrederoxDev/Amethyst $destination
+          git clone --recursive https://github.com/FrederoxDev/Amethyst $destination
           echo "AMETHYST_SRC=$destination" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8
 
       # Build the Amethyst API so we can link against it
       - name: Build AmethystAPI
         run: |
           cd "$env:AMETHYST_SRC"
-          xmake build -v
+          xmake build AmethystAPI -m release -v
+
+      # Get version from mod.json and set env variable for subsequent steps
+      - name: Get version from mod.json
+        id: get_version
+        shell: pwsh
+        run: |
+          $json = Get-Content "mod.json" -Raw | ConvertFrom-Json
+          $versionArray = $json.version
+          $version = "$($versionArray[0]).$($versionArray[1]).$($versionArray[2])"
+          echo "VERSION=$version" >> $env:GITHUB_ENV
+          Write-Host "Version set to: $version"
 
       # Build with MSVC
       - name: Build with MSVC
-        run: xmake build -v
+        run: xmake build -m release -v
 
       # Package the build artifacts (only dll, pdb, and mod.json)
       - name: Package AmethystRuntime
@@ -91,24 +97,11 @@ jobs:
           Remove-Item $tempPath -Recurse -Force -ErrorAction SilentlyContinue
           New-Item -ItemType Directory -Path $tempPath
 
-          # Hardcoded paths for the build artifacts as requested
-          $dllFullPath = "C:\Users\runneradmin\AppData\Local\Packages\Microsoft.MinecraftUWP_8wekyb3d8bbwe\LocalState\games\com.mojang\amethyst\mods\AmethystRuntime@2.0.0\AmethystRuntime.dll"
-          $pdbFullPath = "C:\Users\runneradmin\AppData\Local\Packages\Microsoft.MinecraftUWP_8wekyb3d8bbwe\LocalState\games\com.mojang\amethyst\mods\AmethystRuntime@2.0.0\AmethystRuntime.pdb"
-
           # Copy only required runtime outputs
-          if (Test-Path $dllFullPath) {
-            Write-Host "Found DLL at: $dllFullPath"
-            Copy-Item $dllFullPath -Destination $tempPath
-          } else {
-            Write-Host "DLL not found at: $dllFullPath"
-          }
-
-          if (Test-Path $pdbFullPath) {
-            Write-Host "Found PDB at: $pdbFullPath"
-            Copy-Item $pdbFullPath -Destination $tempPath
-          } else {
-            Write-Host "PDB not found at: $pdbFullPath"
-          }
+          $dllPath = Get-ChildItem -Path build -Recurse -Filter "AmethystRuntime.dll" | Select-Object -First 1
+          $pdbPath = Get-ChildItem -Path build -Recurse -Filter "AmethystRuntime.pdb" | Select-Object -First 1
+          if ($dllPath) { Copy-Item $dllPath.FullName $tempPath }
+          if ($pdbPath) { Copy-Item $pdbPath.FullName $tempPath }
 
           # Copy mod.json
           Copy-Item "mod.json" $tempPath -Force
@@ -117,8 +110,20 @@ jobs:
           Compress-Archive -Path "$tempPath\*" -DestinationPath $zipName -Force
           echo "Created package: $zipName"
 
+      # Create GitHub Release
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          tag_name: v${{ env.VERSION }}
+          name: AmethystRuntime ${{ env.VERSION }}
+          files: ${{ env.PROJECT_NAME }}@${{ env.VERSION }}.zip
+          overwrite: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       # Bump the version in mod.json and push the changes
-      - name: Bump version and push changes
+      - name: Bump version in mod.json and push
         shell: pwsh
         run: |
           # Configure Git
@@ -154,21 +159,9 @@ jobs:
           $changes = git status --porcelain
           if ($changes) {
               git add mod.json
-              git commit -m "Build AmethystRuntime version $env:VERSION"
+              git commit -m "Build: Bump version for next build"
               git push
               Write-Host "Committed and pushed version changes"
           } else {
               Write-Host "No changes to commit"
           }
-
-      # Create GitHub Release and Upload Release Asset
-      - name: Create and Upload GitHub Release
-        uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/')
-        with:
-          tag_name: v${{ env.VERSION }}
-          name: AmethystRuntime ${{ env.VERSION }}
-          files: ${{ env.PROJECT_NAME }}@${{ env.VERSION }}.zip
-          overwrite: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
