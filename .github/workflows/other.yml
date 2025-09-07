@@ -106,14 +106,14 @@ jobs:
         run: |
           echo "=== Searching for AmethystRuntime.dll and AmethystRuntime.pdb ==="
           
-          # Search common build paths for the files
+          # Search common build paths for the files, including the new path from the logs
           $searchPaths = @(
               ".",
               "build",
               ".xmake",
               "$env:USERPROFILE",
               "C:\Users\runneradmin",
-              "C:\"
+              "C:\Users\runneradmin\AppData\Local\Packages\Microsoft.MinecraftUWP_8wekyb3d8bbwe\LocalState\games\com.mojang\amethyst\mods"
           )
           
           $dllPath = $null
