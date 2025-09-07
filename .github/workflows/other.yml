@@ -104,18 +104,57 @@ jobs:
         id: find_artifacts
         shell: pwsh
         run: |
-          $dllPath = Get-ChildItem -Path "." -Recurse -File -ErrorAction SilentlyContinue | Where-Object { $_.Name -eq "AmethystRuntime.dll" } | Select-Object -ExpandProperty FullName
-          if (-not $dllPath) {
+          echo "=== Searching for AmethystRuntime.dll and AmethystRuntime.pdb ==="
+          
+          # Search common build paths for the files
+          $searchPaths = @(
+              ".",
+              "build",
+              ".xmake",
+              "$env:USERPROFILE",
+              "C:\Users\runneradmin",
+              "C:\"
+          )
+          
+          $dllPath = $null
+          $pdbPath = $null
+          
+          foreach ($path in $searchPaths) {
+              if (Test-Path $path) {
+                  echo "--- Searching in $path ---"
+                  $found = Get-ChildItem -Path $path -Recurse -File -ErrorAction SilentlyContinue | Where-Object { 
+                      ($_.Name -eq "AmethystRuntime.dll") -or ($_.Name -eq "AmethystRuntime.pdb")
+                  }
+          
+                  if ($found) {
+                      foreach ($file in $found) {
+                          if ($file.Name -eq "AmethystRuntime.dll") {
+                              $dllPath = $file.FullName
+                          }
+                          if ($file.Name -eq "AmethystRuntime.pdb") {
+                              $pdbPath = $file.FullName
+                          }
+                      }
+                  }
+              }
+              if ($dllPath -and $pdbPath) {
+                  break
+              }
+          }
+          
+          if ($dllPath) {
+              echo "AMETHYST_DLL_PATH=$dllPath" | Out-File -FilePath $env:GITHUB_ENV -Append
+              echo "SUCCESS: Found AmethystRuntime.dll at $dllPath"
+          } else {
               echo "ERROR: AmethystRuntime.dll not found."
               exit 1
           }
-          echo "AMETHYST_DLL_PATH=$dllPath" | Out-File -FilePath $env:GITHUB_ENV -Append
 
-          $pdbPath = Get-ChildItem -Path "." -Recurse -File -ErrorAction SilentlyContinue | Where-Object { $_.Name -eq "AmethystRuntime.pdb" } | Select-Object -ExpandProperty FullName
-          if (-not $pdbPath) {
-              echo "WARNING: AmethystRuntime.pdb not found. Skipping PDB."
-          } else {
+          if ($pdbPath) {
               echo "AMETHYST_PDB_PATH=$pdbPath" | Out-File -FilePath $env:GITHUB_ENV -Append
+              echo "SUCCESS: Found AmethystRuntime.pdb at $pdbPath"
+          } else {
+              echo "WARNING: AmethystRuntime.pdb not found. Skipping PDB."
           }
 
       # Package the build artifacts from their found locations
