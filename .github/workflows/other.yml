@@ -100,6 +100,7 @@ jobs:
         run: xmake build -v
 
       # Package the build artifacts (only dll, pdb, and mod.json)
+  # Package the build artifacts from Minecraft directory
       - name: Package AmethystRuntime
         shell: pwsh
         run: |
@@ -107,17 +108,29 @@ jobs:
           $tempPath = "$env:TEMP\runtime_temp"
           Remove-Item $tempPath -Recurse -Force -ErrorAction SilentlyContinue
           New-Item -ItemType Directory -Path $tempPath
+          $minecraftPath = "C:\Users\runneradmin\AppData\Local\Packages\Microsoft.MinecraftUWP_8wekyb3d8bbwe\LocalState\games\com.mojang\amethyst\mods\AmethystRuntime@$env:VERSION"
+          $dllPath = "$minecraftPath\AmethystRuntime.dll"
+          $pdbPath = "$minecraftPath\AmethystRuntime.pdb"
+      
+          if (Test-Path $dllPath) {
+          Copy-Item $dllPath $tempPath -Force
+          echo "Copied DLL from: $dllPath"
+          } else {
+          echo "ERROR: DLL not found at $dllPath"
+         }
+          if (Test-Path $pdbPath) {
+          Copy-Item $pdbPath $tempPath -Force
+          echo "Copied PDB from: $pdbPath"
+         }  else {
+          echo "ERROR: PDB not found at $pdbPath"
+         }
 
-          # Copy only required runtime outputs
-          $dllPath = Get-ChildItem -Path build -Recurse -Filter "AmethystRuntime.dll" | Select-Object -First 1
-          $pdbPath = Get-ChildItem -Path build -Recurse -Filter "AmethystRuntime.pdb" | Select-Object -First 1
-          if ($dllPath) { Copy-Item $dllPath.FullName $tempPath }
-          if ($pdbPath) { Copy-Item $pdbPath.FullName $tempPath }
-
-          # Copy mod.json
           Copy-Item "mod.json" $tempPath -Force
-
-          # Zip only those files
+          echo "Copied mod.json"
+      
+          echo "=== PACKAGING THESE FILES ==="
+          Get-ChildItem $tempPath | ForEach-Object { echo "  $($_.Name)" }
+      
           Compress-Archive -Path "$tempPath\*" -DestinationPath $zipName -Force
           echo "Created package: $zipName"
 
