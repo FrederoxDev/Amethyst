@@ -34,7 +34,6 @@ jobs:
           choco install nim -y
           echo "C:\ProgramData\chocolatey\bin" >> $env:GITHUB_PATH
           Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1
-          refreshenv
 
         # Setup Deno
       - name: Setup Deno
