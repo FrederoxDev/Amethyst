@@ -77,7 +77,7 @@ jobs:
       - name: Build AmethystAPI
         run: |
           cd "$env:AMETHYST_SRC"
-          xmake build AmethystAPI -v
+          xmake build AmethystAPI
 
       # Get version from mod.json and set env variable for subsequent steps
       - name: Get version from mod.json
