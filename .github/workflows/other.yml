@@ -99,29 +99,43 @@ jobs:
       - name: Build with MSVC
         run: xmake build -v
 
-      # DEBUG: Find where the files actually are
-      - name: Debug - Find build output
+      # DEBUG: Search entire runner user directory
+      - name: Debug - Search entire system for DLL/PDB
         shell: pwsh
         run: |
-          echo "=== SEARCHING FOR DLL AND PDB FILES ==="
+          echo "=== SEARCHING ENTIRE RUNNER USER DIRECTORY ==="
           
-          # Search entire workspace for AmethystRuntime files
-          Get-ChildItem -Path . -Recurse -File | Where-Object { 
+          # Search the entire user profile
+          Get-ChildItem -Path $env:USERPROFILE -Recurse -File -ErrorAction SilentlyContinue | Where-Object { 
               $_.Name -like "*AmethystRuntime*" -and ($_.Extension -eq ".dll" -or $_.Extension -eq ".pdb")
           } | Format-Table Name, Directory, FullName
           
-          echo "=== CHECKING BUILD DIRECTORY CONTENTS ==="
-          if (Test-Path "build") {
-              Get-ChildItem "build" -Recurse | Format-Table Name, Directory, FullName
-          } else {
-              echo "No build directory found!"
-          }
+          echo "=== SEARCHING C:\ FOR AMETHYST FILES ==="
           
-          echo "=== CHECKING XMAKE OUTPUT DIRECTORY ==="
-          if (Test-Path ".xmake") {
-              Get-ChildItem ".xmake" -Recurse -File | Where-Object { 
-                  $_.Extension -eq ".dll" -or $_.Extension -eq ".pdb"
-              } | Format-Table Name, Directory, FullName
+          # Search entire C: drive (might be slow but thorough)
+          Get-ChildItem -Path "C:\" -Recurse -File -ErrorAction SilentlyContinue | Where-Object { 
+              $_.Name -like "*AmethystRuntime*" -and ($_.Extension -eq ".dll" -or $_.Extension -eq ".pdb")
+          } | Select-Object -First 10 | Format-Table Name, Directory, FullName
+          
+          echo "=== CHECKING ALL BUILD-RELATED DIRECTORIES ==="
+          
+          $searchPaths = @(
+              ".",
+              "build",
+              ".xmake",
+              "$env:USERPROFILE\Documents",
+              "$env:USERPROFILE\AppData\Local",
+              "$env:TEMP",
+              "C:\Users\runneradmin"
+          )
+          
+          foreach ($path in $searchPaths) {
+              if (Test-Path $path) {
+                  echo "--- Searching $path ---"
+                  Get-ChildItem -Path $path -Recurse -File -ErrorAction SilentlyContinue | Where-Object { 
+                      $_.Name -like "*Amethyst*" -and ($_.Extension -eq ".dll" -or $_.Extension -eq ".pdb" -or $_.Extension -eq ".exe")
+                  } | Format-Table Name, Directory, FullName
+              }
           }
 
       # Package the build artifacts from Minecraft directory
