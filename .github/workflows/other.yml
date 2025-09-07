@@ -99,6 +99,31 @@ jobs:
       - name: Build with MSVC
         run: xmake build -v
 
+      # DEBUG: Find where the files actually are
+      - name: Debug - Find build output
+        shell: pwsh
+        run: |
+          echo "=== SEARCHING FOR DLL AND PDB FILES ==="
+          
+          # Search entire workspace for AmethystRuntime files
+          Get-ChildItem -Path . -Recurse -File | Where-Object { 
+              $_.Name -like "*AmethystRuntime*" -and ($_.Extension -eq ".dll" -or $_.Extension -eq ".pdb")
+          } | Format-Table Name, Directory, FullName
+          
+          echo "=== CHECKING BUILD DIRECTORY CONTENTS ==="
+          if (Test-Path "build") {
+              Get-ChildItem "build" -Recurse | Format-Table Name, Directory, FullName
+          } else {
+              echo "No build directory found!"
+          }
+          
+          echo "=== CHECKING XMAKE OUTPUT DIRECTORY ==="
+          if (Test-Path ".xmake") {
+              Get-ChildItem ".xmake" -Recurse -File | Where-Object { 
+                  $_.Extension -eq ".dll" -or $_.Extension -eq ".pdb"
+              } | Format-Table Name, Directory, FullName
+          }
+
       # Package the build artifacts from Minecraft directory
       - name: Package AmethystRuntime
         shell: pwsh
