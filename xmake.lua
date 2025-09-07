@@ -1,79 +1,87 @@
 -- Mod Options
-local mod_name = "AmethystRuntime"
-local modMajor = 2
-local modMinor = 0
-local modPatch = 0
+local mod_name = "AmethystRuntime" -- Replace with the name of your mod
+local targetMajor, targetMinor, targetPatch = 1, 21, 101 -- Replace with the target minecraft version
 
--- Minecraft version
-local major = 1
-local minor = 21
-local patch = 3
+option("automated_build")
+    set_default(false)
+    set_showmenu(true)
+    set_description("Flag to indicate this is an automated build")
+option_end()
 
 set_languages("c++23")
-set_project(mod_name)
-set_version(string.format("%d.%d.%d", modMajor, modMinor, modPatch))
 
--- Check if we are in an automated build
-local isAutomatedBuild = os.getenv("GITHUB_ACTIONS") == "true"
-local amethystApiSrc = ""
+local automated = is_config("automated_build", true)
+local modFolder
+local amethystApiPath
 
-if isAutomatedBuild then
-    -- Use the hardcoded path for the GitHub Actions runner
-    amethystApiSrc = "C:\\Users\\runneradmin\\Documents\\Amethyst"
+if automated then
+    modFolder = path.join(os.projectdir(), "dist")
+    amethystApiPath = path.join(os.projectdir(), "Amethyst", "AmethystAPI")
 else
-    -- For a local build, first try the environment variable
-    amethystApiSrc = os.getenv("amethyst_src")
+    set_symbols("debug")
+    local amethystSrc = os.getenv("AMETHYST_SRC")
+    amethystApiPath = amethystSrc and path.join(amethystSrc, "AmethystAPI") or nil
 
-    -- If the environment variable is not set, try the default Documents folder
-    if amethystApiSrc == nil then
-        local documentsPath = path.join(os.getenv("USERPROFILE"), "Documents", "Amethyst")
-        if os.isdir(documentsPath) then
-            amethystApiSrc = documentsPath
-        else
-            -- If all else fails, print a warning and let the includes() fail gracefully
-            print("amethyst_src environment variable is not set and Amethyst API was not found in the expected folder.")
-        end
-    end
+    local amethystFolder = path.join(
+        os.getenv("localappdata"),
+        "Packages",
+        "Microsoft.MinecraftUWP_8wekyb3d8bbwe",
+        "LocalState",
+        "games",
+        "com.mojang",
+        "amethyst"
+    )
+
+    modFolder = path.join(
+        amethystFolder,
+        "mods",
+        string.format("%s@dev", mod_name)
+    )
+end
+
+-- Only include AmethystAPI if present on disk at configure-time
+if amethystApiPath and os.isdir(amethystApiPath) then
+    includes(amethystApiPath)
+    includes(path.join(amethystApiPath, "packages", "libhat"))
 end
 
 -- RelWithDebInfo flags
-add_cxxflags("/O2", "/Zi", "/DNDEBUG", "/MD", "/EHsc", "/FS", "/MP")
-add_ldflags("/DEBUG", "/OPT:REF", "/OPT:ICF", "/INCREMENTAL:NO", {force = true})
-includes(path.join(amethystApiSrc, "AmethystAPI"))
+add_cxxflags("/O2", "/DNDEBUG", "/MD", "/EHsc", "/FS", "/MP")
+add_ldflags("/OPT:REF", "/OPT:ICF", "/INCREMENTAL:NO", {force = true})
 
--- Project dependencies
-local amethystFolder = path.join(
-    os.getenv("localappdata"),
-    "Packages",
-    "Microsoft.MinecraftUWP_8wekyb3d8bbwe",
-    "LocalState",
-    "games",
-    "com.mojang",
-    "amethyst"
-)
-
-local modFolder = path.join(
-    amethystFolder,
-    "mods",
-    string.format("%s@%d.%d.%d", mod_name, modMajor, modMinor, modPatch)
-)
-
-set_symbols("debug")
 set_targetdir(modFolder)
+set_toolchains("msvc", {asm = "nasm"})
 
-target("AmethystRuntime")
+set_project(mod_name)
+
+target(mod_name)
     set_kind("shared")
-    set_toolchains("nasm")
-    add_deps("AmethystAPI", {public = true})
-    set_default(true)
+    add_deps("AmethystAPI", "libhat")
+
+    -- Hard fail if AmethystAPI is missing
+    on_load(function (t)
+        if not (amethystApiPath and os.isdir(amethystApiPath)) then
+            raise("AmethystAPI not found at: " .. tostring(amethystApiPath) ..
+                  "\nCI: ensure repo is checked out to Amethyst/AmethystAPI" ..
+                  "\nLocal: set AMETHYST_SRC to point to your Amethyst clone.")
+        end
+    end)
+
+    -- Force rebuild when any source file changes
+    set_policy("build.optimization.lto", true )
+    set_policy("build.across_targets_in_parallel", true )
 
     add_files("src/**.cpp")
 
+    -- Uncomment if you plan to use ASM
+    -- add_files("src/**.asm")
+    --     set_toolset("as", "nasm")
+    --     add_asflags("-f win64", { force = true })
+
     add_defines(
-        string.format('MOD_VERSION="%d.%d.%d"', modMajor, modMinor, modPatch),
-        string.format('MOD_TARGET_VERSION_MAJOR=%d', major),
-        string.format('MOD_TARGET_VERSION_MINOR=%d', minor),
-        string.format('MOD_TARGET_VERSION_PATCH=%d', patch),
+        string.format('MOD_TARGET_VERSION_MAJOR=%d', targetMajor),
+        string.format('MOD_TARGET_VERSION_MINOR=%d', targetMajor),
+        string.format('MOD_TARGET_VERSION_PATCH=%d', targetMajor),
         'ENTT_PACKED_PAGE=128',
         'AMETHYST_EXPORTS'
     )
@@ -81,12 +89,12 @@ target("AmethystRuntime")
     -- Deps
     add_packages("AmethystAPI", "libhat")
     add_links("user32", "oleaut32", "windowsapp")
-    add_includedirs("src", {public = true})
 
+    add_includedirs("src", {public = true})
     add_headerfiles("src/**.hpp")
 
     after_build(function (target)
-        local src_json = path.join(os.curdir(), "mod.json")
+        local src_json = path.join("mod.json")
         local dst_json = path.join(modFolder, "mod.json")
         if not os.isdir(modFolder) then
             os.mkdir(modFolder)
