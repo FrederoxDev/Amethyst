@@ -99,8 +99,7 @@ jobs:
       - name: Build with MSVC
         run: xmake build -v
 
-      # Package the build artifacts (only dll, pdb, and mod.json)
-  # Package the build artifacts from Minecraft directory
+      # Package the build artifacts from Minecraft directory
       - name: Package AmethystRuntime
         shell: pwsh
         run: |
@@ -111,26 +110,27 @@ jobs:
           $minecraftPath = "C:\Users\runneradmin\AppData\Local\Packages\Microsoft.MinecraftUWP_8wekyb3d8bbwe\LocalState\games\com.mojang\amethyst\mods\AmethystRuntime@$env:VERSION"
           $dllPath = "$minecraftPath\AmethystRuntime.dll"
           $pdbPath = "$minecraftPath\AmethystRuntime.pdb"
-      
+          
           if (Test-Path $dllPath) {
-          Copy-Item $dllPath $tempPath -Force
-          echo "Copied DLL from: $dllPath"
+              Copy-Item $dllPath $tempPath -Force
+              echo "Copied DLL from: $dllPath"
           } else {
-          echo "ERROR: DLL not found at $dllPath"
-         }
+              echo "ERROR: DLL not found at $dllPath"
+          }
+          
           if (Test-Path $pdbPath) {
-          Copy-Item $pdbPath $tempPath -Force
-          echo "Copied PDB from: $pdbPath"
-         }  else {
-          echo "ERROR: PDB not found at $pdbPath"
-         }
+              Copy-Item $pdbPath $tempPath -Force
+              echo "Copied PDB from: $pdbPath"
+          } else {
+              echo "ERROR: PDB not found at $pdbPath"
+          }
 
           Copy-Item "mod.json" $tempPath -Force
           echo "Copied mod.json"
-      
+          
           echo "=== PACKAGING THESE FILES ==="
           Get-ChildItem $tempPath | ForEach-Object { echo "  $($_.Name)" }
-      
+          
           Compress-Archive -Path "$tempPath\*" -DestinationPath $zipName -Force
           echo "Created package: $zipName"
 
