@@ -18,6 +18,17 @@ jobs:
         with:
           submodules: recursive
 
+      # Debug directory structure
+      - name: Debug Directory Structure
+        shell: powershell
+        run: |
+            echo "=== Current directory ==="
+            Get-Location
+            echo "=== Directory contents ==="
+            Get-ChildItem -Force
+            echo "=== Looking for AmethystAPI ==="
+            Get-ChildItem -Recurse -Directory -Name "*Amethyst*"
+
       # Setup MSVC and Visual Studio Build Tools
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
