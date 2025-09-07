@@ -44,6 +44,10 @@ jobs:
           echo "C:\ProgramData\chocolatey\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8
           Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
 
+        # Setup Deno
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2.0.3
+
       # Add xmake to PATH
       - name: Add xmake to PATH
         uses: xmake-io/github-action-setup-xmake@v1
