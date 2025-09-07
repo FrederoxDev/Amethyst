@@ -73,11 +73,11 @@ jobs:
       - name: Build AmethystAPI
         run: |
           cd "$env:AMETHYST_SRC"
-          xmake build -m release AmethystAPI
+          xmake build -v
 
       # Build with MSVC
       - name: Build with MSVC
-        run: xmake build -m release
+        run: xmake build -v
 
       # Package the build artifacts (only dll, pdb, and mod.json)
       - name: Package AmethystRuntime
