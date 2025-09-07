@@ -44,7 +44,6 @@ jobs:
           echo "C:\ProgramData\chocolatey\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8
           Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
           refreshenv
-
       # Add xmake to PATH
       - name: Add xmake to PATH
         uses: xmake-io/github-action-setup-xmake@v1
@@ -66,7 +65,7 @@ jobs:
         shell: powershell
         run: |
           $destination = Join-Path $env:USERPROFILE "Documents/Amethyst"
-          git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/FrederoxDev/Amethyst $destination
+          git clone --recursive https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/FrederoxDev/Amethyst $destination
           echo "AMETHYST_SRC=$destination" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8
 
       # Build the Amethyst API so we can link against it
