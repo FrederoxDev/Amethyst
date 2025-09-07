@@ -13,10 +13,25 @@ set_languages("c++23")
 set_project(mod_name)
 set_version(string.format("%d.%d.%d", modMajor, modMinor, modPatch))
 
+-- Check if we are in an automated build
+local isAutomatedBuild = os.getenv("GITHUB_ACTIONS") == "true"
+local amethystApiSrc = ""
+
+if isAutomatedBuild then
+    -- Use the hardcoded path for the GitHub Actions runner
+    amethystApiSrc = "C:\\Users\\runneradmin\\Documents\\Amethyst"
+else
+    -- For a local build, use the environment variable
+    amethystApiSrc = os.getenv("AMETHYST_SRC")
+    if amethystApiSrc == nil then
+        error("AMETHYST_SRC environment variable is not set. Please set it to the path of the Amethyst API source.")
+    end
+end
+
 -- RelWithDebInfo flags
 add_cxxflags("/O2", "/Zi", "/DNDEBUG", "/MD", "/EHsc", "/FS", "/MP")
 add_ldflags("/DEBUG", "/OPT:REF", "/OPT:ICF", "/INCREMENTAL:NO", {force = true})
-includes("AmethystAPI")
+includes(path.join(amethystApiSrc, "AmethystAPI"))
 
 -- Project dependencies
 local amethystFolder = path.join(
