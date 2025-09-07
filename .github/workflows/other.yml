@@ -108,8 +108,8 @@ jobs:
           Remove-Item $tempPath -Recurse -Force -ErrorAction SilentlyContinue
           New-Item -ItemType Directory -Path $tempPath
           $minecraftPath = "C:\Users\runneradmin\AppData\Local\Packages\Microsoft.MinecraftUWP_8wekyb3d8bbwe\LocalState\games\com.mojang\amethyst\mods\AmethystRuntime@$env:VERSION"
-          $dllPath = "$minecraftPath\AmethystRuntime.dll"
-          $pdbPath = "$minecraftPath\AmethystRuntime.pdb"
+          $dllPath = "$minecraftPath"
+          $pdbPath = "$minecraftPath"
           
           if (Test-Path $dllPath) {
               Copy-Item $dllPath $tempPath -Force
