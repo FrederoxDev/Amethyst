@@ -36,6 +36,10 @@ jobs:
           Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1
           refreshenv
 
+        # Setup Deno
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2.0.3
+
       # Add xmake to PATH
       - name: Add xmake to PATH
         uses: xmake-io/github-action-setup-xmake@v1
