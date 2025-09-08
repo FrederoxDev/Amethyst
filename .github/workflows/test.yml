@@ -115,7 +115,7 @@ jobs:
               
               cd data
 
-        # Ensure deno is in path and yes i'm just taking some code from the template mod build.yml :P
+        # Ensure deno is in path and yes I'm just taking some code from the template mod build.yml :P
               Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1
               refreshenv
               
