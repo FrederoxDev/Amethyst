@@ -80,14 +80,6 @@ jobs:
           Expand-Archive $nasmZip -DestinationPath C:\nasm -Force
           echo "C:\nasm\nasm-2.16.03" >> $env:GITHUB_PATH
 
-      # Add the Amethyst API so it recognizes it when building
-      - name: Add AmethystAPI
-        shell: powershell
-        run: |
-          $destination = Join-Path $env:USERPROFILE "Documents/Amethyst"
-          git clone --recursive https://github.com/FrederoxDev/Amethyst $destination
-          echo "AMETHYST_SRC=$destination" >> $env:GITHUB_ENV
-
       # Configure AmethystAPI build mode
       - name: Configure AmethystAPI
         run: |
