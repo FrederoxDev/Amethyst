@@ -3,7 +3,7 @@
 	"name": "AmethystRuntime",
 	"packs": {
 		"behaviorPack": "./build/BP",
-		"resourcePack": "./build/RP"
+		"resourcePack": "data/packs/RP"
 	},
 	"profiles": {
 		"local": {
