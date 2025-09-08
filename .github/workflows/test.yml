@@ -75,18 +75,6 @@ jobs:
           cd "$env:AMETHYST_SRC"
           xmake build AmethystAPI
 
-      # Get version from mod.json and set env variable for subsequent steps
-      - name: Get version from mod.json
-        id: get_version
-        shell: pwsh
-        run: |
-          $json = Get-Content "mod.json" -Raw | ConvertFrom-Json
-          $version = $json.meta.version
-          $versionParts = $version.Split('.')
-          $version = "$($versionParts[0]).$($versionParts[1]).$($versionParts[2])"
-          echo "VERSION=$version" >> $env:GITHUB_ENV
-          Write-Host "Version set to: $version"
-
       # Configure runtime build mode
       - name: Configure runtime
         run: xmake f --mode=release
@@ -196,47 +184,3 @@ jobs:
           overwrite: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      # Bump the version in mod.json and push the changes
-      - name: Bump version in mod.json and push
-        shell: pwsh
-        run: |
-          # Configure Git
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          
-          # Deno script content
-          $denoScript = @'
-          import { readJson, writeJson } from "https://deno.land/x/jsonc@1.1.0/mod.ts";
-          
-          const filePath = "mod.json";
-          const mod = await readJson(filePath);
-          
-          if (mod.version && Array.isArray(mod.version)) {
-            mod.version[2] += 1; // Increment the patch version
-          } else {
-            console.error("Version array not found or invalid in mod.json");
-            Deno.exit(1);
-          }
-          
-          await writeJson(filePath, mod, { spaces: 2 });
-          console.log("Updated mod.json with new version");
-          '@
-
-          # Write Deno script to a temporary file
-          $denoScriptPath = Join-Path $env:TEMP "bump_version.ts"
-          Set-Content -Path $denoScriptPath -Value $denoScript
-
-          # Execute the Deno script
-          deno run --allow-read --allow-write --allow-env $denoScriptPath
-          
-          # Check for changes and commit
-          $changes = git status --porcelain
-          if ($changes) {
-              git add mod.json
-              git commit -m "Build: Bump version for next build"
-              git push
-              Write-Host "Committed and pushed version changes"
-          } else {
-              Write-Host "No changes to commit"
-          }
