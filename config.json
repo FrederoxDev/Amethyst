@@ -1,14 +1,16 @@
 {
 	"author": "FrederoxDev",
 	"name": "AmethystRuntime",
-	"packs": {
-		"behaviorPack": "./build/BP",
-		"resourcePack": "data/packs/RP"
-	},
 	"profiles": {
 		"local": {
 			"export": "development",
 			"filters": []
 		}
-	}
+	},
+	"packs": [
+		{
+			"path": "dapa/packs/RP",
+			"type": "rp"
+		}
+	]
 }
