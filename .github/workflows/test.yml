@@ -82,7 +82,7 @@ jobs:
           cd "$env:AMETHYST_SRC"
           xmake build AmethystAPI
 
-        # Bump mod version
+      # Bump mod version
       - name: Get mod version
         id: get_version
         shell: powershell
@@ -91,36 +91,36 @@ jobs:
           refreshenv
           $NEW_VERSION = deno run --allow-read --allow-write .github/workflows/VersionTools.ts
           echo "NEW_VERSION=$NEW_VERSION" >> $env:GITHUB_ENV
-          
+          echo "VERSION=$NEW_VERSION" >> $env:GITHUB_ENV
+
       - name: Push bumped version
         shell: powershell
         env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add .
           git commit -m "Bump version to $env:NEW_VERSION"
           git push
-          
+
       - name: Package Resources
         shell: powershell
         run: |
-              $url = "https://github.com/Bedrock-OSS/regolith/releases/download/1.5.2/regolith_1.5.2_windows_386.zip"
-              $zipPath = "$env:TEMP\regolith.zip"
-              $extractPath = "$env:TEMP\regolith"
-              
-              Invoke-WebRequest $url -OutFile $zipPath
-              Expand-Archive $zipPath -DestinationPath $extractPath
-              
-              cd data
-
-        # Ensure deno is in path and yes I'm just taking some code from the template mod build.yml :P
-              Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1
-              refreshenv
-              
-              & "$extractPath\regolith.exe" install-all
-              & "$extractPath\regolith.exe" run local
+          $url = "https://github.com/Bedrock-OSS/regolith/releases/download/1.5.2/regolith_1.5.2_windows_386.zip"
+          $zipPath = "$env:TEMP\regolith.zip"
+          $extractPath = "$env:TEMP\regolith"
+          
+          Invoke-WebRequest $url -OutFile $zipPath
+          Expand-Archive $zipPath -DestinationPath $extractPath
+          
+          cd data
+          
+          Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1
+          refreshenv
+          
+          & "$extractPath\regolith.exe" install-all
+          & "$extractPath\regolith.exe" run local
 
       # Configure runtime build mode
       - name: Configure runtime
