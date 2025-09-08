@@ -1,0 +1,14 @@
+{
+	"author": "FrederoxDev",
+	"name": "AmethystRuntime",
+	"packs": {
+		"behaviorPack": "./build/BP",
+		"resourcePack": "./build/RP"
+	},
+	"profiles": {
+		"local": {
+			"export": "development",
+			"filters": []
+		}
+	}
+}
