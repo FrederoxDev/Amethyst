@@ -9,16 +9,20 @@ env:
 jobs:
   build-and-release:
     runs-on: windows-latest
-    environment: meow
     permissions:
       contents: write
     steps:
-      # Checkout Amethyst Runtime repository
-      - name: Checkout Amethyst Runtime
+      # Checkout current mod
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Checkout AmethystAPI into /Amethyst
+      - name: Checkout AmethystAPI
         uses: actions/checkout@v4
         with:
+          repository: FrederoxDev/Amethyst
+          path: Amethyst
           submodules: recursive
-
       # Setup MSVC and Visual Studio Build Tools
       - name: Setup MSBuild
         uses: microsoft/setup-msbuild@v2
@@ -38,6 +42,10 @@ jobs:
           # Add Chocolatey's bin directory to the GitHub Actions PATH for all subsequent steps
           echo "C:\ProgramData\chocolatey\bin" >> $env:GITHUB_PATH
 
+      # Setup Deno
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2.0.3
+
       # Add xmake to PATH
       - name: Add xmake to PATH
         uses: xmake-io/github-action-setup-xmake@v1
@@ -54,9 +62,13 @@ jobs:
           Expand-Archive $nasmZip -DestinationPath C:\nasm -Force
           echo "C:\nasm\nasm-2.16.03" >> $env:GITHUB_PATH
 
-      # Setup Deno
-      - name: Setup Deno
-        uses: denoland/setup-deno@v2.0.3
+      # Add the Amethyst API so it recognizes it when building
+      - name: Add AmethystAPI
+        shell: powershell
+        run: |
+          $destination = Join-Path $env:USERPROFILE "Documents/Amethyst"
+          git clone --recursive https://github.com/FrederoxDev/Amethyst $destination
+          echo "AMETHYST_SRC=$destination" >> $env:GITHUB_ENV
 
       # Configure AmethystAPI build mode
       - name: Configure AmethystAPI
@@ -69,6 +81,47 @@ jobs:
         run: |
           cd "$env:AMETHYST_SRC"
           xmake build AmethystAPI
+
+        # Bump mod version
+      - name: Get mod version
+        id: get_version
+        shell: powershell
+        run: |
+          Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1
+          refreshenv
+          $NEW_VERSION = deno run --allow-read --allow-write .github/workflows/VersionTools.ts
+          echo "NEW_VERSION=$NEW_VERSION" >> $env:GITHUB_ENV
+          
+            - name: Push bumped version
+              shell: powershell
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                git config user.name "github-actions[bot]"
+                git config user.email "github-actions[bot]@users.noreply.github.com"
+                git add .
+                git commit -m "Bump version to $env:NEW_VERSION"
+                git push
+
+        #idk
+      - name: Package Resources
+        shell: powershell
+        run: |
+              $url = "https://github.com/Bedrock-OSS/regolith/releases/download/1.5.2/regolith_1.5.2_windows_386.zip"
+              $zipPath = "$env:TEMP\regolith.zip"
+              $extractPath = "$env:TEMP\regolith"
+              
+              Invoke-WebRequest $url -OutFile $zipPath
+              Expand-Archive $zipPath -DestinationPath $extractPath
+              
+              cd data
+
+        # Ensure deno is in path and yes i'm just taking some code from the template mod build.yml :P
+              Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1
+              refreshenv
+              
+              & "$extractPath\regolith.exe" install-all
+              & "$extractPath\regolith.exe" run local
 
       # Configure runtime build mode
       - name: Configure runtime
@@ -179,3 +232,47 @@ jobs:
           overwrite: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Bump the version in mod.json and push the changes
+      - name: Bump version in mod.json and push
+        shell: pwsh
+        run: |
+          # Configure Git
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Deno script content
+          $denoScript = @'
+          import { readJson, writeJson } from "https://deno.land/x/jsonc@1.1.0/mod.ts";
+          
+          const filePath = "mod.json";
+          const mod = await readJson(filePath);
+          
+          if (mod.version && Array.isArray(mod.version)) {
+            mod.version[2] += 1; // Increment the patch version
+          } else {
+            console.error("Version array not found or invalid in mod.json");
+            Deno.exit(1);
+          }
+          
+          await writeJson(filePath, mod, { spaces: 2 });
+          console.log("Updated mod.json with new version");
+          '@
+
+          # Write Deno script to a temporary file
+          $denoScriptPath = Join-Path $env:TEMP "bump_version.ts"
+          Set-Content -Path $denoScriptPath -Value $denoScript
+
+          # Execute the Deno script
+          deno run --allow-read --allow-write --allow-env $denoScriptPath
+          
+          # Check for changes and commit
+          $changes = git status --porcelain
+          if ($changes) {
+              git add mod.json
+              git commit -m "Build: Bump version for next build"
+              git push
+              Write-Host "Committed and pushed version changes"
+          } else {
+              Write-Host "No changes to commit"
+          }
