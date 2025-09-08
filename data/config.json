@@ -1,9 +1,10 @@
 {
 	"$schema": "https://raw.githubusercontent.com/Bedrock-OSS/regolith-schemas/main/config/v1.4.json",
 	"author": "FrederoxDev",
-	"name": "AmethystRuntime",
+	"name": "Amethyst-Template",
 	"packs": {
-		"resourcePack": "./packs/RP"
+		"resourcePack": "./packs/RP",
+		"behaviorPack": "./packs/BP"
 	},
 	"regolith": {
 		"dataPath": "./packs/data",
@@ -12,13 +13,27 @@
 		"profiles": {
 			"default": {
 				"export": {
+					"bpPath": "%localappdata%/Packages/Microsoft.MinecraftUWP_8wekyb3d8bbwe/LocalState/games/com.mojang/amethyst/mods/Amethyst-Template@dev/behavior_packs/main_bp",
 					"build": "standard",
 					"readOnly": false,
-					"target": "exact",
-					"rpPath": "%localappdata%/Packages/Microsoft.MinecraftUWP_8wekyb3d8bbwe/LocalState/games/com.mojang/amethyst/mods/AmethystRuntime@2.0.0/resource_packs/main_rp",
-					"bpPath": "%localappdata%/Packages/Microsoft.MinecraftUWP_8wekyb3d8bbwe/LocalState/games/com.mojang/amethyst/mods/AmethystRuntime@2.0.0/behavior_packs/main_bp"
+					"rpPath": "%localappdata%/Packages/Microsoft.MinecraftUWP_8wekyb3d8bbwe/LocalState/games/com.mojang/amethyst/mods/Amethyst-Template@dev/resource_packs/main_rp",
+					"target": "exact"
 				},
 				"filters": []
+			},
+			"local": {
+				"export": {
+					"bpPath": "../dist/behavior_packs/main_bp",
+					"build": "standard",
+					"readOnly": false,
+					"rpPath": "../dist/resource_packs/main_rp",
+					"target": "exact"
+				},
+				"filters": [
+					{
+						"profile": "default"
+					}
+				]
 			}
 		}
 	}
