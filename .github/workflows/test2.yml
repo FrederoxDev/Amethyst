@@ -1,0 +1,121 @@
+name: Release new AmethystRuntime
+
+on:
+    workflow_dispatch:
+
+env:
+    MOD_NAME: AmethystRuntime
+
+jobs:
+    build:
+        runs-on: windows-latest
+        steps:
+            # Checkout current mod
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            # Checkout AmethystAPI into /Amethyst
+            - name: Checkout AmethystAPI
+              uses: actions/checkout@v4
+              with:
+                  repository: FrederoxDev/Amethyst
+                  path: Amethyst
+                  submodules: recursive
+
+            # Build dependencies
+            - name: Install Build Tools
+              shell: powershell
+              run: |
+                choco install xmake -y
+                choco install deno -y
+
+            # Bump mod version
+            - name: Get mod version
+              id: get_version
+              shell: powershell
+              run: |
+                Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1
+                refreshenv
+                $NEW_VERSION = deno run --allow-read --allow-write .github/workflows/VersionTools.ts
+                echo "NEW_VERSION=$NEW_VERSION" >> $env:GITHUB_ENV
+                
+            - name: Push bumped version
+              shell: powershell
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                git config user.name "github-actions[bot]"
+                git config user.email "github-actions[bot]@users.noreply.github.com"
+                git add .
+                git commit -m "Bump version to $env:NEW_VERSION"
+                git push
+
+            - name: Package Resources
+              shell: powershell
+              run: |
+                $url = "https://github.com/Bedrock-OSS/regolith/releases/download/1.5.2/regolith_1.5.2_windows_386.zip"
+                $zipPath = "$env:TEMP\regolith.zip"
+                $extractPath = "$env:TEMP\regolith"
+
+                Invoke-WebRequest $url -OutFile $zipPath
+                Expand-Archive $zipPath -DestinationPath $extractPath
+
+                cd data
+
+                # Ensure deno is in path
+                Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1
+                refreshenv
+
+                & "$extractPath\regolith.exe" install-all
+                & "$extractPath\regolith.exe" run local
+
+            - name: Build
+              run: |
+                Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1
+                refreshenv
+
+                Invoke-WebRequest https://www.nasm.us/pub/nasm/releasebuilds/2.16.03/win64/nasm-2.16.03-win64.zip -OutFile nasm.zip
+                Expand-Archive nasm.zip -DestinationPath C:\nasm
+                $Env:PATH = "C:\nasm\nasm-2.16.03;$Env:PATH"
+
+                nasm -v
+                xmake f -y --automated_build=y
+                xmake
+              shell: powershell
+
+            - name: Package Mod
+              shell: powershell
+              run: |
+                $zipName = "$env:MOD_NAME@$env:NEW_VERSION.zip"
+                $distPath = "dist"
+
+                $excluded = Get-ChildItem -Path $distPath -Recurse -File | Where-Object { $_.Extension -in ".lib", ".exp" }
+                $tempPath = "$env:TEMP\dist_temp"
+                Remove-Item $tempPath -Recurse -Force -ErrorAction SilentlyContinue
+                Copy-Item $distPath $tempPath -Recurse
+
+                foreach ($file in $excluded) {
+                  $fileToRemove = $file.FullName.Replace((Resolve-Path $distPath).Path, $tempPath)
+                  Remove-Item $fileToRemove -Force
+                }
+
+                Compress-Archive -Path "$tempPath\*" -DestinationPath $zipName
+
+            - name: Create GitHub Release
+              id: create_release
+              run: |
+                $tag_name = "v$env:NEW_VERSION"
+                $release_name = "Release $env:NEW_VERSION"
+                gh release create $tag_name --title "$release_name" --notes "Automated release" --target main --repo ${{ github.repository }} --draft=false --prerelease=false
+              shell: pwsh
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Upload Release Asset
+              run: |
+                $asset_path = "${{ env.MOD_NAME }}@$env:NEW_VERSION.zip"
+                $asset_label = "${{ env.MOD_NAME }}@$env:NEW_VERSION.zip"
+                gh release upload "v$env:NEW_VERSION" "$asset_path#$asset_label" --repo ${{ github.repository }}
+              shell: pwsh
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
