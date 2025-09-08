@@ -31,7 +31,7 @@
 				},
 				"filters": [
 					{
-						"profile": "default"
+						"profile": "local"
 					}
 				]
 			}
