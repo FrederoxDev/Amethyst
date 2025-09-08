@@ -102,6 +102,7 @@ jobs:
                 git add .
                 git commit -m "Bump version to $env:NEW_VERSION"
                 git push
+          
       - name: Package Resources
         shell: powershell
         run: |
