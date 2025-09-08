@@ -1,4 +1,4 @@
-name: Release new Amethyst Runtime
+name: Release new Amethyst Runtime test
 
 on:
   workflow_dispatch:
@@ -57,17 +57,35 @@ jobs:
       - name: Setup Deno
         uses: denoland/setup-deno@v2.0.3
 
+      # Set AMETHYST_SRC environment variable
+      - name: Set AmethystAPI Environment
+        shell: powershell
+        run: |
+          echo "AMETHYST_SRC=$env:GITHUB_WORKSPACE" >> $env:GITHUB_ENV
+
       # Configure AmethystAPI build mode
       - name: Configure AmethystAPI
         run: |
-          cd AmethystAPI
+          cd "$env:AMETHYST_SRC"
           xmake f --mode=release
 
       # Build the Amethyst API so we can link against it
       - name: Build AmethystAPI
         run: |
-          cd AmethystAPI
+          cd "$env:AMETHYST_SRC"
           xmake build AmethystAPI
+
+      # Get version from mod.json and set env variable for subsequent steps
+      - name: Get version from mod.json
+        id: get_version
+        shell: pwsh
+        run: |
+          $json = Get-Content "mod.json" -Raw | ConvertFrom-Json
+          $version = $json.meta.version
+          $versionParts = $version.Split('.')
+          $version = "$($versionParts[0]).$($versionParts[1]).$($versionParts[2])"
+          echo "VERSION=$version" >> $env:GITHUB_ENV
+          Write-Host "Version set to: $version"
 
       # Configure runtime build mode
       - name: Configure runtime
@@ -135,23 +153,38 @@ jobs:
               echo "WARNING: AmethystRuntime.pdb not found. Skipping PDB."
           }
 
+      # Package the build artifacts from their found locations
       - name: Package AmethystRuntime
-        shell: powershell
+        shell: pwsh
         run: |
-            $zipName = "$env:MOD_NAME@$env:NEW_VERSION.zip"
-                $distPath = "dist"
+          $zipName = "$env:PROJECT_NAME@$env:VERSION.zip"
+          $tempPath = "$env:TEMP\runtime_temp"
+          Remove-Item $tempPath -Recurse -Force -ErrorAction SilentlyContinue
+          New-Item -ItemType Directory -Path $tempPath
+          
+          if (Test-Path $env:AMETHYST_DLL_PATH) {
+              Copy-Item $env:AMETHYST_DLL_PATH $tempPath -Force
+              echo "Copied DLL from: $env:AMETHYST_DLL_PATH"
+          } else {
+              echo "ERROR: DLL not found at $env:AMETHYST_DLL_PATH"
+              exit 1
+          }
+          
+          if (Test-Path $env:AMETHYST_PDB_PATH) {
+              Copy-Item $env:AMETHYST_PDB_PATH $tempPath -Force
+              echo "Copied PDB from: $env:AMETHYST_PDB_PATH"
+          } else {
+              echo "WARNING: PDB not found. Skipping PDB copy."
+          }
 
-                $excluded = Get-ChildItem -Path $distPath -Recurse -File | Where-Object { $_.Extension -in ".lib", ".exp" }
-                $tempPath = "$env:TEMP\dist_temp"
-                Remove-Item $tempPath -Recurse -Force -ErrorAction SilentlyContinue
-                Copy-Item $distPath $tempPath -Recurse
-
-                foreach ($file in $excluded) {
-                  $fileToRemove = $file.FullName.Replace((Resolve-Path $distPath).Path, $tempPath)
-                  Remove-Item $fileToRemove -Force
-                }
-
-                Compress-Archive -Path "$tempPath\*" -DestinationPath $zipName
+          Copy-Item "mod.json" $tempPath -Force
+          echo "Copied mod.json"
+          
+          echo "=== PACKAGING THESE FILES ==="
+          Get-ChildItem $tempPath | ForEach-Object { echo "  $($_.Name)" }
+          
+          Compress-Archive -Path "$tempPath\*" -DestinationPath $zipName -Force
+          echo "Created package: $zipName"
 
       # Create GitHub Release
       - name: Create GitHub Release
