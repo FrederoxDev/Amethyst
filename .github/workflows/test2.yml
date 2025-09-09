@@ -1,10 +1,10 @@
-name: Release new AmethystRuntime
+name: test 5
 
 on:
     workflow_dispatch:
 
 env:
-    MOD_NAME: AmethystRuntime
+    MOD_NAME: Offhand
 
 jobs:
     build:
@@ -26,9 +26,14 @@ jobs:
             - name: Install Build Tools
               shell: powershell
               run: |
-                choco install xmake -y
                 choco install deno -y
 
+            # try another way to install regolith, prob wont work
+            - name: setup-regolith
+              uses: BLOCKLINE-IO/regolith-install-action@v1.0
+              with:
+                version: 0.0.17
+            
             # Bump mod version
             - name: Get mod version
               id: get_version
@@ -71,17 +76,17 @@ jobs:
 
             - name: Build
               run: |
-                    Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1
-                    refreshenv
+                Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1
+                refreshenv
 
-                    Invoke-WebRequest https://www.nasm.us/pub/nasm/releasebuilds/2.16.03/win64/nasm-2.16.03-win64.zip -OutFile nasm.zip
-                    Expand-Archive nasm.zip -DestinationPath C:\nasm
-                    $Env:PATH = "C:\nasm\nasm-2.16.03;$Env:PATH"
+                Invoke-WebRequest https://www.nasm.us/pub/nasm/releasebuilds/2.16.03/win64/nasm-2.16.03-win64.zip -OutFile nasm.zip
+                Expand-Archive nasm.zip -DestinationPath C:\nasm
+                $Env:PATH = "C:\nasm\nasm-2.16.03;$Env:PATH"
 
-                    nasm -v
-                    xmake f -y --automated_build=y --mod_version="$env:NEW_VERSION"
-                    xmake
-                      shell: powershell
+                nasm -v
+                xmake f -y --automated_build=y
+                xmake
+              shell: powershell
 
             - name: Package Mod
               shell: powershell
