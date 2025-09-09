@@ -6,6 +6,22 @@
 			"export": "development",
 			"filters": []
 		}
+		"local": {
+		"export": {
+			"bpPath": "../dist/behavior_packs/main_bp",
+			"build": "standard",
+					"readOnly": false,
+					"rpPath": "../dist/resource_packs/main_rp",
+					"target": "exact"
+				},
+				"filters": [
+					{
+						"profile": "default"
+					}
+				]
+			}
+		}
+	}
 	},
 	"packs": [
 		{
