@@ -27,6 +27,7 @@ jobs:
               shell: powershell
               run: |
                 choco install deno -y
+                choco install xmake -y
 
             # try another way to install regolith, prob wont work
             - name: setup-regolith
