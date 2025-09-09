@@ -71,17 +71,17 @@ jobs:
 
             - name: Build
               run: |
-                Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1
-                refreshenv
+                    Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1
+                    refreshenv
 
-                Invoke-WebRequest https://www.nasm.us/pub/nasm/releasebuilds/2.16.03/win64/nasm-2.16.03-win64.zip -OutFile nasm.zip
-                Expand-Archive nasm.zip -DestinationPath C:\nasm
-                $Env:PATH = "C:\nasm\nasm-2.16.03;$Env:PATH"
+                    Invoke-WebRequest https://www.nasm.us/pub/nasm/releasebuilds/2.16.03/win64/nasm-2.16.03-win64.zip -OutFile nasm.zip
+                    Expand-Archive nasm.zip -DestinationPath C:\nasm
+                    $Env:PATH = "C:\nasm\nasm-2.16.03;$Env:PATH"
 
-                nasm -v
-                xmake f -y --automated_build=y
-                xmake
-              shell: powershell
+                    nasm -v
+                    xmake f -y --automated_build=y --mod_version="$env:NEW_VERSION"
+                    xmake
+                      shell: powershell
 
             - name: Package Mod
               shell: powershell
