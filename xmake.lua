@@ -10,6 +10,18 @@ option_end()
 
 set_languages("c++23")
 
+local function get_mod_version()
+    local json_file = io.open("mod.json", "r")
+    if json_file then
+        local content = json_file:read("*a")
+        json_file:close()
+        local version = content:match('"version"%s*:%s*"([^"]+)"')
+        return version or "1.0.0"
+    end
+    return "1.0.0"
+end
+
+local mod_version = get_mod_version()
 local automated = is_config("automated_build", true)
 local modFolder
 local amethystApiPath
