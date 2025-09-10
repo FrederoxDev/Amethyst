@@ -11,10 +11,8 @@ option_end()
 set_languages("c++23")
 
 local function get_mod_version()
-    local json_file = io.open("mod.json", "r")
-    if json_file then
-        local content = json_file:read("*a")
-        json_file:close()
+    if os.isfile("mod.json") then
+        local content = os.readfile("mod.json")
         local version = content:match('"version"%s*:%s*"([^"]+)"')
         return version or "1.0.0"
     end
