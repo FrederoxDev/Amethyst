@@ -16,7 +16,12 @@ set_version(string.format("%d.%d.%d", modMajor, modMinor, modPatch))
 -- RelWithDebInfo flags
 add_cxxflags("/O2", "/Zi", "/DNDEBUG", "/MD", "/EHsc", "/FS", "/MP")
 add_ldflags("/DEBUG", "/OPT:REF", "/OPT:ICF", "/INCREMENTAL:NO", {force = true})
-includes(path.join(os.getenv("AMETHYST_SRC"), "AmethystAPI"))
+
+if os.getenv("GITHUB_ACTIONS") then
+    includes("AmethystAPI")
+else
+    includes(path.join(os.getenv("AMETHYST_SRC"), "AmethystAPI"))
+end
 
 -- Project dependencies
 local amethystFolder = path.join(
