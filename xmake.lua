@@ -91,8 +91,9 @@ target(mod_name)
 
     add_defines(
         string.format('MOD_TARGET_VERSION_MAJOR=%d', targetMajor),
-        string.format('MOD_TARGET_VERSION_MINOR=%d', targetMajor),
-        string.format('MOD_TARGET_VERSION_PATCH=%d', targetMajor),
+        string.format('MOD_TARGET_VERSION_MINOR=%d', targetMinor),
+        string.format('MOD_TARGET_VERSION_PATCH=%d', targetPatch),
+        string.format('MOD_VERSION="%s"', mod_version),
         'ENTT_PACKED_PAGE=128',
         'AMETHYST_EXPORTS'
     )
