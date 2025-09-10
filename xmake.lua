@@ -11,10 +11,15 @@ option_end()
 set_languages("c++23")
 
 local function get_mod_version()
-    if os.isfile("mod.json") then
-        local content = os.readfile("mod.json")
-        local version = content:match('"version"%s*:%s*"([^"]+)"')
-        return version or "1.0.0"
+    local paths = {"mod.json", "../mod.json", "../../mod.json"}
+    for _, path in ipairs(paths) do
+        if os.isfile(path) then
+            local ok, content = pcall(os.readfile, path)
+            if ok and content then
+                local version = content:match('"version"%s*:%s*"([^"]+)"')
+                if version then return version end
+            end
+        end
     end
     return "1.0.0"
 end
