@@ -55,8 +55,6 @@ jobs:
           
       - name: Setup Deno
         uses: denoland/setup-deno@v2.0.3
-        with:
-          deno-version: 2.4.5
           
       # Install NASM (in temp folder only, not saved in repo)
       - name: Install NASM
