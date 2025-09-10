@@ -54,10 +54,10 @@ jobs:
           version: 'latest'
           
       - name: Setup Deno
-      - uses: denoland/setup-deno@v2
+        uses: denoland/setup-deno@v2.0.3
         with:
-          deno-version: lts
-
+          deno-version: 2.4.5
+          
       # Install NASM (in temp folder only, not saved in repo)
       - name: Install NASM
         shell: pwsh
