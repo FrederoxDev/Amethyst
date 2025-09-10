@@ -39,10 +39,10 @@ jobs:
           # Add Chocolatey's bin directory to the GitHub Actions PATH for all subsequent steps
           echo "C:\ProgramData\chocolatey\bin" >> $env:GITHUB_PATH
 
-        - name: setup-regolith
-            uses: BLOCKLINE-IO/regolith-install-action@v1.0
-            with:
-                version: 0.0.17
+      - name: setup-regolith
+        uses: BLOCKLINE-IO/regolith-install-action@v1.0
+        with:
+            version: 0.0.17
 
       # Add xmake to PATH
       - name: Add xmake to PATH
