@@ -1,7 +1,3 @@
-[submodule "AmethystAPI"]
-    path = AmethystAPI
-    url = https://github.com/AmethystAPI/AmethystAPI.git
-
 [submodule "AmethystAPI/packages/libhat"]
     path = AmethystAPI/packages/libhat
     url = https://github.com/AmethystAPI/libhat.git
