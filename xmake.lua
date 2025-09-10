@@ -82,6 +82,7 @@ target(mod_name)
     -- Force rebuild when any source file changes
     set_policy("build.optimization.lto", true )
     set_policy("build.across_targets_in_parallel", true )
+    set_policy("script.allow_io", true)
 
     add_files("src/**.cpp")
 
