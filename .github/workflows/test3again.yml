@@ -37,7 +37,7 @@ jobs:
         shell: powershell
         run: |
           choco install xmake -y
-          choco install ninja -y
+          choco install deno -y
           
           # Add Chocolatey's bin directory to the GitHub Actions PATH for all subsequent steps
           echo "C:\ProgramData\chocolatey\bin" >> $env:GITHUB_PATH
