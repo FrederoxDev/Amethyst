@@ -12,13 +12,17 @@ jobs:
     permissions:
       contents: write
     steps:
-      # Checkout Amethyst Runtime repository
-      - name: Checkout Amethyst Runtime
+            # Checkout current mod
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+            # Checkout AmethystAPI into /Amethyst
+      - name: Checkout AmethystAPI
         uses: actions/checkout@v4
         with:
-            repository: FederoxDev/Amethyst
-            path: Amethyst
-            submodules: recursive
+                repository: FrederoxDev/Amethyst
+                path: Amethyst
+                submodules: recursive
 
       # Setup MSVC and Visual Studio Build Tools
       - name: Setup MSBuild
