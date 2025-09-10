@@ -1,0 +1,193 @@
+name: Release new Amethyst Runtime
+
+on:
+  workflow_dispatch:
+
+env:
+  PROJECT_NAME: AmethystRuntime
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      # Checkout Amethyst Runtime repository
+      - name: Checkout Amethyst Runtime
+        uses: actions/checkout@v4
+        with:
+            repository: FederoxDev/Amethyst
+            path: Amethyst
+            submodules: recursive
+
+      # Setup MSVC and Visual Studio Build Tools
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Setup Visual Studio Developer Command Prompt
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      # Install Chocolatey packages
+      - name: Install Build Tools via Chocolatey
+        shell: powershell
+        run: |
+          choco install xmake -y
+          choco install deno -y
+
+          # Add Chocolatey's bin directory to the GitHub Actions PATH for all subsequent steps
+          echo "C:\ProgramData\chocolatey\bin" >> $env:GITHUB_PATH
+
+        - name: setup-regolith
+            uses: BLOCKLINE-IO/regolith-install-action@v1.0
+            with:
+                version: 0.0.17
+
+      # Add xmake to PATH
+      - name: Add xmake to PATH
+        uses: xmake-io/github-action-setup-xmake@v1
+        with:
+          version: 'latest'
+
+      # Install NASM
+      - name: Install NASM
+        shell: pwsh
+        run: |
+          $nasmUrl = "https://www.nasm.us/pub/nasm/releasebuilds/2.16.03/win64/nasm-2.16.03-win64.zip"
+          $nasmZip = "$env:TEMP\nasm.zip"
+          Invoke-WebRequest $nasmUrl -OutFile $nasmZip
+          Expand-Archive $nasmZip -DestinationPath C:\nasm -Force
+          echo "C:\nasm\nasm-2.16.03" >> $env:GITHUB_PATH
+
+      # Setup Deno
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2.0.3
+
+      # Configure AmethystAPI build mode
+      - name: Configure AmethystAPI
+        run: |
+          cd AmethystAPI
+          xmake f --mode=release
+
+      # Build the Amethyst API so we can link against it
+      - name: Build AmethystAPI
+        run: |
+          cd AmethystAPI
+          xmake build AmethystAPI
+
+      # Configure runtime build mode
+      - name: Configure runtime
+        run: xmake f --mode=release
+
+      # Build with MSVC
+      - name: Build with MSVC
+        run: xmake build -v
+
+      # Find the DLL and PDB files
+      - name: Find Build Artifacts
+        id: find_artifacts
+        shell: pwsh
+        run: |
+          echo "=== Searching for AmethystRuntime.dll and AmethystRuntime.pdb ==="
+
+          # Search common build paths for the files, including the new path from the logs
+          $searchPaths = @(
+              ".",
+              "build",
+              ".xmake",
+              "$env:USERPROFILE",
+              "C:\Users\runneradmin",
+              "C:\Users\runneradmin\AppData\Local\Packages\Microsoft.MinecraftUWP_8wekyb3d8bbwe\LocalState\games\com.mojang\amethyst\mods"
+          )
+
+          $dllPath = $null
+          $pdbPath = $null
+
+          foreach ($path in $searchPaths) {
+              if (Test-Path $path) {
+                  echo "--- Searching in $path ---"
+                  $found = Get-ChildItem -Path $path -Recurse -File -ErrorAction SilentlyContinue | Where-Object {
+                      ($_.Name -eq "AmethystRuntime.dll") -or ($_.Name -eq "AmethystRuntime.pdb")
+                  }
+
+                  if ($found) {
+                      foreach ($file in $found) {
+                          if ($file.Name -eq "AmethystRuntime.dll") {
+                              $dllPath = $file.FullName
+                          }
+                          if ($file.Name -eq "AmethystRuntime.pdb") {
+                              $pdbPath = $file.FullName
+                          }
+                      }
+                  }
+              }
+              if ($dllPath -and $pdbPath) {
+                  break
+              }
+          }
+
+          if ($dllPath) {
+              echo "AMETHYST_DLL_PATH=$dllPath" | Out-File -FilePath $env:GITHUB_ENV -Append
+              echo "SUCCESS: Found AmethystRuntime.dll at $dllPath"
+          } else {
+              echo "ERROR: AmethystRuntime.dll not found."
+              exit 1
+          }
+
+          if ($pdbPath) {
+              echo "AMETHYST_PDB_PATH=$pdbPath" | Out-File -FilePath $env:GITHUB_ENV -Append
+              echo "SUCCESS: Found AmethystRuntime.pdb at $pdbPath"
+          } else {
+              echo "WARNING: AmethystRuntime.pdb not found. Skipping PDB."
+          }
+
+      - name: Package AmethystRuntime
+        shell: powershell
+        run: |
+            $zipName = "$env:MOD_NAME@$env:NEW_VERSION.zip"
+                $distPath = "dist"
+
+                $excluded = Get-ChildItem -Path $distPath -Recurse -File | Where-Object { $_.Extension -in ".lib", ".exp" }
+                $tempPath = "$env:TEMP\dist_temp"
+                Remove-Item $tempPath -Recurse -Force -ErrorAction SilentlyContinue
+                Copy-Item $distPath $tempPath -Recurse
+
+                foreach ($file in $excluded) {
+                  $fileToRemove = $file.FullName.Replace((Resolve-Path $distPath).Path, $tempPath)
+                  Remove-Item $fileToRemove -Force
+                }
+
+                Compress-Archive -Path "$tempPath\*" -DestinationPath $zipName
+
+      # Create GitHub Release
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ env.VERSION }}
+          name: AmethystRuntime ${{ env.VERSION }}
+          files: ${{ env.PROJECT_NAME }}@${{ env.VERSION }}.zip
+          overwrite: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Bump mod version
+      - name: Get mod version
+        id: get_version
+        shell: powershell
+        run: |
+                Import-Module $env:ChocolateyInstall\helpers\chocolateyProfile.psm1
+                refreshenv
+                $NEW_VERSION = deno run --allow-read --allow-write .github/workflows/VersionTools.ts
+                echo "NEW_VERSION=$NEW_VERSION" >> $env:GITHUB_ENV
+
+        - name: Push bumped version
+            shell: powershell
+            env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            run: |
+                git config user.name "github-actions[bot]"
+                git config user.email "github-actions[bot]@users.noreply.github.com"
+                git add mod.json
+                git commit -m "Bump version to $env:NEW_VERSION"
+                git push
