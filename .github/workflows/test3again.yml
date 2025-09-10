@@ -101,7 +101,7 @@ jobs:
 
       # Configure runtime build mode
       - name: Configure runtime
-        run: xmake f --mode=release
+        run: xmake f --mode=release --automated_build=y
 
       # Build with MSVC
       - name: Build with MSVC
