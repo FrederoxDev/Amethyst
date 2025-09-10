@@ -85,6 +85,9 @@ jobs:
 
       - name: setup-regolith
         uses: BLOCKLINE-IO/regolith-install-action@v1.0
+
+      - name: Initialize and update submodules
+        run: git submodule update --init --recursive
           
       # Configure AmethystAPI build mode
       - name: Configure AmethystAPI
@@ -110,9 +113,6 @@ jobs:
 
                 & "$extractPath\regolith.exe" install-all
                 & "$extractPath\regolith.exe" run local
-
-      - name: Initialize and update submodules
-        run: git submodule update --init --recursive
 
       # Build the Amethyst API so we can link against it
       - name: Build AmethystAPI
