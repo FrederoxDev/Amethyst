@@ -7,7 +7,7 @@
   </h1>
 </div>
 
-Project Amethyst was an open source-project for building client-side mods for Minecraft Bedrock `1.21.0.3`, client-side mods are able to stretch past the limitations of addons and have full control over the game such as using Minecraft's input system, creating your own user interfaces, changing vanilla functionality, and more. Please consider starring ⭐ the repository, doing this takes a significant amount of work.
+Project Amethyst was an open source-project for building client-side mods for Minecraft Bedrock `1.21.101`, client-side mods are able to stretch past the limitations of addons and have full control over the game such as using Minecraft's input system, creating your own user interfaces, changing vanilla functionality, and more. Please consider starring ⭐ the repository, doing this takes a significant amount of work.
 
 <br />
 <h2 align="center">Mods built with Amethyst</h2>
