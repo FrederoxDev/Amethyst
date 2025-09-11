@@ -128,24 +128,95 @@ jobs:
       - name: Build with MSVC
         run: xmake build -v
 
-      - name: Package AmethystRuntime
-        shell: powershell
+      # Find the DLL and PDB files
+      - name: Find Build Artifacts
+        id: find_artifacts
+        shell: pwsh
         run: |
-            $zipName = "$env:MOD_NAME@$env:NEW_VERSION.zip"
-                $distPath = "dist"
+          echo "=== Searching for AmethystRuntime.dll and AmethystRuntime.pdb ==="
+          
+          # Search common build paths for the files, including the new path from the logs
+          $searchPaths = @(
+              ".",
+              "build",
+              ".xmake",
+              "$env:USERPROFILE",
+              "C:\Users\runneradmin",
+              "C:\Users\runneradmin\AppData\Local\Packages\Microsoft.MinecraftUWP_8wekyb3d8bbwe\LocalState\games\com.mojang\amethyst\mods"
+          )
+          
+          $dllPath = $null
+          $pdbPath = $null
+          
+          foreach ($path in $searchPaths) {
+              if (Test-Path $path) {
+                  echo "--- Searching in $path ---"
+                  $found = Get-ChildItem -Path $path -Recurse -File -ErrorAction SilentlyContinue | Where-Object { 
+                      ($_.Name -eq "AmethystRuntime.dll") -or ($_.Name -eq "AmethystRuntime.pdb")
+                  }
+          
+                  if ($found) {
+                      foreach ($file in $found) {
+                          if ($file.Name -eq "AmethystRuntime.dll") {
+                              $dllPath = $file.FullName
+                          }
+                          if ($file.Name -eq "AmethystRuntime.pdb") {
+                              $pdbPath = $file.FullName
+                          }
+                      }
+                  }
+              }
+              if ($dllPath -and $pdbPath) {
+                  break
+              }
+          }
+          
+          if ($dllPath) {
+              echo "AMETHYST_DLL_PATH=$dllPath" | Out-File -FilePath $env:GITHUB_ENV -Append
+              echo "SUCCESS: Found AmethystRuntime.dll at $dllPath"
+          } else {
+              echo "ERROR: AmethystRuntime.dll not found."
+              exit 1
+          }
+          if ($pdbPath) {
+              echo "AMETHYST_PDB_PATH=$pdbPath" | Out-File -FilePath $env:GITHUB_ENV -Append
+              echo "SUCCESS: Found AmethystRuntime.pdb at $pdbPath"
+          } else {
+              echo "WARNING: AmethystRuntime.pdb not found. Skipping PDB."
+          }
 
-                $excluded = Get-ChildItem -Path $distPath -Recurse -File | Where-Object { $_.Extension -in ".lib", ".exp" }
-                $tempPath = "$env:TEMP\dist_temp"
-                Remove-Item $tempPath -Recurse -Force -ErrorAction SilentlyContinue
-                Copy-Item $distPath $tempPath -Recurse
-
-                foreach ($file in $excluded) {
-                  $fileToRemove = $file.FullName.Replace((Resolve-Path $distPath).Path, $tempPath)
-                  Remove-Item $fileToRemove -Force
-                }
-
-                Compress-Archive -Path "$tempPath\*" -DestinationPath $zipName
-
+      # Package the build artifacts from their found locations
+      - name: Package AmethystRuntime
+        shell: pwsh
+        run: |
+          $zipName = "$env:PROJECT_NAME@$env:VERSION.zip"
+          $tempPath = "$env:TEMP\runtime_temp"
+          Remove-Item $tempPath -Recurse -Force -ErrorAction SilentlyContinue
+          New-Item -ItemType Directory -Path $tempPath
+          
+          if (Test-Path $env:AMETHYST_DLL_PATH) {
+              Copy-Item $env:AMETHYST_DLL_PATH $tempPath -Force
+              echo "Copied DLL from: $env:AMETHYST_DLL_PATH"
+          } else {
+              echo "ERROR: DLL not found at $env:AMETHYST_DLL_PATH"
+              exit 1
+          }
+          
+          if (Test-Path $env:AMETHYST_PDB_PATH) {
+              Copy-Item $env:AMETHYST_PDB_PATH $tempPath -Force
+              echo "Copied PDB from: $env:AMETHYST_PDB_PATH"
+          } else {
+              echo "WARNING: PDB not found. Skipping PDB copy."
+          }
+          Copy-Item "mod.json" $tempPath -Force
+          echo "Copied mod.json"
+          
+          echo "=== PACKAGING THESE FILES ==="
+          Get-ChildItem $tempPath | ForEach-Object { echo "  $($_.Name)" }
+          
+          Compress-Archive -Path "$tempPath\*" -DestinationPath $zipName -Force
+          echo "Created package: $zipName"
+          
       # Create GitHub Release
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
