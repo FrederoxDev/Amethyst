@@ -189,7 +189,7 @@ jobs:
       - name: Package AmethystRuntime
         shell: pwsh
         run: |
-          $zipName = "$env:PROJECT_NAME@$env:VERSION.zip"
+          $zipName = "$env:PROJECT_NAME@$env:NEW_VERSION.zip"
           $tempPath = "$env:TEMP\runtime_temp"
           Remove-Item $tempPath -Recurse -Force -ErrorAction SilentlyContinue
           New-Item -ItemType Directory -Path $tempPath
@@ -221,9 +221,9 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v${{ env.VERSION }}
-          name: AmethystRuntime ${{ env.VERSION }}
-          files: ${{ env.PROJECT_NAME }}@${{ env.VERSION }}.zip
+          tag_name: v${{ env.NEW_VERSION }}
+          name: AmethystRuntime ${{ env.NEW_VERSION }}
+          files: ${{ env.PROJECT_NAME }}@${{ env.NEW_VERSION }}.zip
           overwrite: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
