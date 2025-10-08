@@ -9,7 +9,7 @@
 //}
 
 void VanillaClientInputMappingFactory::createKeyboardAndMouseBinding(KeyboardInputMapping* keyboard, MouseInputMapping* mouse, const std::string* buttonName, const std::string* keyName, FocusImpact impact) {
-    Keymapping& mapping = *mLayout->getKeymappingByAction(*keyName);
+    Keymapping mapping = mLayout->getKeymappingByAction(keyName);
 
 	for(int key : mapping.mKeys) {
 		//key = mLayout->getAdjustedKey(key);

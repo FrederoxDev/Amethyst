@@ -297,7 +297,7 @@ public:
 	/** @vidx {093} */ MC virtual void neighborChanged(BlockSource& unk0, const BlockPos& unk1, const BlockPos& unk2) const;
 	/** @vidx {094} */ MC virtual bool getSecondPart(const IConstBlockSource& unk0, const BlockPos& unk1, BlockPos& unk2) const;
 	/** @vidx {095} */ MC virtual const Block* playerWillDestroy(Player& unk0, const BlockPos& unk1, const Block& unk2) const;
-	/** @vidx {096} */ MC virtual ItemInstance asItemInstance(const Block& block, const BlockActor* actor) const;
+	/** @vidx {096} */ MC virtual ItemInstance asItemInstance(const Block& unk0, const BlockActor* unk1) const;
 	/** @vidx {097} */ MC virtual void spawnAfterBreak(BlockSource& unk0, const Block& unk1, const BlockPos& unk2, const ResourceDropsContext& unk3) const;
 	/** @vidx {098} */ MC virtual const Block& getPlacementBlock(const Actor& unk0, const BlockPos& unk1, unsigned char unk2, const Vec3& unk3, int unk4) const;
 	/** @vidx {099} */ MC virtual int calcVariant(BlockSource& unk0, const BlockPos& unk1, const mce::Color& unk2) const;
@@ -313,7 +313,7 @@ public:
 	/** @vidx {109} */ MC virtual bool pushesUpFallingBlocks() const;
 	/** @vidx {110} */ MC virtual bool canHaveExtraData() const;
 	/** @vidx {111} */ MC virtual bool hasComparatorSignal() const;
-	/** @vidx {112} */ MC virtual int getComparatorSignal(BlockSource& blockSource, const BlockPos& pos, const Block& block, unsigned char face) const;
+	/** @vidx {112} */ MC virtual int getComparatorSignal(BlockSource& unk0, const BlockPos& unk1, const Block& unk2, unsigned char unk3) const;
 	/** @vidx {113} */ MC virtual bool canSlide(BlockSource& unk0, const BlockPos& unk1) const;
 	/** @vidx {114} */ MC virtual bool canInstatick() const;
 	/** @vidx {115} */ MC virtual bool canSpawnAt(const BlockSource& unk0, const BlockPos& unk1) const;
@@ -333,9 +333,9 @@ public:
 	/** @vidx {129} */ MC virtual int getVariant(const Block& unk0) const;
 	/** @vidx {130} */ MC virtual bool canSpawnOn(Actor* unk0) const;
 	/** @vidx {131} */ MC virtual const Block& getRenderBlock() const;
-	/** @vidx {132} */ MC virtual unsigned char getMappedFace(unsigned char face, const Block& block) const;
+	/** @vidx {132} */ MC virtual unsigned char getMappedFace(unsigned char unk0, const Block& unk1) const;
 	/** @vidx {133} */ MC virtual Flip getFaceFlip(unsigned char unk0, const Block& unk1) const;
-	/** @vidx {134} */ MC virtual void animateTickBedrockLegacy(BlockSource& blockSource, const BlockPos& pos, Random& rand) const;
+	/** @vidx {134} */ MC virtual void animateTickBedrockLegacy(BlockSource& unk0, const BlockPos& unk1, Random& unk2) const;
 	/** @vidx {135} */ MC virtual void animateTick(BlockSource& unk0, const BlockPos& unk1, Random& unk2) const;
 	/** @vidx {136} */ MC virtual BlockLegacy& init();
 	/** @vidx {137} */ MC virtual Brightness getLightEmission(const Block& unk0) const;
@@ -344,7 +344,7 @@ public:
 	/** @vidx {140} */ MC virtual const Block* tryGetInfested(const Block& unk0) const;
 	/** @vidx {141} */ MC virtual const Block* tryGetUninfested(const Block& unk0) const;
 	/** @vidx {142} */ MC virtual void _addHardCodedBlockComponents(const Experiments& unk0);
-	/** @vidx {143} */ MC virtual void onRemove(BlockSource& blockSource, const BlockPos& pos) const;
+	/** @vidx {143} */ MC virtual void onRemove(BlockSource& unk0, const BlockPos& unk1) const;
 	/** @vidx {144} */ MC virtual void onExploded(BlockSource& unk0, const BlockPos& unk1, Actor* unk2) const;
 	/** @vidx {145} */ MC virtual void onStandOn(EntityContext& unk0, const BlockPos& unk1) const;
 	/** @vidx {146} */ MC virtual void onPlace(BlockSource& unk0, const BlockPos& unk1) const;
@@ -353,7 +353,7 @@ public:
 	/** @vidx {149} */ MC virtual void randomTick(BlockSource& unk0, const BlockPos& unk1, Random& unk2) const;
 	/** @vidx {150} */ MC virtual bool isInteractiveBlock() const;
 	/** @vidx {152} */ MC virtual bool use(Player& unk0, const BlockPos& unk1, unsigned char unk2, std::optional<Vec3> unk3) const;
-	/** @vidx {151} */ MC virtual bool use(Player& player, const BlockPos& pos, unsigned char face) const;
+	/** @vidx {151} */ MC virtual bool use(Player& unk0, const BlockPos& unk1, unsigned char unk2) const;
 	/** @vidx {153} */ MC virtual bool allowStateMismatchOnPlacement(const Block& unk0, const Block& unk1) const;
 	/** @vidx {154} */ MC virtual bool canSurvive(BlockSource& unk0, const BlockPos& unk1) const;
 	/** @vidx {156} */ MC virtual BlockRenderLayer getRenderLayer() const;

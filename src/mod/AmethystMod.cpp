@@ -34,7 +34,7 @@ ModFunction void Initialize(AmethystContext& ctx, const Amethyst::Mod& mod)
 
     events.AddListener<RegisterInputsEvent>([&](const RegisterInputsEvent& e) {
         Amethyst::InputManager& input = e.inputManager;
-        auto& action = input.RegisterNewInput("amethyst.show_advanced_item_info", { 'Z' }, true, Amethyst::KeybindContext::Screen);
+        auto& action = input.RegisterNewInput("amethyst.show_advanced_item_info", { VK_SHIFT }, true, Amethyst::KeybindContext::Screen);
         
         action.addButtonDownHandler([](FocusImpact, ClientInstance&) {
             ShowAdvancedItemInfo = true;
