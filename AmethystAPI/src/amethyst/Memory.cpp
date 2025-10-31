@@ -114,9 +114,12 @@ uintptr_t GetEffectiveAddress(uintptr_t address) {
 	return address;
 }
 
-uintptr_t GetVtable(void* obj)
-{
-    return (uintptr_t)*reinterpret_cast<uintptr_t**>(obj);
+uintptr_t GetVtable(void* obj) {
+	return (uintptr_t)*reinterpret_cast<uintptr_t**>(obj);
+}
+
+uintptr_t GetVtable(const void* obj) {
+	return (uintptr_t)*reinterpret_cast<uintptr_t* const*>(obj);
 }
 
 void CompareVirtualTables(uintptr_t lhs, uintptr_t rhs, size_t maxFunctions)

@@ -135,6 +135,7 @@ class ClientScriptEventCoordinator;
 class EducationOptions;
 namespace Core {
 class FileStorageArea;
+class FilePathManager;
 }
 class LatencyGraphDisplay;
 class GameModuleClient;
@@ -151,14 +152,14 @@ namespace Editor { class IEditorManager; }
 class DebugInfoPacketHandler;
 
 class HoloHudDriftDynamics {
-  Matrix mMatrixPatch;
-  Vec3 mHudDirPoseSpace;
-  Vec3 mHudDirAVelPoseSpace;
-  Vec3 mLastHudTargetDir;
-  Vec3 mLastGazeToPoseDelta;
-  long double mLastHudDirUpdateTime;
-  bool mResetLastTargetDir;
-  IClientInstance *mClient;
+	Matrix mMatrixPatch;
+	Vec3 mHudDirPoseSpace;
+	Vec3 mHudDirAVelPoseSpace;
+	Vec3 mLastHudTargetDir;
+	Vec3 mLastGazeToPoseDelta;
+	long double mLastHudDirUpdateTime;
+	bool mResetLastTargetDir;
+	IClientInstance *mClient;
 };
 
 namespace mce { class RenderStage; }
@@ -217,11 +218,20 @@ public:
 namespace persona { class PersonaPieceCollectionModel; }
 namespace PlayerCapabilities { class IClientController; }
 namespace OreUI { class SceneProvider; class Telemetry { std::byte padding0[24]; }; }
-namespace Social { class GameConnectionInfo; class User; }
+namespace Social {
+	class GameConnectionInfo; 
+	class User; 
+	class IUserManager;
+	enum class MultiplayerServiceIdentifier;
+}
 class NetworkSessionOwner;
 class IMinecraftApp;
 class LevelListener;
 class IAdvancedGraphicsOptions;
+class NetworkSystem;
+class Timer;
+class IGameModuleApp;
+using IMinecraftGame = MinecraftGame;
 
 enum class ClientInstanceState : int32_t {
     Idle = 0x0000,
@@ -233,6 +243,7 @@ enum class ClientInstanceState : int32_t {
 // thx for the struct levilamina
 // levilamina op
 
+/** @vptr {48 8D 05 ? ? ? ? 48 89 06 48 8D 05 ? ? ? ? 48 89 46 ? 48 8D 05 ? ? ? ? 48 89 86} */
 class ClientInstance {
 public:
     class ClientRenderResources {
@@ -248,7 +259,7 @@ public:
         std::string multiplayerCorrelationId;
     };
 
-    /* this + 0    */ uintptr_t** vtable;
+	MC static uintptr_t $vtable_for_this;
     /* this + 8    */ std::byte padding8[160 - 8]; // member variable of bases, not mapped out yet
     /* this + 160  */ ClientInstanceState mClientState;
     /* this + 168  */ IMinecraftApp* mApp;
@@ -383,16 +394,50 @@ public:
     std::shared_ptr<Social::User> mUser;
 
 public:
-    // 1.20.71.1 - 48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 49 8B F9 49 8B D8 4C 8B E2
-    ClientInstance(uint64_t a2, uint64_t a3, uint64_t a4, char a5, void* a6, void* a7, uint64_t a8, void* a9);
+	/** @sig {48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 49 8B F9 49 8B D8 4C 8B E2} */
+    ClientInstance(
+		IMinecraftGame& mg,
+		IMinecraftApp& app,
+		LevelListener& levelListener,
+		SubClientId subid,
+		const Bedrock::NotNullNonOwnerPtr<IAdvancedGraphicsOptions>& graphicsOptions,
+		const Bedrock::NotNullNonOwnerPtr<ClientInstanceEventCoordinator>& coordinator,
+		LatencyGraphDisplay* latencyGraphDisplay,
+		const Bedrock::NotNullNonOwnerPtr<NetworkSessionOwner>& sessionOwner
+	);
     
-    /// @signature {48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 49 8B F9 49 8B D8 4C 8B E2}
-    MC void _ClientInstance(uint64_t a2, uint64_t a3, uint64_t a4, char a5, void* a6, void* a7, uint64_t a8, void* a9);
+	/** @vidx {0} */ virtual ~ClientInstance();
+	/** @vidx {1} */ virtual void unknown_1();
+	/** @vidx {2} */ virtual void unknown_2();
+	/** @vidx {3} */ 
+	virtual void init(
+		const Bedrock::NotNullNonOwnerPtr<Core::FilePathManager>& filePathManager,
+		NetworkSystem& network,
+		Timer& simTimer,
+		Timer& realTimer,
+		const Bedrock::NotNullNonOwnerPtr<Social::IUserManager>& userManager,
+		uint32_t id,
+		IGameModuleApp& gameModuleApp
+	);
 
-    /// @signature {40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 45 8B F1}
-    MC int64_t onStartJoinGame(ClientInstance*, int64_t, int64_t, int64_t);
 
-    /// @signature {48 89 5C 24 ? 48 89 74 24 ? 55 57 41 54 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 45 0F B6 F0 44 0F B6 FA}
+    /** @sig {48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 49 8B F9 49 8B D8 4C 8B E2} */
+    MC static ClientInstance* $constructor(
+		ClientInstance* self, 
+		IMinecraftGame& mg, 
+		IMinecraftApp& app, 
+		LevelListener& levelListener, 
+		SubClientId subid, 
+		const Bedrock::NotNullNonOwnerPtr<IAdvancedGraphicsOptions>& graphicsOptions, 
+		const Bedrock::NotNullNonOwnerPtr<ClientInstanceEventCoordinator>& coordinator,
+		LatencyGraphDisplay* latencyGraphDisplay, 
+		const Bedrock::NotNullNonOwnerPtr<NetworkSessionOwner>& sessionOwner
+	);
+
+    /** @signature {40 55 53 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 45 8B F1} */
+    MC void* onStartJoinGame(bool unk0, const std::string& unk1, int unk2, Social::MultiplayerServiceIdentifier serviceId);
+
+    /** @signature {48 89 5C 24 ? 48 89 74 24 ? 55 57 41 54 41 56 41 57 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 45 0F B6 F0 44 0F B6 FA} */
     MC void requestLeaveGame(bool switchScreen, bool sync);
 
     BlockSource* getRegion();

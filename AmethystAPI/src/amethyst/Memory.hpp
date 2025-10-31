@@ -82,6 +82,7 @@ void ProtectMemory(uintptr_t address, size_t size, DWORD protectionData, DWORD* 
 uintptr_t GetEffectiveAddress(uintptr_t address);
 
 uintptr_t GetVtable(void* obj);
+uintptr_t GetVtable(const void* obj);
 
 /*
  * Compares two virtual tables and logs any differences
