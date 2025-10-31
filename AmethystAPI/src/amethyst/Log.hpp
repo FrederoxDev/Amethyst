@@ -11,7 +11,7 @@
 namespace Log {
     void InitializeConsole();
     void DestroyConsole();
-    //void HideConsole();
+    void HideConsole();
     std::string GetModName();
     std::string GetThreadName();
 
@@ -24,21 +24,21 @@ namespace Log {
     void Info(const std::format_string<T...> fmt, T&&... args) {
         std::string formatted_string = std::format(fmt, std::forward<T>(args)...);
         formatted_string = std::format("[{}] [{}] {}", GetThreadName(), GetModName(), formatted_string);
-        std::cout << formatted_string << "\n";
+        std::cout << formatted_string << std::endl;
     }
 
     template <typename... T>
     void Info(const std::wformat_string<T...> fmt, T&&... args) {
         std::wstring formatted_string = std::format(fmt, std::forward<T>(args)...);
         formatted_string = std::format("[{}] [{}] {}", GetThreadName(), GetModName(), formatted_string);
-        std::wcout << formatted_string << L"\n";
+        std::wcout << formatted_string << std::endl;
     }
 
     template <typename... T>
     void Warning(const std::format_string<T...> fmt, T&&... args) {
         std::string formatted_string = std::format(fmt, std::forward<T>(args)...);
         formatted_string = std::format("[{}] [{}] {}", GetThreadName(), GetModName(), formatted_string);
-        std::cout << YELLOW << formatted_string << RESET << "\n";
+        std::cout << YELLOW << formatted_string << RESET << std::endl;
     }
 
     template <typename... T>
@@ -46,14 +46,14 @@ namespace Log {
         std::wstring formatted_wstring = std::format(fmt, std::forward<T>(args)...);
         std::string formatted_string = StringFromWstring(formatted_wstring);
         formatted_string = std::format("[{}] [{}] {}", GetThreadName(), GetModName(), formatted_string);
-        std::cout << YELLOW << formatted_string << RESET << "\n";
+        std::cout << YELLOW << formatted_string << RESET << std::endl;
     }
 
     template <typename... T>
     void Error(const std::format_string<T...> fmt, T&&... args) {
         std::string formatted_string = std::format(fmt, std::forward<T>(args)...);
         formatted_string = std::format("[{}] [{}] {}", GetThreadName(), GetModName(), formatted_string);
-        std::cerr << RED << formatted_string << RESET << "\n";
+        std::cerr << RED << formatted_string << RESET << std::endl;
     }
 
     template <typename... T>
@@ -61,7 +61,7 @@ namespace Log {
         std::wstring formatted_wstring = std::format(fmt, std::forward<T>(args)...);
         std::string formatted_string = StringFromWstring(formatted_wstring);
         formatted_string = std::format("[{}] [{}] {}", GetThreadName(), GetModName(), formatted_string);
-        std::cerr << RED << formatted_string << RESET << "\n";
+        std::cerr << RED << formatted_string << RESET << std::endl;
     }
 
     template <typename... T>

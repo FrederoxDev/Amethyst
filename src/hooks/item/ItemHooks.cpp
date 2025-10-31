@@ -13,6 +13,7 @@
 
 bool ShowAdvancedItemInfo = false;
 
+#ifdef CLIENT
 SafetyHookInline _Item_appendFormattedHovertext;
 void Item_appendFormattedHovertext(const Item* self, const ItemStackBase& stack, Level& level, std::string& hovertext, bool showCategory)
 {
@@ -98,9 +99,13 @@ void Item_appendFormattedHovertext(const Item* self, const ItemStackBase& stack,
 
     hovertext += std::format("\n§o§9{}§r", modName);
 }
+#endif
 
 void CreateItemHooks()
 {
     Amethyst::HookManager& hooks = Amethyst::GetHookManager();
+
+	#ifdef CLIENT
     VHOOK(Item, appendFormattedHovertext, this);
+	#endif
 }

@@ -5,8 +5,8 @@
 #include <amethyst/runtime/ctx/ServerContext.hpp>
 #include <amethyst/runtime/ctx/ClientContext.hpp>
 
-AmethystContext* _AmethystContextInstance;
-const Amethyst::Mod* _OwnMod;
+AmethystContext* _AmethystContextInstance = nullptr;
+const Amethyst::Mod* _OwnMod = nullptr;
 
 void Amethyst::InitializeAmethystMod(AmethystContext& context, const Mod& mod)
 {
@@ -111,4 +111,9 @@ bool Amethyst::IsOnMainServerThread()
 const Amethyst::Mod* Amethyst::GetOwnMod()
 {
     return _OwnMod;
+}
+
+bool Amethyst::IsAmethystContextInitialized()
+{
+    return _AmethystContextInstance != nullptr;
 }

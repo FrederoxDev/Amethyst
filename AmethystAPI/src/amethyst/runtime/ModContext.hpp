@@ -27,6 +27,8 @@ namespace Amethyst {
 	bool IsOnAmethystThread();
 	bool IsOnMainClientThread();
 	bool IsOnMainServerThread();
+	
+	bool IsAmethystContextInitialized();
 
 	const Mod* GetOwnMod();
 }

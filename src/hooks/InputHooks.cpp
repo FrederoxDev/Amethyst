@@ -62,6 +62,7 @@ void CreateInputHooks()
 {
     Amethyst::HookManager& hooks = Amethyst::GetHookManager();
 
+	#ifdef CLIENT
     hooks.CreateVirtualHook<&VanillaClientInputMappingFactory::createInputMappingTemplates>(
         VanillaClientInputMappingFactory::$vtable_for_this,
         _VanillaClientInputMappingFactory_createInputMappingTemplates,
@@ -73,4 +74,5 @@ void CreateInputHooks()
     hooks.CreateDirectHook<&InputHandler::handleButtonEvent>(_InputHandler_handleButtonEvent, &InputHandler_handleButtonEvent);
 
     HOOK(VanillaClientInputMappingFactory, _createScreenKeyboardAndMouseMapping);
+	#endif
 }

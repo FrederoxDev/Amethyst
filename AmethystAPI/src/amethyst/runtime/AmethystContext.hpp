@@ -47,7 +47,7 @@ public:
     std::optional<std::thread::id> mMainClientThread;
     std::optional<std::thread::id> mMainServerThread;
 
-    Amethyst::MinecraftPackageInfo mPackageInfo;
+    // Amethyst::MinecraftPackageInfo mPackageInfo;
     std::unique_ptr<Amethyst::ClientContext> mClientCtx;
     std::unique_ptr<Amethyst::ServerContext> mServerCtx;
 

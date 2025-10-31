@@ -1,5 +1,6 @@
 #include "hooks/ResourceHooks.hpp"
 
+#ifdef CLIENT
 void Amethyst::ResourceHooks::initializeResourceStack(
     VanillaGameModuleClient* self,
     const Experiments& experiments,
@@ -12,6 +13,7 @@ void Amethyst::ResourceHooks::initializeResourceStack(
     context.mPackManager->AddResourcePacksToStack(repository, stack);
     _initializeResourceStack(self, experiments, repository, stack, baseGameVer, loadingPhase);
 }
+#endif
 
 void Amethyst::ResourceHooks::initializeBehaviorStack(
     VanillaGameModuleServer* self,
@@ -73,7 +75,11 @@ void Amethyst::ResourceHooks::initializePackSource(ResourcePackRepository* self)
 void Amethyst::ResourceHooks::Create()
 {
     Amethyst::HookManager& hooks = Amethyst::GetHookManager();
+
+	#ifdef CLIENT
     hooks.CreateVirtualHook<&VanillaGameModuleClient::initializeResourceStack>(VanillaGameModuleClient::$vtable_for_this, _initializeResourceStack, &initializeResourceStack);
+	#endif
+	
     hooks.CreateVirtualHook<&VanillaGameModuleServer::initializeBehaviorStack>(VanillaGameModuleServer::$vtable_for_this, _initializeBehaviorStack, &initializeBehaviorStack);
     hooks.CreateDirectHook<&ResourcePackRepository::_initializePackSource>(__initializePackSource, &initializePackSource);
 }

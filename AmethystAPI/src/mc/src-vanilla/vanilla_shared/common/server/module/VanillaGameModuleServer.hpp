@@ -11,6 +11,7 @@ class IResourcePackRepository;
 class ResourcePackStack;
 class BaseGameVersion;
 
+/// @vptr { 0x2BD1248, this, win-server }
 /// @vptr { 0x4EC7070, this }
 class VanillaGameModuleServer {
 public:

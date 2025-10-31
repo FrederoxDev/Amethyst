@@ -109,7 +109,7 @@ Minecraft* Minecraft__Minecraft(Minecraft* a1, void* a2, void* a3, void* a4, voi
     // This is where the initial threads ids are found, so at this point Amethsyt::IsOnMainClietnThread and Amethyst::IsOnMainServerThread will start working.
     // But for this it does have to do a tiny bit of jank such that this can be setup
     
-    if (Amethyst::GetClientCtx().mMinecraft == nullptr) {
+    if (Amethyst::IsOnMainClientThread()) {
         Amethyst::GetClientCtx().mMinecraft = a1;
         ctx.mMainClientThread = std::this_thread::get_id();
     }
@@ -183,18 +183,18 @@ void BlockActorRenderDispatcher_initializeBlockEntityRenderers(
 void CreateModFunctionHooks() {
     Amethyst::HookManager& hooks = Amethyst::GetHookManager();
 
+	#ifdef CLIENT
     HOOK(ClientInstance, onStartJoinGame);
     HOOK(ClientInstance, requestLeaveGame);
     HOOK(ClientInstance, _ClientInstance);
-    
     HOOK(ScreenView, setupAndRender);
+    HOOK(BlockGraphics, initBlocks);
+    HOOK(BlockActorRenderDispatcher, initializeBlockEntityRenderers);
+    #endif
+
     HOOK(Minecraft, update);
+    HOOK(Minecraft, _Minecraft);
     HOOK(VanillaItems, registerItems);
     HOOK(BlockDefinitionGroup, registerBlocks);
-    HOOK(BlockGraphics, initBlocks);
-
-    HOOK(Minecraft, _Minecraft);
     HOOK(Minecraft, $dtor);
-
-    HOOK(BlockActorRenderDispatcher, initializeBlockEntityRenderers);
 }

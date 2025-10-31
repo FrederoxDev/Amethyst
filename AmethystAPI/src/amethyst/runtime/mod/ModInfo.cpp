@@ -73,6 +73,8 @@ std::expected<ModInfo, ModError> ModInfo::FromFile(const fs::path& jsonFile)
     std::optional<std::string> uuid;
 
     if (!modConfigFile.is_open()) {
+		Log::Info("Failed to open mod.json at {}", jsonFile.generic_string());
+
         return std::unexpected(ModError{
             ModErrorStep::Collecting,
             ModErrorType::IOError,
@@ -211,8 +213,9 @@ std::expected<ModInfo, ModError> ModInfo::FromFile(const fs::path& jsonFile)
     std::string versionedName = std::format("{}@{}", name, version.to_string());
     fs::path directory = jsonFile.parent_path();
     std::string libraryName = std::format("{}.dll", name);
+	auto& platform = Amethyst::GetPlatform();
 
-    if (!fs::exists(directory / libraryName)) {
+    if (!fs::exists(directory / platform.GetPlatformFolderName() / libraryName)) {
         return std::unexpected(ModError{
             ModErrorStep::Collecting,
             ModErrorType::IOError,

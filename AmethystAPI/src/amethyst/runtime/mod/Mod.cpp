@@ -27,8 +27,9 @@ std::optional<ModError> Mod::Load()
     if (IsLoaded())
         return std::nullopt;
 
+	auto& platform = Amethyst::GetPlatform();
     std::string versionedName = mInfo->GetVersionedName();
-    fs::path dllPath = mInfo->Directory / mInfo->LibraryName;
+    fs::path dllPath = mInfo->Directory / platform.GetPlatformFolderName() / mInfo->LibraryName;
 
     // Loads the mod in a temporary directory if it's not a runtime so that the original DLL can still be built to
     if (!mInfo->IsRuntime)
@@ -157,8 +158,12 @@ std::shared_ptr<const ModInfo> Amethyst::Mod::GetInfo(const std::string& modName
     Assert(fs::exists(modConfigPath), "mod.json could not be found, for '{}'", modName);
 
     auto result = ModInfo::FromFile(modConfigPath);
-    if (!result.has_value())
-        Assert(result.has_value(), "Failed to read mod info for '{}': {}", modName, result.error().toString());
+	if (!result.has_value()) {
+		ModError& error = result.error();
+		Log::Error("{}", error.getFormattedMessage());
+		AssertFail("Failed to load mod info for '{}' at '{}'", modName, modConfigPath.generic_string());
+	}
+	
     return std::make_shared<const Amethyst::ModInfo>(std::move(*result));
 }
 
@@ -177,7 +182,7 @@ fs::path Mod::GetTemporaryLibrary(const std::string& modName)
     fs::path tempDir = platform.GetAmethystFolder() / L"Temp" / modName;
     if (!fs::exists(tempDir)) fs::create_directories(tempDir);
 
-    fs::path originalDll = platform.GetAmethystFolder() / L"Mods" / modName / std::string(modShortened + ".dll");
+    fs::path originalDll = platform.GetAmethystFolder() / L"Mods" / modName / platform.GetPlatformFolderName() / std::string(modShortened + ".dll");
     Assert(fs::exists(originalDll), "Could not find '{}.dll'", modShortened);
 
     fs::path tempDll = tempDir / (modShortened + ".dll");

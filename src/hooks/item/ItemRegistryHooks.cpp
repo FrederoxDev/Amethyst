@@ -111,7 +111,7 @@ void RegisterCustomCategories(CreativeItemRegistry* creative, ItemRegistryRef re
 
 }
 
-
+#ifdef CLIENT
 SafetyHookInline _CraftingScreenController__tabIndexToCollectionName;
 
 std::string* CraftingScreenController__tabIndexToCollectionName(CraftingScreenController* self, std::string* res, InventoryLeftTabIndex tabIdx)
@@ -414,11 +414,10 @@ uint32_t CraftingScreenController__updateCategoryTabsByRecipes(CraftingScreenCon
 
     //return 0;
 }
+#endif
 
 void CreateItemRegistryHooks()
 {
-    Log::Info("CreateItemRegistryHooks");
-
     Amethyst::HookManager& hooks = Amethyst::GetHookManager();
     HOOK(VanillaItems, _addItemsCategory);
     HOOK(VanillaItems, _addCommandOnlyCategory);
@@ -428,6 +427,7 @@ void CreateItemRegistryHooks()
 
     return; // temp
 
+	#ifdef CLIENT
     HOOK(CraftingScreenController, _tabIndexToCollectionName);
     HOOK(CraftingScreenController, _showCategoryTab);
     HOOK(ContainerFactory, createController);
@@ -438,7 +438,6 @@ void CreateItemRegistryHooks()
     VHOOK(CraftingScreenController, _getCollectionName, this);
 
     VHOOK(CraftingContainerManagerModel, _postInit, this);
-
 
     hooks.CreateHookAbsolute(
         _lambda_ScreenController_registerTabNameBinding,
@@ -503,4 +502,6 @@ void CreateItemRegistryHooks()
     /*for (auto& container : ContainerScreenController::ContainerCollectionNameMap) {
         Log::Info("container enum {} is '{}'", (uint64_t)container.first, container.second);
     }*/
+
+	#endif
 }

@@ -27,11 +27,11 @@ namespace Log {
         FreeConsole();
     }
 
-    //void HideConsole()
-    //{
-    //    HWND consoleWindow = GetConsoleWindow();
-    //    ShowWindow(consoleWindow, SW_HIDE);
-    //}
+    void HideConsole()
+    {
+       HWND consoleWindow = GetConsoleWindow();
+       ShowWindow(consoleWindow, SW_HIDE);
+    }
 
     std::string GetModName() {
         const Amethyst::Mod* mod = Amethyst::GetOwnMod();
@@ -42,6 +42,10 @@ namespace Log {
     }
 
     std::string GetThreadName() {
+		if (!Amethyst::IsAmethystContextInitialized()) {
+			return std::format("{:>7}", std::this_thread::get_id());
+		}
+
         if (Amethyst::IsOnAmethystThread()) return "runtime";
         if (Amethyst::IsOnMainClientThread()) return " client";
         if (Amethyst::IsOnMainServerThread()) return " server";

@@ -7,6 +7,7 @@
 #endif
 
 #include "windows.h"
+#include <Psapi.h>
 
 using namespace winrt;
 using namespace Windows::Storage;
@@ -29,4 +30,22 @@ fs::path WindowsClientPlatform::GetComMojangPath() const
 fs::path WindowsClientPlatform::GetAmethystFolder() const
 {
     return GetComMojangPath() / "amethyst";
+}
+
+std::string WindowsClientPlatform::GetPlatformFolderName() {
+	return "win-client";
+}
+
+uintptr_t WindowsClientPlatform::GetMinecraftBaseAddress() const {
+	return reinterpret_cast<uintptr_t>(GetModuleHandleA("Minecraft.Windows.exe"));
+}
+
+size_t WindowsClientPlatform::GetMinecraftSize() const {
+	HMODULE base = GetModuleHandleA("Minecraft.Windows.exe");
+	if (base == nullptr) return 0;
+
+	MODULEINFO moduleInfo;
+	if (!GetModuleInformation(GetCurrentProcess(), base, &moduleInfo, sizeof(MODULEINFO))) return 0;
+
+	return moduleInfo.SizeOfImage;
 }

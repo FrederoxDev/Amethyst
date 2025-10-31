@@ -3,6 +3,7 @@
 #include <amethyst/runtime/events/RenderingEvents.hpp>
 #include <mc/src-client/common/client/renderer/game/LevelRenderer.hpp>
 
+#ifdef CLIENT
 SafetyHookInline _LevelRenderer_renderLevel;
 
 class LevelRenderer;
@@ -20,8 +21,11 @@ void LevelRenderer_renderLevel(LevelRenderer* self, ScreenContext& screenContext
 	AfterRenderLevelEvent afterEvent(*self, screenContext, frameRenderObj);
     bus.Invoke(afterEvent);
 }
+#endif
 
 void CreateRenderingHooks() {
+	#ifdef CLIENT
     Amethyst::HookManager& hooks = Amethyst::GetHookManager();
     HOOK(LevelRenderer, renderLevel);
+	#endif
 }

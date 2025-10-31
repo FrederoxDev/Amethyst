@@ -115,7 +115,8 @@
         "cwctype": "cpp",
         "resumable": "cpp",
         "future": "cpp",
-        "numbers": "cpp"
+        "numbers": "cpp",
+        "spanstream": "cpp"
     },
     "deno.enablePaths": ["./data/packs/RP/", "./data/packs/BP/"],
     "deno.config": "./data/packs/data/generated/deno.json",

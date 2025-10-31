@@ -43,18 +43,18 @@ ModFunction void Initialize(AmethystContext& ctx, const Amethyst::Mod& mod)
         });
     });
 
-    Log::Info("Initializing runtime mod: '{}'", mod.mInfo->GetVersionedName());
-    SemVersion version = ctx.mPackageInfo.mVersion;
+    // Log::Info("Initializing runtime mod: '{}'", mod.mInfo->GetVersionedName());
+    // SemVersion version = ctx.mPackageInfo.mVersion;
 
-    if (version.mMajor != MOD_TARGET_VERSION_MAJOR || version.mMinor != MOD_TARGET_VERSION_MINOR || version.mPatch != MOD_TARGET_VERSION_PATCH) {
-        Log::Warning("{} has been made for Minecraft version {}.{}.{}, detected version {}.{}.{}\n\t> It should be expected that things may break on this version.\n\t> We will not provide support for unintended versions.",
-                     mod.mInfo->GetVersionedName(),
-                     MOD_TARGET_VERSION_MAJOR, MOD_TARGET_VERSION_MINOR, MOD_TARGET_VERSION_PATCH,
-                     version.mMajor, version.mMinor, version.mPatch);
-    }
-    else {
-        Log::Info("Minecraft Version: {}.{}.{}", version.mMajor, version.mMinor, version.mPatch);
-    }
+    // if (version.mMajor != MOD_TARGET_VERSION_MAJOR || version.mMinor != MOD_TARGET_VERSION_MINOR || version.mPatch != MOD_TARGET_VERSION_PATCH) {
+    //     Log::Warning("{} has been made for Minecraft version {}.{}.{}, detected version {}.{}.{}\n\t> It should be expected that things may break on this version.\n\t> We will not provide support for unintended versions.",
+    //                  mod.mInfo->GetVersionedName(),
+    //                  MOD_TARGET_VERSION_MAJOR, MOD_TARGET_VERSION_MINOR, MOD_TARGET_VERSION_PATCH,
+    //                  version.mMajor, version.mMinor, version.mPatch);
+    // }
+    // else {
+    //     Log::Info("Minecraft Version: {}.{}.{}", version.mMajor, version.mMinor, version.mPatch);
+    // }
 
     CreateInputHooks();
     Amethyst::ResourceHooks::Create();

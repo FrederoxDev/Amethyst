@@ -1,10 +1,10 @@
-#include "amethyst/Utility.hpp"
 #include <winrt/Windows.Storage.h>
 #include <winrt/base.h>
 #include <shlobj_core.h>
 #include <filesystem>
-#include <amethyst/Log.hpp>
 #include <fstream>
+#include <amethyst/Log.hpp>
+#include "amethyst/Utility.hpp"
 
 #ifndef NOMINMAX
 #define NOMINMAX

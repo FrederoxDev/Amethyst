@@ -7,7 +7,9 @@ void RuntimeContext::Start()
 {
     mHookManager = std::make_unique<Amethyst::HookManager>();
     mEventBus = std::make_unique<Amethyst::EventBus>();
+#ifdef CLIENT
     mInputManager = std::make_unique<Amethyst::InputManager>(this);
+#endif
     mPatchManager = std::make_unique<Amethyst::PatchManager>();
     mEnumAllocator = std::make_unique<Amethyst::EnumAllocator>();
     mPackManager = std::make_unique<Amethyst::PackManager>(this);

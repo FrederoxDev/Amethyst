@@ -38,6 +38,7 @@ public:
     /// @address {0x57D14E0}
     MC static BlockNameHashToHashedStringMap mBlockNameHashToStringMap; 
 
+	/// @signature {48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 0F B6 DA 48 8B F9 0F 57 C0, win-server}
     /// @signature {48 89 5C 24 ? 48 89 74 24 ? 48 89 7C 24 ? 55 48 8B EC 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 48 8B D9 0F 57 C0}
     MC static const Block* getDefaultBlockState(const HashedString& name);
 

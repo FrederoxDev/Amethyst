@@ -42,7 +42,7 @@ static PacketHandlerDispatcherInstance<Amethyst::CustomPacketInternal, false> am
 
 std::shared_ptr<Packet> MinecraftPackets_createPacket(MinecraftPacketIds id) {
 // Vanilla packets.
-if (id < MinecraftPacketIds::EndId) {
+if (id <= MinecraftPacketIds::EndId) {
     std::shared_ptr<Packet> packet = _MinecraftPackets_createPacket.call<std::shared_ptr<Packet>>(id);
     return packet;
 }

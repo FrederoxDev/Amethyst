@@ -225,7 +225,8 @@ enum class MinecraftPacketIds {
     EndId = 309
 };
 
-/// @vptr {0x4CB18D0}
+/// @vptr { 0x2BCFDA8, this, win-server }
+/// @vptr { 0x4CB18D0 }
 class Packet {
 public:
     PacketPriority mPriority;
@@ -237,30 +238,39 @@ public:
     Compressibility mCompressible;
 
 public:
+	/// @vidx {0, this, win-server}
     /// @vidx {0}
     MC virtual ~Packet();
 
+	/// @vidx {1, this, win-server}
 	/// @vidx {1}
 	MC virtual MinecraftPacketIds getId() const = 0;
 
+	/// @vidx {2, this, win-server}
 	/// @vidx {2}
 	MC virtual std::string getName() const = 0;
 
+	/// @vidx {3, this, win-server}
 	/// @vidx {3}
-	MC virtual Bedrock::Result<void, std::error_code> checkSize(unsigned long unk0, bool unk1) const;
+	MC virtual Bedrock::Result<void, std::error_code> checkSize(uint64_t unk0, bool unk1) const;
 
+	/// @vidx {4, this, win-server}
 	/// @vidx {4}
 	MC virtual void write(BinaryStream& unk0) const = 0;
 
+	/// @vidx {5, this, win-server}
 	/// @vidx {5}
 	MC virtual Bedrock::Result<void, std::error_code> read(ReadOnlyBinaryStream& unk0);
 
+	/// @vidx {6, this, win-server}
 	/// @vidx {6}
 	MC virtual bool disallowBatching() const;
 
+	/// @vidx {7, this, win-server}
 	/// @vidx {7}
 	MC virtual bool isValid() const;
 
+	/// @vidx {8, this, win-server}
 	/// @vidx {8}
 	MC virtual Bedrock::Result<void, std::error_code> _read(ReadOnlyBinaryStream& unk0) = 0;
 
@@ -270,6 +280,7 @@ public:
 
 class MinecraftPackets {
 public:
-    /// @signature {40 53 48 83 EC ? 45 33 C0 48 8B D9 FF CA 81 FA}
-    MC static std::shared_ptr<Packet> createPacket(MinecraftPacketIds id);
+	/// @signature {48 89 5C 24 ? 48 89 74 24 ? 55 57 41 56 48 8B EC 48 83 EC ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 48 8B F9, win-server}
+	/// @signature {40 53 48 83 EC ? 45 33 C0 48 8B D9 FF CA 81 FA}
+	MC static std::shared_ptr<Packet> createPacket(MinecraftPacketIds id);
 };

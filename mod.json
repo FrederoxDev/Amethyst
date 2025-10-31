@@ -1,11 +1,15 @@
 {
-    "format_version": "1.1.0",
+    "format_version": "1.2.0",
     "meta": {
         "uuid": "e56c3987-fd4a-4590-9923-a07fc4be7250",
         "namespace": "amethyst",
         "name": "Amethyst-Runtime",
         "version": "2.1.0",
         "author": "FrederoxDev",
-        "is_runtime": true
+        "is_runtime": true,
+        "platforms": {
+            "win-server": {},
+            "win-client": {}
+        }
     }
 }

@@ -1,6 +1,7 @@
 #include "hooks/ui/UIHooks.hpp"
 #include "mc/src/common/locale/I18n.hpp"
 
+#ifdef CLIENT
 ui::ViewRequest Amethyst::UIHooks::ScreenControllerHooks::_handleButtonEvent(ScreenController* screen, ScreenEvent& event) {
     ui::ViewRequest result = __handleButtonEvent(screen, event);
     UIButtonHandleEvent ev(event);
@@ -48,9 +49,12 @@ void Amethyst::UIHooks::StartMenuScreenControllerHooks::_registerBindings(StartM
         return true; 
     });
 }
+#endif
 
 void Amethyst::UIHooks::Create() {
     Amethyst::HookManager& hooks = Amethyst::GetHookManager();
+	#ifdef CLIENT
     hooks.CreateDirectHook<&ScreenController::_handleButtonEvent>(ScreenControllerHooks::__handleButtonEvent, &ScreenControllerHooks::_handleButtonEvent);
     hooks.CreateDirectHook<&StartMenuScreenController::_registerBindings>(StartMenuScreenControllerHooks::__registerBindings, &StartMenuScreenControllerHooks::_registerBindings);
+	#endif
 }
