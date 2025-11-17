@@ -365,6 +365,15 @@ public:
     std::optional<int> _tryLookupAlteredStateCollection(uint64_t stateId, uint16_t blockData);
 };
 
+namespace std {
+	template <>
+	struct hash<BlockLegacy> {
+		size_t operator()(const BlockLegacy& blockLegacy) const {
+			return blockLegacy.mNameInfo.mFullName.getHash();
+		}
+	};
+}
+
 // 1.21.0.3
 static_assert(sizeof(BlockLegacy) == 984);
 static_assert(offsetof(BlockLegacy, mID) == 422);
