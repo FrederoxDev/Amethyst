@@ -1,9 +1,6 @@
 #include "hooks/shared/Shared.hpp"
-#include "hooks/shared/ItemRegistry.hpp"
-#include "hooks/shared/BlockRegistry.hpp"
 #include "hooks/shared/Networking.hpp"
 #include "hooks/shared/Resource.hpp"
-#include "hooks/shared/Block.hpp"
 
 #include <thread>
 
@@ -115,10 +112,7 @@ namespace Amethyst::SharedHooks {
 		HOOK(Minecraft, $destructor);
 		HOOK(Minecraft, update);
 		VHOOK(Level, tick, this);
-		ItemRegistryHooks::Initialize();
-		BlockRegistryHooks::Initialize();
 		NetworkingHooks::Initialize();
 		ResourceHooks::Initialize();
-		BlockHooks::Initialize();
 	}
 }

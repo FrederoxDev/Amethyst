@@ -6,7 +6,6 @@
 #include "hooks/client/Resource.hpp"
 #include "hooks/client/UI.hpp"
 #include "game/client/CustomUIRendererRegistry.hpp"
-#include "debug/F3Menu.hpp"
 
 #include <amethyst/runtime/ModContext.hpp>
 #include <amethyst/runtime/utility/InlineHook.hpp>
@@ -71,7 +70,6 @@ namespace Amethyst::ClientHooks {
 		ResourceHooks::Initialize();
 		UIHooks::Initialize();
 		CustomUIRendererRegistry::AddEventListeners();
-		F3Menu::Initialize();
 	}
 }
 #endif
