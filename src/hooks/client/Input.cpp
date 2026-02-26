@@ -79,11 +79,11 @@ namespace Amethyst::ClientHooks::InputHooks {
 
 	void Initialize() {
 		auto& hooks = Amethyst::GetHookManager();
-		VHOOK(VanillaClientInputMappingFactory, createInputMappingTemplates, this);
-		HOOK(VanillaClientInputMappingFactory, _addFullKeyboardGamePlayControls);
-		HOOK(VanillaClientInputMappingFactory, _createScreenKeyboardAndMouseMapping);
-		HOOK(InputHandler, handleButtonEvent);
-		HOOK(MouseDevice, feed);
+		// VHOOK(VanillaClientInputMappingFactory, createInputMappingTemplates, this);
+		// HOOK(VanillaClientInputMappingFactory, _addFullKeyboardGamePlayControls);
+		// HOOK(VanillaClientInputMappingFactory, _createScreenKeyboardAndMouseMapping);
+		// HOOK(InputHandler, handleButtonEvent);
+		// HOOK(MouseDevice, feed);
 	}
 }
 #endif

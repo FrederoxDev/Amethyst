@@ -1,10 +1,9 @@
-/// @symbolgeneration
+/// @symbols
 #pragma once
 #include "mc/src-deps/core/file/Path.hpp"
 #include "mc/src-deps/core/resource/ResourceHelper.hpp"
 #include <amethyst/Imports.hpp>
 
-/// @vptr {0x4EBAA28, this}
 class IInPackagePacks {
 public:
     struct MetaData {

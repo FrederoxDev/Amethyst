@@ -1,4 +1,4 @@
-/// @symbolgeneration
+/// @symbols
 #pragma once
 #include <amethyst/Imports.hpp>
 #include <string_view>
@@ -111,7 +111,7 @@ public:
 
 	UnknownReturn _populateControl(const UIResolvedDef& unk0, UIControl& unk1);
 
-    /// @signature {48 89 5C 24 ? 55 56 57 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 85 ? ? ? ? 4D 8B E0 4C 8B FA 4C 8B E9 49 8B D0}
+	/// @address {0x45E5810}
 	MC void _populateCustomRenderComponent(const UIResolvedDef& unk0, UIControl& unk1);
 
 	UnknownReturn _populateDataBindingComponent(const UIResolvedDef& unk0, UIControl& unk1);

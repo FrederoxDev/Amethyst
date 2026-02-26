@@ -18,10 +18,10 @@
 		"profiles": {
 			"default": {
 				"export": {
-					"bpPath": "%localappdata%/Packages/Microsoft.MinecraftUWP_8wekyb3d8bbwe/LocalState/games/com.mojang/amethyst/mods/Amethyst-Runtime@0.0.0-dev/behavior_packs/main_bp",
+					"bpPath": "%appdata%/Minecraft Bedrock/games/com.mojang/amethyst/mods/Amethyst-Runtime@0.0.0-dev/behavior_packs/main_bp",
 					"build": "standard",
 					"readOnly": false,
-					"rpPath": "%localappdata%/Packages/Microsoft.MinecraftUWP_8wekyb3d8bbwe/LocalState/games/com.mojang/amethyst/mods/Amethyst-Runtime@0.0.0-dev/resource_packs/main_rp",
+					"rpPath": "%appdata%/Minecraft Bedrock/games/com.mojang/amethyst/mods/Amethyst-Runtime@0.0.0-dev/resource_packs/main_rp",
 					"target": "exact"
 				},
 				"filters": [

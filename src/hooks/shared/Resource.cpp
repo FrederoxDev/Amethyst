@@ -68,8 +68,8 @@ namespace Amethyst::SharedHooks::ResourceHooks {
 
 	void Initialize() {
 		auto& hooks = Amethyst::GetHookManager();
-		VHOOK(VanillaGameModuleServer, initializeBehaviorStack, this);
-		HOOK(ResourcePackRepository, _initializePackSource);
+		// VHOOK(VanillaGameModuleServer, initializeBehaviorStack, this);
+		// HOOK(ResourcePackRepository, _initializePackSource);
 	}
 }
 #endif

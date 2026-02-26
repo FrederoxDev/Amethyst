@@ -108,11 +108,11 @@ namespace Amethyst::SharedHooks {
 
 	void Initialize() {
 		auto& hooks = Amethyst::GetHookManager();
-		HOOK(Minecraft, $constructor);
-		HOOK(Minecraft, $destructor);
-		HOOK(Minecraft, update);
-		VHOOK(Level, tick, this);
-		NetworkingHooks::Initialize();
-		ResourceHooks::Initialize();
+		// HOOK(Minecraft, $constructor);
+		// HOOK(Minecraft, $destructor);
+		// HOOK(Minecraft, update);
+		// HOOK(Level, tick);
+		// NetworkingHooks::Initialize();
+		// ResourceHooks::Initialize();
 	}
 }

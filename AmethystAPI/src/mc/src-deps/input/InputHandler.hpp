@@ -1,4 +1,4 @@
-/// @symbolgeneration
+/// @symbols
 #pragma once
 #include <functional>
 #include <string>
@@ -85,6 +85,5 @@ public:
         return state->mInputMappingStack.back();
     }
 
-    /// @signature {40 53 55 56 57 41 54 41 56 41 57 48 83 EC ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 44 24 ? 8B 84 24}
     MC void handleButtonEvent(const ButtonEventData& button, FocusImpact focus, IClientInstance& client, int controllerId);
 };

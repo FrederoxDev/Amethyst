@@ -1,4 +1,4 @@
-/// @symbolgeneration
+/// @symbols
 #pragma once
 #include <amethyst/Imports.hpp>
 #include "mc/src-client/common/module/GameModuleClient.hpp"
@@ -11,7 +11,6 @@ class ResourcePackStack;
 class BaseGameVersion;
 class ResourcePackRepository;
 
-/// @vptr { 0x4EBD550, this }
 class VanillaGameModuleClient {
 public:
     MC static uintptr_t $vtable_for_this;

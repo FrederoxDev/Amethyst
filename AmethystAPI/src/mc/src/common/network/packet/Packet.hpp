@@ -1,4 +1,4 @@
-/// @symbolgeneration
+/// @symbols
 #pragma once
 #include <amethyst/Imports.hpp>
 #include <mc/src-deps/raknet/raknet/PacketPriority.hpp>
@@ -225,8 +225,6 @@ enum class MinecraftPacketIds {
     EndId = 309
 };
 
-/// @vptr { 0x2BCFDA8, this, win-server }
-/// @vptr { 0x4CB18D0 }
 class Packet {
 public:
     PacketPriority mPriority;
@@ -280,6 +278,5 @@ public:
 
 class MinecraftPackets {
 public:
-	/// @signature {40 53 48 83 EC ? 45 33 C0 48 8B D9 FF CA 81 FA}
 	MC static std::shared_ptr<Packet> createPacket(MinecraftPacketIds id);
 };

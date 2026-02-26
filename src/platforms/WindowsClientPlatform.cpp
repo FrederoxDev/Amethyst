@@ -22,9 +22,9 @@ Amethyst::PlatformType WindowsClientPlatform::GetPlatformType() const
 
 fs::path WindowsClientPlatform::GetComMojangPath() const
 {
-    StorageFolder localFolder = ApplicationData::Current().LocalFolder();
-    fs::path localPath = localFolder.Path().c_str();
-    return localPath / "games" / "com.mojang";
+    char appdata[MAX_PATH];
+    GetEnvironmentVariableA("APPDATA", appdata, MAX_PATH);
+    return fs::path(appdata) / "Minecraft Bedrock" / "games" / "com.mojang";
 }
 
 fs::path WindowsClientPlatform::GetAmethystFolder() const

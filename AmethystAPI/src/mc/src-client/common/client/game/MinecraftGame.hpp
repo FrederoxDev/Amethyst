@@ -1,4 +1,4 @@
-/// @symbolgeneration
+/// @symbols
 #pragma once
 #include <memory>
 #include "amethyst/Imports.hpp"
@@ -24,10 +24,8 @@ public:
 	/* this + 3328 */ std::unique_ptr<MinecraftInputHandler> mInput;
 	/* this + 3336 */ std::byte padding3336[4272 - 3336];
 
-	/// @signature {48 89 5C 24 ? 48 89 7C 24 ? 55 48 8D 6C 24 ? 48 81 EC ? ? ? ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 45 ? 48 8B FA 48 8B D9 0F 57 C0 0F 11 45}
 	MC void onActiveResourcePacksChanged(ResourcePackManager& resourcePackManager);
 
-	/// @signature {48 89 5C 24 ? 48 89 74 24 ? 48 89 7C 24 ? 55 41 54 41 55 41 56 41 57 48 8D AC 24 ? ? ? ? 48 81 EC ? ? ? ? 4C 8B E9 45 33 F6}
 	MC void onAppSuspended();
 };
 

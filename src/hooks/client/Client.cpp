@@ -17,25 +17,11 @@ namespace Amethyst::ClientHooks {
 	Amethyst::InlineHook<decltype(&ClientInstance::$constructor)> _ClientInstance_$constructor;
 	ClientInstance* ClientInstance_$constructor(
 		ClientInstance* self,
-		IMinecraftGame& mg,
-		IMinecraftApp& app,
-		LevelListener& levelListener,
-		SubClientId subid,
-		const Bedrock::NotNullNonOwnerPtr<IAdvancedGraphicsOptions>& graphicsOptions,
-		const Bedrock::NotNullNonOwnerPtr<ClientInstanceEventCoordinator>& coordinator,
-		LatencyGraphDisplay* latencyGraphDisplay,
-		const Bedrock::NotNullNonOwnerPtr<NetworkSessionOwner>& sessionOwner
+		ClientInstanceArguments& args
 	) {
 		auto* result = _ClientInstance_$constructor(
 			self, 
-			mg, 
-			app, 
-			levelListener, 
-			subid, 
-			graphicsOptions, 
-			coordinator, 
-			latencyGraphDisplay, 
-			sessionOwner
+			args
 		);
 
 		Amethyst::GetClientCtx().mClientInstance = self;
@@ -43,11 +29,11 @@ namespace Amethyst::ClientHooks {
 	}
 
 	Amethyst::InlineHook<decltype(&ClientInstance::onStartJoinGame)> _ClientInstance_onStartJoinGame;
-	void* ClientInstance_onStartJoinGame(ClientInstance* self, bool unk0, const std::string& unk1, int unk2, Social::MultiplayerServiceIdentifier serviceId) {
+	void ClientInstance_onStartJoinGame(ClientInstance* self, bool a1, const ::std::string& a2, const ::std::string& a3, const ::std::string& a4, int a5, int a6, PlayerJoinWorldContext* a7) {
 		Amethyst::GetClientCtx().mIsInWorldOrLoading = true;
 		OnStartJoinGameEvent event(*self);
 		Amethyst::GetEventBus().Invoke(event);
-		return _ClientInstance_onStartJoinGame(self, unk0, unk1, unk2, serviceId);
+		_ClientInstance_onStartJoinGame(self, a1, a2, a3, a4, a5, a6, a7);
 	}
 
 	Amethyst::InlineHook<decltype(&ClientInstance::requestLeaveGame)> _ClientInstance_requestLeaveGame;

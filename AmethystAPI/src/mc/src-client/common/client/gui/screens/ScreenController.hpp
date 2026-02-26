@@ -1,4 +1,4 @@
-/// @symbolgeneration
+/// @symbols
 #pragma once
 #include <amethyst/Imports.hpp>
 
@@ -18,6 +18,6 @@ enum class ViewRequest : uint32_t {
 
 class ScreenController {
 public:
-	/// @signature {48 89 5C 24 ? 48 89 6C 24 ? 48 89 74 24 ? 57 41 54 41 55 41 56 41 57 48 83 EC ? 48 8B 05 ? ? ? ? 48 33 C4 48 89 44 24 ? 0F 10 52}
+	/// @address {0x483EC00}
 	MC ui::ViewRequest _handleButtonEvent(ScreenEvent& event);
 };

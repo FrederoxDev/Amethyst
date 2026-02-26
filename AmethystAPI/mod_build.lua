@@ -40,10 +40,8 @@ function build_mod(mod_name, targetMajor, targetMinor, targetPatch, automated_bu
 
         if platform == "win-client" then
             amethystFolder = path.join(
-                os.getenv("localappdata"),
-                "Packages",
-                "Microsoft.MinecraftUWP_8wekyb3d8bbwe",
-                "LocalState",
+                os.getenv("appdata"),
+                "Minecraft Bedrock",
                 "games",
                 "com.mojang",
                 "amethyst"
@@ -215,7 +213,7 @@ function build_mod(mod_name, targetMajor, targetMinor, targetPatch, automated_bu
             local include_dir = path.join(amethystApiPath, "include"):gsub("\\", "/")
 
             local gen_sym_args = {
-                ".importer/bin/Amethyst.SymbolGenerator.exe",
+                "\".importer/bin/Amethyst.SymbolGenerator.exe\"",
                 "--input", string.format("%s", input_dir),
                 "--output", string.format("%s", generated_dir),
                 "--filters", "mc",
@@ -233,7 +231,7 @@ function build_mod(mod_name, targetMajor, targetMinor, targetPatch, automated_bu
             os.exec(table.concat(gen_sym_args, " "))
 
             local gen_lib_args = {
-                ".importer/bin/Amethyst.LibraryGenerator.exe",
+                "\".importer/bin/Amethyst.LibraryGenerator.exe\"",
                 "--platform " .. platform,
                 "--input", string.format("%s", generated_dir),
                 "--output", string.format("%s", generated_dir)
@@ -261,9 +259,9 @@ function build_mod(mod_name, targetMajor, targetMinor, targetPatch, automated_bu
             io.writefile(dst_json, mod_json)
 
             local tweaker_args = {
-                ".importer/bin/Amethyst.ModuleTweaker.exe",
+                "\".importer/bin/Amethyst.ModuleTweaker.exe\"",
                 "--platform", platform,
-                "--module", target:targetfile(),
+                "--module", '"' .. target:targetfile() .. '"',
                 "--input", string.format("%s", generated_dir),
                 "--output", string.format("%s", generated_dir)
             }

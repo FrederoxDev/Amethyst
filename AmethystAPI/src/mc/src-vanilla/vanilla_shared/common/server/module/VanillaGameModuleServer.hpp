@@ -1,4 +1,4 @@
-/// @symbolgeneration
+/// @symbols
 #pragma once
 #include <amethyst/Imports.hpp>
 #include "mc/src-deps/core/utility/NonOwnerPointer.hpp"
@@ -11,8 +11,6 @@ class IResourcePackRepository;
 class ResourcePackStack;
 class BaseGameVersion;
 
-/// @vptr { 0x2BD1248, this, win-server }
-/// @vptr { 0x4EC7070, this }
 class VanillaGameModuleServer {
 public:
     MC static uintptr_t $vtable_for_this;

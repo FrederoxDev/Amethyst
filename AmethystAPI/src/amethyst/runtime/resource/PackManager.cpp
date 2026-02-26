@@ -81,41 +81,41 @@ const std::unordered_map<std::string, std::unordered_map<std::string, Amethyst::
 void Amethyst::PackManager::AddResourcePacksToStack(const Bedrock::NonOwnerPointer<ResourcePackRepository>& repository, ResourcePackStack& stack)
 {
     // Iterate over all registered packs
-    for (auto& [nameVer, packs] : mPacks) {
-        // Sort packs by priority (highest priority first)
-        std::vector<std::pair<std::string, Pack&>> sortedPacks(packs.begin(), packs.end());
-        std::ranges::sort(sortedPacks, [](const auto& a, const auto& b) {
-            return static_cast<int>(a.second.priority) > static_cast<int>(b.second.priority);
-        });
+    // for (auto& [nameVer, packs] : mPacks) {
+    //     // Sort packs by priority (highest priority first)
+    //     std::vector<std::pair<std::string, Pack&>> sortedPacks(packs.begin(), packs.end());
+    //     std::ranges::sort(sortedPacks, [](const auto& a, const auto& b) {
+    //         return static_cast<int>(a.second.priority) > static_cast<int>(b.second.priority);
+    //     });
 
-        for (auto& [path, pack] : sortedPacks) {
-            if (pack.type != PackType::Resources)
-                continue;
-            // Add the pack to the stack
-            // Workaround for lambda capture
-            lambda::Pack lambdaPack{repository, stack};
-            lambdaPack.addFromUUID({pack.uuid, pack.version});
-        }
-    }
+    //     for (auto& [path, pack] : sortedPacks) {
+    //         if (pack.type != PackType::Resources)
+    //             continue;
+    //         // Add the pack to the stack
+    //         // Workaround for lambda capture
+    //         lambda::Pack lambdaPack{repository, stack};
+    //         lambdaPack.addFromUUID({pack.uuid, pack.version});
+    //     }
+    // }
 }
 
 void Amethyst::PackManager::AddBehaviorPacksToStack(const Bedrock::NonOwnerPointer<ResourcePackRepository>& repository, ResourcePackStack& stack)
 {
     // Iterate over all registered packs
-    for (auto& [nameVer, packs] : mPacks) {
-        // Sort packs by priority (highest priority first)
-        std::vector<std::pair<std::string, Pack&>> sortedPacks(packs.begin(), packs.end());
-        std::ranges::sort(sortedPacks, [](const auto& a, const auto& b) {
-            return static_cast<int>(a.second.priority) > static_cast<int>(b.second.priority);
-        });
+    // for (auto& [nameVer, packs] : mPacks) {
+    //     // Sort packs by priority (highest priority first)
+    //     std::vector<std::pair<std::string, Pack&>> sortedPacks(packs.begin(), packs.end());
+    //     std::ranges::sort(sortedPacks, [](const auto& a, const auto& b) {
+    //         return static_cast<int>(a.second.priority) > static_cast<int>(b.second.priority);
+    //     });
 
-        for (auto& [path, pack] : sortedPacks) {
-            if (pack.type != PackType::Behavior)
-                continue;
-            // Add the pack to the stack
-            // Workaround for lambda capture
-            lambda::Pack lambdaPack{repository, stack};
-            lambdaPack.addFromUUID({pack.uuid, pack.version});
-        }
-    }
+    //     for (auto& [path, pack] : sortedPacks) {
+    //         if (pack.type != PackType::Behavior)
+    //             continue;
+    //         // Add the pack to the stack
+    //         // Workaround for lambda capture
+    //         lambda::Pack lambdaPack{repository, stack};
+    //         lambdaPack.addFromUUID({pack.uuid, pack.version});
+    //     }
+    // }
 }

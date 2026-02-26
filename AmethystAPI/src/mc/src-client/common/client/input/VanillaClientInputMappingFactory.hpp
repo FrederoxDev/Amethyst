@@ -1,4 +1,4 @@
-/// @symbolgeneration
+/// @symbols
 #pragma once
 #include "mc/src-deps/input/InputHandler.hpp"
 #include "mc/src-client/common/client/input/ClientInputMappingFactory.hpp"
@@ -71,7 +71,6 @@ public:
 
 class Options;
 
-/// @vptr {0x4EBD5A8, this}
 class VanillaClientInputMappingFactory : public ClientInputMappingFactory {
 public:
     /// @vidx { inherit, this }
@@ -84,10 +83,8 @@ public:
 public:
     void createKeyboardAndMouseBinding(KeyboardInputMapping* keyboard, MouseInputMapping* mouse, const std::string* buttonName, const std::string* keyName, FocusImpact impact = FocusImpact::Neutral);
     
-    /// @signature {40 55 53 56 57 41 56 48 8B EC 48 83 EC ? 45 0F B6 F1}
     MC void _addFullKeyboardGamePlayControls(KeyboardInputMapping*, MouseInputMapping*);
 
-    /// @signature {40 55 53 56 57 41 56 48 8D 6C 24 ? 48 81 EC ? ? ? ? 49 8B F0 48 8B DA 4C 8B F1 48 8D 55}
     MC void _createScreenKeyboardAndMouseMapping(KeyboardInputMapping&, MouseInputMapping&);
     
     MC static uintptr_t $vtable_for_this;
