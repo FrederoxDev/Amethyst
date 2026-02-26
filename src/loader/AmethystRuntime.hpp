@@ -8,7 +8,6 @@
 #include "amethyst/Log.hpp"
 #include "amethyst/Config.hpp"
 #include "amethyst/runtime/AmethystContext.hpp"
-#include "mc/src/common/world/item/Item.hpp"
 
 #include "loader/RuntimeContext.hpp"
 #include <platforms/WindowsClientPlatform.hpp>

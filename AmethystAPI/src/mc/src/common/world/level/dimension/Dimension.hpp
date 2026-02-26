@@ -14,7 +14,7 @@
 #include "mc/src/common/world/level/levelgen/v1/FeatureTerrainAdjustments.hpp"
 #include "mc/src/common/world/level/levelgen/structure/StructureSetRegistry.hpp"
 #include <mc/src-deps/core/threading/TaskGroup.hpp>
-#include <amethyst/game/capabilities/Capabilities.hpp>
+
 
 enum class LimboEntitiesVersion : char {
     v0,
@@ -294,11 +294,6 @@ public:
 		return mLevel->destroyBlock(*mBlockSource, pos, dropResources);
 	}
 
-	// Amethyst utils
-	template<typename T, typename C>
-	T* getCapability(BlockCapability<T, C>& capability, const BlockPos& pos, const Block& state, BlockActor* be, const C& side) {
-		return capability.getCapability((Level&)*mLevel, pos, state, be, side);
-	}
 };
 
 //static_assert(sizeof(Dimension) == 1592);
