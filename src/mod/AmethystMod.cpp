@@ -1,13 +1,10 @@
 #include "mod/AmethystMod.hpp"
 #include "amethyst/runtime/ModContext.hpp"
 #include "amethyst/runtime/events/ModEvents.hpp"
-#include "amethyst/runtime/events/InputEvents.hpp"
-
 #include "hooks/client/Client.hpp"
 #include "hooks/shared/Shared.hpp"
 
 extern const Amethyst::Mod* _OwnMod;
-extern bool ShowAdvancedItemInfo;
 
 ModFunction void Initialize(AmethystContext& ctx, const Amethyst::Mod& mod)
 {
@@ -33,21 +30,6 @@ ModFunction void Initialize(AmethystContext& ctx, const Amethyst::Mod& mod)
     // }
 
 #ifdef CLIENT
-	events.AddListener<RegisterInputsEvent>([&](const RegisterInputsEvent& e) {
-		Amethyst::InputManager& input = e.inputManager;
-		auto& action = input.RegisterNewInput("amethyst.show_advanced_item_info", { 'Z' }, true, Amethyst::KeybindContext::Screen);
-
-		action.addButtonDownHandler([](FocusImpact, ClientInstance&) {
-			ShowAdvancedItemInfo = true;
-			return Amethyst::InputPassthrough::Passthrough;
-		});
-
-		action.addButtonUpHandler([](FocusImpact, ClientInstance&) {
-			ShowAdvancedItemInfo = false;
-			return Amethyst::InputPassthrough::Passthrough;
-		});
-	});
-
 	Amethyst::ClientHooks::Initialize();
 
 #endif

@@ -1,7 +1,6 @@
 #ifdef CLIENT
 #include "hooks/client/Client.hpp"
 #include "hooks/client/Input.hpp"
-#include "hooks/client/Item.hpp"
 #include "hooks/client/Rendering.hpp"
 #include "hooks/client/Resource.hpp"
 #include "hooks/client/UI.hpp"
@@ -65,7 +64,6 @@ namespace Amethyst::ClientHooks {
 		HOOK(ClientInstance, onStartJoinGame);
 		HOOK(ClientInstance, requestLeaveGame);
 		InputHooks::Initialize();
-		ItemHooks::Initialize();
 		RenderingHooks::Initialize();
 		ResourceHooks::Initialize();
 		UIHooks::Initialize();

@@ -8,8 +8,6 @@
 
 #include <mc/src-client/common/client/gui/ScreenView.hpp>
 #include <mc/src-client/common/client/gui/screens/ScreenController.hpp>
-#include <mc/src-client/common/client/gui/screens/controllers/StartMenuScreenController.hpp>
-#include <mc/src/common/locale/I18n.hpp>
 
 namespace Amethyst::ClientHooks::UIHooks {
 	Amethyst::InlineHook<decltype(&ScreenView::setupAndRender)> _ScreenView_setupAndRender;
@@ -30,51 +28,10 @@ namespace Amethyst::ClientHooks::UIHooks {
 		return result;
 	}
 
-	Amethyst::InlineHook<decltype(&StartMenuScreenController::_registerBindings)> _StartMenuScreenController__registerBindings;
-	void StartMenuScreenController__registerBindings(StartMenuScreenController* self) {
-		_StartMenuScreenController__registerBindings(self);
-		auto& context = Amethyst::GetContext();
-		const Amethyst::Mod* ownMod = Amethyst::GetOwnMod();
-		std::string versionStr;
-		if (ownMod->mInfo->Version.prerelease_tag() == "dev")
-			versionStr = std::format("{}", "§uAmethyst Runtime (DEV)§r");
-		else
-			versionStr = std::format("Amethyst Runtime v{}", ownMod->mInfo->Version.to_string());
-
-		// Register '#amethyst_version' binding
-		self->bindString(StringHash("#amethyst_version"), [versionStr]() {
-			return versionStr;
-		}, []() {
-			return true;
-		});
-
-		// Register '#mods_loaded' binding
-		self->bindString(StringHash("#mods_loaded"), [&context]() -> std::string {
-			// Not beautiful but works
-			auto* mod = GetOwnMod();
-			if (!mod)
-				return "Reloading...";
-
-			auto* importer = mod->GetImporter();
-			if (!importer || !importer->IsResolved() || !context.mModLoader) {
-				return "Reloading...";
-			}
-
-			size_t count = context.mModLoader->GetModCount();
-			std::string modsLoadedLocalized = "text.amethyst.mods_loaded"_i18n;
-			bool plural = (count != 1);
-			std::string pluralSuffix = plural ? "s" : "";
-			return std::vformat(modsLoadedLocalized, std::make_format_args(count, pluralSuffix, pluralSuffix));
-		}, []() {
-			return true;
-		});
-	}
-
 	void Initialize() {
 		auto& hooks = Amethyst::GetHookManager();
 		HOOK(ScreenView, setupAndRender);
 		HOOK(ScreenController, _handleButtonEvent);
-		HOOK(StartMenuScreenController, _registerBindings);
 	}
 }
 #endif

@@ -3,13 +3,13 @@
 #include <amethyst/Imports.hpp>
 #include "mc/src-client/common/module/GameModuleClient.hpp"
 #include "mc/src-deps/core/utility/NonOwnerPointer.hpp"
-#include "mc/src/common/resources/ResourcePackRepository.hpp"
 #include "gsl/gsl"
 
 class Experiments;
 class IResourcePackRepository;
 class ResourcePackStack;
 class BaseGameVersion;
+class ResourcePackRepository;
 
 /// @vptr { 0x4EBD550, this }
 class VanillaGameModuleClient {

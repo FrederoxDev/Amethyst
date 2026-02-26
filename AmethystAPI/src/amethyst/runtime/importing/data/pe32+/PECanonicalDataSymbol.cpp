@@ -1,5 +1,4 @@
 #include "amethyst/runtime/importing/data/pe32+/PECanonicalDataSymbol.hpp"
-#include "mc/src/common/world/containers/managers/controllers/CraftingContainerController.hpp"
 
 namespace Amethyst::Importing::PE {
 	std::string PECanonicalDataSymbol::GetFormatType() const {

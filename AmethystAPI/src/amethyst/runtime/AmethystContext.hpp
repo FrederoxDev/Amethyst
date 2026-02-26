@@ -12,7 +12,6 @@
 #include "amethyst/runtime/EnumAllocator.hpp"
 #include "amethyst/runtime/platform/Platform.hpp"
 #include "amethyst/runtime/networking/NetworkManager.hpp"
-#include "mc/src-client/common/client/game/ClientInstance.hpp"
 #include "mc/src-client/common/client/input/MinecraftInputHandler.hpp"
 #include "mc/src-client/common/client/options/Options.hpp"
 #include "mc/src-client/common/client/renderer/screen/MinecraftUIRenderContext.hpp"

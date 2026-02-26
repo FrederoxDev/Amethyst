@@ -1,5 +1,4 @@
 #include <amethyst/runtime/ModContext.hpp>
-#include <mc/src/common/Minecraft.hpp>
 #include <thread>
 #include <amethyst/runtime/ctx/SharedContext.hpp>
 #include <amethyst/runtime/ctx/ServerContext.hpp>
