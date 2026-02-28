@@ -2,9 +2,9 @@
 #include "amethyst-deps/safetyhook.hpp"
 #include "amethyst/Log.hpp"
 #include "amethyst/Memory.hpp"
-#include "mc/src-deps/core/string/StringHash.hpp"
 #include <unordered_map>
 #include <vector>
+#include <Core/String/HashedString.hpp>
 
 // #define NO_THROW_HOOK(className, functionName, signature)                                                                  \
 // {                                                                                                                      \

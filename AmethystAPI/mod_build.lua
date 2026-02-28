@@ -10,6 +10,7 @@ function build_mod(mod_name, targetMajor, targetMinor, targetPatch, automated_bu
     local extra_include_dirs  = config.extra_include_dirs or {}
     local extra_header_files  = config.extra_header_files or {}
     local extra_files         = config.extra_files or {}
+    local mc_headers_path     = config.mc_headers_path or nil
     local platform = config.platform or "win-client"
     
     local BUILD_SCRIPT_VERSION = 2
@@ -68,6 +69,8 @@ function build_mod(mod_name, targetMajor, targetMinor, targetPatch, automated_bu
         includes(amethystApiPath)
         includes(path.join(amethystApiPath, "packages", "libhat"))
     end
+
+    includes(mc_headers_path)
 
     -- RelWithDebInfo flags
     add_cxxflags("/O2", "/DNDEBUG", "/MD", "/EHsc", "/FS", "/MP")
@@ -147,7 +150,7 @@ function build_mod(mod_name, targetMajor, targetMinor, targetPatch, automated_bu
         set_languages("c++23")
         set_kind("shared")
         set_toolchains("msvc")
-        add_deps("AmethystAPI", "libhat")
+        add_deps("AmethystAPI", "libhat", "MC")
 
         -- Hard fail if AmethystAPI is missing
         on_load(function (t)

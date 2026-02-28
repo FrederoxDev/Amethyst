@@ -7,9 +7,15 @@ includes("packages/libhat")
 
 set_toolchains("msvc")
 
+print("hi")
+
+local mc_headers_path = os.getenv("MC_HEADERS")
+includes(mc_headers_path)
+
 target("AmethystAPI")
     set_kind("static")
     set_default(false)
+    add_deps("MC")
 
     add_files("src/**.cpp", "src/**.c", "include/**.cpp")
 

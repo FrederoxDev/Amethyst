@@ -2,8 +2,10 @@
 #include <string> 
 #include <vector>
 #include <functional>
-#include <mc/src-deps/input/InputHandler.hpp>
-#include <mc/src-client/common/client/game/IClientInstance.hpp>
+
+class InputHandler;
+class IClientInstance;
+enum class FocusImpact;
 
 namespace Amethyst {
 

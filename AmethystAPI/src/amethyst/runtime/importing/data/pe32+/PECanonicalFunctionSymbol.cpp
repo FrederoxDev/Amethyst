@@ -1,6 +1,7 @@
 #include "amethyst/runtime/importing/data/pe32+/PECanonicalFunctionSymbol.hpp"
 #include "amethyst/runtime/importing/data/pe32+/PECanonicalDataSymbol.hpp"
 #include "amethyst/runtime/importing/data/CanonicalHeader.hpp"
+#include <amethyst/Memory.hpp>
 
 namespace Amethyst::Importing::PE {
 	std::string PECanonicalFunctionSymbol::GetFormatType() const {
