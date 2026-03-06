@@ -8,8 +8,8 @@
 #include <amethyst/runtime/ModContext.hpp>
 #include <amethyst/runtime/events/GameEvents.hpp>
 
-#include <mc/src/common/world/level/Level.hpp>
-#include <mc/src/common/Minecraft.hpp>
+#include <common/world/level/Level.hpp>
+#include <common/Minecraft.hpp>
 
 namespace Amethyst::SharedHooks {
 	void OnLevelEvent(Level* level) {

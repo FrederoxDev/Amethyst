@@ -5,7 +5,7 @@
 #include <amethyst/runtime/utility/InlineHook.hpp>
 #include <amethyst/runtime/events/RenderingEvents.hpp>
 
-#include <mc/src-client/common/client/renderer/game/LevelRenderer.hpp>
+#include <common/client/renderer/game/LevelRenderer.hpp>
 
 namespace Amethyst::ClientHooks::RenderingHooks {
 	Amethyst::InlineHook<decltype(&LevelRenderer::renderLevel)> _LevelRenderer_renderLevel;

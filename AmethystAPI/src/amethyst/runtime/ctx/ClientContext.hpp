@@ -16,7 +16,7 @@ public:
     bool mIsInWorldOrLoading = false;
 
 	// Amethyst Helpers
-	std::shared_ptr<ICustomUIRendererRegistry> mCustomUIRendererRegistry;
+	// std::shared_ptr<ICustomUIRendererRegistry> mCustomUIRendererRegistry;
 };
 
 }

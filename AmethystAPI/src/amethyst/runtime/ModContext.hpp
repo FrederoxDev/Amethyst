@@ -18,7 +18,7 @@ namespace Amethyst {
 	Amethyst::HookManager& GetHookManager();
 	Amethyst::PatchManager& GetPatchManager();
 	Amethyst::EnumAllocator& GetEnumAllocator();
-	Amethyst::NetworkManager& GetNetworkManager();
+	// Amethyst::NetworkManager& GetNetworkManager();
 	Amethyst::Platform& GetPlatform();
 
 	Amethyst::ClientContext& GetClientCtx();

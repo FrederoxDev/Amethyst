@@ -1,5 +1,5 @@
 #pragma once
-#include <mc/src-deps/core/string/StringHash.hpp>
+#include <Core/String/HashedString.hpp>
 #include <cstdint>
 #include <map>
 

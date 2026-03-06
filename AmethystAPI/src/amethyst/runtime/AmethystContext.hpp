@@ -2,19 +2,18 @@
 #include "amethyst/runtime/HookManager.hpp"
 #include "amethyst/runtime/events/EventBus.hpp"
 #include "amethyst/runtime/input/InputManager.hpp"
-#include "amethyst/runtime/mc/MinecraftPackageInfo.hpp"
 #include "amethyst/runtime/mod/Mod.hpp"
 #include "amethyst/runtime/mod/ModRepository.hpp"
 #include "amethyst/runtime/mod/ModGraph.hpp"
 #include "amethyst/runtime/mod/ModLoader.hpp"
 #include "amethyst/runtime/patchManager/PatchManager.hpp"
-#include "amethyst/runtime/resource/PackManager.hpp"
+// #include "amethyst/runtime/resource/PackManager.hpp"
 #include "amethyst/runtime/EnumAllocator.hpp"
 #include "amethyst/runtime/platform/Platform.hpp"
 #include "amethyst/runtime/networking/NetworkManager.hpp"
-#include "mc/src-client/common/client/input/MinecraftInputHandler.hpp"
-#include "mc/src-client/common/client/options/Options.hpp"
-#include "mc/src-client/common/client/renderer/screen/MinecraftUIRenderContext.hpp"
+// #include "mc/src-client/common/client/input/MinecraftInputHandler.hpp"
+// #include "mc/src-client/common/client/options/Options.hpp"
+// #include "mc/src-client/common/client/renderer/screen/MinecraftUIRenderContext.hpp"
 #include "amethyst/Imports.hpp"
 #include "amethyst/runtime/ctx/ClientContext.hpp"
 #include "amethyst/runtime/ctx/ServerContext.hpp"
@@ -29,11 +28,11 @@ public:
     // Volatile between mod loads
     std::unique_ptr<Amethyst::HookManager> mHookManager;
     std::unique_ptr<Amethyst::EventBus> mEventBus;
-    std::unique_ptr<Amethyst::InputManager> mInputManager;
+    // std::unique_ptr<Amethyst::InputManager> mInputManager;
     std::unique_ptr<Amethyst::PatchManager> mPatchManager;
     std::unique_ptr<Amethyst::EnumAllocator> mEnumAllocator;
-    std::unique_ptr<Amethyst::PackManager> mPackManager;
-    std::unique_ptr<Amethyst::NetworkManager> mNetworkManager;
+    // std::unique_ptr<Amethyst::PackManager> mPackManager;
+    // std::unique_ptr<Amethyst::NetworkManager> mNetworkManager;
     std::unique_ptr<Amethyst::ModRepository> mModRepository;
     std::unique_ptr<Amethyst::ModGraph> mModGraph;
     std::unique_ptr<Amethyst::ModLoader> mModLoader;

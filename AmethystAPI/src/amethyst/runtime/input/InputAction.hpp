@@ -2,10 +2,11 @@
 #include <string> 
 #include <vector>
 #include <functional>
+#include <Input/Enums/FocusImpact.hpp>
+#include <Input/Enums/ButtonState.hpp>
 
 class InputHandler;
-class IClientInstance;
-enum class FocusImpact;
+class ClientInstance;
 
 namespace Amethyst {
 

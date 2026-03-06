@@ -75,8 +75,8 @@ void AmethystRuntime::LoadModDlls()
     // When hot-reloading we will have options already so we can register inputs here.
 	#ifdef CLIENT
     if (Amethyst::GetClientCtx().mOptions != nullptr) {
-        RegisterInputsEvent event(*Amethyst::GetContext().mInputManager.get());
-        Amethyst::GetEventBus().Invoke(event);
+        // RegisterInputsEvent event(*Amethyst::GetContext().mInputManager.get());
+        // Amethyst::GetEventBus().Invoke(event);
     }
 	#endif
 
