@@ -7,8 +7,6 @@ includes("packages/libhat")
 
 set_toolchains("msvc")
 
-print("hi")
-
 local mc_headers_path = os.getenv("MC_HEADERS")
 includes(mc_headers_path)
 
