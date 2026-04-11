@@ -20,13 +20,13 @@ void Amethyst::InitializeAmethystMod(AmethystContext& context, const Mod& mod)
         Log::Warning("Detected difference in amethyst ABI hash! This mod is not compatible with this version of the runtime! Please recompile the mod/runtime if developing!");
     }
 
-    // // Check if the mod has a resource pack and register it if it does
-    // if (fs::exists(mod.mInfo->Directory / "resource_packs" / "main_rp" / "manifest.json"))
-    //     context.mPackManager->RegisterNewPack(&mod, "main_rp", PackType::Resources);
+    // Check if the mod has a resource pack and register it if it does
+    if (fs::exists(mod.mInfo->Directory / "resource_packs" / "main_rp" / "manifest.json"))
+        context.mPackManager->RegisterNewPack(&mod, "main_rp", PackType::Resources);
 
-    // // Check if the mod has a behavior pack and register it if it does
-    // if (fs::exists(mod.mInfo->Directory / "behavior_packs" / "main_bp" / "manifest.json"))
-    //     context.mPackManager->RegisterNewPack(&mod, "main_bp", PackType::Behavior);
+    // Check if the mod has a behavior pack and register it if it does
+    if (fs::exists(mod.mInfo->Directory / "behavior_packs" / "main_bp" / "manifest.json"))
+        context.mPackManager->RegisterNewPack(&mod, "main_bp", PackType::Behavior);
 }
 
 AmethystContext& Amethyst::GetContext()

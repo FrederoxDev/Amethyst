@@ -7,7 +7,7 @@
 #include "amethyst/runtime/mod/ModGraph.hpp"
 #include "amethyst/runtime/mod/ModLoader.hpp"
 #include "amethyst/runtime/patchManager/PatchManager.hpp"
-// #include "amethyst/runtime/resource/PackManager.hpp"
+#include "amethyst/runtime/resource/PackManager.hpp"
 #include "amethyst/runtime/EnumAllocator.hpp"
 #include "amethyst/runtime/platform/Platform.hpp"
 #include "amethyst/runtime/networking/NetworkManager.hpp"
@@ -31,7 +31,7 @@ public:
     // std::unique_ptr<Amethyst::InputManager> mInputManager;
     std::unique_ptr<Amethyst::PatchManager> mPatchManager;
     std::unique_ptr<Amethyst::EnumAllocator> mEnumAllocator;
-    // std::unique_ptr<Amethyst::PackManager> mPackManager;
+    std::unique_ptr<Amethyst::PackManager> mPackManager;
     // std::unique_ptr<Amethyst::NetworkManager> mNetworkManager;
     std::unique_ptr<Amethyst::ModRepository> mModRepository;
     std::unique_ptr<Amethyst::ModGraph> mModGraph;

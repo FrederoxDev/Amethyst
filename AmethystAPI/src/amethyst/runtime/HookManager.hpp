@@ -4,7 +4,7 @@
 #include "amethyst/Memory.hpp"
 #include <unordered_map>
 #include <vector>
-#include <Core/String/HashedString.hpp>
+#include <Core/String/StringHash.hpp>
 
 // #define NO_THROW_HOOK(className, functionName, signature)                                                                  \
 // {                                                                                                                      \

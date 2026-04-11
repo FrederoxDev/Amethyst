@@ -1,5 +1,5 @@
 #pragma once
-#include <Core/String/HashedString.hpp>
+#include <Core/String/StringHash.hpp>
 #include <cstdint>
 #include <map>
 

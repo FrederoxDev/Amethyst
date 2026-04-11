@@ -29,7 +29,9 @@ fs::path WindowsClientPlatform::GetComMojangPath() const
 
 fs::path WindowsClientPlatform::GetAmethystFolder() const
 {
-    return GetComMojangPath() / "amethyst";
+	char appdata[MAX_PATH];
+	GetEnvironmentVariableA("APPDATA", appdata, MAX_PATH);
+	return fs::path(appdata) / "Amethyst" / "Launcher";
 }
 
 std::string WindowsClientPlatform::GetPlatformFolderName() {

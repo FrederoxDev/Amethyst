@@ -40,25 +40,25 @@ function build_mod(mod_name, targetMajor, targetMinor, targetPatch, automated_bu
         local amethystFolder
 
         if platform == "win-client" then
-            amethystFolder = path.join(
+            modFolder = path.join(
                 os.getenv("appdata"),
-                "Minecraft Bedrock",
-                "games",
-                "com.mojang",
-                "amethyst"
+                "Amethyst",
+                "Launcher",
+                "Mods",
+                string.format("%s@0.0.0-dev", mod_name)
             )
         elseif platform == "win-server" then
             amethystFolder = path.join(
                 os.getenv("AMETHYST_BDS_TARGET"),
                 "amethyst"
             )
-        end
 
-        modFolder = path.join(
-            amethystFolder,
-            "mods",
-            string.format("%s@0.0.0-dev", mod_name)
-        )
+            modFolder = path.join(
+                amethystFolder,
+                "mods",
+                string.format("%s@0.0.0-dev", mod_name)
+            )
+        end
     end
 
     local binary_dir = path.join(modFolder, platform)
