@@ -68,21 +68,21 @@ public:
     {
         Assert(mHook.operator bool(), "Attempted to call an InlineHook that was invalid!");
         if constexpr (Convention == CallingConvention::CDecl) {
-            return mHook.ccall<R, Args...>(args...);
+            return mHook.ccall<R, Args...>(std::forward<Args>(args)...);
         } else if constexpr (Convention == CallingConvention::StdCall) {
-            return mHook.stdcall<R, Args...>(args...);
+            return mHook.stdcall<R, Args...>(std::forward<Args>(args)...);
         } else if constexpr (Convention == CallingConvention::ThisCall) {
-            return mHook.thiscall<R, Args...>(args...);
+            return mHook.thiscall<R, Args...>(std::forward<Args>(args)...);
         } else if constexpr (Convention == CallingConvention::FastCall) {
-            return mHook.fastcall<R, Args...>(args...);
+            return mHook.fastcall<R, Args...>(std::forward<Args>(args)...);
         }
-        return mHook.call<R, Args...>(args...);
+        return mHook.call<R, Args...>(std::forward<Args>(args)...);
     }
 
     template <CallingConvention Convention = CallingConvention::Default>
-    R operator()(Args... args) 
+    R operator()(Args... args)
     {
-        return call<Convention>(args...);
+        return call<Convention>(std::forward<Args>(args)...);
     }
 };
 

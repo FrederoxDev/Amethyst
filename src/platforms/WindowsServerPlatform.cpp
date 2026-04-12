@@ -21,10 +21,6 @@ std::string WindowsServerPlatform::GetPlatformFolderName() {
 }
 
 bool WindowsServerPlatform::HasRequestedHotReload() const {
-	// For some reason it listens to inputs even when not focused
-	if (GetForegroundWindow() != GetConsoleWindow())
-		return false;
-
 	return WindowsPlatformCommon::HasRequestedHotReload();
 }
 

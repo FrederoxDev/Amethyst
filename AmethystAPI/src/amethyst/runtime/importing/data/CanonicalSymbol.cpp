@@ -2,13 +2,13 @@
 
 namespace Amethyst::Importing {
 	std::string CanonicalSymbol::ToString() const {
-		return std::format("CanonicalSymbol[{}, {}, {}, {}]", Name, GetFormatType(), GetKind(), IsShadow);
+		return std::format("CanonicalSymbol[{}, {}, {}]", DisplayName(), GetKind(), IsShadow);
 	}
 
 	template<>
 	PE::PECanonicalDataSymbol* CanonicalSymbol::Transform<PE::PECanonicalDataSymbol>() {
-		if (GetFormatType() != "pe32+" || GetKind() != "data") {
-			Assert(false, "Cannot transform CanonicalSymbol of type {} and kind {} to PECanonicalDataSymbol", GetFormatType(), GetKind());
+		if (GetKind() != "data") {
+			Assert(false, "Cannot transform CanonicalSymbol of kind {} to PECanonicalDataSymbol", GetKind());
 			return nullptr;
 		}
 		return reinterpret_cast<PE::PECanonicalDataSymbol*>(this);
@@ -16,8 +16,8 @@ namespace Amethyst::Importing {
 
 	template<>
 	PE::PECanonicalFunctionSymbol* CanonicalSymbol::Transform<PE::PECanonicalFunctionSymbol>() {
-		if (GetFormatType() != "pe32+" || GetKind() != "function") {
-			Assert(false, "Cannot transform CanonicalSymbol of type {} and kind {} to PECanonicalFunctionSymbol", GetFormatType(), GetKind());
+		if (GetKind() != "function") {
+			Assert(false, "Cannot transform CanonicalSymbol of kind {} to PECanonicalFunctionSymbol", GetKind());
 			return nullptr;
 		}
 		return reinterpret_cast<PE::PECanonicalFunctionSymbol*>(this);

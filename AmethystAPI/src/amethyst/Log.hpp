@@ -1,9 +1,11 @@
 #pragma once
 #include "Utility.hpp"
 #include <iostream>
+#include <fstream>
 #include <format>
 #include <intrin.h>
 #include <utility>
+#include <mutex>
 
 #ifndef NOMINMAX
 #define NOMINMAX
@@ -17,6 +19,10 @@ namespace Log {
     std::string GetModName();
     std::string GetThreadName();
 
+    void WriteToFile(const std::string& message);
+    void InitializeFileLogging();
+    void ShutdownFileLogging();
+
     constexpr const char* RESET   = "\033[0m";
     constexpr const char* YELLOW  = "\033[1;33m";
     constexpr const char* RED     = "\033[1;31m";
@@ -27,6 +33,7 @@ namespace Log {
         std::string formatted_string = std::format(fmt, std::forward<T>(args)...);
         formatted_string = std::format("[{}] [{}] {}", GetThreadName(), GetModName(), formatted_string);
         std::cout << formatted_string << std::endl;
+        WriteToFile(formatted_string);
     }
 
     template <typename... T>
@@ -34,36 +41,41 @@ namespace Log {
         std::wstring formatted_string = std::format(fmt, std::forward<T>(args)...);
         formatted_string = std::format("[{}] [{}] {}", GetThreadName(), GetModName(), formatted_string);
         std::wcout << formatted_string << std::endl;
+        WriteToFile(StringFromWstring(formatted_string));
     }
 
     template <typename... T>
     void Warning(const std::format_string<T...> fmt, T&&... args) {
         std::string formatted_string = std::format(fmt, std::forward<T>(args)...);
-        formatted_string = std::format("[{}] [{}] {}", GetThreadName(), GetModName(), formatted_string);
+        formatted_string = std::format("[{}] [{}] [WARN] {}", GetThreadName(), GetModName(), formatted_string);
         std::cout << YELLOW << formatted_string << RESET << std::endl;
+        WriteToFile(formatted_string);
     }
 
     template <typename... T>
     void Warning(const std::wformat_string<T...> fmt, T&&... args) {
         std::wstring formatted_wstring = std::format(fmt, std::forward<T>(args)...);
         std::string formatted_string = StringFromWstring(formatted_wstring);
-        formatted_string = std::format("[{}] [{}] {}", GetThreadName(), GetModName(), formatted_string);
+        formatted_string = std::format("[{}] [{}] [WARN] {}", GetThreadName(), GetModName(), formatted_string);
         std::cout << YELLOW << formatted_string << RESET << std::endl;
+        WriteToFile(formatted_string);
     }
 
     template <typename... T>
     void Error(const std::format_string<T...> fmt, T&&... args) {
         std::string formatted_string = std::format(fmt, std::forward<T>(args)...);
-        formatted_string = std::format("[{}] [{}] {}", GetThreadName(), GetModName(), formatted_string);
+        formatted_string = std::format("[{}] [{}] [ERROR] {}", GetThreadName(), GetModName(), formatted_string);
         std::cerr << RED << formatted_string << RESET << std::endl;
+        WriteToFile(formatted_string);
     }
 
     template <typename... T>
     void Error(const std::wformat_string<T...> fmt, T&&... args) {
         std::wstring formatted_wstring = std::format(fmt, std::forward<T>(args)...);
         std::string formatted_string = StringFromWstring(formatted_wstring);
-        formatted_string = std::format("[{}] [{}] {}", GetThreadName(), GetModName(), formatted_string);
+        formatted_string = std::format("[{}] [{}] [ERROR] {}", GetThreadName(), GetModName(), formatted_string);
         std::cerr << RED << formatted_string << RESET << std::endl;
+        WriteToFile(formatted_string);
     }
 
     template <typename... T>

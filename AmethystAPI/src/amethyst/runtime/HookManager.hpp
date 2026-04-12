@@ -22,9 +22,9 @@
     hooks.CreateDirectHook<&className::functionName>(_##className##_##functionName, &className##_##functionName); \
 }
 
-#define VHOOK(className, functionName, forName)                                                                                  \
-{                                                                                                                  \
-    hooks.CreateVirtualHook<&className::functionName>(##className::$vtable_for_##forName, _##className##_##functionName, &className##_##functionName); \
+#define VHOOK(className, functionName, vtable)                                                                      \
+{                                                                                                                   \
+    hooks.CreateVirtualHook<&className::functionName>(vtable, _##className##_##functionName, &className##_##functionName); \
 }
 
 
@@ -66,28 +66,51 @@ namespace Amethyst {
         template <auto OriginalFn>
         void CreateDirectHook(SafetyHookInline& trampoline, void* hook)
         {
+            constexpr std::string_view name = function_id::name<OriginalFn>();
             using FnType = decltype(OriginalFn);
             uintptr_t original_addr = 0;
 
             if constexpr (std::is_member_function_pointer_v<FnType>) {
-                // will cause issues if a virtual function is passed here
                 union { FnType fn; uintptr_t addr; } u{};
                 u.fn = OriginalFn;
                 original_addr = u.addr;
-            } 
+            }
             else {
                 original_addr = std::bit_cast<uintptr_t>(OriginalFn);
             }
 
-            // uintptr_t original_addr = std::bit_cast<uintptr_t>(OriginalFn);
+            if (original_addr == 0) {
+                Log::Error("[HOOK] Failed to resolve address for '{}' (got nullptr). Are imports resolved?", name);
+                return;
+            }
+
             CreateHookAbsolute(trampoline, original_addr, hook);
         }
 
         template <auto OriginalFn>
         void CreateVirtualHook(uintptr_t vtable, SafetyHookInline& trampoline, void* hook)
         {
+            constexpr std::string_view name = function_id::name<OriginalFn>();
+
+            if (vtable == 0) {
+                Log::Error("[VHOOK] vtable pointer is null for '{}'. Are imports resolved?", name);
+                return;
+            }
+
             size_t offset = GetVirtualFunctionOffset<OriginalFn>();
-            uintptr_t vtableEntry = reinterpret_cast<uintptr_t*>(vtable)[offset / sizeof(void*)];
+            if (offset == 0) {
+                Log::Error("[VHOOK] Failed to get vtable offset for '{}'. Is it actually virtual?", name);
+                return;
+            }
+
+            size_t index = offset / sizeof(void*);
+            uintptr_t vtableEntry = reinterpret_cast<uintptr_t*>(vtable)[index];
+
+            if (vtableEntry == 0) {
+                Log::Error("[VHOOK] vtable[{}] is null for '{}' (vtable at 0x{:x})", index, name, vtable);
+                return;
+            }
+
             CreateHookAbsolute(trampoline, vtableEntry, hook);
         }
 

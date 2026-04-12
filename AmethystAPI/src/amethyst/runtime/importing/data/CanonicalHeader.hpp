@@ -12,7 +12,6 @@ namespace Amethyst::Importing {
 		std::vector<std::unique_ptr<CanonicalSymbol>> Symbols;
 
 		virtual ~CanonicalHeader() = default;
-		virtual std::string GetFormatType() const = 0;
 		virtual std::string ToString() const;
 
 		template<typename T = CanonicalHeader>

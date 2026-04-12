@@ -1,5 +1,6 @@
 #pragma once
 #include "amethyst/runtime/importing/data/CanonicalSymbol.hpp"
+#include <libhat/signature.hpp>
 
 namespace Amethyst::Importing::PE {
 	class PECanonicalDataSymbol :
@@ -13,9 +14,8 @@ namespace Amethyst::Importing::PE {
 		bool IsVirtualTable = false;
 		uint64_t Address = 0x0;
 		bool IsSignature = false;
-		std::string Signature = "";
+		hat::signature Signature = {};
 
-		virtual std::string GetFormatType() const override;
 		virtual std::string GetKind() const override;
 		virtual std::string ToString() const override;
 		virtual uintptr_t Compute(const ResolutionContext& ctx) override;

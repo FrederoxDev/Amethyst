@@ -63,6 +63,14 @@ function build_mod(mod_name, targetMajor, targetMinor, targetPatch, automated_bu
 
     local binary_dir = path.join(modFolder, platform)
 
+    -- Resolve Runtime-Importer bin directory (shared across on_load, before_build, after_build)
+    local importer_bin_dir = path.join(os.curdir(), ".importer", "bin")
+    local local_importer = os.getenv("RUNTIME_IMPORTER_PATH")
+    if local_importer and os.isdir(local_importer) then
+        importer_bin_dir = local_importer
+        print("Using local Runtime-Importer from: " .. local_importer)
+    end
+
     -- Only include AmethystAPI if present on disk at configure-time
     if amethystApiPath and os.isdir(amethystApiPath) then
         PLATFORM = platform -- This is kinda horrible, declare a non local variable here which is read in the xmake.lua of AmethystAPI 
@@ -84,52 +92,58 @@ function build_mod(mod_name, targetMajor, targetMinor, targetPatch, automated_bu
         set_description("The runtime importer enables importing functions and variables from the game just by defining annotations in header files")
 
         on_load(function (package)
-            import("net.http")
-            import("core.base.json")
-            import("utils.archive")
-
-            local releases_file = path.join(os.tmpdir(), "runtime-importer.releases.json")
-            http.download("https://api.github.com/repos/AmethystAPI/Runtime-Importer/releases/latest", releases_file)
-
             local importer_dir = path.join(os.curdir(), ".importer");
-            local bin_dir = path.join(importer_dir, "bin");
-            local release = json.loadfile(releases_file)
-            local latest_tag = release.tag_name
-            local installed_version_file = path.join(importer_dir, "version.txt")
-            local installed_version = os.isfile(installed_version_file) and io.readfile(installed_version_file) or "None"
-            local should_reinstall = installed_version ~= latest_tag
+            local bin_dir = importer_bin_dir
+            local should_reinstall = false
 
-            local is_first_install = should_reinstall and installed_version == "None"
+            if not local_importer then
+                import("net.http")
+                import("core.base.json")
+                import("utils.archive")
 
-            if should_reinstall and not is_first_install and not automated_build then
-                io.write("Runtime-Importer is outdated (installed: " .. installed_version .. ", latest: " .. latest_tag .. "), install? (y/n): ")
-                io.flush()
-                local answer = (io.read() or ""):lower()
-                should_reinstall = (answer == "" or answer == "y")
-            end
+                local releases_file = path.join(os.tmpdir(), "runtime-importer.releases.json")
+                http.download("https://api.github.com/repos/AmethystAPI/Runtime-Importer/releases/latest", releases_file)
 
-            if should_reinstall then
-                local url = "https://github.com/AmethystAPI/Runtime-Importer/releases/latest/download/Runtime-Importer.zip"
-                local zipfile = path.join(os.tmpdir(), "Runtime-Importer.zip")
-                print("Installing Runtime-Importer " .. latest_tag .. "...")
+                local release = json.loadfile(releases_file)
+                local latest_tag = release.tag_name
+                local installed_version_file = path.join(importer_dir, "version.txt")
+                local installed_version = os.isfile(installed_version_file) and io.readfile(installed_version_file) or "None"
+                should_reinstall = installed_version ~= latest_tag
 
-                http.download(url, zipfile)
-                archive.extract(zipfile, bin_dir)
-                io.writefile(installed_version_file, latest_tag)
+                local is_first_install = should_reinstall and installed_version == "None"
+
+                if should_reinstall and not is_first_install and not automated_build then
+                    io.write("Runtime-Importer is outdated (installed: " .. installed_version .. ", latest: " .. latest_tag .. "), install? (y/n): ")
+                    io.flush()
+                    local answer = (io.read() or ""):lower()
+                    should_reinstall = (answer == "" or answer == "y")
+                end
+
+                if should_reinstall then
+                    local url = "https://github.com/AmethystAPI/Runtime-Importer/releases/latest/download/Runtime-Importer.zip"
+                    local zipfile = path.join(os.tmpdir(), "Runtime-Importer.zip")
+                    print("Installing Runtime-Importer " .. latest_tag .. "...")
+
+                    http.download(url, zipfile)
+                    archive.extract(zipfile, bin_dir)
+                    io.writefile(installed_version_file, latest_tag)
+                end
             end
 
             local generated_dir = path.join(importer_dir)
             local pch_file = path.join(generated_dir, "pch.hpp.pch")
             local should_regenerate_pch = os.exists(pch_file) == false or should_reinstall
 
+            -- clang++ and pch.hpp always come from the installed release, not the local override
+            local installed_bin_dir = path.join(importer_dir, "bin")
             if should_regenerate_pch then
                 print("Generating precompiled header of STL...")
                 os.mkdir(generated_dir)
 
                 local clang_args = {
-                    path.join(bin_dir, "clang++.exe"),
+                    path.join(installed_bin_dir, "clang++.exe"),
                     "-x", "c++-header",
-                    path.join(path.join(bin_dir, "utils"), "pch.hpp"),
+                    path.join(path.join(installed_bin_dir, "utils"), "pch.hpp"),
                     "-std=c++23",
                     "-fms-extensions",
                     "-fms-compatibility",
@@ -199,7 +213,11 @@ function build_mod(mod_name, targetMajor, targetMinor, targetPatch, automated_bu
 
         libs_folder = path.join(".importer", platform)
 
-        add_links("user32", "windowsapp", path.join(libs_folder, "Minecraft.Windows.*.lib"), "Dbghelp")
+        add_links("user32", "windowsapp", "Dbghelp")
+        add_linkdirs(libs_folder)
+        for _, f in ipairs(os.files(path.join(libs_folder, "Minecraft.Windows.*.lib"))) do
+            add_links(f)
+        end
 
         add_defines(
             string.format('MOD_TARGET_VERSION_MAJOR=%d', targetMajor),
@@ -215,32 +233,102 @@ function build_mod(mod_name, targetMajor, targetMinor, targetPatch, automated_bu
             local input_dir = path.join(amethystApiPath, "src"):gsub("\\", "/")
             local include_dir = path.join(amethystApiPath, "include"):gsub("\\", "/")
 
+            -- Build SymbolGenerator arguments
+            local mc_headers_root = os.getenv("MC_HEADERS")
+
             local gen_sym_args = {
-                "\".importer/bin/Amethyst.SymbolGenerator.exe\"",
+                '"' .. path.join(importer_bin_dir, "Amethyst.SymbolGenerator.exe") .. '"',
                 "--input", string.format("%s", input_dir),
-                "--output", string.format("%s", generated_dir),
-                "--filters", "mc",
-                "--platform " .. platform,
-                "--",
-                "-x c++",
-                "-include-pch", path.join(generated_dir, "pch.hpp.pch"),
+            }
+
+            -- Add MC headers as additional input directory for SymbolGenerator
+            if mc_headers_root and os.isdir(mc_headers_root) then
+                gen_sym_args[#gen_sym_args + 1] = "--input"
+                gen_sym_args[#gen_sym_args + 1] = mc_headers_root:gsub("\\", "/")
+            end
+
+            -- Remaining CLI args (before the -- separator)
+            gen_sym_args[#gen_sym_args + 1] = "--output"
+            gen_sym_args[#gen_sym_args + 1] = string.format("%s", generated_dir)
+            gen_sym_args[#gen_sym_args + 1] = "--filters"
+            gen_sym_args[#gen_sym_args + 1] = "mc"
+            gen_sym_args[#gen_sym_args + 1] = "--platform " .. platform
+
+            -- Build Clang arguments and write to a response file to avoid command line length limits
+            -- One argument per line; flags with separate values must be on separate lines
+            local clang_args = {
+                "-x",
+                "c++",
+                "-include-pch",
+                path.join(generated_dir, "pch.hpp.pch"):gsub("\\", "/"),
+                "-ferror-limit=0",
                 "-std=c++23",
                 "-fms-extensions",
                 "-fms-compatibility",
                 string.format('-I%s', include_dir),
-                string.format('-I%s', input_dir)
+                string.format('-I%s', input_dir),
             }
-            print('Generating *.symbols.json files for headers...')
-            os.exec(table.concat(gen_sym_args, " "))
 
-            local gen_lib_args = {
-                "\".importer/bin/Amethyst.LibraryGenerator.exe\"",
-                "--platform " .. platform,
-                "--input", string.format("%s", generated_dir),
-                "--output", string.format("%s", generated_dir)
-            }
-            print('Generating Minecraft.Windows.lib file...')
-            os.exec(table.concat(gen_lib_args, " "))
+            -- Add MC headers include directories so Clang can resolve includes
+            -- First add the MC_HEADERS root itself (Generated.cpp uses paths relative to it)
+            if mc_headers_root and os.isdir(mc_headers_root) then
+                clang_args[#clang_args + 1] = string.format('-I%s', mc_headers_root:gsub("\\", "/"))
+            end
+            -- Then add the MC target's public include directories
+            local mc_dep = target:dep("MC")
+            if mc_dep then
+                local inc_dirs = mc_dep:get("includedirs")
+                if inc_dirs then
+                    for _, dir in ipairs(inc_dirs) do
+                        local abs = path.absolute(dir):gsub("\\", "/")
+                        clang_args[#clang_args + 1] = string.format('-I%s', abs)
+                    end
+                end
+            end
+
+            local response_file = path.join(generated_dir, "clang_args.txt")
+            io.writefile(response_file, table.concat(clang_args, "\n"))
+
+            gen_sym_args[#gen_sym_args + 1] = "--"
+            gen_sym_args[#gen_sym_args + 1] = "@" .. response_file
+
+            -- Check if any input header is newer than the last generation timestamp
+            local stamp_file = path.join(generated_dir, platform, "symbols", ".gen_stamp")
+            local needs_regen = not os.isfile(stamp_file)
+            if not needs_regen then
+                local stamp_mtime = os.mtime(stamp_file)
+                local input_dirs_to_check = {}
+                if mc_headers_root and os.isdir(mc_headers_root) then
+                    table.insert(input_dirs_to_check, mc_headers_root)
+                end
+                for _, dir in ipairs(input_dirs_to_check) do
+                    for _, f in ipairs(os.files(path.join(dir, "**.hpp"))) do
+                        if os.mtime(f) > stamp_mtime then
+                            needs_regen = true
+                            break
+                        end
+                    end
+                    if needs_regen then break end
+                end
+            end
+
+            if needs_regen then
+                print('Generating *.symbols.json files for headers...')
+                os.exec(table.concat(gen_sym_args, " "))
+
+                local gen_lib_args = {
+                    '"' .. path.join(importer_bin_dir, "Amethyst.LibraryGenerator.exe") .. '"',
+                    "--platform " .. platform,
+                    "--input", string.format("%s", generated_dir),
+                    "--output", string.format("%s", generated_dir)
+                }
+                print('Generating Minecraft.Windows.lib file...')
+                os.exec(table.concat(gen_lib_args, " "))
+
+                io.writefile(stamp_file, os.date())
+            else
+                print('Symbols up to date, skipping generation.')
+            end
         end)
 
         after_build(function (target)
@@ -262,12 +350,15 @@ function build_mod(mod_name, targetMajor, targetMinor, targetPatch, automated_bu
             io.writefile(dst_json, mod_json)
 
             local tweaker_args = {
-                "\".importer/bin/Amethyst.ModuleTweaker.exe\"",
+                '"' .. path.join(importer_bin_dir, "Amethyst.ModuleTweaker.exe") .. '"',
                 "--platform", platform,
                 "--module", '"' .. target:targetfile() .. '"',
                 "--input", string.format("%s", generated_dir),
                 "--output", string.format("%s", generated_dir)
             }
+            if automated_build then
+                table.insert(tweaker_args, "--obfuscate")
+            end
             print('Tweaking output file...')
             os.exec(table.concat(tweaker_args, " "))    
 

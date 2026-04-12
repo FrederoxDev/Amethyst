@@ -1,13 +1,13 @@
 #include "AmethystContext.hpp"
-#include "amethyst/runtime/importing/data/AbstractSymbol.hpp"
-#include "amethyst/runtime/importing/data/AbstractHeader.hpp"
+#include "amethyst/runtime/importing/data/CanonicalSymbol.hpp"
+#include "amethyst/runtime/importing/data/CanonicalHeader.hpp"
 
-AmethystContext::AmethystContext(std::unique_ptr<Amethyst::Platform> platform, std::thread::id amethystThread) : 
+AmethystContext::AmethystContext(std::unique_ptr<Amethyst::Platform> platform, std::thread::id amethystThread) :
     mAmethystAbiHash(AmethystContext::GetAmethystAbiHash()),
-    mPlatform(std::move(platform)), 
-    mAmethystThread(amethystThread), 
-    mClientCtx(nullptr), 
-    mServerCtx(nullptr) 
+    mPlatform(std::move(platform)),
+    mAmethystThread(amethystThread),
+    mClientCtx(nullptr),
+    mServerCtx(nullptr)
 	{
 		#ifdef CLIENT
 		mClientCtx = std::make_unique<Amethyst::ClientContext>();
@@ -24,10 +24,8 @@ uint64_t AmethystContext::GetAmethystAbiHash()
     abiDescription += "sizeof(Amethyst::SharedContext):" + std::to_string(sizeof(Amethyst::SharedContext));
     abiDescription += "sizeof(Amethyst::ClientContext):" + std::to_string(sizeof(Amethyst::ClientContext));
     abiDescription += "sizeof(Amethyst::ServerContext):" + std::to_string(sizeof(Amethyst::ServerContext));
-	abiDescription += "sizeof(Amethyst::Importing::AbstractSymbol):" + std::to_string(sizeof(Amethyst::Importing::AbstractSymbol));
-	abiDescription += "sizeof(Amethyst::Importing::AbstractHeader):" + std::to_string(sizeof(Amethyst::Importing::AbstractHeader));
-	abiDescription += "sizeof(Amethyst::Importing::SymbolType):" + std::to_string(sizeof(Amethyst::Importing::SymbolType));
-	abiDescription += "sizeof(Amethyst::Importing::HeaderType):" + std::to_string(sizeof(Amethyst::Importing::HeaderType));
+	abiDescription += "sizeof(Amethyst::Importing::CanonicalSymbol):" + std::to_string(sizeof(Amethyst::Importing::CanonicalSymbol));
+	abiDescription += "sizeof(Amethyst::Importing::CanonicalHeader):" + std::to_string(sizeof(Amethyst::Importing::CanonicalHeader));
 
     return HashedString::computeHash(abiDescription);
 }

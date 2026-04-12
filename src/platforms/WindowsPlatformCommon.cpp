@@ -229,9 +229,18 @@ LONG WINAPI AmethystUnhandledExceptionsHandler(EXCEPTION_POINTERS* ExceptionInfo
 	return ExceptionContinueSearch;	
 }
 
+static BOOL WINAPI ConsoleCtrlHandler(DWORD ctrlType)
+{
+    if (ctrlType == CTRL_CLOSE_EVENT || ctrlType == CTRL_C_EVENT) {
+        TerminateProcess(GetCurrentProcess(), 0);
+    }
+    return FALSE;
+}
+
 void WindowsPlatformCommon::Initialize()
 {
     SetUnhandledExceptionFilter(AmethystUnhandledExceptionsHandler);
+    SetConsoleCtrlHandler(ConsoleCtrlHandler, TRUE);
 }
 
 DWORD __stdcall EjectThread(LPVOID lpParameter)
@@ -260,12 +269,27 @@ void WindowsPlatformCommon::ShutdownWaitForInput()
     Shutdown();
 }
 
+static bool IsConsoleFocused()
+{
+    HWND console = GetConsoleWindow();
+    return console != nullptr && GetForegroundWindow() == console;
+}
+
 bool WindowsPlatformCommon::HasRequestedStop() const
 {
+    if (!IsConsoleFocused()) return false;
     return GetAsyncKeyState(VK_NUMPAD0) || GetAsyncKeyState(VK_END);
 }
 
 bool WindowsPlatformCommon::HasRequestedHotReload() const
 {
-    return GetAsyncKeyState('R') & 0x8000;
+    static bool wasDown = false;
+    if (!IsConsoleFocused()) return false;
+    bool isDown = GetAsyncKeyState('R') & 0x8000;
+    if (isDown && !wasDown) {
+        wasDown = true;
+        return true;
+    }
+    if (!isDown) wasDown = false;
+    return false;
 }

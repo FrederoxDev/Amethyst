@@ -34,6 +34,7 @@ DWORD WINAPI Main()
 
     auto& platform = Amethyst::GetPlatform();
     platform.Initialize(); // Initialize things like uncaught exception handling
+    Log::InitializeFileLogging();
 
     try {
         runtime->Start();

@@ -2,12 +2,9 @@
 #include "amethyst/runtime/importing/data/pe32+/PECanonicalDataSymbol.hpp"
 #include "amethyst/runtime/importing/data/CanonicalHeader.hpp"
 #include <amethyst/Memory.hpp>
+#include <libhat/Scanner.hpp>
 
 namespace Amethyst::Importing::PE {
-	std::string PECanonicalFunctionSymbol::GetFormatType() const {
-		return "pe32+";
-	}
-
 	std::string PECanonicalFunctionSymbol::GetKind() const {
 		return "function";
 	}
@@ -15,10 +12,11 @@ namespace Amethyst::Importing::PE {
 	std::string PECanonicalFunctionSymbol::ToString() const {
 		std::stringstream fields;
 		if (IsVirtual) {
-			fields << std::format("Virtual[{}, {}]", VirtualIndex, VirtualTable);
+			std::string vtName = DebugVirtualTable.empty() ? std::format("#{:016x}", VirtualTableHash) : DebugVirtualTable;
+			fields << std::format("Virtual[{}, {}]", VirtualIndex, vtName);
 		}
 		else if (IsSignature) {
-			fields << std::format("Signature[{}]", Signature);
+			fields << std::format("Signature[{} elements]", Signature.size());
 		}
 		else {
 			fields << std::format("Address[{:x}]", Address);
@@ -28,7 +26,7 @@ namespace Amethyst::Importing::PE {
 
 	uintptr_t PECanonicalFunctionSymbol::Compute(const ResolutionContext& ctx) {
 		if (ctx.ModuleHandle == nullptr) {
-			Assert(false, "Cannot resolve function symbol '{}' without a valid module handle", Name);
+			Log::Error("Cannot resolve function symbol '{}' without a valid module handle", DisplayName());
 			return 0x0;
 		}
 
@@ -37,7 +35,7 @@ namespace Amethyst::Importing::PE {
 				ctx.Header->Symbols.begin(),
 				ctx.Header->Symbols.end(),
 				[&](const std::unique_ptr<CanonicalSymbol>& sym) {
-					if (sym->GetFormatType() != "pe32+" || sym->GetKind() != "data" || sym->Name != VirtualTable || !sym->IsShadow)
+					if (sym->GetKind() != "data" || sym->NameHash != VirtualTableHash || !sym->IsShadow)
 						return false;
 					auto* transformedSym = sym->Transform<PE::PECanonicalDataSymbol>();
 					return transformedSym->IsVirtualTable;
@@ -45,18 +43,25 @@ namespace Amethyst::Importing::PE {
 			);
 
 			if (it == ctx.Header->Symbols.end()) {
-				Assert(false, "Failed to find virtual table '{}' for function '{}'", VirtualTable, Name);
+				std::string vtName = DebugVirtualTable.empty() ? std::format("#{:016x}", VirtualTableHash) : DebugVirtualTable;
+				Log::Error("Failed to find virtual table '{}' for function '{}'", vtName, DisplayName());
 				return 0x0;
 			}
 
 			uintptr_t* vtable = reinterpret_cast<uintptr_t*>((*it)->Compute(ctx));
+			if (vtable == nullptr) return 0x0;
 			return vtable[VirtualIndex];
 		}
-		
+
 		if (IsSignature) {
-			auto scanResult = SigScanSafe(Signature);
-			Assert(scanResult.has_value(), "Failed to resolve signature for function '{}': {}", Name, Signature);
-			return GetEffectiveAddress(*scanResult);
+			const auto begin = reinterpret_cast<std::byte*>(GetMinecraftBaseAddress());
+			const auto end = begin + GetMinecraftSize();
+			const auto result = hat::find_pattern(begin, end, Signature);
+			if (!result.has_result()) {
+				Log::Error("Failed to resolve signature for function '{}' ({} elements)", DisplayName(), Signature.size());
+				return 0x0;
+			}
+			return GetEffectiveAddress(reinterpret_cast<uintptr_t>(result.get()));
 		}
 
 		return GetEffectiveAddress(SlideAddress(Address));
@@ -64,22 +69,24 @@ namespace Amethyst::Importing::PE {
 
 	bool PECanonicalFunctionSymbol::Resolve(const ResolutionContext& ctx) {
 		if (IsShadow) {
-			// Shadow symbols do not need to be resolved
 			return true;
 		}
 
 		if (TargetOffset == 0x0) {
-			Assert(false, "Function symbol '{}' has no target offset to write to", Name);
+			Log::Error("Function symbol '{}' has no target offset to write to", DisplayName());
 			return false;
 		}
 
 		uintptr_t base = reinterpret_cast<uintptr_t>(ctx.ModuleHandle);
 		uintptr_t computedAddress = Compute(ctx);
-		Assert(computedAddress != 0x0, "Failed to compute address for '{}'", Name);
+		if (computedAddress == 0x0) {
+			Log::Error("Failed to compute address for '{}'", DisplayName());
+			return false;
+		}
 
 		if (HasStorage) {
 			if (StorageOffset == 0x0) {
-				Assert(false, "Function symbol '{}' has storage enabled but no storage offset", Name);
+				Log::Error("Function symbol '{}' has storage enabled but no storage offset", DisplayName());
 				return false;
 			}
 

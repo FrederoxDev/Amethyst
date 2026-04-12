@@ -2,10 +2,9 @@
 #include <span>
 #include <spanstream>
 
+#include "amethyst/runtime/importing/data/CanonicalSymbol.hpp"
 #include "amethyst/runtime/importing/data/pe32+/PECanonicalHeader.hpp"
 #include "amethyst/runtime/utility/SimpleBinaryReader.hpp"
-#include "amethyst/runtime/importing/data/AbstractHeader.hpp"
-#include "amethyst/runtime/importing/data/HeaderFactory.hpp"
 
 namespace Amethyst::Importing::PE {
 	PEImporter::PEImporter(void* module) :
@@ -32,13 +31,25 @@ namespace Amethyst::Importing::PE {
 			AssertFail("Cannot resolve symbols without a valid header");
 		if (IsResolved())
 			AssertFail("Symbols are already resolved for this module");
+
+		std::vector<std::string> failures;
 		for (auto& symbol : mHeader->Symbols) {
 			ResolutionContext ctx = {
 				.ModuleHandle = mModule,
 				.Header = mHeader.get()
 			};
-			symbol->Resolve(ctx);
+			if (!symbol->Resolve(ctx)) {
+				failures.push_back(symbol->DisplayName());
+			}
 		}
+
+		if (!failures.empty()) {
+			std::string msg = std::format("Failed to resolve {} symbol(s):\n", failures.size());
+			for (auto& name : failures)
+				msg += std::format("  - {}\n", name);
+			AssertFail("{}", msg);
+		}
+
 		if (mState)
 			*mState = (*mState & ~0xFFull) | 1;
 	}
@@ -84,7 +95,7 @@ namespace Amethyst::Importing::PE {
 			AssertFail("RTIH section header cannot be null");
 		if (rtis == nullptr)
 			AssertFail("RTIS section header cannot be null");
-		
+
 		uintptr_t base = reinterpret_cast<uintptr_t>(module);
 		std::span<char> data = {
 			reinterpret_cast<char*>(base + rtih->VirtualAddress),
@@ -93,15 +104,7 @@ namespace Amethyst::Importing::PE {
 
 		std::spanstream ss(data);
 		SimpleBinaryReader reader(ss);
-		auto type = AbstractHeader::PeekInfo(reader);
-		auto header = HeaderFactory::Create(type);
-		if (header == nullptr) {
-			AssertFail("Failed to create header of type '{}'", type.ToString());
-			return nullptr;
-		}
-
-		header->ReadFrom(reader);
-		return header->Canonize();
+		return PECanonicalHeader::ReadFrom(reader);
 	}
 
 	std::unique_ptr<PEImporter> PEImporter::Create(void* module) {

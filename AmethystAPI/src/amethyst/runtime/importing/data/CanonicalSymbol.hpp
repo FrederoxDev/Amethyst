@@ -15,15 +15,19 @@ namespace Amethyst::Importing {
 
 	class CanonicalSymbol {
 	public:
-		std::string Name = "";
+		uint64_t NameHash = 0;
+		std::string DebugName = "";
 		bool IsShadow = false;
 
 		virtual ~CanonicalSymbol() = default;
-		virtual std::string GetFormatType() const = 0;
 		virtual std::string GetKind() const = 0;
 		virtual std::string ToString() const;
 		virtual uintptr_t Compute(const ResolutionContext& ctx) = 0;
 		virtual bool Resolve(const ResolutionContext& ctx) = 0;
+
+		std::string DisplayName() const {
+			return DebugName.empty() ? std::format("#{:016x}", NameHash) : DebugName;
+		}
 
 		template<typename T = CanonicalSymbol>
 		T* Transform() {
