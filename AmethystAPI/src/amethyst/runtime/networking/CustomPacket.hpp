@@ -1,33 +1,36 @@
-// #pragma once
-// #include <string>
-// #include <memory>
-// #include <common/network/NetworkPeer.hpp>
-// #include <Platform/Result.hpp>
-// #include <Core/Utility/BinaryStream.hpp>
-// #include <common/network/Packet.hpp>
+#pragma once
 
-// class NetworkIdentifier;
-// class NetEventCallback;
+#include <memory>
+#include <string>
 
-// namespace Amethyst {
+#include <Core/Utility/BinaryStream.hpp>
+#include <Platform/Result.hpp>
+#include <network/NetworkPeer.hpp>
+#include <raknet/PacketPriority.hpp>
 
-// class CustomPacket {
-// public:
-//     PacketPriority mPriority;
-//     NetworkPeer::Reliability mReliability;
-//     Compressibility mCompressible;
+class NetworkIdentifier;
+class NetEventCallback;
 
-//     CustomPacket()
-//         : mPriority(PacketPriority::MEDIUM_PRIORITY), mReliability(NetworkPeer::Reliability::ReliableOrdered), mCompressible(Compressibility::Compressible) {}
+namespace Amethyst {
 
-//     virtual std::string getName() const = 0;
-//     virtual void write(BinaryStream& out) = 0;
-//     virtual Bedrock::Result<void, std::error_code> read(ReadOnlyBinaryStream& in) = 0;
-// };
+class CustomPacket {
+public:
+    PacketPriority mPriority = PacketPriority::MEDIUM_PRIORITY;
+    NetworkPeer::Reliability mReliability = NetworkPeer::Reliability::ReliableOrdered;
+    Compressibility mCompressible = Compressibility::Compressible;
 
-// class CustomPacketHandler {
-// public:
-//     virtual void handle(const NetworkIdentifier& networkId, NetEventCallback& callback, const Amethyst::CustomPacket& _packet) const = 0;
-// };
+    CustomPacket() = default;
+    virtual ~CustomPacket() = default;
 
-// }
+    virtual std::string getName() const = 0;
+    virtual void write(BinaryStream& out) const = 0;
+    virtual Bedrock::Result<void, std::error_code> read(ReadOnlyBinaryStream& in) = 0;
+};
+
+class CustomPacketHandler {
+public:
+    virtual ~CustomPacketHandler() = default;
+    virtual void handle(const NetworkIdentifier& source, NetEventCallback& callback, const CustomPacket& packet) const = 0;
+};
+
+} // namespace Amethyst

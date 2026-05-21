@@ -1,3 +1,5 @@
+set_toolchains("clang-cl")
+
 -- Mod Options
 local mod_name = "Amethyst-Runtime" -- Replace with the name of your mod
 local targetMajor, targetMinor, targetPatch = 1, 21, 3 -- 1.21.0.3 (Other versions not supported by Amethyst)
@@ -24,11 +26,12 @@ option_end()
 local automated = is_config("automated_build", true)
 local platform = get_config("platform")
 
+local amethystSrc = os.getenv("AMETHYST_SRC")
 local build_script_path
-if automated then
-    build_script_path = path.join("Amethyst", "AmethystAPI", "mod_build.lua")
+if amethystSrc and os.isfile(path.join(amethystSrc, "AmethystAPI", "mod_build.lua")) then
+    build_script_path = path.join(amethystSrc, "AmethystAPI", "mod_build.lua")
 else
-    build_script_path = path.join(os.getenv(("AMETHYST_SRC")), "AmethystAPI", "mod_build.lua")
+    build_script_path = path.join("Amethyst", "AmethystAPI", "mod_build.lua")
 end
 
 if not os.isfile(build_script_path) then

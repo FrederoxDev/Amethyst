@@ -29,6 +29,28 @@ enum class CallingConvention : uint8_t {
     FastCall
 };
 
+namespace detail {
+    /// Forward-declared single-inheritance proxy: MSVC encodes member fn ptrs
+    /// to a `__single_inheritance` class as a 1-word code address. We cast
+    /// `Self*` to `Proxy*` at the call site so MSVC emits member-function ABI
+    /// (RCX=this, RDX=sret) regardless of `Self`'s real inheritance shape.
+    class __single_inheritance Proxy;
+
+    /// Convert a raw code address into a non-virtual member function pointer
+    /// of the single-inheritance Proxy class.
+    template <typename ProxyMemFn>
+    inline ProxyMemFn AddrToProxyMemFn(uintptr_t addr) noexcept {
+        static_assert(std::is_member_function_pointer_v<ProxyMemFn>,
+            "AddrToProxyMemFn requires a member function pointer type");
+        static_assert(sizeof(ProxyMemFn) == sizeof(uintptr_t),
+            "Proxy MFP must be a single code address; ensure Proxy is forward-declared "
+            "with __single_inheritance");
+        union { uintptr_t a; ProxyMemFn m; } u{};
+        u.a = addr;
+        return u.m;
+    }
+}
+
 template <typename T>
 class InlineHook {
     static_assert(sizeof(T) == 0, "InlineHook<T> is not supported!");
@@ -90,6 +112,7 @@ template <typename R, typename Self, typename... Args>
 class InlineHook<R(Self::*)(Args...)> {
 public:
     using QualifiedSelf = Self*;
+    using MemFn = R (Self::*)(Args...);
     SafetyHookInline mHook;
 
     InlineHook() = default;
@@ -129,7 +152,11 @@ public:
         else if constexpr (Convention == CallingConvention::FastCall) {
             return mHook.fastcall<R, QualifiedSelf, Args...>(self, args...);
         }
-        return mHook.thiscall<R, QualifiedSelf, Args...>(self, args...);
+        using ProxyMemFn = R (detail::Proxy::*)(Args...);
+        auto mfn = detail::AddrToProxyMemFn<ProxyMemFn>(mHook.trampoline().address());
+        auto* p = reinterpret_cast<detail::Proxy*>(
+            const_cast<std::remove_cv_t<Self>*>(self));
+        return (p->*mfn)(args...);
     }
 
     template <CallingConvention Convention = CallingConvention::Default>
@@ -143,6 +170,7 @@ template <typename R, typename Self, typename... Args>
 class InlineHook<R (Self::*)(Args...) const> {
 public:
     using QualifiedSelf = const Self*;
+    using MemFn = R (Self::*)(Args...) const;
     SafetyHookInline mHook;
 
     InlineHook() = default;
@@ -182,7 +210,11 @@ public:
         else if constexpr (Convention == CallingConvention::FastCall) {
             return mHook.fastcall<R, QualifiedSelf, Args...>(self, args...);
         }
-        return mHook.thiscall<R, QualifiedSelf, Args...>(self, args...);
+        using ProxyMemFn = R (detail::Proxy::*)(Args...);
+        auto mfn = detail::AddrToProxyMemFn<ProxyMemFn>(mHook.trampoline().address());
+        auto* p = reinterpret_cast<detail::Proxy*>(
+            const_cast<std::remove_cv_t<Self>*>(self));
+        return (p->*mfn)(args...);
     }
 
     template <CallingConvention Convention = CallingConvention::Default>
@@ -196,6 +228,7 @@ template <typename R, typename Self, typename... Args>
 class InlineHook<R (Self::*)(Args...) const volatile> {
 public:
     using QualifiedSelf = const volatile Self*;
+    using MemFn = R (Self::*)(Args...) const volatile;
     SafetyHookInline mHook;
 
     InlineHook() = default;
@@ -235,7 +268,11 @@ public:
         else if constexpr (Convention == CallingConvention::FastCall) {
             return mHook.fastcall<R, QualifiedSelf, Args...>(self, args...);
         }
-        return mHook.thiscall<R, QualifiedSelf, Args...>(self, args...);
+        using ProxyMemFn = R (detail::Proxy::*)(Args...);
+        auto mfn = detail::AddrToProxyMemFn<ProxyMemFn>(mHook.trampoline().address());
+        auto* p = reinterpret_cast<detail::Proxy*>(
+            const_cast<std::remove_cv_t<Self>*>(self));
+        return (p->*mfn)(args...);
     }
 
     template <CallingConvention Convention = CallingConvention::Default>
@@ -249,6 +286,7 @@ template <typename R, typename Self, typename... Args>
 class InlineHook<R (Self::*)(Args...)&> {
 public:
     using QualifiedSelf = Self*;
+    using MemFn = R (Self::*)(Args...) &;
     SafetyHookInline mHook;
 
     InlineHook() = default;
@@ -288,7 +326,11 @@ public:
         else if constexpr (Convention == CallingConvention::FastCall) {
             return mHook.fastcall<R, QualifiedSelf, Args...>(self, args...);
         }
-        return mHook.thiscall<R, QualifiedSelf, Args...>(self, args...);
+        using ProxyMemFn = R (detail::Proxy::*)(Args...);
+        auto mfn = detail::AddrToProxyMemFn<ProxyMemFn>(mHook.trampoline().address());
+        auto* p = reinterpret_cast<detail::Proxy*>(
+            const_cast<std::remove_cv_t<Self>*>(self));
+        return (p->*mfn)(args...);
     }
 
     template <CallingConvention Convention = CallingConvention::Default>
@@ -302,6 +344,7 @@ template <typename R, typename Self, typename... Args>
 class InlineHook<R (Self::*)(Args...)&&> {
 public:
     using QualifiedSelf = Self*;
+    using MemFn = R (Self::*)(Args...) &&;
     SafetyHookInline mHook;
 
     InlineHook() = default;
@@ -341,7 +384,11 @@ public:
         else if constexpr (Convention == CallingConvention::FastCall) {
             return mHook.fastcall<R, QualifiedSelf, Args...>(self, args...);
         }
-        return mHook.thiscall<R, QualifiedSelf, Args...>(self, args...);
+        using ProxyMemFn = R (detail::Proxy::*)(Args...);
+        auto mfn = detail::AddrToProxyMemFn<ProxyMemFn>(mHook.trampoline().address());
+        auto* p = reinterpret_cast<detail::Proxy*>(
+            const_cast<std::remove_cv_t<Self>*>(self));
+        return (p->*mfn)(args...);
     }
 
     template <CallingConvention Convention = CallingConvention::Default>
@@ -355,6 +402,7 @@ template <typename R, typename Self, typename... Args>
 class InlineHook<R (Self::*)(Args...) const&> {
 public:
     using QualifiedSelf = const Self*;
+    using MemFn = R (Self::*)(Args...) const &;
     SafetyHookInline mHook;
 
     InlineHook() = default;
@@ -394,7 +442,11 @@ public:
         else if constexpr (Convention == CallingConvention::FastCall) {
             return mHook.fastcall<R, QualifiedSelf, Args...>(self, args...);
         }
-        return mHook.thiscall<R, QualifiedSelf, Args...>(self, args...);
+        using ProxyMemFn = R (detail::Proxy::*)(Args...);
+        auto mfn = detail::AddrToProxyMemFn<ProxyMemFn>(mHook.trampoline().address());
+        auto* p = reinterpret_cast<detail::Proxy*>(
+            const_cast<std::remove_cv_t<Self>*>(self));
+        return (p->*mfn)(args...);
     }
 
     template <CallingConvention Convention = CallingConvention::Default>
@@ -408,6 +460,7 @@ template <typename R, typename Self, typename... Args>
 class InlineHook<R (Self::*)(Args...) const&&> {
 public:
     using QualifiedSelf = const Self*;
+    using MemFn = R (Self::*)(Args...) const &&;
     SafetyHookInline mHook;
 
     InlineHook() = default;
@@ -447,7 +500,11 @@ public:
         else if constexpr (Convention == CallingConvention::FastCall) {
             return mHook.fastcall<R, QualifiedSelf, Args...>(self, args...);
         }
-        return mHook.thiscall<R, QualifiedSelf, Args...>(self, args...);
+        using ProxyMemFn = R (detail::Proxy::*)(Args...);
+        auto mfn = detail::AddrToProxyMemFn<ProxyMemFn>(mHook.trampoline().address());
+        auto* p = reinterpret_cast<detail::Proxy*>(
+            const_cast<std::remove_cv_t<Self>*>(self));
+        return (p->*mfn)(args...);
     }
 
     template <CallingConvention Convention = CallingConvention::Default>
@@ -461,6 +518,7 @@ template <typename R, typename Self, typename... Args>
 class InlineHook<R (Self::*)(Args...) const volatile&> {
 public:
     using QualifiedSelf = const volatile Self*;
+    using MemFn = R (Self::*)(Args...) const volatile &;
     SafetyHookInline mHook;
 
     InlineHook() = default;
@@ -500,7 +558,11 @@ public:
         else if constexpr (Convention == CallingConvention::FastCall) {
             return mHook.fastcall<R, QualifiedSelf, Args...>(self, args...);
         }
-        return mHook.thiscall<R, QualifiedSelf, Args...>(self, args...);
+        using ProxyMemFn = R (detail::Proxy::*)(Args...);
+        auto mfn = detail::AddrToProxyMemFn<ProxyMemFn>(mHook.trampoline().address());
+        auto* p = reinterpret_cast<detail::Proxy*>(
+            const_cast<std::remove_cv_t<Self>*>(self));
+        return (p->*mfn)(args...);
     }
 
     template <CallingConvention Convention = CallingConvention::Default>
@@ -514,6 +576,7 @@ template <typename R, typename Self, typename... Args>
 class InlineHook<R (Self::*)(Args...) const volatile&&> {
 public:
     using QualifiedSelf = const volatile Self*;
+    using MemFn = R (Self::*)(Args...) const volatile &&;
     SafetyHookInline mHook;
 
     InlineHook() = default;
@@ -553,7 +616,11 @@ public:
         else if constexpr (Convention == CallingConvention::FastCall) {
             return mHook.fastcall<R, QualifiedSelf, Args...>(self, args...);
         }
-        return mHook.thiscall<R, QualifiedSelf, Args...>(self, args...);
+        using ProxyMemFn = R (detail::Proxy::*)(Args...);
+        auto mfn = detail::AddrToProxyMemFn<ProxyMemFn>(mHook.trampoline().address());
+        auto* p = reinterpret_cast<detail::Proxy*>(
+            const_cast<std::remove_cv_t<Self>*>(self));
+        return (p->*mfn)(args...);
     }
 
     template <CallingConvention Convention = CallingConvention::Default>

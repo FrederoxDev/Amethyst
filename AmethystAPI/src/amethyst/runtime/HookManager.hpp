@@ -17,18 +17,148 @@
 //     }                                                                                                                  \
 // }
 
-#define HOOK(className, functionName)                                                                               \
-{                                                                                                                   \
-    hooks.CreateDirectHook<&className::functionName>(_##className##_##functionName, &className##_##functionName); \
+/// Hook a non-static member fn (overloaded or not) or a static fn.
+/// Detour must be named `<className>_<functionName>`, trampoline `_<className>_<functionName>`.
+/// For overloads, the detour's signature picks the matching overload of the original via PickOriginal.
+#define HOOK(className, functionName)                                                                                                  \
+{                                                                                                                                       \
+    hooks.CreateDirectHook<                                                                                                            \
+        ::Amethyst::detail::PickOriginal(&className::functionName,                                                                     \
+            static_cast<decltype(&className##_##functionName)>(nullptr)),                                                              \
+        &className##_##functionName>(_##className##_##functionName);                                                                   \
 }
 
-#define VHOOK(className, functionName, vtable)                                                                      \
-{                                                                                                                   \
-    hooks.CreateVirtualHook<&className::functionName>(vtable, _##className##_##functionName, &className##_##functionName); \
+#define VHOOK(className, functionName, vtable)                                                                                          \
+{                                                                                                                                       \
+    hooks.CreateVirtualHook<                                                                                                           \
+        ::Amethyst::detail::PickOriginal(&className::functionName,                                                                     \
+            static_cast<decltype(&className##_##functionName)>(nullptr)),                                                              \
+        &className##_##functionName>(vtable, _##className##_##functionName);                                                           \
+}
+
+/// For overloaded member fns where you have MULTIPLE detours sharing one MC name.
+/// `detourSym` is the unique detour symbol; trampoline must be named `_<detourSym>`.
+/// Example: HOOK_NAMED(LoopbackPacketSender, sendToClient, LoopbackPacketSender_sendToClientUEIC);
+#define HOOK_NAMED(className, functionName, detourSym)                                                                                 \
+{                                                                                                                                       \
+    hooks.CreateDirectHook<                                                                                                            \
+        ::Amethyst::detail::PickOriginal(&className::functionName,                                                                     \
+            static_cast<decltype(&detourSym)>(nullptr)),                                                                               \
+        &detourSym>(_##detourSym);                                                                                                     \
+}
+
+#define VHOOK_NAMED(className, functionName, vtable, detourSym)                                                                        \
+{                                                                                                                                       \
+    hooks.CreateVirtualHook<                                                                                                           \
+        ::Amethyst::detail::PickOriginal(&className::functionName,                                                                     \
+            static_cast<decltype(&detourSym)>(nullptr)),                                                                               \
+        &detourSym>(vtable, _##detourSym);                                                                                             \
 }
 
 
 namespace Amethyst {
+    /**
+     * HookShim resolves an MSVC x64 ABI mismatch.
+     *
+     * MSVC compiles a free function returning a non-trivially-copyable type with
+     * "free-function sret ABI" — the hidden return-buffer pointer goes in RCX
+     * (args slide right). MSVC compiles a member function with "member-function
+     * sret ABI" — `this` in RCX, sret in RDX, args in R8/R9/stack.
+     *
+     * When safetyhook patches a member function's prologue and we install a
+     * free-function detour as the destination, the call site emits member-fn
+     * ABI but our detour reads free-fn ABI. The args slide one register and
+     * `self` arrives as the sret buffer. Symptom: `self->vftable` points at
+     * uninitialized memory, fields read junk, AV inside MC's body after the
+     * trampoline.
+     *
+     * Fix: install a tiny shim that is itself a non-virtual member function on
+     * a `__single_inheritance` class. MSVC emits the shim with member-fn ABI
+     * (matching the call site). The shim body forwards to the user's free-fn
+     * detour as a normal intra-DLL call, where MSVC reshuffles registers
+     * automatically. ABI gap absorbed.
+     */
+    template <auto OrigFn, auto UserDetour, typename FnSig = decltype(OrigFn)>
+    struct HookShim;
+
+    template <auto OrigFn, auto UserDetour, typename R, typename Self, typename... Args>
+    struct __single_inheritance HookShim<OrigFn, UserDetour, R (Self::*)(Args...)> {
+        R Trampoline(Args... args) {
+            return UserDetour(reinterpret_cast<Self*>(this), args...);
+        }
+    };
+
+    template <auto OrigFn, auto UserDetour, typename R, typename Self, typename... Args>
+    struct __single_inheritance HookShim<OrigFn, UserDetour, R (Self::*)(Args...) const> {
+        R Trampoline(Args... args) const {
+            return UserDetour(reinterpret_cast<const Self*>(this), args...);
+        }
+    };
+
+    template <auto OrigFn, auto UserDetour, typename R, typename Self, typename... Args>
+    struct __single_inheritance HookShim<OrigFn, UserDetour, R (Self::*)(Args...) const volatile> {
+        R Trampoline(Args... args) const volatile {
+            return UserDetour(reinterpret_cast<const volatile Self*>(this), args...);
+        }
+    };
+
+    namespace detail {
+        /// Pick the right overload of `&Class::fn` based on the detour's signature.
+        /// The macro passes a typed `nullptr` of the detour's type as the second
+        /// argument; overload resolution forces the matching `&Class::fn` overload.
+        ///
+        /// Provided overloads cover the common cases:
+        ///  - non-cv member function
+        ///  - const member function
+        ///  - const volatile member function
+        ///  - free / static function (detour and original share the same type)
+        ///
+        /// `&` / `&&` ref-qualified MC member functions are rare enough to require
+        /// manual `CreateDirectHook` if encountered — add an overload here if they
+        /// come up in practice.
+
+        template <typename R, typename Self, typename... Args>
+        constexpr auto PickOriginal(R (Self::*orig)(Args...), R(*)(Self*, Args...)) {
+            return orig;
+        }
+
+        template <typename R, typename Self, typename... Args>
+        constexpr auto PickOriginal(R (Self::*orig)(Args...) const, R(*)(const Self*, Args...)) {
+            return orig;
+        }
+
+        template <typename R, typename Self, typename... Args>
+        constexpr auto PickOriginal(R (Self::*orig)(Args...) const volatile, R(*)(const volatile Self*, Args...)) {
+            return orig;
+        }
+
+        template <typename R, typename... Args>
+        constexpr auto PickOriginal(R(*orig)(Args...), R(*)(Args...)) {
+            return orig;
+        }
+    }
+
+    /// Resolve a user detour to a code address with member-fn ABI.
+    /// For member-fn-pointer originals: install the HookShim's Trampoline so
+    /// MSVC emits the right register layout. For free-fn originals: the user's
+    /// detour is already correct — install it directly.
+    template <auto OrigFn, auto UserDetour>
+    inline void* ResolveDetourAddress() {
+        using OrigType = decltype(OrigFn);
+        if constexpr (std::is_member_function_pointer_v<OrigType>) {
+            using Shim = HookShim<OrigFn, UserDetour>;
+            using ShimMemFn = decltype(&Shim::Trampoline);
+            static_assert(sizeof(ShimMemFn) == sizeof(uintptr_t),
+                "HookShim member fn ptr is not a single code address — __single_inheritance failed");
+            union { ShimMemFn fn; uintptr_t addr; } u{};
+            u.fn = &Shim::Trampoline;
+            return reinterpret_cast<void*>(u.addr);
+        }
+        else {
+            return reinterpret_cast<void*>(UserDetour);
+        }
+    }
+
     class function_id {
     public:
         template <auto Fn>
@@ -39,19 +169,38 @@ namespace Amethyst {
 
         template <auto Fn>
         static consteval std::string_view name() {
+#ifdef AMETHYST_OBFUSCATE
+            return "<obfuscated>";
+#else
+#  if defined(__clang__)
+            // clang's __PRETTY_FUNCTION__ shape: "... name() [Fn = &Foo::bar]"
+            constexpr std::string_view funcSig = __PRETTY_FUNCTION__;
+            constexpr std::string_view prefix = "[Fn = ";
+            constexpr std::string_view suffix = "]";
+            constexpr std::size_t begin = funcSig.find(prefix);
+            constexpr std::size_t end = funcSig.rfind(suffix[0]);
+#  else
+            // MSVC's __FUNCSIG__ shape: "... function_id::name<&Foo::bar>(void)"
             constexpr std::string_view funcSig = __FUNCSIG__;
             constexpr std::string_view prefix = "function_id::name<";
-            constexpr std::size_t begin = funcSig.find("function_id::name<");
-            constexpr std::size_t end = funcSig.rfind('>');
+            constexpr std::string_view suffix = ">";
+            constexpr std::size_t begin = funcSig.find(prefix);
+            constexpr std::size_t end = funcSig.rfind(suffix[0]);
+#  endif
             static_assert(begin != std::string_view::npos);
             static_assert(end != std::string_view::npos);
             return funcSig.substr(begin + prefix.size(), end - begin - prefix.size());
+#endif
         }
 
         template<typename T>
         static consteval uint64_t class_hash() {
+#ifdef AMETHYST_OBFUSCATE
+            return 0;
+#else
             constexpr std::string_view name = __FUNCSIG__;
             return HashedString::computeHash(name);
+#endif
         }
     };
 
@@ -63,8 +212,8 @@ namespace Amethyst {
         HookManager& operator=(const HookManager&) = delete;
         HookManager& operator=(HookManager&&) = delete;
 
-        template <auto OriginalFn>
-        void CreateDirectHook(SafetyHookInline& trampoline, void* hook)
+        template <auto OriginalFn, auto UserDetour>
+        void CreateDirectHook(SafetyHookInline& trampoline)
         {
             constexpr std::string_view name = function_id::name<OriginalFn>();
             using FnType = decltype(OriginalFn);
@@ -84,11 +233,12 @@ namespace Amethyst {
                 return;
             }
 
+            void* hook = ResolveDetourAddress<OriginalFn, UserDetour>();
             CreateHookAbsolute(trampoline, original_addr, hook);
         }
 
-        template <auto OriginalFn>
-        void CreateVirtualHook(uintptr_t vtable, SafetyHookInline& trampoline, void* hook)
+        template <auto OriginalFn, auto UserDetour>
+        void CreateVirtualHook(uintptr_t vtable, SafetyHookInline& trampoline)
         {
             constexpr std::string_view name = function_id::name<OriginalFn>();
 
@@ -111,6 +261,7 @@ namespace Amethyst {
                 return;
             }
 
+            void* hook = ResolveDetourAddress<OriginalFn, UserDetour>();
             CreateHookAbsolute(trampoline, vtableEntry, hook);
         }
 

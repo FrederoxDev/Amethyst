@@ -11,17 +11,16 @@
 #include <amethyst/runtime/events/GameEvents.hpp>
 
 #include <client/game/ClientInstance.hpp>
+#include <client/Events/PlayerJoinWorldContext.hpp>
 
 namespace Amethyst::ClientHooks {
 	SafetyHookInline _ClientInstance_$constructor;
 	ClientInstance* ClientInstance_$constructor(
 		ClientInstance* self,
-		ClientInstanceArguments* args
+		ClientInstanceArguments&& args
 	) {
-		auto* result = _ClientInstance_$constructor.call<ClientInstance*>(
-			self,
-			args
-		);
+		using OrigFn = ClientInstance* (*)(ClientInstance*, ClientInstanceArguments&&);
+		auto* result = _ClientInstance_$constructor.original<OrigFn>()(self, std::move(args));
 
 		Log::Info("ClientInstance constructed!");
 		Amethyst::GetClientCtx().mClientInstance = self;
@@ -29,11 +28,11 @@ namespace Amethyst::ClientHooks {
 	}
 
 	Amethyst::InlineHook<decltype(&ClientInstance::onStartJoinGame)> _ClientInstance_onStartJoinGame;
-	void ClientInstance_onStartJoinGame(ClientInstance* self, bool isJoiningLocalServer, const ::std::string& multiplayerCorrelationId, const ::std::string& serverName, const ::std::string& worldName, NetworkType networkTypeOverride, ::Social::MultiplayerServiceIdentifier service, const ::std::string& partyId, bool isPartyLeader, bool isPartyDestination, bool isServerTransfer) {
+	void ClientInstance_onStartJoinGame(ClientInstance* self, bool isJoiningLocalServer, const ::std::string& multiplayerCorrelationId, const ::std::string& serverName, const ::std::string& worldName, NetworkType networkTypeOverride, ::Social::MultiplayerServiceIdentifier service, PlayerJoinWorldContext context) {
 		Amethyst::GetClientCtx().mIsInWorldOrLoading = true;
 		OnStartJoinGameEvent event(*self);
 		Amethyst::GetEventBus().Invoke(event);
-		_ClientInstance_onStartJoinGame(self, isJoiningLocalServer, multiplayerCorrelationId, serverName, worldName, networkTypeOverride, service, partyId, isPartyLeader, isPartyDestination, isServerTransfer);
+		_ClientInstance_onStartJoinGame(self, isJoiningLocalServer, multiplayerCorrelationId, serverName, worldName, networkTypeOverride, service, std::move(context));
 	}
 
 	Amethyst::InlineHook<decltype(&ClientInstance::requestLeaveGame)> _ClientInstance_requestLeaveGame;
@@ -51,7 +50,7 @@ namespace Amethyst::ClientHooks {
 		VHOOK(ClientInstance, requestLeaveGame, ClientInstance::$vtable_for_ClientInstance$IClientInstance);
 		// InputHooks::Initialize();
 		RenderingHooks::Initialize();
-		// ResourceHooks::Initialize();
+		ResourceHooks::Initialize();
 		// UIHooks::Initialize();
 		// CustomUIRendererRegistry::AddEventListeners();
 	}

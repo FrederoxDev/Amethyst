@@ -37,14 +37,6 @@ namespace Log {
     }
 
     template <typename... T>
-    void Info(const std::wformat_string<T...> fmt, T&&... args) {
-        std::wstring formatted_string = std::format(fmt, std::forward<T>(args)...);
-        formatted_string = std::format("[{}] [{}] {}", GetThreadName(), GetModName(), formatted_string);
-        std::wcout << formatted_string << std::endl;
-        WriteToFile(StringFromWstring(formatted_string));
-    }
-
-    template <typename... T>
     void Warning(const std::format_string<T...> fmt, T&&... args) {
         std::string formatted_string = std::format(fmt, std::forward<T>(args)...);
         formatted_string = std::format("[{}] [{}] [WARN] {}", GetThreadName(), GetModName(), formatted_string);
@@ -53,26 +45,8 @@ namespace Log {
     }
 
     template <typename... T>
-    void Warning(const std::wformat_string<T...> fmt, T&&... args) {
-        std::wstring formatted_wstring = std::format(fmt, std::forward<T>(args)...);
-        std::string formatted_string = StringFromWstring(formatted_wstring);
-        formatted_string = std::format("[{}] [{}] [WARN] {}", GetThreadName(), GetModName(), formatted_string);
-        std::cout << YELLOW << formatted_string << RESET << std::endl;
-        WriteToFile(formatted_string);
-    }
-
-    template <typename... T>
     void Error(const std::format_string<T...> fmt, T&&... args) {
         std::string formatted_string = std::format(fmt, std::forward<T>(args)...);
-        formatted_string = std::format("[{}] [{}] [ERROR] {}", GetThreadName(), GetModName(), formatted_string);
-        std::cerr << RED << formatted_string << RESET << std::endl;
-        WriteToFile(formatted_string);
-    }
-
-    template <typename... T>
-    void Error(const std::wformat_string<T...> fmt, T&&... args) {
-        std::wstring formatted_wstring = std::format(fmt, std::forward<T>(args)...);
-        std::string formatted_string = StringFromWstring(formatted_wstring);
         formatted_string = std::format("[{}] [{}] [ERROR] {}", GetThreadName(), GetModName(), formatted_string);
         std::cerr << RED << formatted_string << RESET << std::endl;
         WriteToFile(formatted_string);
@@ -100,6 +74,10 @@ namespace Log {
     }
 }; // namespace Log
 
+#ifdef AMETHYST_OBFUSCATE
+#define Assert(condition, ...) Log::_Assert(condition, "", __LINE__, __VA_ARGS__)
+#define AssertFail(...) Log::_AssertFail("", __LINE__, __VA_ARGS__)
+#else
 #define Assert(condition, ...) Log::_Assert(condition, __FUNCTION__, __LINE__, __VA_ARGS__)
-
 #define AssertFail(...) Log::_AssertFail(__FUNCTION__, __LINE__, __VA_ARGS__)
+#endif

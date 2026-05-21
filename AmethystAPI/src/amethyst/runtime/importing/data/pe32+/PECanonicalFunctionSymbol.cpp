@@ -64,7 +64,7 @@ namespace Amethyst::Importing::PE {
 			return GetEffectiveAddress(reinterpret_cast<uintptr_t>(result.get()));
 		}
 
-		return GetEffectiveAddress(SlideAddress(Address));
+		return SlideAddress(Address);
 	}
 
 	bool PECanonicalFunctionSymbol::Resolve(const ResolutionContext& ctx) {

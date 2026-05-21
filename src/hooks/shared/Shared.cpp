@@ -112,7 +112,7 @@ namespace Amethyst::SharedHooks {
 		// HOOK(Minecraft, $destructor);
 		// HOOK(Minecraft, update);
 		// HOOK(Level, tick);
-		// NetworkingHooks::Initialize();
+		NetworkingHooks::Initialize();
 		// ResourceHooks::Initialize();
 	}
 }

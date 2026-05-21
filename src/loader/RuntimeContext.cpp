@@ -17,7 +17,7 @@ void RuntimeContext::Start()
     mPatchManager = std::make_unique<Amethyst::PatchManager>();
     mEnumAllocator = std::make_unique<Amethyst::EnumAllocator>();
     mPackManager = std::make_unique<Amethyst::PackManager>(this);
-    // mNetworkManager = std::make_unique<Amethyst::NetworkManager>();
+    mNetworkManager = std::make_unique<Amethyst::NetworkManager>();
     mModRepository = std::make_unique<Amethyst::ModRepository>();
     mModGraph = std::make_unique<Amethyst::ModGraph>();
     mModLoader = std::make_unique<Amethyst::ModLoader>(this);
@@ -37,7 +37,7 @@ void RuntimeContext::Shutdown()
     mPatchManager.reset();
     mEnumAllocator.reset();
     mPackManager.reset();
-    // mNetworkManager.reset();
+    mNetworkManager.reset();
     mModRepository.reset();
     mModGraph.reset();
     mModLoader.reset();

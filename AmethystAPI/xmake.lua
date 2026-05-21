@@ -5,7 +5,7 @@ add_ldflags("/DEBUG", "/OPT:REF", "/OPT:ICF", "/INCREMENTAL:NO", {force = true})
 
 includes("packages/libhat")
 
-set_toolchains("msvc")
+set_toolchains("clang-cl")
 
 local mc_headers_path = os.getenv("MC_HEADERS")
 includes(mc_headers_path)
@@ -25,6 +25,8 @@ target("AmethystAPI")
 
     add_includedirs("include", "src", {public = true})
     add_headerfiles("src/**.hpp", "include/**.hpp", "include/**.h")
+
+    add_defines("WIN32_LEAN_AND_MEAN", "NOMINMAX", { public = true })
 
     -- Janky fix, this is set in the mod_build.lua script by defining a non-local variable
     -- But it does mean it propagates down so good enough xD

@@ -54,10 +54,10 @@ Amethyst::EnumAllocator& Amethyst::GetEnumAllocator()
     return *_AmethystContextInstance->mEnumAllocator.get();
 }
 
-// Amethyst::NetworkManager& Amethyst::GetNetworkManager()
-// {
-//     return *_AmethystContextInstance->mNetworkManager.get();
-// }
+Amethyst::NetworkManager& Amethyst::GetNetworkManager()
+{
+    return *_AmethystContextInstance->mNetworkManager.get();
+}
 
 Amethyst::Platform& Amethyst::GetPlatform()
 {

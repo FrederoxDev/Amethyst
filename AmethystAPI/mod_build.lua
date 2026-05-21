@@ -28,14 +28,13 @@ function build_mod(mod_name, targetMajor, targetMinor, targetPatch, automated_bu
     local modFolder
     local amethystApiPath
 
-    -- Automated builds use project-local paths
+    local amethystSrc = os.getenv("AMETHYST_SRC")
+    amethystApiPath = amethystSrc and path.join(amethystSrc, "AmethystAPI") or nil
+
     if automated_build then
         modFolder = path.join(os.projectdir(), "dist")
-        amethystApiPath = path.join(os.projectdir(), "Amethyst", "AmethystAPI")
     else
         set_symbols("debug")
-        local amethystSrc = os.getenv("AMETHYST_SRC")
-        amethystApiPath = amethystSrc and path.join(amethystSrc, "AmethystAPI") or nil
 
         local amethystFolder
 
@@ -83,8 +82,6 @@ function build_mod(mod_name, targetMajor, targetMinor, targetPatch, automated_bu
     -- RelWithDebInfo flags
     add_cxxflags("/O2", "/DNDEBUG", "/MD", "/EHsc", "/FS", "/MP")
     add_ldflags("/OPT:REF", "/OPT:ICF", "/INCREMENTAL:NO", {force = true})
-
-    set_targetdir(binary_dir)
 
     package("Runtime-Importer")
         set_kind("binary")
@@ -163,7 +160,10 @@ function build_mod(mod_name, targetMajor, targetMinor, targetPatch, automated_bu
     target(mod_name)
         set_languages("c++23")
         set_kind("shared")
-        set_toolchains("msvc")
+        set_toolchains("clang-cl")
+        if not automated_build then
+            set_targetdir(binary_dir)
+        end
         add_deps("AmethystAPI", "libhat", "MC")
 
         -- Hard fail if AmethystAPI is missing
@@ -209,6 +209,18 @@ function build_mod(mod_name, targetMajor, targetMinor, targetPatch, automated_bu
             add_defines("SERVER", "WIN_SERVER", {  public = true })
         end
 
+        if automated_build then
+            add_defines("AMETHYST_OBFUSCATE", { public = true })
+            -- Strip absolute source paths from __FILE__ so obfuscated binaries don't
+            -- embed user-specific filesystem paths. /d1trimfile rewrites any __FILE__
+            -- whose prefix matches the given path to start at the remainder.
+            local trim_roots = { os.projectdir() }
+            if amethystSrc then table.insert(trim_roots, amethystSrc) end
+            for _, root in ipairs(trim_roots) do
+                add_cxflags("/d1trimfile:" .. root, { force = true })
+            end
+        end
+
         add_packages("AmethystAPI", "libhat")
 
         libs_folder = path.join(".importer", platform)
@@ -224,6 +236,7 @@ function build_mod(mod_name, targetMajor, targetMinor, targetPatch, automated_bu
             string.format('MOD_TARGET_VERSION_MINOR=%d', targetMinor),
             string.format('MOD_TARGET_VERSION_PATCH=%d', targetPatch),
             'ENTT_PACKED_PAGE=128',
+            'ENTT_NO_MIXIN',
             'AMETHYST_EXPORTS'
         )
 
@@ -232,6 +245,22 @@ function build_mod(mod_name, targetMajor, targetMinor, targetPatch, automated_bu
             local generated_dir = path.join(importer_dir)
             local input_dir = path.join(amethystApiPath, "src"):gsub("\\", "/")
             local include_dir = path.join(amethystApiPath, "include"):gsub("\\", "/")
+
+            local pch_file = path.join(generated_dir, "pch.hpp.pch")
+            local installed_bin_dir = path.join(importer_dir, "bin")
+            if not os.isfile(pch_file) then
+                print("Generating precompiled header of STL...")
+                os.mkdir(generated_dir)
+                os.exec(table.concat({
+                    '"' .. path.join(installed_bin_dir, "clang++.exe") .. '"',
+                    "-x", "c++-header",
+                    '"' .. path.join(installed_bin_dir, "utils", "pch.hpp") .. '"',
+                    "-std=c++23",
+                    "-fms-extensions",
+                    "-fms-compatibility",
+                    "-o", '"' .. pch_file .. '"'
+                }, " "))
+            end
 
             -- Build SymbolGenerator arguments
             local mc_headers_root = os.getenv("MC_HEADERS")
@@ -265,6 +294,7 @@ function build_mod(mod_name, targetMajor, targetMinor, targetPatch, automated_bu
                 "-std=c++23",
                 "-fms-extensions",
                 "-fms-compatibility",
+                "-Wno-c++11-narrowing",
                 string.format('-I%s', include_dir),
                 string.format('-I%s', input_dir),
             }
@@ -284,6 +314,12 @@ function build_mod(mod_name, targetMajor, targetMinor, targetPatch, automated_bu
                         clang_args[#clang_args + 1] = string.format('-I%s', abs)
                     end
                 end
+                local defs = mc_dep:get("defines")
+                if defs then
+                    for _, def in ipairs(defs) do
+                        clang_args[#clang_args + 1] = string.format('-D%s', def)
+                    end
+                end
             end
 
             local response_file = path.join(generated_dir, "clang_args.txt")
@@ -292,43 +328,9 @@ function build_mod(mod_name, targetMajor, targetMinor, targetPatch, automated_bu
             gen_sym_args[#gen_sym_args + 1] = "--"
             gen_sym_args[#gen_sym_args + 1] = "@" .. response_file
 
-            -- Check if any input header is newer than the last generation timestamp
-            local stamp_file = path.join(generated_dir, platform, "symbols", ".gen_stamp")
-            local needs_regen = not os.isfile(stamp_file)
-            if not needs_regen then
-                local stamp_mtime = os.mtime(stamp_file)
-                local input_dirs_to_check = {}
-                if mc_headers_root and os.isdir(mc_headers_root) then
-                    table.insert(input_dirs_to_check, mc_headers_root)
-                end
-                for _, dir in ipairs(input_dirs_to_check) do
-                    for _, f in ipairs(os.files(path.join(dir, "**.hpp"))) do
-                        if os.mtime(f) > stamp_mtime then
-                            needs_regen = true
-                            break
-                        end
-                    end
-                    if needs_regen then break end
-                end
-            end
-
-            if needs_regen then
-                print('Generating *.symbols.json files for headers...')
-                os.exec(table.concat(gen_sym_args, " "))
-
-                local gen_lib_args = {
-                    '"' .. path.join(importer_bin_dir, "Amethyst.LibraryGenerator.exe") .. '"',
-                    "--platform " .. platform,
-                    "--input", string.format("%s", generated_dir),
-                    "--output", string.format("%s", generated_dir)
-                }
-                print('Generating Minecraft.Windows.lib file...')
-                os.exec(table.concat(gen_lib_args, " "))
-
-                io.writefile(stamp_file, os.date())
-            else
-                print('Symbols up to date, skipping generation.')
-            end
+            -- SymbolGenerator now also produces Minecraft.Windows.lib in-process; no separate LibraryGenerator invocation.
+            print('Generating symbols and library...')
+            os.exec(table.concat(gen_sym_args, " "))
         end)
 
         after_build(function (target)
@@ -349,10 +351,23 @@ function build_mod(mod_name, targetMajor, targetMinor, targetPatch, automated_bu
 
             io.writefile(dst_json, mod_json)
 
+            -- For automated builds the link byproducts (.lib/.exp/.pdb) stay in xmake's
+            -- build dir. Only the DLL is copied into the shipping folder, which the
+            -- tweaker then patches in place.
+            local module_to_tweak = target:targetfile()
+            if automated_build then
+                if not os.isdir(binary_dir) then
+                    os.mkdir(binary_dir)
+                end
+                local shipped_dll = path.join(binary_dir, path.filename(target:targetfile()))
+                os.cp(target:targetfile(), shipped_dll)
+                module_to_tweak = shipped_dll
+            end
+
             local tweaker_args = {
                 '"' .. path.join(importer_bin_dir, "Amethyst.ModuleTweaker.exe") .. '"',
                 "--platform", platform,
-                "--module", '"' .. target:targetfile() .. '"',
+                "--module", '"' .. module_to_tweak .. '"',
                 "--input", string.format("%s", generated_dir),
                 "--output", string.format("%s", generated_dir)
             }
@@ -360,7 +375,58 @@ function build_mod(mod_name, targetMajor, targetMinor, targetPatch, automated_bu
                 table.insert(tweaker_args, "--obfuscate")
             end
             print('Tweaking output file...')
-            os.exec(table.concat(tweaker_args, " "))    
+            os.exec(table.concat(tweaker_args, " "))
+
+            if automated_build then
+                local f = io.open(module_to_tweak, "rb")
+                if not f then
+                    raise("Obfuscation audit: could not open shipped DLL '" .. module_to_tweak .. "'")
+                end
+                local data = f:read("*all")
+                f:close()
+
+                -- Normalize-friendly search helpers: binary-safe check for a needle and
+                -- its case-variants across forward/back slashes.
+                local function contains_literal(haystack, needle)
+                    return haystack:find(needle, 1, true) ~= nil
+                end
+                local function contains_path(haystack, path_needle)
+                    -- Match either slash flavor, case-insensitive for the Windows drive/user prefix.
+                    local variants = {
+                        path_needle,
+                        (path_needle:gsub("\\", "/")),
+                        (path_needle:gsub("/", "\\")),
+                    }
+                    for _, v in ipairs(variants) do
+                        if contains_literal(haystack, v) then return v end
+                        if contains_literal(haystack:lower(), v:lower()) then return v end
+                    end
+                    return nil
+                end
+
+                if contains_literal(data, "RSDS") then
+                    raise("Obfuscation audit FAILED: shipped DLL contains 'RSDS' (CodeView PDB reference). Check /DEBUG linker flag and tweaker debug-directory zeroing.")
+                end
+                if data:find("%.pdb") then
+                    raise("Obfuscation audit FAILED: shipped DLL contains '.pdb' substring (likely embedded PDB path).")
+                end
+                -- Any absolute Windows user-profile path leaks the machine's user name.
+                -- Matches `:\Users\` and `:/Users/` case-insensitively without naming anyone.
+                local lower = data:lower()
+                if lower:find(":\\users\\", 1, true) or lower:find(":/users/", 1, true) then
+                    raise("Obfuscation audit FAILED: shipped DLL contains a ':\\Users\\' path. Check /d1trimfile coverage and __FILE__ usage.")
+                end
+                -- Dynamic: the literal project + AmethystAPI source roots must not appear.
+                local leak_roots = { os.projectdir() }
+                if amethystSrc then table.insert(leak_roots, amethystSrc) end
+                for _, root in ipairs(leak_roots) do
+                    local hit = contains_path(data, root)
+                    if hit then
+                        raise("Obfuscation audit FAILED: shipped DLL contains source root '" .. hit .. "'. Check /d1trimfile coverage.")
+                    end
+                end
+                print("Obfuscation audit passed: no RSDS, .pdb, user-profile paths, or source-root paths in shipped DLL.")
+            end
 
             print("Built '" .. mod_name .. "' for '" .. platform .. "'")
         end)

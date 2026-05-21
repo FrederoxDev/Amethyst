@@ -1,5 +1,7 @@
 #pragma once
 #include <memory>
+#include <string>
+#include <vector>
 
 namespace Amethyst::Importing {
 	namespace PE {
@@ -11,7 +13,7 @@ namespace Amethyst::Importing {
 	public:
 		std::vector<std::unique_ptr<CanonicalSymbol>> Symbols;
 
-		virtual ~CanonicalHeader() = default;
+		virtual ~CanonicalHeader();
 		virtual std::string ToString() const;
 
 		template<typename T = CanonicalHeader>

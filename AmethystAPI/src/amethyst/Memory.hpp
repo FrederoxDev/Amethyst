@@ -7,10 +7,6 @@
 #include <string>
 #include <vector>
 #include <string_view>
-#define WIN32_LEAN_AND_MEAN
-#ifndef NOMINMAX
-#define NOMINMAX
-#endif
 #include <Windows.h>
 
 /*
@@ -118,7 +114,27 @@ void CompareVirtualTables(ObjT* lhs, ObjT* rhs, size_t maxFunctions) {
 }
 
 /*
- * Returns the virtual offset of a virtual function from a thunk
+ * Returns the virtual offset of a virtual function from a thunk.
+ *
+ * MSVC emits virtual-PMF thunks in several shapes depending on inheritance:
+ *   1) MSVC single inheritance:   mov rax,[rcx]; jmp [rax+disp]
+ *   2) MSVC adjustor:             add rcx,N; mov rax,[rcx]; jmp [rax+disp]
+ *                              or sub rcx,N; ...
+ *                              or lea rcx,[rcx+N]; ...
+ *   3) Clang single inheritance:  mov rax,[rcx]; mov rax,[rax+disp]; jmp rax
+ *   4) Clang adjustor:            add/sub/lea rcx,N; mov rax,[rcx]; mov rax,[rax+disp]; jmp rax
+ *   5) Wrapped:                   jmp rel32 -> any of the above
+ *
+ * Any of the above may be preceded by `endbr64` (Intel CET branch-tracking)
+ * when the consumer was built with `-fcf-protection=branch` or `full` (clang's
+ * default on recent versions). We skip endbr64 silently.
+ *
+ * Walk forward past any `add/sub/lea rcx`, the vtable load `mov rax,[rcx(+X)]`,
+ * an optional clang-style slot load `mov rax,[rax+disp]` (remembering disp), and
+ * finally one of:
+ *   - `jmp [rax+disp]`  (MSVC) → return disp from the operand
+ *   - `jmp rax`         (clang) → return the disp from the prior slot-load mov
+ * Anything else is unexpected.
  */
 template <auto T>
 size_t GetVirtualFunctionOffset() {
@@ -135,45 +151,84 @@ size_t GetVirtualFunctionOffset() {
     ZydisDecodedInstruction instr;
     ZydisDecodedOperand operands[ZYDIS_MAX_OPERAND_COUNT];
 
-    // Decode jmp rel32
-    if (ZYAN_SUCCESS(ZydisDecoderDecodeFull(&decoder, reinterpret_cast<const void*>(func), 16, &instr, operands))) {
-        if (instr.mnemonic == ZYDIS_MNEMONIC_JMP && instr.operand_count == 2 && operands[0].type == ZYDIS_OPERAND_TYPE_IMMEDIATE) {
-            func += instr.length + operands[0].imm.value.s;
-        }
-    }
-    else {
+    // Optional leading jmp rel32 (wrapper).
+    if (!ZYAN_SUCCESS(ZydisDecoderDecodeFull(&decoder, reinterpret_cast<const void*>(func), 16, &instr, operands))) {
         Log::Error("[AmethystRuntime] GetVirtualFunctionOffset: Failed to decode instruction at {:x}", func);
         return 0;
     }
-
-    
-    if (ZYAN_SUCCESS(ZydisDecoderDecodeFull(&decoder, reinterpret_cast<const void*>(func), 16, &instr, operands))) {
-        // Decode first instruction (mov rax, ...)
-        if (instr.mnemonic == ZYDIS_MNEMONIC_MOV) {
-            func += instr.length;
-            if (!ZYAN_SUCCESS(ZydisDecoderDecodeFull(&decoder, reinterpret_cast<const void*>(func), 16, &instr, operands))) {
-                Log::Error("[AmethystRuntime] GetVirtualFunctionOffset: Failed to decode instruction at {:x}", func);
-                return 0;
-            }
-        }
-        
-        // Decode second instruction (jmp [rax+disp])
-        if (instr.mnemonic != ZYDIS_MNEMONIC_JMP || operands[0].type != ZYDIS_OPERAND_TYPE_MEMORY) {
-            Log::Error("[AmethystRuntime] GetVirtualFunctionOffset: Expected jmp [rax+disp] instruction.");
-            return 0;
-        }
-
-        const auto& mem = operands[0].mem;
-        if (mem.base != ZYDIS_REGISTER_RAX) {
-            Log::Error("[AmethystRuntime] GetVirtualFunctionOffset: Expected base register to be RAX.");
-            return 0;
-        }
-
-        // disp.value holds either disp8 or disp32 already sign-extended
-        return static_cast<size_t>(mem.disp.value);
+    if (instr.mnemonic == ZYDIS_MNEMONIC_JMP && operands[0].type == ZYDIS_OPERAND_TYPE_IMMEDIATE) {
+        func += instr.length + operands[0].imm.value.s;
     }
-    else {
+
+    // Optional CET branch-tracking prologue (clang with -fcf-protection=branch|full).
+    if (!ZYAN_SUCCESS(ZydisDecoderDecodeFull(&decoder, reinterpret_cast<const void*>(func), 16, &instr, operands))) {
         Log::Error("[AmethystRuntime] GetVirtualFunctionOffset: Failed to decode instruction at {:x}", func);
+        return 0;
     }
+    if (instr.mnemonic == ZYDIS_MNEMONIC_ENDBR64 || instr.mnemonic == ZYDIS_MNEMONIC_ENDBR32) {
+        func += instr.length;
+    }
+
+    // Slot offset captured by a clang-style `mov rax, [rax + disp]` slot load,
+    // used by the trailing `jmp rax` to return the right value.
+    size_t pendingSlot = 0;
+    bool haveSlotLoad = false;
+
+    // Walk through optional adjustor + load instructions, stopping at the dispatching jmp.
+    for (int i = 0; i < 8; ++i) {
+        if (!ZYAN_SUCCESS(ZydisDecoderDecodeFull(&decoder, reinterpret_cast<const void*>(func), 16, &instr, operands))) {
+            Log::Error("[AmethystRuntime] GetVirtualFunctionOffset: Failed to decode instruction at {:x}", func);
+            return 0;
+        }
+
+        // MSVC final: jmp [rax+disp] — extract slot offset from the memory operand.
+        if (instr.mnemonic == ZYDIS_MNEMONIC_JMP
+            && operands[0].type == ZYDIS_OPERAND_TYPE_MEMORY
+            && operands[0].mem.base == ZYDIS_REGISTER_RAX) {
+            return static_cast<size_t>(operands[0].mem.disp.value);
+        }
+
+        // Clang final: jmp rax — slot offset was captured by the preceding mov.
+        if (instr.mnemonic == ZYDIS_MNEMONIC_JMP
+            && operands[0].type == ZYDIS_OPERAND_TYPE_REGISTER
+            && operands[0].reg.value == ZYDIS_REGISTER_RAX
+            && haveSlotLoad) {
+            return pendingSlot;
+        }
+
+        // Permitted prologue: this-pointer adjustors and the vtable load.
+        const bool isAdjustor =
+            (instr.mnemonic == ZYDIS_MNEMONIC_ADD || instr.mnemonic == ZYDIS_MNEMONIC_SUB || instr.mnemonic == ZYDIS_MNEMONIC_LEA)
+            && operands[0].type == ZYDIS_OPERAND_TYPE_REGISTER
+            && operands[0].reg.value == ZYDIS_REGISTER_RCX;
+        const bool isVtableLoad =
+            instr.mnemonic == ZYDIS_MNEMONIC_MOV
+            && operands[0].type == ZYDIS_OPERAND_TYPE_REGISTER
+            && operands[0].reg.value == ZYDIS_REGISTER_RAX
+            && operands[1].type == ZYDIS_OPERAND_TYPE_MEMORY
+            && operands[1].mem.base == ZYDIS_REGISTER_RCX;
+        // Clang slot load: `mov rax, [rax + disp]` — remember disp for the
+        // upcoming `jmp rax`.
+        const bool isSlotLoad =
+            instr.mnemonic == ZYDIS_MNEMONIC_MOV
+            && operands[0].type == ZYDIS_OPERAND_TYPE_REGISTER
+            && operands[0].reg.value == ZYDIS_REGISTER_RAX
+            && operands[1].type == ZYDIS_OPERAND_TYPE_MEMORY
+            && operands[1].mem.base == ZYDIS_REGISTER_RAX;
+        if (isSlotLoad) {
+            pendingSlot = static_cast<size_t>(operands[1].mem.disp.value);
+            haveSlotLoad = true;
+        }
+
+        if (!isAdjustor && !isVtableLoad && !isSlotLoad) {
+            Log::Error("[AmethystRuntime] GetVirtualFunctionOffset: Unexpected instruction at {:x} (mnemonic={})",
+                func, static_cast<int>(instr.mnemonic));
+            return 0;
+        }
+
+        func += instr.length;
+    }
+
+    Log::Error("[AmethystRuntime] GetVirtualFunctionOffset: Walked too many prologue instructions without finding dispatch jmp");
     return 0;
 }

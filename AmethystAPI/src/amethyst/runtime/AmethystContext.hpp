@@ -32,7 +32,7 @@ public:
     std::unique_ptr<Amethyst::PatchManager> mPatchManager;
     std::unique_ptr<Amethyst::EnumAllocator> mEnumAllocator;
     std::unique_ptr<Amethyst::PackManager> mPackManager;
-    // std::unique_ptr<Amethyst::NetworkManager> mNetworkManager;
+    std::unique_ptr<Amethyst::NetworkManager> mNetworkManager;
     std::unique_ptr<Amethyst::ModRepository> mModRepository;
     std::unique_ptr<Amethyst::ModGraph> mModGraph;
     std::unique_ptr<Amethyst::ModLoader> mModLoader;

@@ -1,6 +1,6 @@
-// #ifdef CLIENT
-// #pragma once
-// namespace Amethyst::ClientHooks::ResourceHooks {
-// 	void Initialize();
-// }
-// #endif
+#ifdef CLIENT
+#pragma once
+namespace Amethyst::ClientHooks::ResourceHooks {
+	void Initialize();
+}
+#endif

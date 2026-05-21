@@ -1,185 +1,191 @@
-// #pragma once
-// #include <amethyst/runtime/HookManager.hpp>
-// #include "amethyst/runtime/networking/CustomPacket.hpp"
-// #include <amethyst/Log.hpp>
-// #include <common/network/Packet.hpp>
-// #include <common/network/PacketSender.hpp>
-// #include <common/world/actor/player/Player.hpp>
+#pragma once
 
-// class UserEntityIdentifierComponent;
+#include <functional>
+#include <memory>
+#include <string>
+#include <string_view>
+#include <unordered_map>
 
-// namespace Amethyst {
+#include <nonstd/expected.hpp>
 
-// template<typename T>
-// concept DerivedFromCustomPacket = std::is_base_of_v<Amethyst::CustomPacket, T>;
+#include <amethyst/Log.hpp>
+#include <amethyst/runtime/HookManager.hpp>
+#include <amethyst/runtime/networking/CustomPacket.hpp>
 
-// /// @internal
-// /// Intended for internal use only, DO NOT USE!
-// /// Instead use Amethyst::CustomPacket as the base class for your packets.
-// class CustomPacketInternal final : public ::Packet {
-// public:
-//     std::unique_ptr<Amethyst::CustomPacket> mPacket;
-//     uint64_t mTypeId;
+#include <network/Packet.hpp>
+#include <network/PacketSender.hpp>
 
-//     CustomPacketInternal() 
-//         : Packet(), mPacket(nullptr), mTypeId(0) {}
+class UserEntityIdentifierComponent;
+class NetworkIdentifierWithSubId;
 
-//     CustomPacketInternal(std::unique_ptr<Amethyst::CustomPacket> packet, uint64_t typeId) 
-//         : Packet(), mPacket(std::move(packet)), mTypeId(typeId) {
-//             mReliability = mPacket->mReliability;
-//             mPriority = mPacket->mPriority;
-//             mCompressible = mPacket->mCompressible;
-//         }
+namespace Amethyst {
 
-//     // Delete copy semantics
-//     CustomPacketInternal(const CustomPacketInternal&) = delete;
-//     CustomPacketInternal& operator=(const CustomPacketInternal&) = delete;
+template<typename T>
+concept DerivedFromCustomPacket = std::is_base_of_v<CustomPacket, T>;
 
-//     // Allow move semantics
-//     CustomPacketInternal(CustomPacketInternal&&) noexcept = default;
-//     CustomPacketInternal& operator=(CustomPacketInternal&&) noexcept = default;
+/// Wire-level envelope. Carries a typeId + the inner CustomPacket's bytes.
+/// Claims MinecraftPacketIds::EndId + 1 as its id so MC's dispatcher ignores it;
+/// routing happens via Amethyst::NetworkManager once readNoHeader decodes the typeId.
+class CustomPacketInternal final : public ::Packet {
+public:
+    std::unique_ptr<CustomPacket> mPacket;
+    uint64_t mTypeId = 0;
 
-//     void InitPacketFromNetwork(uint64_t typeId);
+    CustomPacketInternal() = default;
 
-//     virtual MinecraftPacketIds getId() const override {
-//         return (MinecraftPacketIds)((int)MinecraftPacketIds::EndId + 1);
-//     }
+    CustomPacketInternal(std::unique_ptr<CustomPacket> packet, uint64_t typeId)
+        : mPacket(std::move(packet)), mTypeId(typeId)
+    {
+        mReliability  = mPacket->mReliability;
+        mPriority     = mPacket->mPriority;
+        mCompressible = mPacket->mCompressible;
+    }
 
-//     virtual std::string getName() const {
-//         Assert(mPacket != nullptr, "Attempted to get the name of a CustomPacketInternal with a null mPacket!");
-//         return mPacket->getName();
-//     }
+    CustomPacketInternal(const CustomPacketInternal&) = delete;
+    CustomPacketInternal& operator=(const CustomPacketInternal&) = delete;
+    CustomPacketInternal(CustomPacketInternal&&) noexcept = default;
+    CustomPacketInternal& operator=(CustomPacketInternal&&) noexcept = default;
 
-//     virtual void write(BinaryStream& out) const override {
-//         Assert(mTypeId != 0, "Attempted to write a CustomPacketInternal with a typeId of 0!");
-//         out.write<uint64_t>(mTypeId);
-//         Assert(mPacket != nullptr, "Attempted to write a CustomPacketInternal with a null mPacket!");
-//         mPacket->write(out);
-//     }
+    void InitPacketFromNetwork(uint64_t typeId);
 
-//     virtual Bedrock::Result<void, std::error_code> read(ReadOnlyBinaryStream& in) override {
-//         uint64_t id = in.get<uint64_t>().value();
-//         Assert(id != 0, "Received a CustomPacketInternal with a typeId of 0!");
-//         InitPacketFromNetwork(id);
+    MinecraftPacketIds getId() const override
+    {
+        return static_cast<MinecraftPacketIds>(static_cast<int>(MinecraftPacketIds::EndId) + 1);
+    }
 
-// 		if (mPacket == nullptr) {
-// 			Log::Warning("[CustomPacketInternal] Failed to create packet for typeId {}", id);
-// 			return {};
-// 		}
+    std::string_view getName() const override
+    {
+        return "Amethyst::CustomPacketInternal";
+    }
 
-//         return mPacket->read(in);
-//     }
+    void write(BinaryStream& out) const override
+    {
+        out.writeUnsignedVarInt64(mTypeId, "typeId", "");
+        if (mPacket) mPacket->write(out);
+    }
 
-//     virtual Bedrock::Result<void, std::error_code> _read(ReadOnlyBinaryStream& in) override {
-//         return Bedrock::Result<void, std::error_code>();
-//     }
-// };
+    Bedrock::Result<void, std::error_code> read(ReadOnlyBinaryStream& in) override
+    {
+        auto id = in.getUnsignedVarInt64();
+        if (!id.has_value()) return ::nonstd::expected_lite::make_unexpected(id.error());
 
-// class NetworkManager {
-// public:
-//     NetworkManager()
-//         : mPacketHandlers(), mPacketFactories() {}
-//     NetworkManager(const NetworkManager&) = delete;
-//     NetworkManager(NetworkManager&&) = delete;
-//     NetworkManager& operator=(const NetworkManager&) = delete;
-//     NetworkManager& operator=(NetworkManager&&) = delete;
+        InitPacketFromNetwork(*id);
+        if (!mPacket) {
+            Log::Warning("[CustomPacketInternal] No factory for typeId {}", *id);
+            return {};
+        }
 
-//     template<DerivedFromCustomPacket T>
-//     void RegisterPacketType(std::unique_ptr<Amethyst::CustomPacketHandler> handler) {
-//         constexpr uint64_t typeId = function_id::class_hash<T>();
-//         Assert(!mPacketHandlers.contains(typeId), "[Amethyst] Attempted to register packet when a packet with that name already exists!");
-//         mPacketHandlers[typeId] = std::move(handler);
+        return mPacket->read(in);
+    }
 
-//         mPacketFactories[typeId] = []() -> std::unique_ptr<CustomPacket> {
-//             return std::make_unique<T>();
-//         };
-//     }
+    Bedrock::Result<void, std::error_code> read(ReadOnlyBinaryStream& in, const ::cereal::ReflectionCtx&) override
+    {
+        return read(in);
+    }
 
-//     template <DerivedFromCustomPacket T>
-//     void Send(::PacketSender& sender, std::unique_ptr<T> packet) 
-//     {
-//         CustomPacketInternal sendable = CreateSendablePacket(std::move(packet));
-//         sender.send(sendable);
-//     }
+    Bedrock::Result<void, std::error_code> _read(ReadOnlyBinaryStream& in) override
+    {
+        return read(in);
+    }
 
-//     template<DerivedFromCustomPacket T>
-//     void SendToServer(::PacketSender& sender, std::unique_ptr<T> packet) 
-//     {
-//         CustomPacketInternal sendable = CreateSendablePacket(std::move(packet));
-//         sender.sendToServer(sendable);
-//     }
+    void handle(const NetworkIdentifier& source, NetEventCallback& callback) const;
+};
 
-// 	template <DerivedFromCustomPacket T>
-//     void SendToClient(::PacketSender& sender, const Player& player, std::unique_ptr<T> packet)
-//     {
-//         CustomPacketInternal sendable = CreateSendablePacket(std::move(packet));
-//         sender.sendToClient(player.getUserIdentity(), sendable);
-//     }
+class NetworkManager {
+public:
+    NetworkManager() = default;
+    NetworkManager(const NetworkManager&) = delete;
+    NetworkManager(NetworkManager&&) = delete;
+    NetworkManager& operator=(const NetworkManager&) = delete;
+    NetworkManager& operator=(NetworkManager&&) = delete;
 
-//     template <DerivedFromCustomPacket T>
-//     void SendToClient(::PacketSender& sender, const UserEntityIdentifierComponent* userIdentifier, std::unique_ptr<T> packet)
-//     {
-//         CustomPacketInternal sendable = CreateSendablePacket(std::move(packet));
-//         sender.sendToClient(userIdentifier, sendable);
-//     }
+    template<DerivedFromCustomPacket T>
+    void RegisterPacketType(std::unique_ptr<CustomPacketHandler> handler)
+    {
+        constexpr uint64_t typeId = function_id::class_hash<T>();
+        Assert(!mPacketHandlers.contains(typeId),
+            "[Amethyst] Packet type already registered for typeId {}", typeId);
 
-//     template <DerivedFromCustomPacket T>
-//     void SendToClient(::PacketSender& sender, const NetworkIdentifier& id, SubClientId subid, std::unique_ptr<T> packet)
-//     {
-//         CustomPacketInternal sendable = CreateSendablePacket(std::move(packet));
-//         sender.sendToClient(id, sendable, subid);
-//     }
+        mPacketHandlers[typeId] = std::move(handler);
+        mPacketFactories[typeId] = []() -> std::unique_ptr<CustomPacket> {
+            return std::make_unique<T>();
+        };
+    }
 
-//     template <DerivedFromCustomPacket T>
-//     void SendToClients(::PacketSender& sender, const std::vector<NetworkIdentifierWithSubId>& ids, std::unique_ptr<T> packet)
-//     {
-//         CustomPacketInternal sendable = CreateSendablePacket(std::move(packet));
-//         sender.sendToClients(ids, sendable);
-//     }
+    template<DerivedFromCustomPacket T>
+    void Send(::PacketSender& sender, std::unique_ptr<T> packet)
+    {
+        auto wrapped = CreateSendable(std::move(packet));
+        sender.send(wrapped);
+    }
 
-//     template <DerivedFromCustomPacket T>
-//     void SendBroadcast(::PacketSender& sender, std::unique_ptr<T> packet)
-//     {
-//         CustomPacketInternal sendable = CreateSendablePacket(std::move(packet));
-//         sender.sendBroadcast(sendable);
-//     }
+    template<DerivedFromCustomPacket T>
+    void SendToServer(::PacketSender& sender, std::unique_ptr<T> packet)
+    {
+        auto wrapped = CreateSendable(std::move(packet));
+        sender.sendToServer(wrapped);
+    }
 
-//     template <DerivedFromCustomPacket T>
-//     void SendBroadcast(::PacketSender& sender, const NetworkIdentifier& exceptId, SubClientId exceptSubid, std::unique_ptr<T> packet)
-//     {
-//         CustomPacketInternal sendable = CreateSendablePacket(std::move(packet));
-//         sender.send(exceptId, exceptSubid, sendable);
-//     }
+    template<DerivedFromCustomPacket T>
+    void SendToClient(::PacketSender& sender, const UserEntityIdentifierComponent* userIdentifier, std::unique_ptr<T> packet)
+    {
+        auto wrapped = CreateSendable(std::move(packet));
+        sender.sendToClient(userIdentifier, wrapped);
+    }
 
-//     CustomPacketHandler* GetPacketHandler(uint64_t typeId) {
-//         auto it = mPacketHandlers.find(typeId);
-//         if (it != mPacketHandlers.end()) {
-//             return it->second.get();
-//         }
+    template<DerivedFromCustomPacket T>
+    void SendToClient(::PacketSender& sender, const NetworkIdentifier& id, SubClientId subId, std::unique_ptr<T> packet)
+    {
+        auto wrapped = CreateSendable(std::move(packet));
+        sender.sendToClient(id, wrapped, subId);
+    }
 
-// 		Log::Warning("[NetworkManager] No packet handler found for typeId {}", typeId);
-// 		return nullptr;
-//     }
+    template<DerivedFromCustomPacket T>
+    void SendToClients(::PacketSender& sender, const std::vector<NetworkIdentifierWithSubId>& ids, std::unique_ptr<T> packet)
+    {
+        auto wrapped = CreateSendable(std::move(packet));
+        sender.sendToClients(ids, wrapped);
+    }
 
-//     std::unique_ptr<Amethyst::CustomPacket> CreatePacket(uint64_t typeId) {
-//         auto it = mPacketFactories.find(typeId);
-//         if (it != mPacketFactories.end()) {
-//             return it->second();
-//         }
-        
-// 		Log::Warning("[NetworkManager] No packet factory found for typeId {}", typeId);
-// 		return nullptr;
-//         // Assert(false, "[NetworkManager] No packet factory found for typeId {}", typeId);
-//         // std::unreachable();
-//     }
+    template<DerivedFromCustomPacket T>
+    void SendBroadcast(::PacketSender& sender, std::unique_ptr<T> packet)
+    {
+        auto wrapped = CreateSendable(std::move(packet));
+        sender.sendBroadcast(wrapped);
+    }
 
-// private:
-//     template<DerivedFromCustomPacket T>
-//     CustomPacketInternal CreateSendablePacket(std::unique_ptr<T> packet) {
-//         return CustomPacketInternal(std::move(packet), function_id::class_hash<T>());
-//     }
+    template<DerivedFromCustomPacket T>
+    void SendBroadcast(::PacketSender& sender, const NetworkIdentifier& exceptId, SubClientId exceptSub, std::unique_ptr<T> packet)
+    {
+        auto wrapped = CreateSendable(std::move(packet));
+        sender.sendBroadcast(exceptId, exceptSub, wrapped);
+    }
 
-//     std::unordered_map<uint64_t, std::unique_ptr<CustomPacketHandler>> mPacketHandlers;
-//     std::unordered_map<uint64_t, std::function<std::unique_ptr<Amethyst::CustomPacket>()>> mPacketFactories;
-// };
-// }
+    CustomPacketHandler* GetPacketHandler(uint64_t typeId) const
+    {
+        auto it = mPacketHandlers.find(typeId);
+        if (it != mPacketHandlers.end()) return it->second.get();
+        Log::Warning("[NetworkManager] No handler for typeId {}", typeId);
+        return nullptr;
+    }
+
+    std::unique_ptr<CustomPacket> CreatePacket(uint64_t typeId) const
+    {
+        auto it = mPacketFactories.find(typeId);
+        if (it != mPacketFactories.end()) return it->second();
+        Log::Warning("[NetworkManager] No factory for typeId {}", typeId);
+        return nullptr;
+    }
+
+private:
+    template<DerivedFromCustomPacket T>
+    CustomPacketInternal CreateSendable(std::unique_ptr<T> packet)
+    {
+        return CustomPacketInternal(std::move(packet), function_id::class_hash<T>());
+    }
+
+    std::unordered_map<uint64_t, std::unique_ptr<CustomPacketHandler>> mPacketHandlers;
+    std::unordered_map<uint64_t, std::function<std::unique_ptr<CustomPacket>()>> mPacketFactories;
+};
+
+} // namespace Amethyst

@@ -5,6 +5,7 @@
 #include <amethyst/runtime/ModContext.hpp>
 #include <DbgHelp.h>
 #include <tchar.h>
+#include <winternl.h>
 
 WindowsPlatformCommon::WindowsPlatformCommon(HANDLE mcThreadHandle)
     : mMcThreadHandle(mcThreadHandle) {}

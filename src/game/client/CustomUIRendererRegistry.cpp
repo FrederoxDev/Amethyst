@@ -1,10 +1,10 @@
 // #ifdef CLIENT
 // #include "CustomUIRendererRegistry.hpp"
-// #include <common/client/gui/controls/UIControlFactory.hpp>
-// #include <common/client/gui/controls/CustomRenderComponent.hpp>
-// #include <common/client/gui/UIResolvedDef.hpp>
-// #include <common/client/gui/gui/UIControl.hpp>
-// #include <common/client/gui/controls/renderers/MinecraftUICustomRenderer.hpp>
+// #include <client/gui/controls/UIControlFactory.hpp>
+// #include <client/gui/controls/CustomRenderComponent.hpp>
+// #include <client/gui/UIResolvedDef.hpp>
+// #include <client/gui/controls/UIControl.hpp>
+// #include <client/gui/controls/renderers/MinecraftUICustomRenderer.hpp>
 // #include "game/client/CustomUIRendererRegistry.hpp"
 
 // Amethyst::InlineHook<decltype(&UIControlFactory::_populateCustomRenderComponent)> _UIControlFactory__populateCustomRenderComponent;
