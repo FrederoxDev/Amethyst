@@ -35,7 +35,7 @@ std::optional<ModError> Mod::Load()
     if (!mInfo->IsRuntime)
         dllPath = GetTemporaryLibrary(versionedName);
 
-    HMODULE handle = LoadLibrary(dllPath.string().c_str());
+    HMODULE handle = LoadLibraryExA(dllPath.string().c_str(), nullptr, LOAD_WITH_ALTERED_SEARCH_PATH);
 
     mHandle.Reset(handle);
     if (!mHandle) {
@@ -182,13 +182,19 @@ fs::path Mod::GetTemporaryLibrary(const std::string& modName)
     fs::path tempDir = platform.GetAmethystFolder() / L"Temp" / modName;
     if (!fs::exists(tempDir)) fs::create_directories(tempDir);
 
-    fs::path originalDll = platform.GetAmethystFolder() / L"Mods" / modName / platform.GetPlatformFolderName() / std::string(modShortened + ".dll");
+    fs::path sourceDir = platform.GetAmethystFolder() / L"Mods" / modName / platform.GetPlatformFolderName();
+    fs::path originalDll = sourceDir / std::string(modShortened + ".dll");
     Assert(fs::exists(originalDll), "Could not find '{}.dll'", modShortened);
 
     fs::path tempDll = tempDir / (modShortened + ".dll");
 
-    try {
-        fs::copy_file(originalDll, tempDll, fs::copy_options::overwrite_existing);
+	try {
+        for (const auto& entry : fs::directory_iterator(sourceDir)) {
+            if (!entry.is_regular_file()) continue;
+            if (entry.path().extension() != ".dll") continue;
+            fs::path dst = tempDir / entry.path().filename();
+            fs::copy_file(entry.path(), dst, fs::copy_options::overwrite_existing);
+        }
     }
     catch (const std::filesystem::filesystem_error& e) {
         Assert(false, "{} (Error code: {})", e.what(), e.code().value());

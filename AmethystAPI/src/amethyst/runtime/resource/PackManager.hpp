@@ -42,8 +42,8 @@ public:
 
     void RegisterNewPack(const Mod* owner, const std::string& path, PackType type, PackPriority priority = PackPriority::Normal);
     const std::unordered_map<std::string, std::unordered_map<std::string, Pack>>& GetPacks() const;
-    void AddResourcePacksToStack(const Bedrock::NonOwnerPointer<IResourcePackRepository>& repository, ResourcePackStack& stack);
-    void AddBehaviorPacksToStack(const Bedrock::NonOwnerPointer<IResourcePackRepository>& repository, ResourcePackStack& stack);
+    void AddResourcePacksToStack(const ::gsl::not_null<Bedrock::NonOwnerPointer<IResourcePackRepository>>& repository, ResourcePackStack& stack);
+    void AddBehaviorPacksToStack(const ::gsl::not_null<Bedrock::NonOwnerPointer<IResourcePackRepository>>& repository, ResourcePackStack& stack);
 
 private:
     AmethystContext* mAmethyst;

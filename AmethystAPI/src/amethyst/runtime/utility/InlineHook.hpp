@@ -52,6 +52,59 @@ namespace detail {
 }
 
 template <typename T>
+class VSwapHook {
+    static_assert(sizeof(T) == 0, "VSwapHook<T> is not supported!");
+};
+
+template <typename R, typename Self, typename... Args>
+class VSwapHook<R(Self::*)(Args...)> {
+public:
+    using QualifiedSelf = Self*;
+    uintptr_t mOriginal = 0;
+
+    operator bool() const noexcept { return mOriginal != 0; }
+
+    R call(QualifiedSelf self, Args... args)
+    {
+        Assert(mOriginal != 0, "Attempted to call a VSwapHook that was not installed!");
+        using ProxyMemFn = R (detail::Proxy::*)(Args...);
+        auto mfn = detail::AddrToProxyMemFn<ProxyMemFn>(mOriginal);
+        auto* p = reinterpret_cast<detail::Proxy*>(
+            const_cast<std::remove_cv_t<Self>*>(self));
+        return (p->*mfn)(std::forward<Args>(args)...);
+    }
+
+    R operator()(QualifiedSelf self, Args... args)
+    {
+        return call(self, std::forward<Args>(args)...);
+    }
+};
+
+template <typename R, typename Self, typename... Args>
+class VSwapHook<R(Self::*)(Args...) const> {
+public:
+    using QualifiedSelf = const Self*;
+    uintptr_t mOriginal = 0;
+
+    operator bool() const noexcept { return mOriginal != 0; }
+
+    R call(QualifiedSelf self, Args... args)
+    {
+        Assert(mOriginal != 0, "Attempted to call a VSwapHook that was not installed!");
+        using ProxyMemFn = R (detail::Proxy::*)(Args...);
+        auto mfn = detail::AddrToProxyMemFn<ProxyMemFn>(mOriginal);
+        auto* p = reinterpret_cast<detail::Proxy*>(
+            const_cast<std::remove_cv_t<Self>*>(self));
+        return (p->*mfn)(std::forward<Args>(args)...);
+    }
+
+    R operator()(QualifiedSelf self, Args... args)
+    {
+        return call(self, std::forward<Args>(args)...);
+    }
+};
+
+template <typename T>
 class InlineHook {
     static_assert(sizeof(T) == 0, "InlineHook<T> is not supported!");
 };
@@ -144,25 +197,25 @@ public:
     {
         Assert(mHook.operator bool(), "Attempted to call an InlineHook that was invalid!");
         if constexpr (Convention == CallingConvention::CDecl) {
-            return mHook.ccall<R, QualifiedSelf, Args...>(self, args...);
+            return mHook.ccall<R, QualifiedSelf, Args...>(self, std::forward<Args>(args)...);
         }
         else if constexpr (Convention == CallingConvention::StdCall) {
-            return mHook.stdcall<R, QualifiedSelf, Args...>(self, args...);
+            return mHook.stdcall<R, QualifiedSelf, Args...>(self, std::forward<Args>(args)...);
         }
         else if constexpr (Convention == CallingConvention::FastCall) {
-            return mHook.fastcall<R, QualifiedSelf, Args...>(self, args...);
+            return mHook.fastcall<R, QualifiedSelf, Args...>(self, std::forward<Args>(args)...);
         }
         using ProxyMemFn = R (detail::Proxy::*)(Args...);
         auto mfn = detail::AddrToProxyMemFn<ProxyMemFn>(mHook.trampoline().address());
         auto* p = reinterpret_cast<detail::Proxy*>(
             const_cast<std::remove_cv_t<Self>*>(self));
-        return (p->*mfn)(args...);
+        return (p->*mfn)(std::forward<Args>(args)...);
     }
 
     template <CallingConvention Convention = CallingConvention::Default>
     R operator()(QualifiedSelf self, Args... args)
     {
-        return call<Convention>(self, args...);
+        return call<Convention>(self, std::forward<Args>(args)...);
     }
 };
 
@@ -202,25 +255,25 @@ public:
     {
         Assert(mHook.operator bool(), "Attempted to call an InlineHook that was invalid!");
         if constexpr (Convention == CallingConvention::CDecl) {
-            return mHook.ccall<R, QualifiedSelf, Args...>(self, args...);
+            return mHook.ccall<R, QualifiedSelf, Args...>(self, std::forward<Args>(args)...);
         }
         else if constexpr (Convention == CallingConvention::StdCall) {
-            return mHook.stdcall<R, QualifiedSelf, Args...>(self, args...);
+            return mHook.stdcall<R, QualifiedSelf, Args...>(self, std::forward<Args>(args)...);
         }
         else if constexpr (Convention == CallingConvention::FastCall) {
-            return mHook.fastcall<R, QualifiedSelf, Args...>(self, args...);
+            return mHook.fastcall<R, QualifiedSelf, Args...>(self, std::forward<Args>(args)...);
         }
         using ProxyMemFn = R (detail::Proxy::*)(Args...);
         auto mfn = detail::AddrToProxyMemFn<ProxyMemFn>(mHook.trampoline().address());
         auto* p = reinterpret_cast<detail::Proxy*>(
             const_cast<std::remove_cv_t<Self>*>(self));
-        return (p->*mfn)(args...);
+        return (p->*mfn)(std::forward<Args>(args)...);
     }
 
     template <CallingConvention Convention = CallingConvention::Default>
     R operator()(QualifiedSelf self, Args... args)
     {
-        return call<Convention>(self, args...);
+        return call<Convention>(self, std::forward<Args>(args)...);
     }
 };
 
@@ -260,25 +313,25 @@ public:
     {
         Assert(mHook.operator bool(), "Attempted to call an InlineHook that was invalid!");
         if constexpr (Convention == CallingConvention::CDecl) {
-            return mHook.ccall<R, QualifiedSelf, Args...>(self, args...);
+            return mHook.ccall<R, QualifiedSelf, Args...>(self, std::forward<Args>(args)...);
         }
         else if constexpr (Convention == CallingConvention::StdCall) {
-            return mHook.stdcall<R, QualifiedSelf, Args...>(self, args...);
+            return mHook.stdcall<R, QualifiedSelf, Args...>(self, std::forward<Args>(args)...);
         }
         else if constexpr (Convention == CallingConvention::FastCall) {
-            return mHook.fastcall<R, QualifiedSelf, Args...>(self, args...);
+            return mHook.fastcall<R, QualifiedSelf, Args...>(self, std::forward<Args>(args)...);
         }
         using ProxyMemFn = R (detail::Proxy::*)(Args...);
         auto mfn = detail::AddrToProxyMemFn<ProxyMemFn>(mHook.trampoline().address());
         auto* p = reinterpret_cast<detail::Proxy*>(
             const_cast<std::remove_cv_t<Self>*>(self));
-        return (p->*mfn)(args...);
+        return (p->*mfn)(std::forward<Args>(args)...);
     }
 
     template <CallingConvention Convention = CallingConvention::Default>
     R operator()(QualifiedSelf self, Args... args)
     {
-        return call<Convention>(self, args...);
+        return call<Convention>(self, std::forward<Args>(args)...);
     }
 };
 
@@ -318,25 +371,25 @@ public:
     {
         Assert(mHook.operator bool(), "Attempted to call an InlineHook that was invalid!");
         if constexpr (Convention == CallingConvention::CDecl) {
-            return mHook.ccall<R, QualifiedSelf, Args...>(self, args...);
+            return mHook.ccall<R, QualifiedSelf, Args...>(self, std::forward<Args>(args)...);
         }
         else if constexpr (Convention == CallingConvention::StdCall) {
-            return mHook.stdcall<R, QualifiedSelf, Args...>(self, args...);
+            return mHook.stdcall<R, QualifiedSelf, Args...>(self, std::forward<Args>(args)...);
         }
         else if constexpr (Convention == CallingConvention::FastCall) {
-            return mHook.fastcall<R, QualifiedSelf, Args...>(self, args...);
+            return mHook.fastcall<R, QualifiedSelf, Args...>(self, std::forward<Args>(args)...);
         }
         using ProxyMemFn = R (detail::Proxy::*)(Args...);
         auto mfn = detail::AddrToProxyMemFn<ProxyMemFn>(mHook.trampoline().address());
         auto* p = reinterpret_cast<detail::Proxy*>(
             const_cast<std::remove_cv_t<Self>*>(self));
-        return (p->*mfn)(args...);
+        return (p->*mfn)(std::forward<Args>(args)...);
     }
 
     template <CallingConvention Convention = CallingConvention::Default>
     R operator()(QualifiedSelf self, Args... args)
     {
-        return call<Convention>(self, args...);
+        return call<Convention>(self, std::forward<Args>(args)...);
     }
 };
 
@@ -376,25 +429,25 @@ public:
     {
         Assert(mHook.operator bool(), "Attempted to call an InlineHook that was invalid!");
         if constexpr (Convention == CallingConvention::CDecl) {
-            return mHook.ccall<R, QualifiedSelf, Args...>(self, args...);
+            return mHook.ccall<R, QualifiedSelf, Args...>(self, std::forward<Args>(args)...);
         }
         else if constexpr (Convention == CallingConvention::StdCall) {
-            return mHook.stdcall<R, QualifiedSelf, Args...>(self, args...);
+            return mHook.stdcall<R, QualifiedSelf, Args...>(self, std::forward<Args>(args)...);
         }
         else if constexpr (Convention == CallingConvention::FastCall) {
-            return mHook.fastcall<R, QualifiedSelf, Args...>(self, args...);
+            return mHook.fastcall<R, QualifiedSelf, Args...>(self, std::forward<Args>(args)...);
         }
         using ProxyMemFn = R (detail::Proxy::*)(Args...);
         auto mfn = detail::AddrToProxyMemFn<ProxyMemFn>(mHook.trampoline().address());
         auto* p = reinterpret_cast<detail::Proxy*>(
             const_cast<std::remove_cv_t<Self>*>(self));
-        return (p->*mfn)(args...);
+        return (p->*mfn)(std::forward<Args>(args)...);
     }
 
     template <CallingConvention Convention = CallingConvention::Default>
     R operator()(QualifiedSelf self, Args... args)
     {
-        return call<Convention>(self, args...);
+        return call<Convention>(self, std::forward<Args>(args)...);
     }
 };
 
@@ -434,25 +487,25 @@ public:
     {
         Assert(mHook.operator bool(), "Attempted to call an InlineHook that was invalid!");
         if constexpr (Convention == CallingConvention::CDecl) {
-            return mHook.ccall<R, QualifiedSelf, Args...>(self, args...);
+            return mHook.ccall<R, QualifiedSelf, Args...>(self, std::forward<Args>(args)...);
         }
         else if constexpr (Convention == CallingConvention::StdCall) {
-            return mHook.stdcall<R, QualifiedSelf, Args...>(self, args...);
+            return mHook.stdcall<R, QualifiedSelf, Args...>(self, std::forward<Args>(args)...);
         }
         else if constexpr (Convention == CallingConvention::FastCall) {
-            return mHook.fastcall<R, QualifiedSelf, Args...>(self, args...);
+            return mHook.fastcall<R, QualifiedSelf, Args...>(self, std::forward<Args>(args)...);
         }
         using ProxyMemFn = R (detail::Proxy::*)(Args...);
         auto mfn = detail::AddrToProxyMemFn<ProxyMemFn>(mHook.trampoline().address());
         auto* p = reinterpret_cast<detail::Proxy*>(
             const_cast<std::remove_cv_t<Self>*>(self));
-        return (p->*mfn)(args...);
+        return (p->*mfn)(std::forward<Args>(args)...);
     }
 
     template <CallingConvention Convention = CallingConvention::Default>
     R operator()(QualifiedSelf self, Args... args)
     {
-        return call<Convention>(self, args...);
+        return call<Convention>(self, std::forward<Args>(args)...);
     }
 };
 
@@ -492,25 +545,25 @@ public:
     {
         Assert(mHook.operator bool(), "Attempted to call an InlineHook that was invalid!");
         if constexpr (Convention == CallingConvention::CDecl) {
-            return mHook.ccall<R, QualifiedSelf, Args...>(self, args...);
+            return mHook.ccall<R, QualifiedSelf, Args...>(self, std::forward<Args>(args)...);
         }
         else if constexpr (Convention == CallingConvention::StdCall) {
-            return mHook.stdcall<R, QualifiedSelf, Args...>(self, args...);
+            return mHook.stdcall<R, QualifiedSelf, Args...>(self, std::forward<Args>(args)...);
         }
         else if constexpr (Convention == CallingConvention::FastCall) {
-            return mHook.fastcall<R, QualifiedSelf, Args...>(self, args...);
+            return mHook.fastcall<R, QualifiedSelf, Args...>(self, std::forward<Args>(args)...);
         }
         using ProxyMemFn = R (detail::Proxy::*)(Args...);
         auto mfn = detail::AddrToProxyMemFn<ProxyMemFn>(mHook.trampoline().address());
         auto* p = reinterpret_cast<detail::Proxy*>(
             const_cast<std::remove_cv_t<Self>*>(self));
-        return (p->*mfn)(args...);
+        return (p->*mfn)(std::forward<Args>(args)...);
     }
 
     template <CallingConvention Convention = CallingConvention::Default>
     R operator()(QualifiedSelf self, Args... args)
     {
-        return call<Convention>(self, args...);
+        return call<Convention>(self, std::forward<Args>(args)...);
     }
 };
 
@@ -550,25 +603,25 @@ public:
     {
         Assert(mHook.operator bool(), "Attempted to call an InlineHook that was invalid!");
         if constexpr (Convention == CallingConvention::CDecl) {
-            return mHook.ccall<R, QualifiedSelf, Args...>(self, args...);
+            return mHook.ccall<R, QualifiedSelf, Args...>(self, std::forward<Args>(args)...);
         }
         else if constexpr (Convention == CallingConvention::StdCall) {
-            return mHook.stdcall<R, QualifiedSelf, Args...>(self, args...);
+            return mHook.stdcall<R, QualifiedSelf, Args...>(self, std::forward<Args>(args)...);
         }
         else if constexpr (Convention == CallingConvention::FastCall) {
-            return mHook.fastcall<R, QualifiedSelf, Args...>(self, args...);
+            return mHook.fastcall<R, QualifiedSelf, Args...>(self, std::forward<Args>(args)...);
         }
         using ProxyMemFn = R (detail::Proxy::*)(Args...);
         auto mfn = detail::AddrToProxyMemFn<ProxyMemFn>(mHook.trampoline().address());
         auto* p = reinterpret_cast<detail::Proxy*>(
             const_cast<std::remove_cv_t<Self>*>(self));
-        return (p->*mfn)(args...);
+        return (p->*mfn)(std::forward<Args>(args)...);
     }
 
     template <CallingConvention Convention = CallingConvention::Default>
     R operator()(QualifiedSelf self, Args... args)
     {
-        return call<Convention>(self, args...);
+        return call<Convention>(self, std::forward<Args>(args)...);
     }
 };
 
@@ -608,25 +661,25 @@ public:
     {
         Assert(mHook.operator bool(), "Attempted to call an InlineHook that was invalid!");
         if constexpr (Convention == CallingConvention::CDecl) {
-            return mHook.ccall<R, QualifiedSelf, Args...>(self, args...);
+            return mHook.ccall<R, QualifiedSelf, Args...>(self, std::forward<Args>(args)...);
         }
         else if constexpr (Convention == CallingConvention::StdCall) {
-            return mHook.stdcall<R, QualifiedSelf, Args...>(self, args...);
+            return mHook.stdcall<R, QualifiedSelf, Args...>(self, std::forward<Args>(args)...);
         }
         else if constexpr (Convention == CallingConvention::FastCall) {
-            return mHook.fastcall<R, QualifiedSelf, Args...>(self, args...);
+            return mHook.fastcall<R, QualifiedSelf, Args...>(self, std::forward<Args>(args)...);
         }
         using ProxyMemFn = R (detail::Proxy::*)(Args...);
         auto mfn = detail::AddrToProxyMemFn<ProxyMemFn>(mHook.trampoline().address());
         auto* p = reinterpret_cast<detail::Proxy*>(
             const_cast<std::remove_cv_t<Self>*>(self));
-        return (p->*mfn)(args...);
+        return (p->*mfn)(std::forward<Args>(args)...);
     }
 
     template <CallingConvention Convention = CallingConvention::Default>
     R operator()(QualifiedSelf self, Args... args)
     {
-        return call<Convention>(self, args...);
+        return call<Convention>(self, std::forward<Args>(args)...);
     }
 };
 } // namespace Amethyst

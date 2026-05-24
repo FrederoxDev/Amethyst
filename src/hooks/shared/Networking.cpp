@@ -9,9 +9,6 @@
 #include <network/Packet.hpp>
 #include <network/ServerNetworkHandler.hpp>
 
-Packet::Packet() = default;
-Packet::~Packet() = default;
-
 template <>
 class PacketHandlerDispatcherInstance<Amethyst::CustomPacketInternal, 0> : public IPacketHandlerDispatcher {
 public:

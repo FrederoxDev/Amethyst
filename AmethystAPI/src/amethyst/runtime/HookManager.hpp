@@ -55,6 +55,22 @@
         &detourSym>(vtable, _##detourSym);                                                                                             \
 }
 
+#define VSWAP(className, functionName, vtable)                                                                                          \
+{                                                                                                                                       \
+    _##className##_##functionName.mOriginal = hooks.CreateVirtualSwap<                                                                 \
+        ::Amethyst::detail::PickOriginal(&className::functionName,                                                                     \
+            static_cast<decltype(&className##_##functionName)>(nullptr)),                                                              \
+        &className##_##functionName>(vtable);                                                                                          \
+}
+
+#define VSWAP_NAMED(className, functionName, vtable, detourSym)                                                                        \
+{                                                                                                                                       \
+    _##detourSym.mOriginal = hooks.CreateVirtualSwap<                                                                                  \
+        ::Amethyst::detail::PickOriginal(&className::functionName,                                                                     \
+            static_cast<decltype(&detourSym)>(nullptr)),                                                                               \
+        &detourSym>(vtable);                                                                                                           \
+}
+
 
 namespace Amethyst {
     /**
@@ -84,21 +100,21 @@ namespace Amethyst {
     template <auto OrigFn, auto UserDetour, typename R, typename Self, typename... Args>
     struct __single_inheritance HookShim<OrigFn, UserDetour, R (Self::*)(Args...)> {
         R Trampoline(Args... args) {
-            return UserDetour(reinterpret_cast<Self*>(this), args...);
+            return UserDetour(reinterpret_cast<Self*>(this), std::forward<Args>(args)...);
         }
     };
 
     template <auto OrigFn, auto UserDetour, typename R, typename Self, typename... Args>
     struct __single_inheritance HookShim<OrigFn, UserDetour, R (Self::*)(Args...) const> {
         R Trampoline(Args... args) const {
-            return UserDetour(reinterpret_cast<const Self*>(this), args...);
+            return UserDetour(reinterpret_cast<const Self*>(this), std::forward<Args>(args)...);
         }
     };
 
     template <auto OrigFn, auto UserDetour, typename R, typename Self, typename... Args>
     struct __single_inheritance HookShim<OrigFn, UserDetour, R (Self::*)(Args...) const volatile> {
         R Trampoline(Args... args) const volatile {
-            return UserDetour(reinterpret_cast<const volatile Self*>(this), args...);
+            return UserDetour(reinterpret_cast<const volatile Self*>(this), std::forward<Args>(args)...);
         }
     };
 
@@ -281,6 +297,31 @@ namespace Amethyst {
             function = reinterpret_cast<uintptr_t>(newFunction);
             ProtectMemory(reinterpret_cast<uintptr_t>(&function), sizeof(uintptr_t), oldProt);
             return original;
+        }
+
+        /**
+         * Vtable-slot swap (the ICF-immune alternative to CreateVirtualHook).
+         * Writes the HookShim's Trampoline address into the vtable slot, returns
+         * the previous slot value (the real function address) so the caller can
+         * invoke the original through a VSwapHook<> wrapper.
+         *
+         * Trade-off vs CreateVirtualHook: VSWAP only redirects calls that go
+         * through this particular vtable, so two mods can't both VSWAP the same
+         * slot — the second one wins and the first becomes dead. For trivial
+         * function bodies (single-instruction getters, etc.) this is the only
+         * safe option because the linker folds them with unrelated functions
+         * and an inline body patch would redirect those too.
+         */
+        template <auto OriginalFn, auto UserDetour>
+        uintptr_t CreateVirtualSwap(uintptr_t vtable)
+        {
+            constexpr std::string_view name = function_id::name<OriginalFn>();
+            if (vtable == 0) {
+                Log::Error("[VSWAP] vtable pointer is null for '{}'. Are imports resolved?", name);
+                return 0;
+            }
+            void* shimAddr = ResolveDetourAddress<OriginalFn, UserDetour>();
+            return ReplaceVirtualFunction<OriginalFn>(vtable, shimAddr);
         }
 
         // Legacy funcs
