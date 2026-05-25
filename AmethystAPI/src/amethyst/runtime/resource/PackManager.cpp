@@ -84,12 +84,6 @@ void PackManager::RegisterNewPack(const Mod* owner, const std::string& path, Pac
     auto& modSlot = mPacks[key];
     if (modSlot.contains(path)) return;
     modSlot.insert({path, Pack{owner, path, packUuid, semVersion, type, priority}});
-
-    Log::Info("[Amethyst::PackManager] Registered pack '{}/{}' uuid={} version={}.{}.{}",
-        key, path, header["uuid"].get<std::string>(),
-        versionVal[0].get<uint16_t>(),
-        versionVal[1].get<uint16_t>(),
-        versionVal[2].get<uint16_t>());
 }
 
 // Shared logic for adding registered packs of a given type to a stack. Mirrors
@@ -129,8 +123,6 @@ static void AddPacksOfTypeToStack(
             ::gsl::not_null<std::shared_ptr<ResourcePack>> notNullPack(std::move(resourcePack));
             PackInstance instance(std::move(notNullPack), -1, false, settings);
             stack.add(std::move(instance), constRepo, false);
-
-            Log::Info("[Amethyst::PackManager] Added pack '{}/{}' to stack", modKey, path);
         }
     }
 }

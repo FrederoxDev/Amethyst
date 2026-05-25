@@ -47,13 +47,11 @@ namespace Amethyst::ClientHooks::ResourceHooks {
 				auto rpDir = (modBase / "resource_packs").generic_string();
 				auto& src = factory.createDirectoryPackSource(::Core::Path(rpDir), PackType::Resources, kPackOriginUser, false);
 				self->mPackSource->addPackSource(&src);
-				Log::Info("[Amethyst::PackManager] Registered RP source: {}", rpDir);
 			}
 			if (hasBP) {
 				auto bpDir = (modBase / "behavior_packs").generic_string();
 				auto& src = factory.createDirectoryPackSource(::Core::Path(bpDir), PackType::Behavior, kPackOriginUser, false);
 				self->mPackSource->addPackSource(&src);
-				Log::Info("[Amethyst::PackManager] Registered BP source: {}", bpDir);
 			}
 		}
 	}

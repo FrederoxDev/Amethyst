@@ -3,6 +3,7 @@
 #include "hooks/client/Input.hpp"
 #include "hooks/client/Rendering.hpp"
 #include "hooks/client/Resource.hpp"
+#include "hooks/client/Material.hpp"
 #include "hooks/client/UI.hpp"
 #include "game/client/CustomUIRendererRegistry.hpp"
 
@@ -51,6 +52,7 @@ namespace Amethyst::ClientHooks {
 		// InputHooks::Initialize();
 		RenderingHooks::Initialize();
 		ResourceHooks::Initialize();
+		MaterialHooks::Initialize();
 		// UIHooks::Initialize();
 		// CustomUIRendererRegistry::AddEventListeners();
 	}
