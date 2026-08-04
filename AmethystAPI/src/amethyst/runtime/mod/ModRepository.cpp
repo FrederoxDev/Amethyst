@@ -11,12 +11,12 @@ void ModRepository::LoadFromDirectories(const std::vector<fs::path>& directories
             mErrors.push_back(result.error());
             continue;
         }
-        auto& modInfo = *result;
-        if (mMods.contains(modInfo.UUID)) {
-            Log::Warning("Mod with UUID '{}' already exists in repository, skipping duplicate from '{}'", modInfo.UUID, directory.generic_string());
+        auto modInfo = std::make_shared<const ModInfo>(std::move(*result));
+        if (mMods.contains(modInfo->UUID)) {
+            Log::Warning("Mod with UUID '{}' already exists in repository, skipping duplicate from '{}'", modInfo->UUID, directory.generic_string());
             continue;
         }
-        mMods.emplace(modInfo.UUID, std::make_shared<const ModInfo>(std::move(modInfo)));
+        mMods.emplace(modInfo->UUID, modInfo);
     }
 }
 
