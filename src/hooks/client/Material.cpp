@@ -23,12 +23,11 @@ static std::once_flag sScanFlag;
 
 static void ScanAllPacks()
 {
-	auto& platform = Amethyst::GetPlatform();
 	auto& packs = Amethyst::GetContext().mPackManager->GetPacks();
 	for (const auto& [modKey, modPacks] : packs) {
 		for (const auto& [packPath, pack] : modPacks) {
 			if (pack.type != PackType::Resources) continue;
-			fs::path materialsDir = platform.GetAmethystFolder() / "Mods" / modKey / "resource_packs" / packPath / "materials";
+			fs::path materialsDir = pack.owner->mInfo->Directory / "resource_packs" / packPath / "materials";
 			fs::path manifest = materialsDir / "materials.json";
 			if (!fs::exists(manifest)) continue;
 

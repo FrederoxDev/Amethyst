@@ -1,6 +1,5 @@
 #include <network/Packet.hpp>
 Packet::Packet() = default;
-Packet::~Packet() = default;
 
 #include <Core/SemVer/SemVersion.hpp>
 template class SemVersionBase<Bedrock::StaticOptimizedString>;

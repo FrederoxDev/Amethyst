@@ -248,13 +248,29 @@ function build_mod(mod_name, targetMajor, targetMinor, targetPatch, automated_bu
 
             local pch_file = path.join(generated_dir, "pch.hpp.pch")
             local installed_bin_dir = path.join(importer_dir, "bin")
-            if not os.isfile(pch_file) then
+            local pch_src = path.join(installed_bin_dir, "utils", "pch.hpp")
+            local clang_exe = path.join(installed_bin_dir, "clang++.exe")
+            -- The PCH is built by, and later consumed with, this exact clang++.
+            -- A PCH left over from a previous Runtime-Importer (a different
+            -- clang++) is rejected at consume time with a fatal ASTReadError, and
+            -- a changed pch.hpp yields stale STL decls. Rebuild when the PCH is
+            -- missing OR older than either input (the clang++ binary or pch.hpp)
+            -- so it self-heals instead of requiring a manual delete.
+            local pch_stale = not os.isfile(pch_file)
+            if not pch_stale then
+                local pch_mtime = os.mtime(pch_file)
+                if (os.isfile(clang_exe) and os.mtime(clang_exe) > pch_mtime)
+                   or (os.isfile(pch_src) and os.mtime(pch_src) > pch_mtime) then
+                    pch_stale = true
+                end
+            end
+            if pch_stale then
                 print("Generating precompiled header of STL...")
                 os.mkdir(generated_dir)
                 os.exec(table.concat({
-                    '"' .. path.join(installed_bin_dir, "clang++.exe") .. '"',
+                    '"' .. clang_exe .. '"',
                     "-x", "c++-header",
-                    '"' .. path.join(installed_bin_dir, "utils", "pch.hpp") .. '"',
+                    '"' .. pch_src .. '"',
                     "-std=c++23",
                     "-fms-extensions",
                     "-fms-compatibility",

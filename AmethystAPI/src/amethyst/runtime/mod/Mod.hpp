@@ -67,7 +67,7 @@ public:
     bool IsLoaded() const;
 
     bool operator==(const Mod& other) const;
-    static std::shared_ptr<const ModInfo> GetInfo(const std::string& modName);
-    static fs::path GetTemporaryLibrary(const std::string& modName);
+    static std::shared_ptr<const ModInfo> GetInfo(const fs::path& modDirectory);
+    static fs::path GetTemporaryLibrary(const ModInfo& info);
 };
 } // namespace Amethyst

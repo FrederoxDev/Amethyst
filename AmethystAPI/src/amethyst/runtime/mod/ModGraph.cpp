@@ -132,7 +132,7 @@ void ModGraph::SortAndValidate(const ModRepository& repository, const std::unord
     // Verify all mods in the profile were loaded
     for (const auto& mod : profileMods) {
         if (allLoadedMods.contains(mod)) continue;
-        AssertFail("Failed to find mod with ID '{}' in mods folder", mod);
+        AssertFail("Failed to load mod '{}' named by the launcher session", mod);
     }
 }
 

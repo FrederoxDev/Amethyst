@@ -34,12 +34,10 @@ ModInfo::ModInfo(
 
 std::string ModInfo::GetVersionedName() const
 {
-    std::string versionedName = std::format("{}@{}", Name, Version.to_string());
-    auto& platform = Amethyst::GetPlatform();
-    if (!fs::exists(platform.GetAmethystFolder() / "mods" / versionedName)) {
-        return std::format("{}@0.0.0-dev", Name);
-    }
-    return versionedName;
+    // The folder name is what the launcher identifies a mod by, and it can differ from mod.json's version
+    if (!Directory.empty())
+        return Directory.filename().string();
+    return std::format("{}@{}", Name, Version.to_string());
 }
 
 bool ModInfo::Equals(const ModInfo& other, bool compareVersions) const

@@ -7,6 +7,9 @@
 #include "debug/AmethystDebugging.hpp"
 #include "loader/RuntimeContext.hpp"
 
+#include <unordered_set>
+#include <vector>
+
 AmethystRuntime* AmethystRuntime::instance = nullptr;
 extern HMODULE hModule;
 extern HANDLE gMcThreadHandle;
@@ -23,11 +26,12 @@ void AmethystRuntime::Start()
     Assert(!mRunning, "AmethystRuntime::Start called whilst running!");
     auto& platform = Amethyst::GetPlatform();
 
-    // read the config file and load in any mods
-    ReadLauncherConfig();
+    // The launcher decided what this launch is, everything below is driven by it
+    mSession = Amethyst::SessionManifest::FindForCurrentProcess();
+    Assert(mSession.runtime.has_value(), "Profile '{}' has no runtime, yet the runtime was injected", mSession.profileName);
 
     // Prompt a debugger if they are in developer mode
-    if (mLauncherConfig.promptDebugger)
+    if (mSession.developerMode)
         platform.AttachDebugger();
 
     Amethyst::GetContext().Start();
@@ -37,32 +41,6 @@ void AmethystRuntime::Start()
     mRunning = true;
     RunMods();
 } 
-
-void AmethystRuntime::ReadLauncherConfig()
-{
-    // Ensure it exists
-    auto& platform = Amethyst::GetPlatform();
-    fs::path launcherConfigPath = platform.GetAmethystFolder() / "launcher_config.json";
-
-    if (!fs::exists(launcherConfigPath)) {
-        throw std::exception("launcher_config.json could not be found!");
-    }
-
-    // Try to read it to a std::string
-    std::ifstream configFile(launcherConfigPath);
-    if (!configFile.is_open()) {
-        throw std::exception("Failed to open launcher_config.json");
-    }
-
-    // Read into a std::string
-    std::stringstream buffer;
-    buffer << configFile.rdbuf();
-    configFile.close();
-    std::string fileContents = buffer.str();
-
-    mLauncherConfig = Config(fileContents);
-    mLauncherConfig.mods.insert(mLauncherConfig.mods.begin(), mLauncherConfig.injectedMod);
-}
 
 void AmethystRuntime::LoadModDlls()
 {
@@ -80,15 +58,21 @@ void AmethystRuntime::LoadModDlls()
     }
 	#endif
 
-    // Scan the mods directory for mod.json files and load them into the repository
-	auto& platform = Amethyst::GetPlatform();
-    repository.ScanDirectory(platform.GetAmethystFolder() / "mods", true);
+    // The session names every mod of the profile, the runtime itself included
+    std::vector<fs::path> directories;
+    std::unordered_set<std::string> ids;
 
-    // Add itself as a mod to the repository to resolve dependencies against
-    auto info = Amethyst::Mod::GetInfo(mLauncherConfig.injectedMod);
-    
-    repository.AddMod(repository.GetMods().cbegin(), info);
-    modGraph.SortAndValidate(repository, mLauncherConfig.mods);
+    for (const auto& mod : mSession.mods) {
+        directories.push_back(mod.directory);
+        ids.insert(mod.id);
+    }
+
+    repository.LoadFromDirectories(directories);
+    for (const auto& error : repository.GetErrors()) {
+        Log::Error("{}", error.toString());
+    }
+
+    modGraph.SortAndValidate(repository, ids);
 
     for (const auto& modInfo : modGraph.GetMods()) {
         if (modInfo->UUID == "00000000-0000-0000-0000-000000000000") {

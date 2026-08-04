@@ -2,30 +2,22 @@
 #include "amethyst/Log.hpp"
 
 namespace Amethyst {
-void ModRepository::ScanDirectory(const fs::path& directory, bool skipRuntimes)
+void ModRepository::LoadFromDirectories(const std::vector<fs::path>& directories)
 {
     Clear();
-	if (!fs::exists(directory) || !fs::is_directory(directory)) {
-        throw std::invalid_argument("Provided path is not a valid directory: " + directory.generic_string());
-	}
-	for (const auto& entry : fs::recursive_directory_iterator(directory)) {
-        if (entry.is_directory() || entry.path().filename() != "mod.json")
-            continue;
-        auto result = ModInfo::FromFile(entry.path());
+    for (const fs::path& directory : directories) {
+        auto result = ModInfo::FromFile(directory / "mod.json");
         if (!result) {
             mErrors.push_back(result.error());
             continue;
         }
         auto& modInfo = *result;
-        if (modInfo.IsRuntime && skipRuntimes) {
-            continue;
-        }
         if (mMods.contains(modInfo.UUID)) {
-            Log::Warning("Mod with UUID '{}' already exists in repository, skipping duplicate from '{}'", modInfo.UUID, entry.path().generic_string());
+            Log::Warning("Mod with UUID '{}' already exists in repository, skipping duplicate from '{}'", modInfo.UUID, directory.generic_string());
             continue;
         }
-        mMods.emplace(modInfo.UUID, std::make_shared<const ModInfo>(modInfo));
-	}
+        mMods.emplace(modInfo.UUID, std::make_shared<const ModInfo>(std::move(modInfo)));
+    }
 }
 
 void ModRepository::Clear() {

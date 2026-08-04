@@ -6,8 +6,8 @@
 #include <format>
 
 #include "amethyst/Log.hpp"
-#include "amethyst/Config.hpp"
 #include "amethyst/runtime/AmethystContext.hpp"
+#include "amethyst/runtime/SessionManifest.hpp"
 
 #include "loader/RuntimeContext.hpp"
 #include <platforms/WindowsClientPlatform.hpp>
@@ -48,12 +48,11 @@ public:
     void Shutdown();
 
 private:
-    void ReadLauncherConfig();
     void LoadModDlls();
     void RunMods();
 
 public:
-    Config mLauncherConfig;
+    Amethyst::SessionManifest mSession;
     RuntimeContext mAmethystContext;
     bool mRunning = false;
 };

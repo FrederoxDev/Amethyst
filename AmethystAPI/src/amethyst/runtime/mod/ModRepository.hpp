@@ -20,7 +20,7 @@ public:
     ModRepository(ModRepository&&) = delete;
     ModRepository& operator=(ModRepository&&) = delete;
 
-    void ScanDirectory(const fs::path& directory, bool skipRuntimes = true);
+    void LoadFromDirectories(const std::vector<fs::path>& directories);
     void Clear();
 
     const ModInfoMap& GetMods() const;

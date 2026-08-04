@@ -34,10 +34,10 @@ namespace Amethyst::ClientHooks::ResourceHooks {
 	{
 		_RepositorySources_initializePackSource(self, factory);
 
-		auto& platform = Amethyst::GetPlatform();
 		auto& packManager = *Amethyst::GetContext().mPackManager;
 		for (const auto& [modKey, packs] : packManager.GetPacks()) {
-			std::filesystem::path modBase = platform.GetAmethystFolder() / "Mods" / modKey;
+			if (packs.empty()) continue;
+			std::filesystem::path modBase = packs.begin()->second.owner->mInfo->Directory;
 			bool hasRP = false, hasBP = false;
 			for (const auto& [_, pack] : packs) {
 				if (pack.type == PackType::Resources) hasRP = true;

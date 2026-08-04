@@ -29,10 +29,9 @@ const std::unordered_map<std::string, std::unordered_map<std::string, Pack>>& Pa
 
 void PackManager::RegisterNewPack(const Mod* owner, const std::string& path, PackType type, PackPriority priority)
 {
-    auto& platform = Amethyst::GetPlatform();
     std::string key = owner->mInfo->GetVersionedName();
 
-    fs::path packBasePath = platform.GetAmethystFolder() / "Mods" / key
+    fs::path packBasePath = owner->mInfo->Directory
         / (type == PackType::Resources ? "resource_packs" : "behavior_packs");
     fs::path manifestPath = packBasePath / path / "manifest.json";
 
