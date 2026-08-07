@@ -5,9 +5,14 @@
 #include <amethyst/Log.hpp>
 
 #include <RenderDragon/include/RenderDragon/Materials/CompiledMaterialManager.hpp>
+#include <RenderDragon/include/RenderDragon/Materials/CompiledMaterialDefinition.hpp>
 #include <RenderDragon/include/RenderDragon/Materials/Definition/MaterialShared.hpp>
+#include <RenderDragon/src/BgfxImpl/PlatformHelpers.hpp>
+#include <RenderDragon/src/Materials/CompiledMaterialDefinition.hpp>
+#include <Core/Memory/MemoryStreamBuffer.hpp>
 
 #include <Json.hpp>
+#include <cstddef>
 #include <filesystem>
 #include <fstream>
 #include <mutex>
@@ -92,12 +97,32 @@ std::shared_ptr<CompiledMaterialDefinition> CompiledMaterialManager_getMaterial(
 
 	std::function<bool(const std::string&, std::string&)> loadFn =
 		[&blob](const std::string&, std::string& out) { out = blob; return true; };
-	CompiledMaterialResource cmr;
-	if (!self->_loadCompiledMaterialResource(materialName, cmr, phrase, loadFn)) {
-		Log::Warning("[Amethyst::MaterialRegistry] _loadCompiledMaterialResource failed for {}", materialName);
+	std::string materialBytes;
+	if (!loadFn(materialName, materialBytes)) {
+		Log::Warning("[Amethyst::MaterialRegistry] load callback failed for {}", materialName);
 		return {};
 	}
-	return cmr.mMaterial;
+
+	auto material = std::make_shared<CompiledMaterialDefinition>();
+	alignas(MemoryStream) std::byte streamStorage[sizeof(MemoryStream)];
+	auto* stream = MemoryStream::$constructor(
+		reinterpret_cast<MemoryStream*>(streamStorage),
+		materialBytes.data(),
+		materialBytes.size());
+	std::variant<
+		definition::EncryptionVariants::None,
+		definition::EncryptionVariants::SimplePassphrase,
+		definition::EncryptionVariants::KeyPair> encryption{std::move(phrase)};
+	if (!materialtoolchain::ReadCompiledMaterialFromDisk(
+		*material,
+		*stream,
+		encryption,
+		true,
+		dragon::bgfximpl::getShaderCodePlatform())) {
+		Log::Warning("[Amethyst::MaterialRegistry] failed to parse compiled material {}", materialName);
+		return {};
+	}
+	return material;
 }
 
 void Initialize()

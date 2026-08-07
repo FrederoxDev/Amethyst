@@ -53,7 +53,7 @@ namespace Amethyst::SharedHooks::NetworkingHooks {
 	void Initialize()
 	{
 		auto& hooks = Amethyst::GetHookManager();
-		VHOOK(ServerNetworkHandler, allowIncomingPacketId, ServerNetworkHandler::$vtable_for_ServerNetworkHandler$NetEventCallback);
+		HOOK(ServerNetworkHandler, allowIncomingPacketId);
 		HOOK(MinecraftPackets, createPacket);
 	}
 }

@@ -353,7 +353,7 @@ public:
     /// @note This function will use the default calling convention set by your compiler.
     template <typename RetT = void, typename... Args> RetT call(Args... args) {
         std::scoped_lock lock{m_mutex};
-        return m_trampoline ? original<RetT (*)(Args...)>()(args...) : RetT();
+        return m_trampoline ? original<RetT (*)(Args...)>()(std::forward<Args>(args)...) : RetT();
     }
 
     /// @brief Calls the original function.
@@ -364,7 +364,7 @@ public:
     /// @note This function will use the __cdecl calling convention.
     template <typename RetT = void, typename... Args> RetT ccall(Args... args) {
         std::scoped_lock lock{m_mutex};
-        return m_trampoline ? original<RetT(__cdecl*)(Args...)>()(args...) : RetT();
+        return m_trampoline ? original<RetT(__cdecl*)(Args...)>()(std::forward<Args>(args)...) : RetT();
     }
 
     /// @brief Calls the original function.
@@ -375,7 +375,7 @@ public:
     /// @note This function will use the __thiscall calling convention.
     template <typename RetT = void, typename... Args> RetT thiscall(Args... args) {
         std::scoped_lock lock{m_mutex};
-        return m_trampoline ? original<RetT(__thiscall*)(Args...)>()(args...) : RetT();
+        return m_trampoline ? original<RetT(__thiscall*)(Args...)>()(std::forward<Args>(args)...) : RetT();
     }
 
     /// @brief Calls the original function.
@@ -386,7 +386,7 @@ public:
     /// @note This function will use the __stdcall calling convention.
     template <typename RetT = void, typename... Args> RetT stdcall(Args... args) {
         std::scoped_lock lock{m_mutex};
-        return m_trampoline ? original<RetT(__stdcall*)(Args...)>()(args...) : RetT();
+        return m_trampoline ? original<RetT(__stdcall*)(Args...)>()(std::forward<Args>(args)...) : RetT();
     }
 
     /// @brief Calls the original function.
@@ -397,7 +397,7 @@ public:
     /// @note This function will use the __fastcall calling convention.
     template <typename RetT = void, typename... Args> RetT fastcall(Args... args) {
         std::scoped_lock lock{m_mutex};
-        return m_trampoline ? original<RetT(__fastcall*)(Args...)>()(args...) : RetT();
+        return m_trampoline ? original<RetT(__fastcall*)(Args...)>()(std::forward<Args>(args)...) : RetT();
     }
 
     /// @brief Calls the original function.
@@ -409,7 +409,7 @@ public:
     /// @note This function is unsafe because it doesn't lock the mutex. Only use this if you don't care about unhook
     /// safety or are worried about the performance cost of locking the mutex.
     template <typename RetT = void, typename... Args> RetT unsafe_call(Args... args) {
-        return original<RetT (*)(Args...)>()(args...);
+        return original<RetT (*)(Args...)>()(std::forward<Args>(args)...);
     }
 
     /// @brief Calls the original function.
@@ -421,7 +421,7 @@ public:
     /// @note This function is unsafe because it doesn't lock the mutex. Only use this if you don't care about unhook
     /// safety or are worried about the performance cost of locking the mutex.
     template <typename RetT = void, typename... Args> RetT unsafe_ccall(Args... args) {
-        return original<RetT(__cdecl*)(Args...)>()(args...);
+        return original<RetT(__cdecl*)(Args...)>()(std::forward<Args>(args)...);
     }
 
     /// @brief Calls the original function.
@@ -433,7 +433,7 @@ public:
     /// @note This function is unsafe because it doesn't lock the mutex. Only use this if you don't care about unhook
     /// safety or are worried about the performance cost of locking the mutex.
     template <typename RetT = void, typename... Args> RetT unsafe_thiscall(Args... args) {
-        return original<RetT(__thiscall*)(Args...)>()(args...);
+        return original<RetT(__thiscall*)(Args...)>()(std::forward<Args>(args)...);
     }
 
     /// @brief Calls the original function.
@@ -445,7 +445,7 @@ public:
     /// @note This function is unsafe because it doesn't lock the mutex. Only use this if you don't care about unhook
     /// safety or are worried about the performance cost of locking the mutex.
     template <typename RetT = void, typename... Args> RetT unsafe_stdcall(Args... args) {
-        return original<RetT(__stdcall*)(Args...)>()(args...);
+        return original<RetT(__stdcall*)(Args...)>()(std::forward<Args>(args)...);
     }
 
     /// @brief Calls the original function.
@@ -457,7 +457,7 @@ public:
     /// @note This function is unsafe because it doesn't lock the mutex. Only use this if you don't care about unhook
     /// safety or are worried about the performance cost of locking the mutex.
     template <typename RetT = void, typename... Args> RetT unsafe_fastcall(Args... args) {
-        return original<RetT(__fastcall*)(Args...)>()(args...);
+        return original<RetT(__fastcall*)(Args...)>()(std::forward<Args>(args)...);
     }
 
 private:
@@ -721,7 +721,7 @@ public:
     /// @return The return value of the method.
     /// @note This will call the original method with the default calling convention.
     template <typename RetT = void, typename... Args> RetT call(Args... args) {
-        return original<RetT (*)(Args...)>()(args...);
+        return original<RetT (*)(Args...)>()(std::forward<Args>(args)...);
     }
 
     /// @brief Calls the original method with the __cdecl calling convention.
@@ -730,7 +730,7 @@ public:
     /// @param args The arguments to pass to the method.
     /// @return The return value of the method.
     template <typename RetT = void, typename... Args> RetT ccall(Args... args) {
-        return original<RetT(__cdecl*)(Args...)>()(args...);
+        return original<RetT(__cdecl*)(Args...)>()(std::forward<Args>(args)...);
     }
 
     /// @brief Calls the original method with the __thiscall calling convention.
@@ -739,7 +739,7 @@ public:
     /// @param args The arguments to pass to the method.
     /// @return The return value of the method.
     template <typename RetT = void, typename... Args> RetT thiscall(Args... args) {
-        return original<RetT(__thiscall*)(Args...)>()(args...);
+        return original<RetT(__thiscall*)(Args...)>()(std::forward<Args>(args)...);
     }
 
     /// @brief Calls the original method with the __stdcall calling convention.
@@ -748,7 +748,7 @@ public:
     /// @param args The arguments to pass to the method.
     /// @return The return value of the method.
     template <typename RetT = void, typename... Args> RetT stdcall(Args... args) {
-        return original<RetT(__stdcall*)(Args...)>()(args...);
+        return original<RetT(__stdcall*)(Args...)>()(std::forward<Args>(args)...);
     }
 
     /// @brief Calls the original method with the __fastcall calling convention.
@@ -757,7 +757,7 @@ public:
     /// @param args The arguments to pass to the method.
     /// @return The return value of the method.
     template <typename RetT = void, typename... Args> RetT fastcall(Args... args) {
-        return original<RetT(__fastcall*)(Args...)>()(args...);
+        return original<RetT(__fastcall*)(Args...)>()(std::forward<Args>(args)...);
     }
 
 private:

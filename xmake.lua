@@ -2,7 +2,7 @@ set_toolchains("clang-cl")
 
 -- Mod Options
 local mod_name = "Amethyst-Runtime" -- Replace with the name of your mod
-local targetMajor, targetMinor, targetPatch = 1, 21, 3 -- 1.21.0.3 (Other versions not supported by Amethyst)
+local targetMajor, targetMinor, targetPatch = 1, 26, 40
 local config_options = {} -- Any additional options, see: https://github.com/AmethystAPI/Amethyst-Template/blob/main/README.md
 
 -- Anything below here should not need to be changed

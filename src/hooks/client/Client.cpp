@@ -47,8 +47,8 @@ namespace Amethyst::ClientHooks {
 	void Initialize() {
 		auto& hooks = Amethyst::GetHookManager();
 		HOOK(ClientInstance, $constructor);
-		VHOOK(ClientInstance, onStartJoinGame, ClientInstance::$vtable_for_ClientInstance$IClientInstance);
-		VHOOK(ClientInstance, requestLeaveGame, ClientInstance::$vtable_for_ClientInstance$IClientInstance);
+		HOOK(ClientInstance, onStartJoinGame);
+		HOOK(ClientInstance, requestLeaveGame);
 		// InputHooks::Initialize();
 		RenderingHooks::Initialize();
 		ResourceHooks::Initialize();

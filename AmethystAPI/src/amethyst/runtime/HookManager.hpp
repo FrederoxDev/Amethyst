@@ -36,6 +36,18 @@
         &className##_##functionName>(vtable, _##className##_##functionName);                                                           \
 }
 
+#define HOOK_DIRECT_VIRTUAL(className, functionName)                                                                                   \
+{                                                                                                                                       \
+    hooks.CreateDirectHookAt<                                                                                                          \
+        ::Amethyst::detail::PickOriginal(&className::functionName,                                                                     \
+            static_cast<decltype(&className##_##functionName)>(nullptr)),                                                              \
+        &className##_##functionName>(                                                                                                  \
+            _##className##_##functionName,                                                                                             \
+            std::bit_cast<uintptr_t>(::Amethyst::detail::PickOriginal(                                                                 \
+                &className::$direct_##functionName,                                                                                    \
+                static_cast<decltype(&className##_##functionName)>(nullptr))));                                                        \
+}
+
 /// For overloaded member fns where you have MULTIPLE detours sharing one MC name.
 /// `detourSym` is the unique detour symbol; trampoline must be named `_<detourSym>`.
 /// Example: HOOK_NAMED(LoopbackPacketSender, sendToClient, LoopbackPacketSender_sendToClientUEIC);
@@ -53,6 +65,18 @@
         ::Amethyst::detail::PickOriginal(&className::functionName,                                                                     \
             static_cast<decltype(&detourSym)>(nullptr)),                                                                               \
         &detourSym>(vtable, _##detourSym);                                                                                             \
+}
+
+#define HOOK_DIRECT_VIRTUAL_NAMED(className, functionName, detourSym)                                                                  \
+{                                                                                                                                       \
+    hooks.CreateDirectHookAt<                                                                                                          \
+        ::Amethyst::detail::PickOriginal(&className::functionName,                                                                     \
+            static_cast<decltype(&detourSym)>(nullptr)),                                                                               \
+        &detourSym>(                                                                                                                    \
+            _##detourSym,                                                                                                              \
+            std::bit_cast<uintptr_t>(::Amethyst::detail::PickOriginal(                                                                 \
+                &className::$direct_##functionName,                                                                                    \
+                static_cast<decltype(&detourSym)>(nullptr))));                                                                         \
 }
 
 #define VSWAP(className, functionName, vtable)                                                                                          \
@@ -231,7 +255,6 @@ namespace Amethyst {
         template <auto OriginalFn, auto UserDetour>
         void CreateDirectHook(SafetyHookInline& trampoline)
         {
-            constexpr std::string_view name = function_id::name<OriginalFn>();
             using FnType = decltype(OriginalFn);
             uintptr_t original_addr = 0;
 
@@ -244,6 +267,13 @@ namespace Amethyst {
                 original_addr = std::bit_cast<uintptr_t>(OriginalFn);
             }
 
+            CreateDirectHookAt<OriginalFn, UserDetour>(trampoline, original_addr);
+        }
+
+        template <auto OriginalFn, auto UserDetour>
+        void CreateDirectHookAt(SafetyHookInline& trampoline, uintptr_t original_addr)
+        {
+            constexpr std::string_view name = function_id::name<OriginalFn>();
             if (original_addr == 0) {
                 Log::Error("[HOOK] Failed to resolve address for '{}' (got nullptr). Are imports resolved?", name);
                 return;

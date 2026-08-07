@@ -58,7 +58,7 @@ namespace Amethyst::ClientHooks::ResourceHooks {
 
 	void Initialize() {
 		auto& hooks = Amethyst::GetHookManager();
-		VHOOK(VanillaGameModuleClient, initializeResourceStack, VanillaGameModuleClient::$vtable_for_VanillaGameModuleClient);
+		HOOK(VanillaGameModuleClient, initializeResourceStack);
 		HOOK(RepositorySources, initializePackSource);
 	}
 }
