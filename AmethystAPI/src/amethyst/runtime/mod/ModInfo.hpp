@@ -11,6 +11,12 @@
 
 namespace fs = std::filesystem;
 namespace Amethyst {
+// One game build a mod was made for: the version people know it by, and the CodeView GUID that identifies the link
+struct GameBuild {
+    std::string Version;
+    std::string Guid;
+};
+
 class ModInfo {
 public:
     std::string UUID;
@@ -21,6 +27,8 @@ public:
     Version Version;
     std::vector<std::string> Authors;
     std::vector<ModDependency> Dependencies;
+    // Game builds this mod may run against. Empty means the mod never asked for a check.
+    std::vector<GameBuild> GameBuilds;
     bool IsRuntime;
     fs::path Directory;
     std::string LibraryName;
@@ -35,6 +43,7 @@ public:
         const Amethyst::Version& version,
         const std::vector<std::string>& authors,
         const std::vector<ModDependency>& dependencies,
+        const std::vector<GameBuild>& gameBuilds,
         bool isRuntime,
         const fs::path& directory,
         const std::string& libraryName
@@ -48,6 +57,9 @@ public:
     std::string GetVersionedName() const;
     bool Equals(const ModInfo& other, bool compareVersions = true) const;
     bool IsSameMod(const ModInfo& other) const;
+    bool SupportsGameBuild(const std::string& guid) const;
+
+    static std::string NormalizeGameBuild(const std::string& guid);
 
     bool operator==(const ModInfo& other) const;
     bool operator!=(const ModInfo& other) const;

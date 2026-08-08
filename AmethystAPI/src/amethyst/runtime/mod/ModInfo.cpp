@@ -1,6 +1,8 @@
 
 #include "Json.hpp"
 #include "amethyst/Log.hpp"
+#include <algorithm>
+#include <cctype>
 #include <fstream>
 #include "ModInfo.hpp"
 #include "amethyst/runtime/ModContext.hpp"
@@ -15,9 +17,10 @@ ModInfo::ModInfo(
     const Amethyst::Version& version,
     const std::vector<std::string>& authors,
     const std::vector<ModDependency>& dependencies,
+    const std::vector<GameBuild>& gameBuilds,
     bool isRuntime,
     const fs::path& directory,
-    const std::string& libraryName) : 
+    const std::string& libraryName) :
     UUID(uuid),
     Namespace(modNamespace),
     Name(name),
@@ -26,6 +29,7 @@ ModInfo::ModInfo(
     Version(version),
     Authors(authors),
     Dependencies(dependencies),
+    GameBuilds(gameBuilds),
     IsRuntime(isRuntime),
     Directory(directory),
     LibraryName(libraryName)
@@ -63,6 +67,30 @@ bool ModInfo::operator<(const ModInfo& other) const
 inline bool ModInfo::IsSameMod(const ModInfo& other) const
 {
     return Equals(other, false);
+}
+
+std::string ModInfo::NormalizeGameBuild(const std::string& guid)
+{
+    std::string normalized;
+    normalized.reserve(guid.size());
+
+    for (unsigned char c : guid) {
+        // People paste GUIDs in registry form, so braces and padding are not part of the identity
+        if (c == '{' || c == '}' || std::isspace(c)) continue;
+        normalized.push_back(static_cast<char>(std::toupper(c)));
+    }
+
+    return normalized;
+}
+
+bool ModInfo::SupportsGameBuild(const std::string& guid) const
+{
+    if (GameBuilds.empty()) return true;
+
+    std::string normalized = NormalizeGameBuild(guid);
+    return std::any_of(GameBuilds.begin(), GameBuilds.end(), [&](const GameBuild& gameBuild) {
+        return gameBuild.Guid == normalized;
+    });
 }
 
 std::expected<ModInfo, ModError> ModInfo::FromFile(const fs::path& jsonFile)
@@ -208,10 +236,40 @@ std::expected<ModInfo, ModError> ModInfo::FromFile(const fs::path& jsonFile)
         }
     }
 
+    auto& platform = Amethyst::GetPlatform();
+    std::vector<GameBuild> gameBuilds;
+
+    if (meta.contains("platforms") && meta["platforms"].is_object()) {
+        const nlohmann::json& platforms = meta["platforms"];
+        auto entry = platforms.find(platform.GetPlatformFolderName());
+
+        if (entry != platforms.end() && entry->is_object() && entry->contains("game_builds") && (*entry)["game_builds"].is_array()) {
+            for (const auto& gameBuild : (*entry)["game_builds"]) {
+                // A malformed entry must not silently drop the guard, or the mod loads against a build it was never made for
+                if (!gameBuild.is_object() || !gameBuild.contains("version") || !gameBuild["version"].is_string()
+                    || !gameBuild.contains("guid") || !gameBuild["guid"].is_string()) {
+                    return std::unexpected(ModError{
+                        ModErrorStep::Collecting,
+                        ModErrorType::ParseError,
+                        uuid,
+                        "Invalid mod info JSON: every entry of 'game_builds' needs a 'version' and a 'guid' string",
+                        {
+                            { "{path}", jsonFile.generic_string() }
+                        }
+                    });
+                }
+
+                gameBuilds.push_back(GameBuild{
+                    gameBuild["version"].get<std::string>(),
+                    NormalizeGameBuild(gameBuild["guid"].get<std::string>())
+                });
+            }
+        }
+    }
+
     std::string versionedName = std::format("{}@{}", name, version.to_string());
     fs::path directory = jsonFile.parent_path();
     std::string libraryName = std::format("{}.dll", name);
-	auto& platform = Amethyst::GetPlatform();
 
     if (!fs::exists(directory / platform.GetPlatformFolderName() / libraryName)) {
         return std::unexpected(ModError{
@@ -226,6 +284,6 @@ std::expected<ModInfo, ModError> ModInfo::FromFile(const fs::path& jsonFile)
         });
     }
 
-    return ModInfo(uuid.value(), modNamespace, name, loggingName, friendlyName, version, authors, dependencies, isRuntime, directory, libraryName);
+    return ModInfo(uuid.value(), modNamespace, name, loggingName, friendlyName, version, authors, dependencies, gameBuilds, isRuntime, directory, libraryName);
 }
 } // namespace Amethyst

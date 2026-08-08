@@ -18,6 +18,7 @@ enum class ModErrorType {
     CircularDependency,
     WrongDependencyVersion,
     MissingDependency,
+    IncompatibleGameBuild,
     UnhandledException
 };
 
@@ -30,13 +31,12 @@ struct ModError {
 
     std::string getFormattedMessage() const {
         std::string message = Message;
-        size_t off = 0;
         for (const auto& [key, value] : Data) {
-            auto pos = message.find(key, off);
-            if (pos == std::string::npos)
-                continue;
-            off = pos + key.length();
-            message.replace(pos, key.length(), value);
+            size_t pos = 0;
+            while ((pos = message.find(key, pos)) != std::string::npos) {
+                message.replace(pos, key.length(), value);
+                pos += value.length();
+            }
         }
         return message;
     }
@@ -76,7 +76,10 @@ struct ModError {
                 typeStr = "WrongDependencyVersion"; 
                 break;
             case ModErrorType::MissingDependency:
-                typeStr = "MissingDependency"; 
+                typeStr = "MissingDependency";
+                break;
+            case ModErrorType::IncompatibleGameBuild:
+                typeStr = "IncompatibleGameBuild";
                 break;
             default: 
                 typeStr = "N/A"; 

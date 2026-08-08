@@ -1,4 +1,4 @@
-function build_mod(mod_name, targetMajor, targetMinor, targetPatch, automated_build, config)
+function build_mod(mod_name, automated_build, config)
     config = config or {}
 
     add_rules("plugin.vsxmake.autoupdate")
@@ -109,7 +109,16 @@ function build_mod(mod_name, targetMajor, targetMinor, targetPatch, automated_bu
 
                 local is_first_install = should_reinstall and installed_version == "None"
 
-                if should_reinstall and not is_first_install and not automated_build then
+                -- Only ask when a terminal is there to answer. A non-interactive shell never returns from
+                -- io.read(), which stalls the build with no output, so take the update instead of asking.
+                local interactive = false
+                try
+                {
+                    function () interactive = io.stdin:isatty() end,
+                    catch { function () interactive = false end }
+                }
+
+                if should_reinstall and not is_first_install and not automated_build and interactive then
                     io.write("Runtime-Importer is outdated (installed: " .. installed_version .. ", latest: " .. latest_tag .. "), install? (y/n): ")
                     io.flush()
                     local answer = (io.read() or ""):lower()
@@ -232,9 +241,6 @@ function build_mod(mod_name, targetMajor, targetMinor, targetPatch, automated_bu
         end
 
         add_defines(
-            string.format('MOD_TARGET_VERSION_MAJOR=%d', targetMajor),
-            string.format('MOD_TARGET_VERSION_MINOR=%d', targetMinor),
-            string.format('MOD_TARGET_VERSION_PATCH=%d', targetPatch),
             'ENTT_PACKED_PAGE=128',
             'ENTT_NO_MIXIN',
             'AMETHYST_EXPORTS'

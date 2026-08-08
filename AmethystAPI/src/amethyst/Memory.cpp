@@ -1,5 +1,7 @@
 #include "amethyst/Memory.hpp"
 #include <libhat/Scanner.hpp>
+#include <cstring>
+#include <format>
 #include <mutex>
 #include <thread>
 #include <optional>
@@ -20,6 +22,59 @@ unsigned long GetMinecraftSize()
 uintptr_t SlideAddress(uintptr_t offset)
 {
     return GetMinecraftBaseAddress() + offset;
+}
+
+namespace {
+#pragma pack(push, 1)
+struct CodeViewRSDS {
+    char Signature[4];
+    GUID Guid;
+    uint32_t Age;
+};
+#pragma pack(pop)
+
+std::string FormatGuid(const GUID& guid)
+{
+    return std::format("{:08X}-{:04X}-{:04X}-{:02X}{:02X}-{:02X}{:02X}{:02X}{:02X}{:02X}{:02X}",
+        guid.Data1, guid.Data2, guid.Data3,
+        guid.Data4[0], guid.Data4[1],
+        guid.Data4[2], guid.Data4[3], guid.Data4[4], guid.Data4[5], guid.Data4[6], guid.Data4[7]);
+}
+
+std::optional<MinecraftBuildId> ReadBuildId(uintptr_t base)
+{
+    auto* dosHeader = reinterpret_cast<IMAGE_DOS_HEADER*>(base);
+    if (dosHeader->e_magic != IMAGE_DOS_SIGNATURE) return std::nullopt;
+
+    auto* ntHeaders = reinterpret_cast<IMAGE_NT_HEADERS64*>(base + dosHeader->e_lfanew);
+    if (ntHeaders->Signature != IMAGE_NT_SIGNATURE) return std::nullopt;
+
+    const IMAGE_DATA_DIRECTORY& directory = ntHeaders->OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_DEBUG];
+    if (directory.VirtualAddress == 0) return std::nullopt;
+
+    auto* entries = reinterpret_cast<IMAGE_DEBUG_DIRECTORY*>(base + directory.VirtualAddress);
+    size_t entryCount = directory.Size / sizeof(IMAGE_DEBUG_DIRECTORY);
+
+    for (size_t i = 0; i < entryCount; i++) {
+        const IMAGE_DEBUG_DIRECTORY& entry = entries[i];
+        if (entry.Type != IMAGE_DEBUG_TYPE_CODEVIEW) continue;
+        if (entry.AddressOfRawData == 0 || entry.SizeOfData < sizeof(CodeViewRSDS)) continue;
+
+        // The image is mapped, so the record sits at its RVA. PointerToRawData is a file offset and would read unrelated bytes here.
+        auto* record = reinterpret_cast<const CodeViewRSDS*>(base + entry.AddressOfRawData);
+        if (memcmp(record->Signature, "RSDS", sizeof(record->Signature)) != 0) continue;
+
+        return MinecraftBuildId{ FormatGuid(record->Guid), record->Age };
+    }
+
+    return std::nullopt;
+}
+} // namespace
+
+std::optional<MinecraftBuildId> GetMinecraftBuildId()
+{
+    static const std::optional<MinecraftBuildId> buildId = ReadBuildId(GetMinecraftBaseAddress());
+    return buildId;
 }
 
 std::optional<uintptr_t> SigScanSafe(std::string_view signature)

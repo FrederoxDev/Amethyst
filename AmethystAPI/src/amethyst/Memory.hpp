@@ -3,11 +3,20 @@
 #include "amethyst/Log.hpp"
 #include <chrono>
 #include <cstdint>
+#include <optional>
 #include <psapi.h>
 #include <string>
 #include <vector>
 #include <string_view>
 #include <Windows.h>
+
+/*
+Identifies one exact link of the game binary, taken from the CodeView record the linker embeds in the executable
+*/
+struct MinecraftBuildId {
+    std::string Guid;
+    uint32_t Age;
+};
 
 /*
 Returns the position where Minecraft has been loaded into memory
@@ -18,6 +27,14 @@ uintptr_t GetMinecraftBaseAddress();
 Returns the size of the game (in bytes) while loaded in memory
 */
 unsigned long GetMinecraftSize();
+
+/*
+Returns the build identity of the loaded game, or nothing when the executable carries no CodeView record.
+
+Version strings do not identify a build: two different links can share one version, and a lower version number
+can be the newer link. The CodeView GUID changes with every link, so it is what hardcoded addresses are valid against.
+*/
+std::optional<MinecraftBuildId> GetMinecraftBuildId();
 
 /*
 Offsets an address from the game binary, with the position the game has been loaded into memory at
