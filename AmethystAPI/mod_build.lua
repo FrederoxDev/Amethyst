@@ -32,7 +32,8 @@ function build_mod(mod_name, automated_build, config)
     amethystApiPath = amethystSrc and path.join(amethystSrc, "AmethystAPI") or nil
 
     if automated_build then
-        modFolder = path.join(os.projectdir(), "dist")
+        -- Raw shipping layout: the archive is written beside it as dist/<name>@<version>.amethyst.
+        modFolder = path.join(os.projectdir(), "dist", "unpackaged")
     else
         set_symbols("debug")
 
@@ -170,7 +171,12 @@ function build_mod(mod_name, automated_build, config)
         set_languages("c++23")
         set_kind("shared")
         set_toolchains("clang-cl")
-        if not automated_build then
+        if automated_build then
+            -- Omitting debug symbols is not the same as suppressing them: without these the
+            -- linker still emits a CodeView record naming the mod's PDB.
+            set_symbols("none")
+            add_ldflags("/DEBUG:NONE", { force = true })
+        else
             set_targetdir(binary_dir)
         end
         add_deps("AmethystAPI", "libhat", "MC")
@@ -248,6 +254,7 @@ function build_mod(mod_name, automated_build, config)
 
         before_build(function (target)
             local importer_dir = path.join(os.curdir(), ".importer");
+
             local generated_dir = path.join(importer_dir)
             local input_dir = path.join(amethystApiPath, "src"):gsub("\\", "/")
             local include_dir = path.join(amethystApiPath, "include"):gsub("\\", "/")
@@ -363,7 +370,11 @@ function build_mod(mod_name, automated_build, config)
             local mod_json = io.readfile(src_json)
 
             if not automated_build then
-                mod_json = mod_json:gsub('("version"%s*:%s*")([^"]*)(")', '%1' .. "0.0.0-dev" .. '%3')
+                -- Rewrite the field, not every "version" in the file: game_builds entries carry one too
+                import("core.base.json")
+                local manifest = json.decode(mod_json)
+                manifest.meta.version = "0.0.0-dev"
+                mod_json = json.encode(manifest)
             end
 
             local dst_json = path.join(modFolder, "mod.json")
@@ -426,11 +437,41 @@ function build_mod(mod_name, automated_build, config)
                     return nil
                 end
 
-                if contains_literal(data, "RSDS") then
-                    raise("Obfuscation audit FAILED: shipped DLL contains 'RSDS' (CodeView PDB reference). Check /DEBUG linker flag and tweaker debug-directory zeroing.")
+                -- Decode the PE debug directory rather than scanning for "RSDS": those four
+                -- bytes occur naturally in .text as instruction encodings, and a scan flags
+                -- a clean binary. Only a CODEVIEW (type 2) entry is a real PDB reference.
+                local function u16(off) return data:byte(off + 1) + data:byte(off + 2) * 256 end
+                local function u32(off)
+                    return data:byte(off + 1) + data:byte(off + 2) * 256
+                        + data:byte(off + 3) * 65536 + data:byte(off + 4) * 16777216
                 end
-                if data:find("%.pdb") then
-                    raise("Obfuscation audit FAILED: shipped DLL contains '.pdb' substring (likely embedded PDB path).")
+                local peOff = u32(0x3C)
+                local optOff = peOff + 24
+                local dataDirOff = (u16(optOff) == 0x20B) and (optOff + 112) or (optOff + 96)
+                local debugRva = u32(dataDirOff + 6 * 8)
+                local debugSize = u32(dataDirOff + 6 * 8 + 4)
+                if debugRva ~= 0 and debugSize >= 28 then
+                    local sectionOff = peOff + 24 + u16(peOff + 20)
+                    local sectionCount = u16(peOff + 6)
+                    local debugOff
+                    for i = 0, sectionCount - 1 do
+                        local s = sectionOff + i * 40
+                        local va, vsize, raw = u32(s + 12), u32(s + 16), u32(s + 20)
+                        if debugRva >= va and debugRva < va + vsize then
+                            debugOff = raw + (debugRva - va)
+                            break
+                        end
+                    end
+                    if debugOff then
+                        for i = 0, math.floor(debugSize / 28) - 1 do
+                            if u32(debugOff + i * 28 + 12) == 2 then
+                                raise("Obfuscation audit FAILED: shipped DLL has a CODEVIEW debug directory entry (PDB reference). Check /DEBUG:NONE and tweaker debug-directory zeroing.")
+                            end
+                        end
+                    end
+                end
+                if contains_literal(data, ".pdb") then
+                    raise("Obfuscation audit FAILED: shipped DLL contains '.pdb' (likely an embedded PDB path).")
                 end
                 -- Any absolute Windows user-profile path leaks the machine's user name.
                 -- Matches `:\Users\` and `:/Users/` case-insensitively without naming anyone.
@@ -453,3 +494,87 @@ function build_mod(mod_name, automated_build, config)
             print("Built '" .. mod_name .. "' for '" .. platform .. "'")
         end)
 end
+
+-- Distributable build, available to every mod that includes this script. Reconfigures with
+-- automated_build=y so the mod compiles without symbols and the tweaker runs with --obfuscate,
+-- stages the shipping layout in dist/unpackaged/, then zips it beside it as
+-- dist/<name>@<version>.amethyst. Reads the mod's identity from its own mod.json.
+task("package")
+    set_category("plugin")
+    set_menu({
+        usage = "xmake package",
+        description = "Bump the patch version, build the obfuscated mod, and zip the distributable into dist/"
+    })
+    on_run(function ()
+        import("core.base.json")
+
+        local projectdir = os.projectdir()
+        local manifestpath = path.join(projectdir, "mod.json")
+        local name = json.loadfile(manifestpath).meta.name
+
+        -- Every distributable is a new release, so the version moves before anything is built:
+        -- the staged mod.json is copied verbatim and must already carry the shipped version.
+        -- Spliced into the raw text rather than re-encoded, so hand-authored formatting and key
+        -- order survive. The first "version" key is meta's; game_builds entries carry one too.
+        local raw = io.readfile(manifestpath)
+        local first, last, major, minor, patch = raw:find('"version"%s*:%s*"(%d+)%.(%d+)%.(%d+)"')
+        if not first then
+            raise("mod.json has no meta.version of the form major.minor.patch")
+        end
+        local platformsAt = raw:find('"platforms"', 1, true)
+        if platformsAt and first > platformsAt then
+            raise("mod.json meta.version must appear before platforms; refusing to bump a game_builds version")
+        end
+        local version = string.format("%d.%d.%d", tonumber(major), tonumber(minor), tonumber(patch) + 1)
+        io.writefile(manifestpath, raw:sub(1, first - 1)
+            .. string.format('"version": "%s"', version) .. raw:sub(last + 1))
+        print("version bumped to %s", version)
+
+        local distdir = path.join(projectdir, "dist")
+        local stagedir = path.join(distdir, "unpackaged")
+        local zipfile = path.join(distdir, string.format("%s@%s.amethyst", name, version))
+
+        os.tryrm(stagedir)
+        os.tryrm(zipfile)
+        os.mkdir(distdir)
+
+        os.execv("xmake", { "f", "-y", "--automated_build=y" })
+        local failure
+        try {
+            function ()
+                os.execv("xmake", { "build", "-y", name })
+            end,
+            catch {
+                function (errors)
+                    failure = errors
+                end
+            }
+        }
+        os.execv("xmake", { "f", "-y", "--automated_build=n" })
+        if failure then
+            raise(failure)
+        end
+
+        for _, f in ipairs(os.files(path.join(stagedir, "**"))) do
+            local ext = path.extension(f):lower()
+            if ext == ".lib" or ext == ".exp" or ext == ".pdb" or ext == ".ilk" or ext == ".bak" then
+                os.rm(f)
+            end
+        end
+
+        local zipscript = path.join(projectdir, "build", "package-zip.ps1")
+        os.mkdir(path.directory(zipscript))
+        io.writefile(zipscript, string.format([[
+$ErrorActionPreference = 'Stop'
+Add-Type -AssemblyName System.IO.Compression.FileSystem
+[System.IO.Compression.ZipFile]::CreateFromDirectory('%s', '%s')
+]], stagedir, zipfile))
+        os.vrunv("powershell", { "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-File", zipscript })
+        os.tryrm(zipscript)
+
+        if not os.isfile(zipfile) then
+            raise("packaging failed: %s was not produced", zipfile)
+        end
+        print("packaged %s (%.1f MB)", zipfile, os.filesize(zipfile) / 1048576)
+    end)
+task_end()

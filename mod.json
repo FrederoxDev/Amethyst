@@ -4,11 +4,18 @@
         "uuid": "e56c3987-fd4a-4590-9923-a07fc4be7250",
         "namespace": "amethyst",
         "name": "Amethyst-Runtime",
-        "version": "2.2.1",
+        "version": "2.2.2",
         "author": "FrederoxDev",
         "is_runtime": true,
         "platforms": {
-            "win-client": {}
+            "win-client": {
+                "game_builds": [
+                    {
+                        "version": "1.26.42",
+                        "guid": "E441A62C-3AC0-B238-4C4C-44205044422E"
+                    }
+                ]
+            }
         }
     }
 }
