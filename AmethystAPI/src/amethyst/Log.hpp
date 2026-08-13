@@ -19,7 +19,7 @@ namespace Log {
     std::string GetModName();
     std::string GetThreadName();
 
-    void WriteToFile(const std::string& message);
+    void WriteToFile(const std::string& level, const std::string& thread, const std::string& mod, const std::string& message, const std::string& humanLine);
     void InitializeFileLogging();
     void ShutdownFileLogging();
 
@@ -30,26 +30,32 @@ namespace Log {
 
     template <typename... T>
     void Info(const std::format_string<T...> fmt, T&&... args) {
-        std::string formatted_string = std::format(fmt, std::forward<T>(args)...);
-        formatted_string = std::format("[{}] [{}] {}", GetThreadName(), GetModName(), formatted_string);
-        std::cout << formatted_string << std::endl;
-        WriteToFile(formatted_string);
+        std::string message = std::format(fmt, std::forward<T>(args)...);
+        std::string thread = GetThreadName();
+        std::string mod = GetModName();
+        std::string humanLine = std::format("[{}] [{}] {}", thread, mod, message);
+        std::cout << humanLine << std::endl;
+        WriteToFile("INFO", thread, mod, message, humanLine);
     }
 
     template <typename... T>
     void Warning(const std::format_string<T...> fmt, T&&... args) {
-        std::string formatted_string = std::format(fmt, std::forward<T>(args)...);
-        formatted_string = std::format("[{}] [{}] [WARN] {}", GetThreadName(), GetModName(), formatted_string);
-        std::cout << YELLOW << formatted_string << RESET << std::endl;
-        WriteToFile(formatted_string);
+        std::string message = std::format(fmt, std::forward<T>(args)...);
+        std::string thread = GetThreadName();
+        std::string mod = GetModName();
+        std::string humanLine = std::format("[{}] [{}] [WARN] {}", thread, mod, message);
+        std::cout << YELLOW << humanLine << RESET << std::endl;
+        WriteToFile("WARN", thread, mod, message, humanLine);
     }
 
     template <typename... T>
     void Error(const std::format_string<T...> fmt, T&&... args) {
-        std::string formatted_string = std::format(fmt, std::forward<T>(args)...);
-        formatted_string = std::format("[{}] [{}] [ERROR] {}", GetThreadName(), GetModName(), formatted_string);
-        std::cerr << RED << formatted_string << RESET << std::endl;
-        WriteToFile(formatted_string);
+        std::string message = std::format(fmt, std::forward<T>(args)...);
+        std::string thread = GetThreadName();
+        std::string mod = GetModName();
+        std::string humanLine = std::format("[{}] [{}] [ERROR] {}", thread, mod, message);
+        std::cerr << RED << humanLine << RESET << std::endl;
+        WriteToFile("ERROR", thread, mod, message, humanLine);
     }
 
     template <typename... T>

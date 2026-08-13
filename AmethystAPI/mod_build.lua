@@ -178,6 +178,7 @@ function build_mod(mod_name, automated_build, config)
             add_ldflags("/DEBUG:NONE", { force = true })
         else
             set_targetdir(binary_dir)
+            add_ldflags("/RELEASE", { force = true })
         end
         add_deps("AmethystAPI", "libhat", "MC")
 

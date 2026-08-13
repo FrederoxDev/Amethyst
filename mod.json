@@ -4,7 +4,7 @@
         "uuid": "e56c3987-fd4a-4590-9923-a07fc4be7250",
         "namespace": "amethyst",
         "name": "Amethyst-Runtime",
-        "version": "2.2.2",
+        "version": "2.2.5",
         "author": "FrederoxDev",
         "is_runtime": true,
         "platforms": {
