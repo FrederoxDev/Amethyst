@@ -8,10 +8,60 @@
 #include <amethyst/runtime/ModContext.hpp>
 #include <amethyst/runtime/events/GameEvents.hpp>
 
+#include <Debug/DebugUtils.hpp>
+#include <world/Minecraft.hpp>
+
+#ifdef CLIENT
+#include <client/game/ClientInstance.hpp>
+#endif
+
 // #include <world/level/Level.hpp>
-// #include <world/Minecraft.hpp>
 
 namespace Amethyst::SharedHooks {
+	// Every thread the game starts for itself names itself here first, which makes this the
+	// earliest point any of them can be told apart, and the only named one that the worker
+	// pool threads pass through at all.
+	Amethyst::InlineHook<decltype(&DebugUtils::setThreadName)> _DebugUtils_setThreadName;
+	void DebugUtils_setThreadName(const std::string& name) {
+		// ServerInstance::startServerThread names its thread MC_SERVER, and that thread is one
+		// of only two callers of Minecraft::update, so the name identifies the server outright.
+		Amethyst::ThreadClass threadClass = name == "MC_SERVER"
+			? Amethyst::ThreadClass::MainServer
+			: Amethyst::ThreadClass::EngineNamed;
+
+		Amethyst::GetContext().mThreadRegistry.Record(std::this_thread::get_id(), threadClass, name);
+		_DebugUtils_setThreadName(name);
+	}
+
+	// Minecraft::update has exactly two callers, ClientInstance::update and the thread body of
+	// ServerInstance::startServerThread, so which Minecraft this is says which thread we are on.
+	// ClientInstance::update calls it on its own mMinecraft, which is what the comparison uses.
+	Amethyst::InlineHook<decltype(&Minecraft::update)> _Minecraft_update;
+	bool Minecraft_update(Minecraft* self) {
+		AmethystContext& ctx = Amethyst::GetContext();
+
+#ifdef CLIENT
+		ClientInstance* clientInstance = ctx.mClientCtx != nullptr ? ctx.mClientCtx->mClientInstance : nullptr;
+		bool isClient = clientInstance != nullptr && clientInstance->mMinecraft.get() == self;
+#else
+		bool isClient = false;
+#endif
+
+		Amethyst::SharedContext* sideCtx = isClient
+			? static_cast<Amethyst::SharedContext*>(ctx.mClientCtx.get())
+			: static_cast<Amethyst::SharedContext*>(ctx.mServerCtx.get());
+
+		if (sideCtx != nullptr)
+			sideCtx->mMinecraft = self;
+
+		ctx.mThreadRegistry.Record(
+			std::this_thread::get_id(),
+			isClient ? Amethyst::ThreadClass::MainClient : Amethyst::ThreadClass::MainServer,
+			{});
+
+		return _Minecraft_update(self);
+	}
+
 // 	void OnLevelEvent(Level* level) {
 // 		if (level == nullptr) {
 // 			OnLevelDestroyedEvent event;
@@ -21,80 +71,6 @@ namespace Amethyst::SharedHooks {
 
 // 		OnLevelConstructedEvent event(*level);
 // 		Amethyst::GetEventBus().Invoke(event);
-// 	}
-
-// 	Amethyst::InlineHook<decltype(&Minecraft::$constructor)> _Minecraft_$constructor;
-// 	Minecraft* Minecraft_$constructor(
-// 		Minecraft* self,
-// 		IMinecraftApp& app,
-// 		GameCallbacks& gameCallbacks,
-// 		AllowList& allowList,
-// 		PermissionsFile* permissionsFile,
-// 		const Bedrock::NotNullNonOwnerPtr<Core::FilePathManager>& filePathManager,
-// 		std::chrono::duration<int64_t> maxPlayerIdleTime,
-// 		IMinecraftEventing& eventing,
-// 		ClientOrServerNetworkSystemRef network,
-// 		PacketSender& packetSender,
-// 		SubClientId clientSubId,
-// 		Timer& simTimer,
-// 		Timer& realTimer,
-// 		const Bedrock::NotNullNonOwnerPtr<const IContentTierManager>& contentTierManager,
-// 		ServerMetrics* serverMetrics
-// 	) {
-// 		Minecraft* result = _Minecraft_$constructor(
-// 			self,
-// 			app,
-// 			gameCallbacks,
-// 			allowList,
-// 			permissionsFile,
-// 			filePathManager,
-// 			maxPlayerIdleTime,
-// 			eventing,
-// 			network,
-// 			packetSender,
-// 			clientSubId,
-// 			simTimer,
-// 			realTimer,
-// 			contentTierManager,
-// 			serverMetrics
-// 		);
-
-// 		AmethystContext& ctx = Amethyst::GetContext();
-// 		// This is where the initial threads ids are found, so at this point Amethsyt::IsOnMainClietnThread and Amethyst::IsOnMainServerThread will start working.
-// 		// But for this it does have to do a tiny bit of jank such that this can be setup
-// #ifdef CLIENT
-// 		if (!ctx.mPlatform->IsDedicatedServer() && Amethyst::GetClientCtx().mMinecraft == nullptr) {
-// 			Amethyst::GetClientCtx().mMinecraft = result;
-// 			ctx.mMainClientThread = std::this_thread::get_id();
-// 		} else {
-// 			Amethyst::GetContext().mServerCtx = std::make_unique<Amethyst::ServerContext>();
-// 			Amethyst::GetServerCtx().mMinecraft = result;
-// 			ctx.mMainServerThread = std::this_thread::get_id();
-// 		}
-// #endif
-// #ifdef SERVER
-// 		Amethyst::GetContext().mServerCtx = std::make_unique<Amethyst::ServerContext>();
-// 		Amethyst::GetServerCtx().mMinecraft = result;
-// 		ctx.mMainServerThread = std::this_thread::get_id();
-// #endif
-
-// 		auto context = Bedrock::PubSub::SubscriptionContext::makeDefaultContext("Amethyst LevelEvent Subscriber");
-// 		result->mLevelSubscribers->_connectInternal(OnLevelEvent, Bedrock::PubSub::ConnectPosition::AtFront, std::move(context), std::nullopt);
-// 		return result;
-// 	}
-
-// 	Amethyst::InlineHook<decltype(&Minecraft::$destructor)> _Minecraft_$destructor;
-// 	void Minecraft_$destructor(Minecraft* self, bool shouldDelete) {
-// 		Amethyst::GetContext().mServerCtx.reset();
-// 		_Minecraft_$destructor(self, shouldDelete);
-// 	}
-
-// 	Amethyst::InlineHook<decltype(&Minecraft::update)> _Minecraft_update;
-// 	bool Minecraft_update(Minecraft* self) {
-// 		bool value = _Minecraft_update(self);
-// 		UpdateEvent event(*self);
-// 		Amethyst::GetEventBus().Invoke(event);
-// 		return value;
 // 	}
 
 // 	Amethyst::InlineHook<decltype(&Level::tick)> _Level_tick;
@@ -108,11 +84,19 @@ namespace Amethyst::SharedHooks {
 
 	void Initialize() {
 		auto& hooks = Amethyst::GetHookManager();
-		// HOOK(Minecraft, $constructor);
-		// HOOK(Minecraft, $destructor);
-		// HOOK(Minecraft, update);
+
+		// Addressed at runtime rather than through HOOK, because the address of an imported
+		// free function is only settled once the import is resolved. Asking for it in the
+		// constant expression HOOK needs yields this module's own import thunk, which the game
+		// never calls, and the hook would take cleanly and then never fire.
+		hooks.CreateHookAbsolute(
+			_DebugUtils_setThreadName,
+			reinterpret_cast<uintptr_t>(&DebugUtils::setThreadName),
+			reinterpret_cast<void*>(&DebugUtils_setThreadName));
+
+		HOOK(Minecraft, update);
 		// HOOK(Level, tick);
 		NetworkingHooks::Initialize();
-		// ResourceHooks::Initialize();
+		ResourceHooks::Initialize();
 	}
 }

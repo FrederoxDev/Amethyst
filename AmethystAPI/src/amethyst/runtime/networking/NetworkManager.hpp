@@ -177,15 +177,23 @@ public:
         return nullptr;
     }
 
+    void SetPacketDispatcher(const IPacketHandlerDispatcher* dispatcher)
+    {
+        mPacketDispatcher = dispatcher;
+    }
+
 private:
     template<DerivedFromCustomPacket T>
     CustomPacketInternal CreateSendable(std::unique_ptr<T> packet)
     {
-        return CustomPacketInternal(std::move(packet), function_id::class_hash<T>());
+        CustomPacketInternal wrapped(std::move(packet), function_id::class_hash<T>());
+        wrapped.mHandler = mPacketDispatcher;
+        return wrapped;
     }
 
     std::unordered_map<uint64_t, std::unique_ptr<CustomPacketHandler>> mPacketHandlers;
     std::unordered_map<uint64_t, std::function<std::unique_ptr<CustomPacket>()>> mPacketFactories;
+    const IPacketHandlerDispatcher* mPacketDispatcher = nullptr;
 };
 
 } // namespace Amethyst

@@ -2,14 +2,59 @@
 #include "amethyst/runtime/ModContext.hpp"
 #include <filesystem>
 #include <chrono>
-#include <share.h>
 
 namespace Log {
     FILE* fp;
-    static FILE* gLogFile = nullptr;
-    static FILE* gJsonFile = nullptr;
+    static HANDLE gLogHandle = nullptr;
+    static HANDLE gJsonHandle = nullptr;
     static std::mutex gLogMutex;
     static std::string gSessionId;
+
+    constexpr const wchar_t* kLogPathEnvVar = L"AMETHYST_LOG_PATH";
+    constexpr const wchar_t* kJsonPathEnvVar = L"AMETHYST_JSON_PATH";
+    constexpr const char* kSessionEnvVarA = "AMETHYST_LOG_SESSION";
+
+    static HANDLE OpenAppendHandle(const std::filesystem::path& path, DWORD creationDisposition)
+    {
+        return CreateFileW(
+            path.c_str(),
+            FILE_APPEND_DATA,
+            FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE,
+            nullptr,
+            creationDisposition,
+            FILE_ATTRIBUTE_NORMAL | FILE_FLAG_WRITE_THROUGH,
+            nullptr);
+    }
+
+    static void EnsureHandlesOpen()
+    {
+        if (!gLogHandle) {
+            wchar_t path[MAX_PATH];
+            if (GetEnvironmentVariableW(kLogPathEnvVar, path, MAX_PATH) > 0) {
+                gLogHandle = OpenAppendHandle(path, OPEN_ALWAYS);
+            }
+        }
+
+        if (!gJsonHandle) {
+            wchar_t path[MAX_PATH];
+            if (GetEnvironmentVariableW(kJsonPathEnvVar, path, MAX_PATH) > 0) {
+                gJsonHandle = OpenAppendHandle(path, OPEN_ALWAYS);
+            }
+        }
+
+        if (gSessionId.empty()) {
+            char session[64];
+            DWORD len = GetEnvironmentVariableA(kSessionEnvVarA, session, sizeof(session));
+            if (len > 0) gSessionId = std::string(session, len);
+        }
+    }
+
+    static void WriteHandle(HANDLE handle, const std::string& text)
+    {
+        if (!handle || handle == INVALID_HANDLE_VALUE) return;
+        DWORD written = 0;
+        WriteFile(handle, text.data(), static_cast<DWORD>(text.size()), &written, nullptr);
+    }
 
     static std::string NowIso8601Utc()
     {
@@ -61,34 +106,37 @@ namespace Log {
         std::filesystem::path logPath = logDir / (gSessionId + ".log");
         std::filesystem::path jsonPath = logDir / (gSessionId + ".jsonl");
 
-        gLogFile = _wfsopen(logPath.c_str(), L"w", _SH_DENYWR);
-        gJsonFile = _wfsopen(jsonPath.c_str(), L"w", _SH_DENYWR);
+        gLogHandle = OpenAppendHandle(logPath, CREATE_ALWAYS);
+        gJsonHandle = OpenAppendHandle(jsonPath, CREATE_ALWAYS);
+
+        SetEnvironmentVariableW(kLogPathEnvVar, logPath.c_str());
+        SetEnvironmentVariableW(kJsonPathEnvVar, jsonPath.c_str());
+        SetEnvironmentVariableA(kSessionEnvVarA, gSessionId.c_str());
     }
 
     void ShutdownFileLogging()
     {
         std::lock_guard lock(gLogMutex);
-        if (gLogFile) { fclose(gLogFile); gLogFile = nullptr; }
-        if (gJsonFile) { fclose(gJsonFile); gJsonFile = nullptr; }
+        if (gLogHandle) { CloseHandle(gLogHandle); gLogHandle = nullptr; }
+        if (gJsonHandle) { CloseHandle(gJsonHandle); gJsonHandle = nullptr; }
     }
 
     void WriteToFile(const std::string& level, const std::string& thread, const std::string& mod, const std::string& message, const std::string& humanLine)
     {
         std::lock_guard lock(gLogMutex);
+        EnsureHandlesOpen();
         std::string timestamp = NowIso8601Utc();
 
-        if (gLogFile) {
-            std::string line = std::format("{} {}\n", timestamp, humanLine);
-            fwrite(line.data(), 1, line.size(), gLogFile);
-            fflush(gLogFile);
+        if (gLogHandle) {
+            std::string line = std::format("{} {}\r\n", timestamp, humanLine);
+            WriteHandle(gLogHandle, line);
         }
 
-        if (gJsonFile) {
+        if (gJsonHandle) {
             std::string json = std::format(
-                "{{\"timestamp\":\"{}\",\"session\":\"{}\",\"level\":\"{}\",\"thread\":\"{}\",\"source\":\"{}\",\"message\":\"{}\"}}\n",
+                "{{\"timestamp\":\"{}\",\"session\":\"{}\",\"level\":\"{}\",\"thread\":\"{}\",\"source\":\"{}\",\"message\":\"{}\"}}\r\n",
                 timestamp, gSessionId, level, JsonEscape(thread), JsonEscape(mod), JsonEscape(message));
-            fwrite(json.data(), 1, json.size(), gJsonFile);
-            fflush(gJsonFile);
+            WriteHandle(gJsonHandle, json);
         }
     }
 
@@ -135,9 +183,19 @@ namespace Log {
 			return std::format("{:>7}", std::this_thread::get_id());
 		}
 
-        if (Amethyst::IsOnAmethystThread()) return "runtime";
-        if (Amethyst::IsOnMainClientThread()) return " client";
-        if (Amethyst::IsOnMainServerThread()) return " server";
+        switch (Amethyst::GetCurrentThreadClass()) {
+        case Amethyst::ThreadClass::AmethystRuntime:
+            return "runtime";
+        case Amethyst::ThreadClass::MainClient:
+            return " client";
+        case Amethyst::ThreadClass::MainServer:
+            return " server";
+        case Amethyst::ThreadClass::EngineNamed:
+            return std::format("{:>7.7}", Amethyst::GetCurrentThreadName());
+        case Amethyst::ThreadClass::Unknown:
+            break;
+        }
+
         // Fallback to thread IDs
         return std::format("{:>7}", std::this_thread::get_id());
     }

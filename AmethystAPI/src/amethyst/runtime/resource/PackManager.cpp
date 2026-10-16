@@ -92,10 +92,10 @@ void PackManager::RegisterNewPack(const Mod* owner, const std::string& path, Pac
 static void AddPacksOfTypeToStack(
     const std::unordered_map<std::string, std::unordered_map<std::string, Amethyst::Pack>>& packs,
     PackType wantType,
-    const ::gsl::not_null<Bedrock::NonOwnerPointer<IResourcePackRepository>>& repository,
+    const IResourcePackRepository& repository,
     ResourcePackStack& stack)
 {
-	Bedrock::NonOwnerPointer<const IResourcePackRepository> constNop(repository.get());
+    Bedrock::NonOwnerPointer<const IResourcePackRepository> constNop(repository);
     ::gsl::not_null<Bedrock::NonOwnerPointer<const IResourcePackRepository>> constRepo(constNop);
 
     for (const auto& [modKey, modPacks] : packs) {
@@ -109,14 +109,17 @@ static void AddPacksOfTypeToStack(
             if (pack.type != wantType) continue;
 
             PackIdVersion pid(pack.uuid, pack.version, pack.type);
+            if (stack.isOnStack(pid)) {
+                continue;
+            }
 
-            std::shared_ptr<ResourcePack> resourcePack = repository->getResourcePackForPackId(pid);
+            std::shared_ptr<ResourcePack> resourcePack = repository.getResourcePackForPackId(pid);
             if (!resourcePack) {
                 Log::Warning("[Amethyst::PackManager] Repository has no pack for {}/{}", modKey, path);
                 continue;
             }
 
-            PackSettingsFactory& psf = repository->getPackSettingsFactory();
+            PackSettingsFactory& psf = repository.getPackSettingsFactory();
             PackSettings* settings = psf.getPackSettings(resourcePack->getManifest(), std::nullopt);
 
             ::gsl::not_null<std::shared_ptr<ResourcePack>> notNullPack(std::move(resourcePack));
@@ -126,16 +129,12 @@ static void AddPacksOfTypeToStack(
     }
 }
 
-void PackManager::AddResourcePacksToStack(
-    const ::gsl::not_null<Bedrock::NonOwnerPointer<IResourcePackRepository>>& repository,
-    ResourcePackStack& stack)
+void PackManager::AddResourcePacksToStack(const IResourcePackRepository& repository, ResourcePackStack& stack)
 {
     AddPacksOfTypeToStack(mPacks, PackType::Resources, repository, stack);
 }
 
-void PackManager::AddBehaviorPacksToStack(
-    const ::gsl::not_null<Bedrock::NonOwnerPointer<IResourcePackRepository>>& repository,
-    ResourcePackStack& stack)
+void PackManager::AddBehaviorPacksToStack(const IResourcePackRepository& repository, ResourcePackStack& stack)
 {
     AddPacksOfTypeToStack(mPacks, PackType::Behavior, repository, stack);
 }

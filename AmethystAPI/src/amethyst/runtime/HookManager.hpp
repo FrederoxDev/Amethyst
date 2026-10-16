@@ -233,14 +233,14 @@ namespace Amethyst {
 #endif
         }
 
+        // The hash is the wire identity of a custom packet type, so it has to be distinct per type
+        // in every build. It is consteval: the signature string is consumed at compile time and
+        // never odr-used, so no type name reaches the binary and an obfuscated build ships the same
+        // opaque constants an ordinary one does.
         template<typename T>
         static consteval uint64_t class_hash() {
-#ifdef AMETHYST_OBFUSCATE
-            return 0;
-#else
             constexpr std::string_view name = __FUNCSIG__;
             return HashedString::computeHash(name);
-#endif
         }
     };
 

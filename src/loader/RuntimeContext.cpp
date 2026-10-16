@@ -1,8 +1,8 @@
 #include "loader/RuntimeContext.hpp"
 #include "game/client/CustomUIRendererRegistry.hpp"
 
-RuntimeContext::RuntimeContext(std::unique_ptr<Amethyst::Platform> platform, std::thread::id amethystThread)
-    : AmethystContext(std::move(platform), amethystThread) {}
+RuntimeContext::RuntimeContext(std::unique_ptr<Amethyst::Platform> platform)
+    : AmethystContext(std::move(platform)) {}
 
 void RuntimeContext::Start()
 {

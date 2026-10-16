@@ -72,39 +72,81 @@ Amethyst::Platform& Amethyst::GetPlatform()
 
 Amethyst::ClientContext& Amethyst::GetClientCtx()
 {
-    return *_AmethystContextInstance->mClientCtx;
+    Amethyst::ClientContext* clientCtx = _AmethystContextInstance->mClientCtx.get();
+
+    if (clientCtx == nullptr) {
+        AssertFail("Amethyst::GetClientCtx was nullptr!");
+    }
+
+    return *clientCtx;
 }
 
 Amethyst::ServerContext& Amethyst::GetServerCtx()
 {
-    return *_AmethystContextInstance->mServerCtx;
+    Amethyst::ServerContext* serverCtx = _AmethystContextInstance->mServerCtx.get();
+
+    if (serverCtx == nullptr) {
+        AssertFail("Amethyst::GetServerCtx was nullptr!");
+    }
+
+    return *serverCtx;
+}
+
+Amethyst::SharedContext* Amethyst::TryGetCurrentThreadCtx()
+{
+    switch (Amethyst::GetCurrentThreadClass()) {
+    case ThreadClass::MainClient:
+        return _AmethystContextInstance->mClientCtx.get();
+    case ThreadClass::MainServer:
+        return _AmethystContextInstance->mServerCtx.get();
+    default:
+        return nullptr;
+    }
 }
 
 Amethyst::SharedContext& Amethyst::GetCurrentThreadCtx()
 {
-    if (Amethyst::IsOnMainClientThread()) {
-        return *_AmethystContextInstance->mClientCtx;
-    } 
-    else if (Amethyst::IsOnMainServerThread()) {
-        return *_AmethystContextInstance->mServerCtx;
+    Amethyst::SharedContext* ctx = Amethyst::TryGetCurrentThreadCtx();
+
+    if (ctx == nullptr) {
+        AssertFail("Current thread is {} '{}', not the main Client or Server thread, cannot get context!",
+            Amethyst::ToString(Amethyst::GetCurrentThreadClass()), Amethyst::GetCurrentThreadName());
     }
 
-    AssertFail("Current thread is not the main Client or Server thread, cannot get context!");
+    return *ctx;
+}
+
+Amethyst::ThreadClass Amethyst::GetCurrentThreadClass()
+{
+    if (_AmethystContextInstance == nullptr) {
+        return ThreadClass::Unknown;
+    }
+
+    return _AmethystContextInstance->mThreadRegistry.GetClass(std::this_thread::get_id());
+}
+
+std::string Amethyst::GetCurrentThreadName()
+{
+    if (_AmethystContextInstance == nullptr) {
+        return {};
+    }
+
+    return _AmethystContextInstance->mThreadRegistry.Get(std::this_thread::get_id()).mName;
 }
 
 bool Amethyst::IsOnAmethystThread()
 {
-    return _AmethystContextInstance->mAmethystThread == std::this_thread::get_id();
+    return Amethyst::GetCurrentThreadClass() == ThreadClass::AmethystRuntime;
 }
 
 bool Amethyst::IsOnMainClientThread()
 {
-    return _AmethystContextInstance->mMainClientThread == std::this_thread::get_id();
+    return Amethyst::GetCurrentThreadClass() == ThreadClass::MainClient;
 }
 
 bool Amethyst::IsOnMainServerThread()
 {
-    return _AmethystContextInstance->mMainServerThread == std::this_thread::get_id();
+    return Amethyst::GetCurrentThreadClass() == ThreadClass::MainServer;
 }
 
 const Amethyst::Mod* Amethyst::GetOwnMod()

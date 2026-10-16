@@ -9,10 +9,11 @@
 #include <network/Packet.hpp>
 #include <network/ServerNetworkHandler.hpp>
 
+IPacketHandlerDispatcher::~IPacketHandlerDispatcher() = default;
+
 template <>
 class PacketHandlerDispatcherInstance<Amethyst::CustomPacketInternal, 0> : public IPacketHandlerDispatcher {
 public:
-	// IPacketHandlerDispatcher base is an empty stub; declare virtuals here in MC's slot order (dtor=0, handle=1).
 	virtual ~PacketHandlerDispatcherInstance() = default;
 
 	virtual void handle(const NetworkIdentifier& networkId, NetEventCallback& netEvent, std::shared_ptr<Packet>& _packet) const
@@ -53,8 +54,13 @@ namespace Amethyst::SharedHooks::NetworkingHooks {
 	void Initialize()
 	{
 		auto& hooks = Amethyst::GetHookManager();
-		HOOK(ServerNetworkHandler, allowIncomingPacketId);
+		// allowIncomingPacketId is virtual, so &ServerNetworkHandler::allowIncomingPacketId is a vcall
+		// thunk rather than the body. Patching the thunk leaves vtable dispatch — which is how the
+		// packet gate is actually reached — running the original, so every custom packet id was
+		// rejected as UnknownPacket. createPacket below is static and is correct as a plain HOOK.
+		HOOK_DIRECT_VIRTUAL(ServerNetworkHandler, allowIncomingPacketId);
 		HOOK(MinecraftPackets, createPacket);
+		Amethyst::GetNetworkManager().SetPacketDispatcher(&AmethystCustomPacketHandler);
 	}
 }
 #endif

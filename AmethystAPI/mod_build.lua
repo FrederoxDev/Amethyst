@@ -10,6 +10,16 @@ function build_mod(mod_name, automated_build, config)
     local extra_include_dirs  = config.extra_include_dirs or {}
     local extra_header_files  = config.extra_header_files or {}
     local extra_files         = config.extra_files or {}
+    -- Commands a mod wants run after its DLL is built and patched. A mod cannot use after_build
+    -- for this: xmake keeps one callback per target, so setting its own silently replaces the one
+    -- below, and the DLL then ships without its imports tweaked -- which fails at load with an
+    -- unresolvable entry point rather than at build time.
+    --
+    -- Declared as data rather than a callback because a function defined in a mod's xmake.lua
+    -- carries the description scope, where os.vrunv does not exist; running it here keeps it in
+    -- the script scope that does. Each entry: { program = "rgl", args = {...}, curdir = "data",
+    -- description = "..." }, with curdir relative to the project directory.
+    local post_build_commands = config.post_build_commands or {}
     local mc_headers_path     = config.mc_headers_path or nil
     local platform = config.platform or "win-client"
     
@@ -476,9 +486,55 @@ function build_mod(mod_name, automated_build, config)
                 end
                 -- Any absolute Windows user-profile path leaks the machine's user name.
                 -- Matches `:\Users\` and `:/Users/` case-insensitively without naming anyone.
+                --
+                -- A mod's own sources are trimmed by /d1trimfile, but a prebuilt third-party
+                -- static library carries whatever __FILE__ its own build baked in, and nothing
+                -- in this build can reach those. `obfuscation_audit_exempt` lets a mod name the
+                -- roots it accepts that from -- every path is still reported, so an exemption
+                -- cannot quietly cover a leak it was not written for.
                 local lower = data:lower()
-                if lower:find(":\\users\\", 1, true) or lower:find(":/users/", 1, true) then
+                local exempt = config.obfuscation_audit_exempt or {}
+                local offenders, allowed = {}, {}
+                local searchAt = 1
+                while true do
+                    local at = lower:find(":\\users\\", searchAt, true) or lower:find(":/users/", searchAt, true)
+                    if not at then break end
+                    -- Walk out to the whole printable run the path sits in.
+                    local from = at
+                    while from > 1 and data:byte(from - 1) >= 32 and data:byte(from - 1) < 127 do from = from - 1 end
+                    local to = at
+                    while to < #data and data:byte(to + 1) >= 32 and data:byte(to + 1) < 127 do to = to + 1 end
+                    local found = data:sub(from, to)
+                    local foundLower = found:lower()
+                    local isExempt = false
+                    for _, allowance in ipairs(exempt) do
+                        local a = allowance:lower()
+                        if foundLower:find(a, 1, true)
+                            or foundLower:find((a:gsub("\\", "/")), 1, true)
+                            or foundLower:find((a:gsub("/", "\\")), 1, true) then
+                            isExempt = true
+                            break
+                        end
+                    end
+                    if isExempt then allowed[found] = true else offenders[found] = true end
+                    searchAt = to + 1
+                end
+                local offenderList = {}
+                for pathText in pairs(offenders) do table.insert(offenderList, pathText) end
+                if #offenderList > 0 then
+                    table.sort(offenderList)
+                    for i = 1, math.min(#offenderList, 10) do
+                        print("  leaked path: " .. offenderList[i])
+                    end
+                    if #offenderList > 10 then
+                        print("  ... and " .. (#offenderList - 10) .. " more")
+                    end
                     raise("Obfuscation audit FAILED: shipped DLL contains a ':\\Users\\' path. Check /d1trimfile coverage and __FILE__ usage.")
+                end
+                local allowedCount = 0
+                for _ in pairs(allowed) do allowedCount = allowedCount + 1 end
+                if allowedCount > 0 then
+                    print(string.format("Obfuscation audit: %d exempt third-party path(s) remain in the shipped DLL.", allowedCount))
                 end
                 -- Dynamic: the literal project + AmethystAPI source roots must not appear.
                 local leak_roots = { os.projectdir() }
@@ -493,6 +549,18 @@ function build_mod(mod_name, automated_build, config)
             end
 
             print("Built '" .. mod_name .. "' for '" .. platform .. "'")
+
+            -- Last, so a mod's own step sees a finished, tweaked DLL.
+            for _, command in ipairs(post_build_commands) do
+                local curdir = command.curdir and path.join(os.projectdir(), command.curdir) or os.projectdir()
+                if not os.isdir(curdir) then
+                    raise("post_build_commands: directory not found: " .. curdir)
+                end
+                if command.description then
+                    print(command.description)
+                end
+                os.vrunv(command.program, command.args or {}, { curdir = curdir })
+            end
         end)
 end
 

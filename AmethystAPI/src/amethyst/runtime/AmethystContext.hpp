@@ -11,6 +11,7 @@
 #include "amethyst/runtime/EnumAllocator.hpp"
 #include "amethyst/runtime/platform/Platform.hpp"
 #include "amethyst/runtime/networking/NetworkManager.hpp"
+#include "amethyst/runtime/ThreadRegistry.hpp"
 // #include "mc/src-client/common/client/input/MinecraftInputHandler.hpp"
 // #include "mc/src-client/common/client/options/Options.hpp"
 // #include "mc/src-client/common/client/renderer/screen/MinecraftUIRenderContext.hpp"
@@ -41,9 +42,7 @@ public:
     std::unique_ptr<Amethyst::Platform> mPlatform;
 
     // Threads
-    std::thread::id mAmethystThread;
-    std::optional<std::thread::id> mMainClientThread;
-    std::optional<std::thread::id> mMainServerThread;
+    Amethyst::ThreadRegistry mThreadRegistry;
 
     // Amethyst::MinecraftPackageInfo mPackageInfo;
     std::unique_ptr<Amethyst::ClientContext> mClientCtx;
@@ -60,5 +59,5 @@ public:
 protected:
     virtual void Start() = 0;
     virtual void Shutdown() = 0;
-    AmethystContext(std::unique_ptr<Amethyst::Platform> platform, std::thread::id amethystThread);
+    AmethystContext(std::unique_ptr<Amethyst::Platform> platform);
 };

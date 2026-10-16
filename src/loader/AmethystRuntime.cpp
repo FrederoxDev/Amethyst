@@ -15,8 +15,8 @@ extern HMODULE hModule;
 extern HANDLE gMcThreadHandle;
 extern DWORD gMcThreadId;
 
-AmethystRuntime::AmethystRuntime(std::unique_ptr<Amethyst::Platform> platform, std::thread::id amethystThread)
-    : mAmethystContext(std::move(platform), amethystThread)
+AmethystRuntime::AmethystRuntime(std::unique_ptr<Amethyst::Platform> platform)
+    : mAmethystContext(std::move(platform))
 {
     AmethystRuntime::instance = this;
 }
@@ -37,10 +37,9 @@ void AmethystRuntime::Start()
     Amethyst::GetContext().Start();
 
     // Load all mod DLLs and call their initialize functions
-    LoadModDlls(); 
+    LoadModDlls();
     mRunning = true;
-    RunMods();
-} 
+}
 
 void AmethystRuntime::LoadModDlls()
 {
@@ -94,24 +93,31 @@ void AmethystRuntime::LoadModDlls()
     Amethyst::GetEventBus().Invoke<AddModEventListenersEvent>(event);
 }
 
-void AmethystRuntime::RunMods()
+void AmethystRuntime::WatchForHotReload()
 {
     auto& platform = Amethyst::GetPlatform();
-    platform.ResumeGameThread();
 
-    // Listen for hot-reload and keep Amethyst running until the end
+    // Runs on Amethyst's own thread, so this is the one place its id can be taken without
+    // having to be told which thread it is.
+    mAmethystContext.mThreadRegistry.Record(
+        std::this_thread::get_id(), Amethyst::ThreadClass::AmethystRuntime, {});
+
+    // No resume to balance here any more. Startup never suspends the game: the runtime is
+    // loaded before the game's entry point, so there is nothing running to hold still. The
+    // pause below is the only one left, and it happens with the game up and this loop on a
+    // thread of its own, which is where suspending it is safe.
     while (true) {
         Sleep(1000 / 20);
 
-        if (platform.HasRequestedStop()) break; 
+        if (platform.HasRequestedStop()) break;
 
         if (platform.HasRequestedHotReload() && mRunning == true) {
             Log::Info("\n========================= Starting hot-reload! =========================");
 
             platform.PauseGameThread();
             Shutdown();
-
-            return Start();
+            Start();
+            platform.ResumeGameThread();
         }
     }
 }

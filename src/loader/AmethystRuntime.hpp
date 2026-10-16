@@ -33,7 +33,7 @@ private:
     static AmethystRuntime* instance;
 
 public:
-    AmethystRuntime(std::unique_ptr<Amethyst::Platform> platform, std::thread::id amethystThread);
+    AmethystRuntime(std::unique_ptr<Amethyst::Platform> platform);
 
     static AmethystRuntime& GetInstance()
     {
@@ -47,9 +47,15 @@ public:
     void Start();
     void Shutdown();
 
+    /**
+     * Blocks for the lifetime of the game, so it belongs on a thread of its own. Started only
+     * once Start() has returned and the game is running, which is the point at which creating
+     * a thread and suspending the game thread are both safe.
+     */
+    void WatchForHotReload();
+
 private:
     void LoadModDlls();
-    void RunMods();
 
 public:
     Amethyst::SessionManifest mSession;

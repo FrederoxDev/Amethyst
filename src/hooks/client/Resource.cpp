@@ -5,10 +5,14 @@
 
 #include <module/VanillaGameModuleClient.hpp>
 #include <resources/RepositorySources.hpp>
+#include <resources/ResourcePackManager.hpp>
+#include <resources/ResourcePackStack.hpp>
 #include <resources/PackSourceFactory.hpp>
 #include <resources/PackSource.hpp>
+#include <client/game/ClientInstance.hpp>
 #include <Core/Resource/PackType.hpp>
 #include <Core/File/Path.hpp>
+#include <algorithm>
 #include <filesystem>
 
 static constexpr auto kPackOriginUser = static_cast<PackOrigin>(6);
@@ -25,8 +29,37 @@ namespace Amethyst::ClientHooks::ResourceHooks {
 		bool includeEditorPacks
 	) {
 		auto& context = Amethyst::GetContext();
-		context.mPackManager->AddResourcePacksToStack(repo, stack);
+		context.mPackManager->AddResourcePacksToStack(*repo, stack);
 		_VanillaGameModuleClient_initializeResourceStack(self, experiments, repo, stack, baseGameVersion, loadingPhase, includeEditorPacks);
+	}
+
+	Amethyst::InlineHook<decltype(&ResourcePackManager::composeFullStack)> _ResourcePackManager_composeFullStack;
+	int ResourcePackManager_composeFullStack(
+		const ResourcePackManager* self,
+		ResourcePackStack& output,
+		const ResourcePackStack& globalStack,
+		const ResourcePackStack& levelStack
+	) {
+		int offset = _ResourcePackManager_composeFullStack(self, output, globalStack, levelStack);
+
+		ClientInstance* clientInstance = Amethyst::GetClientCtx().mClientInstance;
+		if (clientInstance) {
+			IResourcePackRepository& repository = clientInstance->getResourcePackRepository();
+			auto& packManager = *Amethyst::GetContext().mPackManager;
+
+			// ResourcePackManager::_loadHelper walks the stack front-to-back and returns the
+			// first pack holding the file, so position IS priority. AddResourcePacksToStack
+			// appends, which would leave mod packs behind the base game and make any file a
+			// mod overrides unreachable. Move them to the front, where vanilla itself puts
+			// the addon stack, so a mod can override a vanilla resource and not just add one.
+			const size_t before = output.mStack.size();
+			packManager.AddResourcePacksToStack(repository, output);
+			const size_t added = output.mStack.size() - before;
+			if (added > 0) {
+				std::rotate(output.mStack.begin(), output.mStack.end() - added, output.mStack.end());
+			}
+		}
+		return offset;
 	}
 
 	Amethyst::InlineHook<decltype(&RepositorySources::initializePackSource)> _RepositorySources_initializePackSource;
@@ -59,6 +92,7 @@ namespace Amethyst::ClientHooks::ResourceHooks {
 	void Initialize() {
 		auto& hooks = Amethyst::GetHookManager();
 		HOOK(VanillaGameModuleClient, initializeResourceStack);
+		HOOK(ResourcePackManager, composeFullStack);
 		HOOK(RepositorySources, initializePackSource);
 	}
 }

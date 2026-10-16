@@ -23,7 +23,6 @@ namespace Amethyst::ClientHooks {
 		using OrigFn = ClientInstance* (*)(ClientInstance*, ClientInstanceArguments&&);
 		auto* result = _ClientInstance_$constructor.original<OrigFn>()(self, std::move(args));
 
-		Log::Info("ClientInstance constructed!");
 		Amethyst::GetClientCtx().mClientInstance = self;
 		return result;
 	}

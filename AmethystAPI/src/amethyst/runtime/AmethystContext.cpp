@@ -2,12 +2,11 @@
 #include "amethyst/runtime/importing/data/CanonicalSymbol.hpp"
 #include "amethyst/runtime/importing/data/CanonicalHeader.hpp"
 
-AmethystContext::AmethystContext(std::unique_ptr<Amethyst::Platform> platform, std::thread::id amethystThread) :
+AmethystContext::AmethystContext(std::unique_ptr<Amethyst::Platform> platform) :
     mAmethystAbiHash(AmethystContext::GetAmethystAbiHash()),
     mPlatform(std::move(platform)),
-    mAmethystThread(amethystThread),
     mClientCtx(nullptr),
-    mServerCtx(nullptr)
+    mServerCtx(::std::make_unique<Amethyst::ServerContext>())
 	{
 		#ifdef CLIENT
 		mClientCtx = std::make_unique<Amethyst::ClientContext>();
